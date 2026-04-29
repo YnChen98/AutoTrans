@@ -36,8 +36,18 @@ Options:
   --startup_wait <seconds> Conservative wait after topics/messages are ready. Default: 20
   --goal_repeat <count>    Number of one-shot goal publications. Default: 3
   --goal_interval <sec>    Delay between repeated goal publications. Default: 1.0
-  -h, --help               Show this help.
+  --help                   Show this help.
+
+Examples:
+  bash experiments/scripts/run_baseline_trial.sh --name trial1 --x 0.0 --y -1.2 --z 0.0 --duration 75
+  bash experiments/scripts/run_baseline_trial.sh --name trial3 --x 8.0 --y 1.5 --z 0.0 --duration 75
 EOF
+}
+
+error_usage() {
+  echo "ERROR: $1" >&2
+  usage >&2
+  exit 2
 }
 
 parse_args() {
@@ -45,87 +55,105 @@ parse_args() {
     case "$1" in
       --name)
         if [[ $# -lt 2 ]]; then
-          echo "ERROR: --name requires a value" >&2
-          exit 2
+          error_usage "--name requires a value"
         fi
         TRIAL_NAME="$2"
         shift 2
         ;;
       --x)
         if [[ $# -lt 2 ]]; then
-          echo "ERROR: --x requires a value" >&2
-          exit 2
+          error_usage "--x requires a value"
         fi
         GOAL_X="$2"
         shift 2
         ;;
       --y)
         if [[ $# -lt 2 ]]; then
-          echo "ERROR: --y requires a value" >&2
-          exit 2
+          error_usage "--y requires a value"
         fi
         GOAL_Y="$2"
         shift 2
         ;;
       --z)
         if [[ $# -lt 2 ]]; then
-          echo "ERROR: --z requires a value" >&2
-          exit 2
+          error_usage "--z requires a value"
         fi
         GOAL_Z="$2"
         shift 2
         ;;
       --duration)
         if [[ $# -lt 2 ]]; then
-          echo "ERROR: --duration requires a value" >&2
-          exit 2
+          error_usage "--duration requires a value"
         fi
         DURATION_SEC="$2"
         shift 2
         ;;
       --frame_id)
         if [[ $# -lt 2 ]]; then
-          echo "ERROR: --frame_id requires a value" >&2
-          exit 2
+          error_usage "--frame_id requires a value"
         fi
         FRAME_ID="$2"
         shift 2
         ;;
       --startup_wait)
         if [[ $# -lt 2 ]]; then
-          echo "ERROR: --startup_wait requires a value" >&2
-          exit 2
+          error_usage "--startup_wait requires a value"
         fi
         STARTUP_WAIT_SEC="$2"
         shift 2
         ;;
       --goal_repeat)
         if [[ $# -lt 2 ]]; then
-          echo "ERROR: --goal_repeat requires a value" >&2
-          exit 2
+          error_usage "--goal_repeat requires a value"
         fi
         GOAL_REPEAT="$2"
         shift 2
         ;;
       --goal_interval)
         if [[ $# -lt 2 ]]; then
-          echo "ERROR: --goal_interval requires a value" >&2
-          exit 2
+          error_usage "--goal_interval requires a value"
         fi
         GOAL_INTERVAL_SEC="$2"
         shift 2
         ;;
-      -h|--help)
+      --help)
         usage
         exit 0
         ;;
+      --*)
+        error_usage "unknown option: $1"
+        ;;
       *)
-        echo "ERROR: unknown argument: $1" >&2
-        usage >&2
-        exit 2
+        error_usage "unexpected positional argument: $1"
         ;;
     esac
   done
+}
+
+is_number() {
+  [[ "$1" =~ ^[-+]?([0-9]+([.][0-9]*)?|[.][0-9]+)$ ]]
+}
+
+is_positive_number() {
+  is_number "$1" && awk -v value="$1" 'BEGIN {exit !(value + 0 > 0)}'
+}
+
+is_nonnegative_number() {
+  is_number "$1" && awk -v value="$1" 'BEGIN {exit !(value + 0 >= 0)}'
+}
+
+is_positive_integer() {
+  [[ "$1" =~ ^[1-9][0-9]*$ ]]
+}
+
+validate_args() {
+  is_number "${GOAL_X}" || error_usage "--x must be numeric: ${GOAL_X}"
+  is_number "${GOAL_Y}" || error_usage "--y must be numeric: ${GOAL_Y}"
+  is_number "${GOAL_Z}" || error_usage "--z must be numeric: ${GOAL_Z}"
+  is_positive_number "${DURATION_SEC}" || error_usage "--duration must be a positive number: ${DURATION_SEC}"
+  is_nonnegative_number "${STARTUP_WAIT_SEC}" || error_usage "--startup_wait must be a non-negative number: ${STARTUP_WAIT_SEC}"
+  is_positive_integer "${GOAL_REPEAT}" || error_usage "--goal_repeat must be a positive integer: ${GOAL_REPEAT}"
+  is_positive_number "${GOAL_INTERVAL_SEC}" || error_usage "--goal_interval must be a positive number: ${GOAL_INTERVAL_SEC}"
 }
 
 require_command() {
@@ -284,6 +312,7 @@ pose:
 
 main() {
   parse_args "$@"
+  validate_args
   trap cleanup EXIT INT TERM
 
   require_command roslaunch

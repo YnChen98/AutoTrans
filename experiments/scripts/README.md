@@ -47,6 +47,27 @@ cd ~/projects/autotrans_ws/src/AutoTrans
 bash experiments/scripts/run_baseline_trial.sh --name trial1 --x 0.0 --y -1.2 --z 0.0 --duration 75
 ```
 
+## Trial 3 示例命令
+
+如果目标点是 `(8.0, 1.5)`，必须显式写成 `--x 8.0 --y 1.5`，不要留下单独的 positional argument：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+bash experiments/scripts/run_baseline_trial.sh --name trial3 --x 8.0 --y 1.5 --z 0.0 --duration 75
+```
+
+脚本会拒绝未知 option 或 positional argument。例如下面的命令会在启动 ROS 前失败：
+
+```bash
+bash experiments/scripts/run_baseline_trial.sh 8.0
+```
+
+可用参数见：
+
+```bash
+bash experiments/scripts/run_baseline_trial.sh --help
+```
+
 默认参数：
 
 - `--name baseline_trial`
