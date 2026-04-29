@@ -24,11 +24,27 @@ rostopic pub -1 /move_base_simple/goal geometry_msgs/PoseStamped ...
 
 因此它适合重复 baseline trials，减少人工点击误差。
 
+脚本现在尽量贴近 RViz `2D Nav Goal` 行为：
+
+- 使用 `frame_id: world`，对应 `planner/plan_manage/launch/sim_vis.rviz` 中的 RViz Fixed Frame。
+- 默认 `--z 0.0`，对应 RViz 2D 平面 goal 的行为。
+- 使用 `stamp: now`，而不是固定的 zero timestamp。
+- 在发布 goal 前等待 `/visual_slam/odom`、`/payload_odom`、`/pcl_render_node/cloud`、`/so3cmd` 和 `/move_base_simple/goal` subscriber。
+- 默认重复发布 goal `3` 次，每次间隔 `1.0 s`，降低一次性命令丢失或早发的风险。
+
+注意：`payload_planner_node` 的 `ReplanFSM::waypointCallback` 只使用 goal 的 `x/y`，目标高度会被内部设置为 `fsm/waypoint0_z`。但是为了和 RViz 2D Nav Goal 保持一致，脚本仍默认发布 `z=0.0`。
+
+## 为什么旧的 --z 1.0 trial 是 invalid
+
+旧命令使用了 `--z 1.0`，且脚本在关键状态刚出现后立即发布 goal。虽然 planner 最终会覆盖目标高度，但这条自动消息与 RViz 2D Nav Goal 不完全一致，并且缺少保守的 odometry/map/controller readiness wait。
+
+invalid run 的表现是 UAV/payload 状态严重发散，说明这次自动 trial 不能作为 baseline。修正后的脚本把 goal message 和发布时机改得更接近手动 RViz 流程。
+
 ## Trial 1 示例命令
 
 ```bash
 cd ~/projects/autotrans_ws/src/AutoTrans
-bash experiments/scripts/run_baseline_trial.sh --name trial1 --x 0.0 --y -1.2 --z 1.0 --duration 75
+bash experiments/scripts/run_baseline_trial.sh --name trial1 --x 0.0 --y -1.2 --z 0.0 --duration 75
 ```
 
 默认参数：
@@ -36,9 +52,12 @@ bash experiments/scripts/run_baseline_trial.sh --name trial1 --x 0.0 --y -1.2 --
 - `--name baseline_trial`
 - `--x 0.0`
 - `--y -1.2`
-- `--z 1.0`
+- `--z 0.0`
 - `--duration 75`
 - `--frame_id world`
+- `--startup_wait 20`
+- `--goal_repeat 3`
+- `--goal_interval 1.0`
 
 ## 查看生成结果
 
@@ -76,21 +95,28 @@ rostopic list | grep /move_base_simple/goal
 
 ```bash
 rostopic pub -1 /move_base_simple/goal geometry_msgs/PoseStamped "header:
-  stamp:
-    secs: 0
-    nsecs: 0
+  stamp: now
   frame_id: 'world'
 pose:
   position:
     x: 0.0
     y: -1.2
-    z: 1.0
+    z: 0.0
   orientation:
     x: 0.0
     y: 0.0
     z: 0.0
     w: 1.0"
 ```
+
+如果 automated run 仍明显偏离手动 RViz run，重点检查：
+
+- `/move_base_simple/goal` 是否至少有 `payload_planner_node` subscriber。
+- `/pcl_render_node/cloud` 是否稳定发布，说明 map/local sensing 已准备好。
+- `/visual_slam/odom` 和 `/payload_odom` 是否已经稳定，且位置没有异常跳变。
+- `/so3cmd` 是否已经有控制命令输出。
+- 手动 RViz `2D Nav Goal` 在同一 target point 是否仍然有效。
+- 是否选择了过远、穿越密集障碍或超出地图边界的 target point。
 
 ## 使用前提
 

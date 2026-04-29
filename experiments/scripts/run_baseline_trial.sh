@@ -4,9 +4,12 @@ set -euo pipefail
 TRIAL_NAME="baseline_trial"
 GOAL_X="0.0"
 GOAL_Y="-1.2"
-GOAL_Z="1.0"
+GOAL_Z="0.0"
 DURATION_SEC="75"
 FRAME_ID="world"
+STARTUP_WAIT_SEC="20"
+GOAL_REPEAT="3"
+GOAL_INTERVAL_SEC="1.0"
 
 WORKSPACE_ROOT="${HOME}/projects/autotrans_ws"
 REPO_ROOT="${WORKSPACE_ROOT}/src/AutoTrans"
@@ -27,9 +30,12 @@ Options:
   --name <trial_name>      Trial name used in temporary process logs.
   --x <goal_x>             Goal x position. Default: 0.0
   --y <goal_y>             Goal y position. Default: -1.2
-  --z <goal_z>             Goal z position. Default: 1.0
+  --z <goal_z>             Goal z position. Default: 0.0, matching RViz 2D Nav Goal.
   --duration <seconds>     Logging duration after goal publish. Default: 75
   --frame_id <frame_id>    Goal frame_id. Default: world
+  --startup_wait <seconds> Conservative wait after topics/messages are ready. Default: 20
+  --goal_repeat <count>    Number of one-shot goal publications. Default: 3
+  --goal_interval <sec>    Delay between repeated goal publications. Default: 1.0
   -h, --help               Show this help.
 EOF
 }
@@ -83,6 +89,30 @@ parse_args() {
           exit 2
         fi
         FRAME_ID="$2"
+        shift 2
+        ;;
+      --startup_wait)
+        if [[ $# -lt 2 ]]; then
+          echo "ERROR: --startup_wait requires a value" >&2
+          exit 2
+        fi
+        STARTUP_WAIT_SEC="$2"
+        shift 2
+        ;;
+      --goal_repeat)
+        if [[ $# -lt 2 ]]; then
+          echo "ERROR: --goal_repeat requires a value" >&2
+          exit 2
+        fi
+        GOAL_REPEAT="$2"
+        shift 2
+        ;;
+      --goal_interval)
+        if [[ $# -lt 2 ]]; then
+          echo "ERROR: --goal_interval requires a value" >&2
+          exit 2
+        fi
+        GOAL_INTERVAL_SEC="$2"
         shift 2
         ;;
       -h|--help)
@@ -178,6 +208,46 @@ wait_for_message() {
   fi
 }
 
+subscriber_count() {
+  local topic="$1"
+
+  rostopic info "${topic}" 2>/dev/null \
+    | awk '
+      /^Subscribers:/ {in_subscribers=1; next}
+      /^Publishers:/ {in_subscribers=0}
+      /^$/ {in_subscribers=0}
+      in_subscribers && /^[[:space:]]*\*/ {count++}
+      END {print count + 0}
+    '
+}
+
+wait_for_subscribers() {
+  local topic="$1"
+  local min_count="$2"
+  local timeout_sec="$3"
+  local start_time
+  local current_time
+  local count
+  start_time="$(date +%s)"
+
+  echo "Waiting for at least ${min_count} subscriber(s) on ${topic}..."
+  while true; do
+    count="$(subscriber_count "${topic}")"
+    if (( count >= min_count )); then
+      echo "Topic ${topic} has ${count} subscriber(s)."
+      return
+    fi
+
+    current_time="$(date +%s)"
+    if (( current_time - start_time >= timeout_sec )); then
+      echo "ERROR: timed out waiting for subscribers on ${topic}; current subscriber count=${count}" >&2
+      exit 1
+    fi
+
+    sleep 1
+  done
+}
+
 latest_new_csv() {
   find "${LOG_DIR}" -maxdepth 1 -name 'autotrans_log_*.csv' -newer "${MARKER_FILE}" -printf '%T@ %p\n' 2>/dev/null \
     | sort -nr \
@@ -185,11 +255,9 @@ latest_new_csv() {
 }
 
 publish_goal() {
-  echo "Publishing goal to /move_base_simple/goal: x=${GOAL_X}, y=${GOAL_Y}, z=${GOAL_Z}, frame_id=${FRAME_ID}"
-  rostopic pub -1 /move_base_simple/goal geometry_msgs/PoseStamped "header:
-  stamp:
-    secs: 0
-    nsecs: 0
+  local goal_msg
+  goal_msg="header:
+  stamp: now
   frame_id: '${FRAME_ID}'
 pose:
   position:
@@ -201,6 +269,17 @@ pose:
     y: 0.0
     z: 0.0
     w: 1.0"
+
+  echo "Publishing PoseStamped goal to /move_base_simple/goal:"
+  printf '%s\n' "${goal_msg}"
+
+  for ((i = 1; i <= GOAL_REPEAT; i++)); do
+    echo "Goal publish ${i}/${GOAL_REPEAT}"
+    rostopic pub -1 /move_base_simple/goal geometry_msgs/PoseStamped "${goal_msg}"
+    if (( i < GOAL_REPEAT )); then
+      sleep "${GOAL_INTERVAL_SEC}"
+    fi
+  done
 }
 
 main() {
@@ -249,8 +328,15 @@ main() {
   wait_for_topic "/payload_odom" 90
   wait_for_topic "/cable_info" 90
   wait_for_topic "/so3cmd" 90
+  wait_for_topic "/pcl_render_node/cloud" 90
+  wait_for_subscribers "/move_base_simple/goal" 1 90
   wait_for_message "/visual_slam/odom" 30
   wait_for_message "/payload_odom" 30
+  wait_for_message "/pcl_render_node/cloud" 60
+  wait_for_message "/so3cmd" 30
+
+  echo "Conservative startup wait: ${STARTUP_WAIT_SEC} seconds..."
+  sleep "${STARTUP_WAIT_SEC}"
 
   echo "Starting autotrans_logger..."
   roslaunch autotrans_logger state_logger.launch >"${RUN_LOG_DIR}/state_logger.log" 2>&1 &
