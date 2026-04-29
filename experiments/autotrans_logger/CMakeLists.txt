@@ -13,6 +13,7 @@ catkin_package()
 
 catkin_install_python(PROGRAMS
   scripts/state_logger.py
+  scripts/analyze_log.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
