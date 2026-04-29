@@ -6,3 +6,6 @@ quadrotor_payload_mpc_with_ext_force_codegen
 *.pyc.codex/
 .codex/
 .codex
+experiments/logs/*.csv
+experiments/figures/*.png
+experiments/figures/*.txt

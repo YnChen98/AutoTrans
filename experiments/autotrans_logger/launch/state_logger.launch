@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="autotrans_logger" type="state_logger.py" name="state_logger" output="screen">
+    <param name="log_rate" value="20.0"/>
+  </node>
+</launch>
