@@ -13,6 +13,12 @@ noise_vel_uav: 0.0
 noise_acc_uav: 0.0
 noise_acc_payload: 0.0
 noise_rpm: 0.0
+enable_wind: false
+wind_force_x: 0.0
+wind_force_y: 0.0
+wind_force_z: 0.0
+wind_max_force: 0.0
+wind_apply_to: "quadrotor"
 simulation_rate: 1000
 odom_rate: 400
 g: 9.795

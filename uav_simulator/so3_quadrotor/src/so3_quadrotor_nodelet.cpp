@@ -299,6 +299,12 @@ class Nodelet : public nodelet::Nodelet {
     nh.getParam("simulation_rate", simulation_rate_);
     nh.getParam("odom_rate", odom_rate_);
     nh.getParam("payload_size", payload_size_);
+    nh.param("enable_wind", config.enable_wind, false);
+    nh.param("wind_force_x", config.wind_force_x, 0.0);
+    nh.param("wind_force_y", config.wind_force_y, 0.0);
+    nh.param("wind_force_z", config.wind_force_z, 0.0);
+    nh.param("wind_max_force", config.wind_max_force, 0.0);
+    nh.param<std::string>("wind_apply_to", config.wind_apply_to, "quadrotor");
     
     nh.param("noise_uav", noise_uav_,0.0);
     nh.param("noise_payload", noise_payload_,0.0);

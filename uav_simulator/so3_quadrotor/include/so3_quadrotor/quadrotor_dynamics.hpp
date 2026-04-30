@@ -1,6 +1,7 @@
 #pragma once
 #include "so3_quadrotor/geometry_utils.hpp"
 #include <iostream>
+#include <string>
 #include "random"
 
 const double kLengthError = 0.025;
@@ -23,6 +24,12 @@ struct Config {
   double          l_length; //load length 
   double          kOmega[3]; 
   double          kdOmega[3];
+  bool            enable_wind = false;
+  double          wind_force_x = 0.0;
+  double          wind_force_y = 0.0;
+  double          wind_force_z = 0.0;
+  double          wind_max_force = 0.0;
+  std::string     wind_apply_to = "quadrotor";
 };
 struct Control {
   double rpm[4];
@@ -173,6 +180,16 @@ class Quadrotor {
     Eigen::Vector3d fl = Eigen::Vector3d(0,0.0,0) + random_force(0.0)-resistanceload *vloadnorm ;
     Eigen::Vector3d fq = Eigen::Vector3d(0.0,0,0) + random_force(0.0)-resistancequad *vquadnorm;
 
+    if (config_.enable_wind) {
+      Eigen::Vector3d wind_force(config_.wind_force_x, config_.wind_force_y, config_.wind_force_z);
+      const double wind_force_norm = wind_force.norm();
+      if (config_.wind_max_force > 0.0 && wind_force_norm > config_.wind_max_force) {
+        wind_force *= config_.wind_max_force / wind_force_norm;
+      }
+      if (config_.wind_apply_to == "quadrotor") {
+        fq += wind_force;
+      }
+    }
 
     double delta = (state.x - state.xl).norm() - config_.l_length;
     if (delta <= -kLengthError ) //Nontaut dynamics
