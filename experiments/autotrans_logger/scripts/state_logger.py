@@ -8,6 +8,7 @@ from datetime import datetime
 
 import rospy
 import rospkg
+from geometry_msgs.msg import Vector3Stamped
 from mavros_msgs.msg import AttitudeTarget
 from nav_msgs.msg import Odometry
 from quadrotor_msgs.msg import PolynomialTraj
@@ -40,6 +41,10 @@ class StateLogger:
         "so3_bodyrate_z",
         "swing_angle_deg",
         "has_trajectory",
+        "wind_force_x",
+        "wind_force_y",
+        "wind_force_z",
+        "wind_force_norm",
     ]
 
     def __init__(self):
@@ -47,6 +52,7 @@ class StateLogger:
         self.payload_odom = None
         self.cable_info = None
         self.so3cmd = None
+        self.wind_force = None
         self.has_trajectory = False
 
         self.log_path = self._make_log_path()
@@ -60,6 +66,7 @@ class StateLogger:
         rospy.Subscriber("/cable_info", Imu, self._cable_info_callback, queue_size=50)
         rospy.Subscriber("/so3cmd", AttitudeTarget, self._so3cmd_callback, queue_size=50)
         rospy.Subscriber("/planning/trajectory", PolynomialTraj, self._trajectory_callback, queue_size=10)
+        rospy.Subscriber("/wind_force", Vector3Stamped, self._wind_force_callback, queue_size=50)
 
         log_rate = rospy.get_param("~log_rate", 20.0)
         self.timer = rospy.Timer(rospy.Duration(1.0 / max(log_rate, 1e-3)), self._timer_callback)
@@ -88,6 +95,9 @@ class StateLogger:
 
     def _trajectory_callback(self, _msg):
         self.has_trajectory = True
+
+    def _wind_force_callback(self, msg):
+        self.wind_force = msg
 
     def _timer_callback(self, _event):
         self.writer.writerow(self._make_row())
@@ -120,6 +130,15 @@ class StateLogger:
         swing_angle = self._compute_swing_angle_deg()
         if swing_angle is not None:
             row["swing_angle_deg"] = self._fmt(swing_angle)
+
+        if self.wind_force is not None:
+            wind = self.wind_force.vector
+            row["wind_force_x"] = self._fmt(wind.x)
+            row["wind_force_y"] = self._fmt(wind.y)
+            row["wind_force_z"] = self._fmt(wind.z)
+            row["wind_force_norm"] = self._fmt(
+                math.sqrt(wind.x * wind.x + wind.y * wind.y + wind.z * wind.z)
+            )
 
         return row
 

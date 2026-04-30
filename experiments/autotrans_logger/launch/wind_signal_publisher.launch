@@ -1,0 +1,31 @@
+<launch>
+  <arg name="enable_wind" default="false"/>
+  <arg name="wind_mode" default="none"/>
+  <arg name="wind_frame" default="world"/>
+  <arg name="wind_force_x" default="0.0"/>
+  <arg name="wind_force_y" default="0.0"/>
+  <arg name="wind_force_z" default="0.0"/>
+  <arg name="wind_start_time" default="0.0"/>
+  <arg name="wind_sine_amp_x" default="0.0"/>
+  <arg name="wind_sine_amp_y" default="0.0"/>
+  <arg name="wind_sine_amp_z" default="0.0"/>
+  <arg name="wind_sine_freq" default="0.1"/>
+  <arg name="wind_max_force" default="0.0"/>
+  <arg name="publish_rate" default="20.0"/>
+
+  <node pkg="autotrans_logger" type="wind_signal_publisher.py" name="wind_signal_publisher" output="screen">
+    <param name="enable_wind" type="bool" value="$(arg enable_wind)"/>
+    <param name="wind_mode" type="str" value="$(arg wind_mode)"/>
+    <param name="wind_frame" type="str" value="$(arg wind_frame)"/>
+    <param name="wind_force_x" type="double" value="$(arg wind_force_x)"/>
+    <param name="wind_force_y" type="double" value="$(arg wind_force_y)"/>
+    <param name="wind_force_z" type="double" value="$(arg wind_force_z)"/>
+    <param name="wind_start_time" type="double" value="$(arg wind_start_time)"/>
+    <param name="wind_sine_amp_x" type="double" value="$(arg wind_sine_amp_x)"/>
+    <param name="wind_sine_amp_y" type="double" value="$(arg wind_sine_amp_y)"/>
+    <param name="wind_sine_amp_z" type="double" value="$(arg wind_sine_amp_z)"/>
+    <param name="wind_sine_freq" type="double" value="$(arg wind_sine_freq)"/>
+    <param name="wind_max_force" type="double" value="$(arg wind_max_force)"/>
+    <param name="publish_rate" type="double" value="$(arg publish_rate)"/>
+  </node>
+</launch>

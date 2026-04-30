@@ -166,6 +166,10 @@ def max_or_nan(values):
     return max(values)
 
 
+def has_column(rows, name):
+    return bool(rows) and name in rows[0]
+
+
 def vector_norm_triplets(xs, ys, zs):
     norms = []
     for x_value, y_value, z_value in zip(xs, ys, zs):
@@ -227,6 +231,7 @@ def compute_metrics(csv_path, rows):
     swing_angle = column(rows, "swing_angle_deg")
     has_trajectory = column(rows, "has_trajectory")
     valid_has_trajectory = valid_values(has_trajectory)
+    wind_force_norm = column(rows, "wind_force_norm") if has_column(rows, "wind_force_norm") else []
 
     duration_sec, effective_log_rate_hz = compute_duration_and_rate(rows)
     final_uav_position = final_position(uav_pos_x, uav_pos_y, uav_pos_z)
@@ -237,7 +242,7 @@ def compute_metrics(csv_path, rows):
     elif not valid_has_trajectory:
         print("WARNING: has_trajectory has no valid numeric data.", file=sys.stderr)
 
-    return {
+    metrics = {
         "csv_path": os.path.abspath(csv_path),
         "sample_count": len(rows),
         "duration_sec": duration_sec,
@@ -255,6 +260,12 @@ def compute_metrics(csv_path, rows):
         "final_uav_position": final_uav_position,
         "final_payload_position": final_payload_position,
     }
+
+    if wind_force_norm:
+        metrics["mean_wind_force_norm"] = mean(wind_force_norm)
+        metrics["max_wind_force_norm"] = max_or_nan(wind_force_norm)
+
+    return metrics
 
 
 def format_value(value):
@@ -433,6 +444,19 @@ def make_plots(rows, output_dir):
             "SO3 command",
         ),
     )
+
+    if "wind_force_norm" in rows[0]:
+        plot_or_warn(
+            output_dir,
+            "wind_force_norm.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [("wind_force_norm", column(rows, "wind_force_norm"))],
+                "force [N]",
+                "Wind force norm",
+            ),
+        )
 
 
 def main():

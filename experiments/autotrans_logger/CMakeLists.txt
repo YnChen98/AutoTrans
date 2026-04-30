@@ -3,6 +3,7 @@ project(autotrans_logger)
 
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  geometry_msgs
   nav_msgs
   sensor_msgs
   mavros_msgs
@@ -14,6 +15,7 @@ catkin_package()
 catkin_install_python(PROGRAMS
   scripts/state_logger.py
   scripts/analyze_log.py
+  scripts/wind_signal_publisher.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
