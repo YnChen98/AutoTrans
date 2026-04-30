@@ -14,9 +14,17 @@ noise_acc_uav: 0.0
 noise_acc_payload: 0.0
 noise_rpm: 0.0
 enable_wind: false
+# Stage 2-B uses velocity-relative drag. wind_force_* is legacy/debug only
+# and is not used when wind_model is "drag".
+wind_model: "drag"
 wind_force_x: 0.0
 wind_force_y: 0.0
 wind_force_z: 0.0
+wind_velocity_x: 0.0
+wind_velocity_y: 0.0
+wind_velocity_z: 0.0
+wind_drag_linear: 0.0
+wind_drag_quad: 0.0
 wind_max_force: 0.0
 wind_apply_to: "quadrotor"
 simulation_rate: 1000

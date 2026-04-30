@@ -25,9 +25,15 @@ struct Config {
   double          kOmega[3]; 
   double          kdOmega[3];
   bool            enable_wind = false;
+  std::string     wind_model = "drag";
   double          wind_force_x = 0.0;
   double          wind_force_y = 0.0;
   double          wind_force_z = 0.0;
+  double          wind_velocity_x = 0.0;
+  double          wind_velocity_y = 0.0;
+  double          wind_velocity_z = 0.0;
+  double          wind_drag_linear = 0.0;
+  double          wind_drag_quad = 0.0;
   double          wind_max_force = 0.0;
   std::string     wind_apply_to = "quadrotor";
 };
@@ -180,15 +186,21 @@ class Quadrotor {
     Eigen::Vector3d fl = Eigen::Vector3d(0,0.0,0) + random_force(0.0)-resistanceload *vloadnorm ;
     Eigen::Vector3d fq = Eigen::Vector3d(0.0,0,0) + random_force(0.0)-resistancequad *vquadnorm;
 
-    if (config_.enable_wind) {
-      Eigen::Vector3d wind_force(config_.wind_force_x, config_.wind_force_y, config_.wind_force_z);
-      const double wind_force_norm = wind_force.norm();
-      if (config_.wind_max_force > 0.0 && wind_force_norm > config_.wind_max_force) {
-        wind_force *= config_.wind_max_force / wind_force_norm;
+    if (config_.enable_wind && config_.wind_model == "drag" && config_.wind_apply_to == "quadrotor") {
+      Eigen::Vector3d wind_velocity_world(
+        config_.wind_velocity_x,
+        config_.wind_velocity_y,
+        config_.wind_velocity_z);
+      Eigen::Vector3d relative_velocity = state.v - wind_velocity_world;
+      Eigen::Vector3d drag_force = -config_.wind_drag_linear * relative_velocity;
+      if (config_.wind_drag_quad > 0.0) {
+        drag_force += -config_.wind_drag_quad * relative_velocity.norm() * relative_velocity;
       }
-      if (config_.wind_apply_to == "quadrotor") {
-        fq += wind_force;
+      const double drag_force_norm = drag_force.norm();
+      if (config_.wind_max_force > 0.0 && drag_force_norm > config_.wind_max_force) {
+        drag_force *= config_.wind_max_force / drag_force_norm;
       }
+      fq += drag_force;
     }
 
     double delta = (state.x - state.xl).norm() - config_.l_length;

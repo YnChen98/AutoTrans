@@ -300,9 +300,15 @@ class Nodelet : public nodelet::Nodelet {
     nh.getParam("odom_rate", odom_rate_);
     nh.getParam("payload_size", payload_size_);
     nh.param("enable_wind", config.enable_wind, false);
+    nh.param<std::string>("wind_model", config.wind_model, "drag");
     nh.param("wind_force_x", config.wind_force_x, 0.0);
     nh.param("wind_force_y", config.wind_force_y, 0.0);
     nh.param("wind_force_z", config.wind_force_z, 0.0);
+    nh.param("wind_velocity_x", config.wind_velocity_x, 0.0);
+    nh.param("wind_velocity_y", config.wind_velocity_y, 0.0);
+    nh.param("wind_velocity_z", config.wind_velocity_z, 0.0);
+    nh.param("wind_drag_linear", config.wind_drag_linear, 0.0);
+    nh.param("wind_drag_quad", config.wind_drag_quad, 0.0);
     nh.param("wind_max_force", config.wind_max_force, 0.0);
     nh.param<std::string>("wind_apply_to", config.wind_apply_to, "quadrotor");
     
