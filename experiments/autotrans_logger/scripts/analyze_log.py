@@ -57,6 +57,31 @@ PLOT_COLUMNS = [
     "swing_angle_deg",
 ]
 
+KEY_STATE_FIELDS = [
+    "uav_pos_x",
+    "uav_pos_y",
+    "uav_pos_z",
+    "uav_vel_x",
+    "uav_vel_y",
+    "uav_vel_z",
+    "payload_pos_x",
+    "payload_pos_y",
+    "payload_pos_z",
+    "payload_vel_x",
+    "payload_vel_y",
+    "payload_vel_z",
+    "so3_thrust",
+    "so3_bodyrate_x",
+    "so3_bodyrate_y",
+    "so3_bodyrate_z",
+    "swing_angle_deg",
+]
+
+MAX_REASONABLE_SPEED_MPS = 10.0
+MAX_REASONABLE_SWING_DEG = 90.0
+MIN_REASONABLE_UAV_Z = 0.2
+MIN_REASONABLE_PAYLOAD_Z = -0.2
+
 
 def repo_paths():
     experiments_dir = Path(__file__).resolve().parents[2]
@@ -199,6 +224,40 @@ def final_position(xs, ys, zs):
     return None
 
 
+def last_position(xs, ys, zs):
+    if not xs or not ys or not zs:
+        return None
+    return (xs[-1], ys[-1], zs[-1])
+
+
+def invalid_value_counts(rows, fields):
+    counts = {}
+    first_invalid_index = None
+    for field in fields:
+        if not has_column(rows, field):
+            counts[field] = 0
+            continue
+        count = 0
+        seen_finite_value = False
+        for index, row in enumerate(rows):
+            value = parse_float(row.get(field))
+            if math.isfinite(value):
+                seen_finite_value = True
+            elif seen_finite_value:
+                count += 1
+                if first_invalid_index is None or index < first_invalid_index:
+                    first_invalid_index = index
+        counts[field] = count
+    return counts, first_invalid_index
+
+
+def row_has_invalid_key_state(row, fields):
+    for field in fields:
+        if field in row and not math.isfinite(parse_float(row.get(field))):
+            return True
+    return False
+
+
 def compute_duration_and_rate(rows):
     ros_time = valid_values(column(rows, "ros_time"))
     wall_time = valid_values(column(rows, "wall_time"))
@@ -234,8 +293,49 @@ def compute_metrics(csv_path, rows):
     wind_force_norm = column(rows, "wind_force_norm") if has_column(rows, "wind_force_norm") else []
 
     duration_sec, effective_log_rate_hz = compute_duration_and_rate(rows)
-    final_uav_position = final_position(uav_pos_x, uav_pos_y, uav_pos_z)
-    final_payload_position = final_position(payload_pos_x, payload_pos_y, payload_pos_z)
+    final_valid_uav_position = final_position(uav_pos_x, uav_pos_y, uav_pos_z)
+    final_valid_payload_position = final_position(payload_pos_x, payload_pos_y, payload_pos_z)
+    last_row_uav_position = last_position(uav_pos_x, uav_pos_y, uav_pos_z)
+    last_row_payload_position = last_position(payload_pos_x, payload_pos_y, payload_pos_z)
+    nan_counts, first_nan_index = invalid_value_counts(rows, KEY_STATE_FIELDS)
+    nan_count_total = sum(nan_counts.values())
+    has_nan_state = nan_count_total > 0
+    final_row_has_nan = row_has_invalid_key_state(rows[-1], KEY_STATE_FIELDS)
+    ros_times = column(rows, "ros_time")
+    valid_ros_times = valid_values(ros_times)
+    first_ros_time = valid_ros_times[0] if valid_ros_times else math.nan
+    first_nan_ros_time = ""
+    first_nan_time = ""
+    if first_nan_index is not None:
+        first_nan_ros_value = ros_times[first_nan_index] if first_nan_index < len(ros_times) else math.nan
+        if math.isfinite(first_nan_ros_value):
+            first_nan_ros_time = first_nan_ros_value
+            if math.isfinite(first_ros_time):
+                first_nan_time = first_nan_ros_value - first_ros_time
+
+    max_uav_speed = max_or_nan(uav_speed)
+    max_payload_speed = max_or_nan(payload_speed)
+    max_swing_angle_deg = max_or_nan(swing_angle)
+
+    unreasonable_final_altitude = (
+        final_valid_uav_position is not None
+        and final_valid_payload_position is not None
+        and (
+            final_valid_uav_position[2] < MIN_REASONABLE_UAV_Z
+            or final_valid_payload_position[2] < MIN_REASONABLE_PAYLOAD_Z
+        )
+    )
+    # This is an experiment validity heuristic, not a physics proof.
+    valid_run_suggested = not (
+        has_nan_state
+        or final_row_has_nan
+        or final_valid_uav_position is None
+        or final_valid_payload_position is None
+        or (math.isfinite(max_uav_speed) and max_uav_speed > MAX_REASONABLE_SPEED_MPS)
+        or (math.isfinite(max_payload_speed) and max_payload_speed > MAX_REASONABLE_SPEED_MPS)
+        or (math.isfinite(max_swing_angle_deg) and max_swing_angle_deg > MAX_REASONABLE_SWING_DEG)
+        or unreasonable_final_altitude
+    )
 
     if valid_has_trajectory and max(valid_has_trajectory) <= 0.0:
         print("WARNING: no valid trajectory data detected in has_trajectory.", file=sys.stderr)
@@ -247,19 +347,31 @@ def compute_metrics(csv_path, rows):
         "sample_count": len(rows),
         "duration_sec": duration_sec,
         "effective_log_rate_hz": effective_log_rate_hz,
+        "has_nan_state": has_nan_state,
+        "first_nan_time": first_nan_time,
+        "first_nan_ros_time": first_nan_ros_time,
+        "final_row_has_nan": final_row_has_nan,
+        "valid_run_suggested": valid_run_suggested,
+        "nan_count_total": nan_count_total,
         "has_trajectory_ratio": mean([1.0 if value > 0.5 else 0.0 for value in valid_has_trajectory]),
         "mean_swing_angle_deg": mean(swing_angle),
-        "max_swing_angle_deg": max_or_nan(swing_angle),
+        "max_swing_angle_deg": max_swing_angle_deg,
         "p95_swing_angle_deg": percentile(swing_angle, 95.0),
-        "max_uav_speed": max_or_nan(uav_speed),
+        "max_uav_speed": max_uav_speed,
         "mean_uav_speed": mean(uav_speed),
-        "max_payload_speed": max_or_nan(payload_speed),
+        "max_payload_speed": max_payload_speed,
         "mean_payload_speed": mean(payload_speed),
         "uav_path_length": path_length(uav_pos_x, uav_pos_y, uav_pos_z),
         "payload_path_length": path_length(payload_pos_x, payload_pos_y, payload_pos_z),
-        "final_uav_position": final_uav_position,
-        "final_payload_position": final_payload_position,
+        "final_uav_position": final_valid_uav_position,
+        "final_payload_position": final_valid_payload_position,
+        "final_valid_uav_position": final_valid_uav_position,
+        "final_valid_payload_position": final_valid_payload_position,
+        "last_row_uav_position": last_row_uav_position,
+        "last_row_payload_position": last_row_payload_position,
     }
+    for field in KEY_STATE_FIELDS:
+        metrics["nan_count_%s" % field] = nan_counts[field]
 
     if wind_force_norm:
         metrics["mean_wind_force_norm"] = mean(wind_force_norm)
@@ -269,8 +381,12 @@ def compute_metrics(csv_path, rows):
 
 
 def format_value(value):
+    if value == "":
+        return ""
     if value is None:
         return "nan"
+    if isinstance(value, bool):
+        return str(value).lower()
     if isinstance(value, tuple):
         return "(%.6f, %.6f, %.6f)" % value
     if isinstance(value, int):
