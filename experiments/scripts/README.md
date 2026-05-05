@@ -80,6 +80,83 @@ bash experiments/scripts/run_baseline_trial.sh --help
 - `--goal_repeat 3`
 - `--goal_interval 1.0`
 
+## Stage 2-B drag-wind 配置 helper
+
+`experiments/scripts/set_drag_wind_config.py` 用于切换 Stage 2-B frozen drag-wind benchmark levels。它只修改：
+
+```bash
+uav_simulator/uav_simulator/config/so3_quadrotor.yaml
+```
+
+查看当前 wind config：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/set_drag_wind_config.py --show
+```
+
+先预览 `strong` level，不写入文件：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/set_drag_wind_config.py --level strong --dry-run
+```
+
+设置 no wind：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/set_drag_wind_config.py --level none
+```
+
+设置 weak / moderate / strong wind：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/set_drag_wind_config.py --level weak
+python3 experiments/scripts/set_drag_wind_config.py --level moderate
+python3 experiments/scripts/set_drag_wind_config.py --level strong
+```
+
+`boundary` 是 stress level，只在明确需要边界压力测试时使用：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/set_drag_wind_config.py --level boundary
+```
+
+Stage 2-B frozen levels:
+
+| Level | enable_wind | wind_velocity_x | wind_drag_linear | wind_max_force |
+| --- | --- | ---: | ---: | ---: |
+| none | false | 0.0 | 0.0 | 0.0 |
+| weak | true | 0.5 | 0.004 | 0.002 |
+| moderate | true | 0.5 | 0.010 | 0.005 |
+| strong | true | 0.5 | 0.015 | 0.0075 |
+| boundary | true | 0.5 | 0.020 | 0.010 |
+
+运行 `wind_signal_publisher` 时，把 annotation `/wind_force` 的 cap 设置成同一个 level 的 `wind_max_force`。例如 weak / moderate / strong：
+
+```bash
+roslaunch autotrans_logger wind_signal_publisher.launch enable_wind:=true wind_mode:=constant wind_force_x:=0.002 wind_max_force:=0.002
+roslaunch autotrans_logger wind_signal_publisher.launch enable_wind:=true wind_mode:=constant wind_force_x:=0.005 wind_max_force:=0.005
+roslaunch autotrans_logger wind_signal_publisher.launch enable_wind:=true wind_mode:=constant wind_force_x:=0.0075 wind_max_force:=0.0075
+```
+
+运行 baseline trial：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+bash experiments/scripts/run_baseline_trial.sh --name stage2b_weak_trial1 --x 0.0 --y -1.2 --z 0.0 --duration 75
+```
+
+每次 wind run 结束后恢复 no wind，避免下一次实验继承旧配置：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/set_drag_wind_config.py --level none
+```
+
 ## 查看生成结果
 
 CSV logs:
