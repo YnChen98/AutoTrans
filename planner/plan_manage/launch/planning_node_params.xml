@@ -46,6 +46,10 @@
     <!-- planner manager -->
     <param name="manager/max_vel" value="$(arg max_vel)" type="double"/>
     <param name="manager/max_acc" value="$(arg max_acc)" type="double"/>
+    <param name="manager/enable_command_adaptation" value="false" type="bool"/>
+    <param name="manager/adaptation_mode" value="none" type="string"/>
+    <param name="manager/speed_scale" value="1.0" type="double"/>
+    <param name="manager/acceleration_scale" value="1.0" type="double"/>
     <param name="manager/polyTraj_piece_length" value="2.0" type="double"/>
     <param name="manager/planning_horizon" value="$(arg planning_horizon)" type="double"/>
 

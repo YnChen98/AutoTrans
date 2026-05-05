@@ -23,6 +23,18 @@ namespace payload_planner
     nh.param("manager/max_acc", pp_.max_acc_, -1.0);
     nh.param("manager/polyTraj_piece_length", pp_.polyTraj_piece_length, -1.0);
     nh.param("manager/planning_horizon", pp_.planning_horizen_, 5.0);
+    nh.param("manager/enable_command_adaptation", enable_command_adaptation_, false);
+    nh.param("manager/adaptation_mode", adaptation_mode_, std::string("none"));
+    nh.param("manager/speed_scale", speed_scale_, 1.0);
+    nh.param("manager/acceleration_scale", acceleration_scale_, 1.0);
+
+    ROS_INFO("[PlannerManager] command_adaptation enabled=%s mode=%s speed_scale=%.3f acceleration_scale=%.3f effective_max_vel=%.3f effective_max_acc=%.3f",
+             enable_command_adaptation_ ? "true" : "false",
+             adaptation_mode_.c_str(),
+             enable_command_adaptation_ ? clampAdaptationScale(speed_scale_) : speed_scale_,
+             enable_command_adaptation_ ? clampAdaptationScale(acceleration_scale_) : acceleration_scale_,
+             effectiveMaxVel(),
+             effectiveMaxAcc());
 
     grid_map_.reset(new GridMap);
     grid_map_->initMap(nh);
@@ -32,6 +44,29 @@ namespace payload_planner
     ploy_traj_opt_->setEnvironment(grid_map_);
 
     visualization_ = vis;
+  }
+
+  double PlannerManager::clampAdaptationScale(double value) const
+  {
+    if (value < 0.4)
+      return 0.4;
+    if (value > 1.0)
+      return 1.0;
+    return value;
+  }
+
+  double PlannerManager::effectiveMaxVel() const
+  {
+    if (!enable_command_adaptation_)
+      return pp_.max_vel_;
+    return pp_.max_vel_ * clampAdaptationScale(speed_scale_);
+  }
+
+  double PlannerManager::effectiveMaxAcc() const
+  {
+    if (!enable_command_adaptation_)
+      return pp_.max_acc_;
+    return pp_.max_acc_ * clampAdaptationScale(acceleration_scale_);
   }
 
   bool PlannerManager::computeInitReferenceState(const Eigen::Vector3d &start_pt,
@@ -142,7 +177,9 @@ namespace payload_planner
 
     traj_.global_traj.last_glb_t_of_lc_tgt = traj_.global_traj.glb_t_of_lc_tgt;
 
-    double t_step = planning_horizen / 40.0 / pp_.max_vel_;
+    const double max_vel = effectiveMaxVel();
+    const double max_acc = effectiveMaxAcc();
+    double t_step = planning_horizen / 40.0 / max_vel;
     // double dist_min = 9999, dist_min_t = 0.0;
     double sum_dist = 0;
     Eigen::Vector3d last_pt = start_pt;
@@ -172,7 +209,7 @@ namespace payload_planner
       traj_.global_traj.glb_t_of_lc_tgt = traj_.global_traj.global_start_time + traj_.global_traj.duration;
     }
 
-    if ((global_end_pt - local_target_pos).norm() < (pp_.max_vel_ * pp_.max_vel_) / (2 * pp_.max_acc_))
+    if ((global_end_pt - local_target_pos).norm() < (max_vel * max_vel) / (2 * max_acc))
     {
       local_target_vel = Eigen::Vector3d::Zero();
       local_target_acc = Eigen::Vector3d::Zero();
@@ -203,7 +240,7 @@ namespace payload_planner
     ros::Duration t_init, t_opt;
 
     /*** STEP 1: INIT ***/
-    double ts = pp_.polyTraj_piece_length / pp_.max_vel_;
+    double ts = pp_.polyTraj_piece_length / effectiveMaxVel();
 
    
     poly_traj::MinSnapOpt initMJO;
@@ -322,7 +359,8 @@ namespace payload_planner
     }
     globalMJO.reset(headState, tailState, waypoints.size());
 
-    double des_vel = pp_.max_vel_/1.0;
+    const double max_vel = effectiveMaxVel();
+    double des_vel = max_vel / 1.0;
     Eigen::VectorXd time_vec(waypoints.size());
     for (int j = 0; j < 5; ++j)
     {
@@ -334,9 +372,9 @@ namespace payload_planner
 
       globalMJO.generate(innerPts, time_vec);
 
-      if (globalMJO.getTraj().getMaxVelRate() < pp_.max_vel_ ||
-          start_vel.norm() > pp_.max_vel_ ||
-          end_vel.norm() > pp_.max_vel_)
+      if (globalMJO.getTraj().getMaxVelRate() < max_vel ||
+          start_vel.norm() > max_vel ||
+          end_vel.norm() > max_vel)
       {
         break;
       }

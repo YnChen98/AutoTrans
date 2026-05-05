@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include <string>
 
 #include <optimizer/poly_traj_optimizer.h>
 #include <traj_utils/DataDisp.h>
@@ -46,6 +47,8 @@ namespace payload_planner
         Eigen::Vector3d &local_target_pos, Eigen::Vector3d &local_target_vel,Eigen::Vector3d &local_target_acc);
     void initPlanModules(ros::NodeHandle &nh, PlanningVisualization::Ptr vis = NULL);
     bool EmergencyStop(Eigen::Vector3d stop_pos);
+    double effectiveMaxVel() const;
+    double effectiveMaxAcc() const;
 
     PlanParameters pp_;
     GridMap::Ptr grid_map_;
@@ -64,6 +67,12 @@ namespace payload_planner
     PlanningVisualization::Ptr visualization_;
 
     int continous_failures_count_{0};
+    bool enable_command_adaptation_{false};
+    std::string adaptation_mode_{"none"};
+    double speed_scale_{1.0};
+    double acceleration_scale_{1.0};
+
+    double clampAdaptationScale(double value) const;
 
   public:
     typedef unique_ptr<PlannerManager> Ptr;
