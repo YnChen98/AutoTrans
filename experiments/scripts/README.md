@@ -88,6 +88,8 @@ bash experiments/scripts/run_baseline_trial.sh --help
 uav_simulator/uav_simulator/config/so3_quadrotor.yaml
 ```
 
+完整实验流程、validity criteria 和 repeat policy 见 `experiments/protocols/stage2b_drag_wind_experiment_protocol.md`。
+
 查看当前 wind config：
 
 ```bash
