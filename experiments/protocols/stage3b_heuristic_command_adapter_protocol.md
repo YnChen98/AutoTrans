@@ -42,6 +42,7 @@ Subscribed:
 
 Default policy parameters:
 
+- `policy_mode: wind_level`
 - `publish_rate: 5.0`
 - `min_scale: 0.4`
 - `max_scale: 1.0`
@@ -65,6 +66,22 @@ Default policy parameters:
 - `recent_speed_window_sec: 3.0`
 - `scale_rate_limit_per_sec: 0.5`
 - `publish_same_acceleration_scale: true`
+
+## Policy Modes
+
+`policy_mode=wind_level` is the current default and recommended mode for formal strong-wind repeated validation. It selects scale only from `/wind_force` thresholds:
+
+- no wind: `1.0`
+- weak: `0.95`
+- moderate: `0.90`
+- strong: `0.85`
+- boundary: `0.70`
+
+This mode still computes swing angle and recent max speed for diagnostics, but it does not use them to reduce scale.
+
+`policy_mode=risk_reactive` preserves the original Stage 3-B v1 behavior. It starts from the same wind-level base scale and then applies swing/speed overrides that can reduce scale to `0.65` or `0.50`.
+
+The risk-reactive v1 policy produced mixed strong-wind results and should be treated as experimental until further tuning.
 
 ## Safety Behavior
 
@@ -114,8 +131,8 @@ Default policy parameters:
 - Published scale is always within `[0.4, 1.0]` by default.
 - Logged command scale plots should be inspected when a run becomes invalid or drops below the wind-level base scale.
 - In no wind with no motion, scale remains `1.0`.
-- In strong wind annotation without high swing/speed risk, target scale reaches `0.85`.
-- In boundary wind annotation without high swing/speed risk, target scale reaches `0.70`.
+- In strong wind annotation, `policy_mode=wind_level` target scale reaches `0.85`.
+- In boundary wind annotation, `policy_mode=wind_level` target scale reaches `0.70`.
 - Strong wind Trial 2 should be compared against fixed `0.85` and topic fixed-publisher `0.85` baselines.
 
 ## What Not To Do

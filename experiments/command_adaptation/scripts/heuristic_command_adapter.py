@@ -11,7 +11,20 @@ from std_msgs.msg import Float64
 
 
 class HeuristicCommandAdapter:
+    POLICY_MODE_WIND_LEVEL = "wind_level"
+    POLICY_MODE_RISK_REACTIVE = "risk_reactive"
+    VALID_POLICY_MODES = (POLICY_MODE_WIND_LEVEL, POLICY_MODE_RISK_REACTIVE)
+
     def __init__(self):
+        self.policy_mode = str(rospy.get_param("~policy_mode", self.POLICY_MODE_WIND_LEVEL))
+        if self.policy_mode not in self.VALID_POLICY_MODES:
+            rospy.logwarn(
+                "unknown policy_mode=%s; falling back to %s",
+                self.policy_mode,
+                self.POLICY_MODE_WIND_LEVEL,
+            )
+            self.policy_mode = self.POLICY_MODE_WIND_LEVEL
+
         self.publish_rate = float(rospy.get_param("~publish_rate", 5.0))
         self.min_scale = float(rospy.get_param("~min_scale", 0.4))
         self.max_scale = float(rospy.get_param("~max_scale", 1.0))
@@ -61,8 +74,9 @@ class HeuristicCommandAdapter:
         self.timer = rospy.Timer(rospy.Duration(timer_period), self._timer_callback)
 
         rospy.loginfo(
-            "heuristic_command_adapter publishing command adaptation scales at %.3f Hz",
+            "heuristic_command_adapter publishing command adaptation scales at %.3f Hz policy_mode=%s",
             self.publish_rate,
+            self.policy_mode,
         )
 
     def _uav_odom_callback(self, msg):
@@ -122,9 +136,10 @@ class HeuristicCommandAdapter:
         rospy.loginfo_throttle(
             1.0,
             (
-                "heuristic_command_adapter wind_force_norm=%.6f swing_angle_deg=%.3f "
+                "heuristic_command_adapter policy_mode=%s wind_force_norm=%.6f swing_angle_deg=%.3f "
                 "recent_max_speed=%.3f speed_scale=%.3f acceleration_scale=%.3f has_trajectory=%s"
             ),
+            self.policy_mode,
             wind_force_norm,
             swing_angle_deg,
             recent_max_speed,
@@ -138,6 +153,8 @@ class HeuristicCommandAdapter:
             return self._clamp_scale(1.0)
 
         scale = self._base_wind_scale(wind_force_norm)
+        if self.policy_mode == self.POLICY_MODE_WIND_LEVEL:
+            return self._clamp_scale(scale)
 
         if math.isfinite(swing_angle_deg):
             if swing_angle_deg > self.swing_critical_deg:

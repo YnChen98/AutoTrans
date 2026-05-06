@@ -33,6 +33,14 @@ catkin_make -DCMAKE_BUILD_TYPE=Release
 roslaunch command_adaptation heuristic_command_adapter.launch
 ```
 
+Default `policy_mode` is `wind_level`, which selects scale only from `/wind_force` level and is the current recommended mode for formal strong-wind repeated validation.
+
+The previous reactive v1 behavior is still available as an experimental option:
+
+```bash
+roslaunch command_adaptation heuristic_command_adapter.launch policy_mode:=risk_reactive
+```
+
 ## Echo Scale Topics
 
 ```bash

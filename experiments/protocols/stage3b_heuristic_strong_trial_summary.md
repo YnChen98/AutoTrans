@@ -44,6 +44,8 @@ Wind setting:
 
 ## Scale Behavior Interpretation
 
+These results were collected with the original reactive Stage 3-B v1 policy behavior, now preserved as `policy_mode=risk_reactive`.
+
 The strong-wind base scale is `0.85`. In nominal strong-wind behavior, both `command_speed_scale` and `command_acceleration_scale` should remain near `0.85` unless the heuristic risk overrides activate.
 
 The Trial 3 diagnostic repeat reached a minimum `command_speed_scale` of `0.65` and recovered to a final scale of `0.85`. This is consistent with a warning-level override from either `speed_warn` or `swing_warn_deg`.
@@ -51,6 +53,8 @@ The Trial 3 diagnostic repeat reached a minimum `command_speed_scale` of `0.65` 
 The first Trial 3 run was observed to reach `0.5`, which is consistent with a critical override from either `speed_critical` or `swing_critical_deg`. This drop is expected heuristic policy behavior and is not evidence of a topic-mode planner bug.
 
 However, the invalid first Trial 3 run suggests that the policy can still react too late, react too aggressively, or interact poorly with an already unstable trajectory. The current heuristic should therefore be treated as a first risk-aware adapter, not as a frozen final method.
+
+The current recommended mode for formal strong-wind repeated validation is `policy_mode=wind_level`, which uses automatic wind-level fixed scaling and does not apply swing/speed risk overrides.
 
 ## Current Conclusion
 

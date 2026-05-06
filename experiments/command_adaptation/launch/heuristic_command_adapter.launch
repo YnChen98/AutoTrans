@@ -1,4 +1,5 @@
 <launch>
+  <arg name="policy_mode" default="wind_level"/>
   <arg name="publish_rate" default="5.0"/>
   <arg name="min_scale" default="0.4"/>
   <arg name="max_scale" default="1.0"/>
@@ -29,6 +30,7 @@
   <arg name="publish_same_acceleration_scale" default="true"/>
 
   <node pkg="command_adaptation" type="heuristic_command_adapter.py" name="heuristic_command_adapter" output="screen">
+    <param name="policy_mode" value="$(arg policy_mode)" type="string"/>
     <param name="publish_rate" value="$(arg publish_rate)" type="double"/>
     <param name="min_scale" value="$(arg min_scale)" type="double"/>
     <param name="max_scale" value="$(arg max_scale)" type="double"/>
