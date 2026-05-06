@@ -11,6 +11,8 @@
 #include <ros/ros.h>
 #include <plan_manage/planning_visualization.h>
 #include <optimizer/poly_traj_utils.hpp>
+#include <std_msgs/Float64.h>
+#include <sstream>
 
 namespace payload_planner
 {
@@ -49,6 +51,8 @@ namespace payload_planner
     bool EmergencyStop(Eigen::Vector3d stop_pos);
     double effectiveMaxVel() const;
     double effectiveMaxAcc() const;
+    bool commandAdaptationReady() const;
+    std::string commandAdaptationStatusString() const;
 
     PlanParameters pp_;
     GridMap::Ptr grid_map_;
@@ -68,11 +72,19 @@ namespace payload_planner
 
     int continous_failures_count_{0};
     bool enable_command_adaptation_{false};
+    bool require_adaptation_topic_ready_{false};
     std::string adaptation_mode_{"none"};
     double speed_scale_{1.0};
     double acceleration_scale_{1.0};
+    bool speed_scale_topic_received_{false};
+    bool acceleration_scale_topic_received_{false};
+    ros::Subscriber speed_scale_sub_;
+    ros::Subscriber acceleration_scale_sub_;
 
     double clampAdaptationScale(double value) const;
+    bool isCommandAdaptationActive() const;
+    void speedScaleCallback(const std_msgs::Float64::ConstPtr &msg);
+    void accelerationScaleCallback(const std_msgs::Float64::ConstPtr &msg);
 
   public:
     typedef unique_ptr<PlannerManager> Ptr;

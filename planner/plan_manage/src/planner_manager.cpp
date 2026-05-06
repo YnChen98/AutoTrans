@@ -1,5 +1,6 @@
 // #include <fstream>
 #include <plan_manage/planner_manager.h>
+#include <cmath>
 #include <thread>
 #include "visualization_msgs/Marker.h"
 
@@ -25,16 +26,42 @@ namespace payload_planner
     nh.param("manager/planning_horizon", pp_.planning_horizen_, 5.0);
     nh.param("manager/enable_command_adaptation", enable_command_adaptation_, false);
     nh.param("manager/adaptation_mode", adaptation_mode_, std::string("none"));
+    nh.param("manager/require_adaptation_topic_ready", require_adaptation_topic_ready_, false);
     nh.param("manager/speed_scale", speed_scale_, 1.0);
     nh.param("manager/acceleration_scale", acceleration_scale_, 1.0);
 
-    ROS_INFO("[PlannerManager] command_adaptation enabled=%s mode=%s speed_scale=%.3f acceleration_scale=%.3f effective_max_vel=%.3f effective_max_acc=%.3f",
+    if (!enable_command_adaptation_ || adaptation_mode_ == "none")
+    {
+      adaptation_mode_ = "none";
+    }
+    else if (adaptation_mode_ == "fixed")
+    {
+      speed_scale_ = clampAdaptationScale(speed_scale_);
+      acceleration_scale_ = clampAdaptationScale(acceleration_scale_);
+    }
+    else if (adaptation_mode_ == "topic")
+    {
+      speed_scale_ = 1.0;
+      acceleration_scale_ = 1.0;
+      speed_scale_sub_ = nh.subscribe("/command_adaptation/speed_scale", 1, &PlannerManager::speedScaleCallback, this);
+      acceleration_scale_sub_ = nh.subscribe("/command_adaptation/acceleration_scale", 1, &PlannerManager::accelerationScaleCallback, this);
+      // TODO: add stale-topic timeout handling after runtime adaptation policy is introduced.
+    }
+    else
+    {
+      ROS_WARN("[PlannerManager] unknown adaptation_mode=%s, falling back to none", adaptation_mode_.c_str());
+      adaptation_mode_ = "none";
+    }
+
+    ROS_INFO("[PlannerManager] command_adaptation enabled=%s mode=%s require_topic_ready=%s speed_scale=%.3f acceleration_scale=%.3f effective_max_vel=%.3f effective_max_acc=%.3f status=\"%s\"",
              enable_command_adaptation_ ? "true" : "false",
              adaptation_mode_.c_str(),
-             enable_command_adaptation_ ? clampAdaptationScale(speed_scale_) : speed_scale_,
-             enable_command_adaptation_ ? clampAdaptationScale(acceleration_scale_) : acceleration_scale_,
+             require_adaptation_topic_ready_ ? "true" : "false",
+             speed_scale_,
+             acceleration_scale_,
              effectiveMaxVel(),
-             effectiveMaxAcc());
+             effectiveMaxAcc(),
+             commandAdaptationStatusString().c_str());
 
     grid_map_.reset(new GridMap);
     grid_map_->initMap(nh);
@@ -55,18 +82,73 @@ namespace payload_planner
     return value;
   }
 
-  double PlannerManager::effectiveMaxVel() const
+  bool PlannerManager::isCommandAdaptationActive() const
+  {
+    return enable_command_adaptation_ && adaptation_mode_ != "none";
+  }
+
+  bool PlannerManager::commandAdaptationReady() const
   {
     if (!enable_command_adaptation_)
+      return true;
+    if (adaptation_mode_ != "topic")
+      return true;
+    if (!require_adaptation_topic_ready_)
+      return true;
+    return speed_scale_topic_received_ && acceleration_scale_topic_received_;
+  }
+
+  std::string PlannerManager::commandAdaptationStatusString() const
+  {
+    std::ostringstream status;
+    status << "enabled=" << (enable_command_adaptation_ ? "true" : "false")
+           << " mode=" << adaptation_mode_
+           << " require_topic_ready=" << (require_adaptation_topic_ready_ ? "true" : "false")
+           << " speed_received=" << (speed_scale_topic_received_ ? "true" : "false")
+           << " acceleration_received=" << (acceleration_scale_topic_received_ ? "true" : "false")
+           << " speed_scale=" << speed_scale_
+           << " acceleration_scale=" << acceleration_scale_;
+    return status.str();
+  }
+
+  void PlannerManager::speedScaleCallback(const std_msgs::Float64::ConstPtr &msg)
+  {
+    if (!std::isfinite(msg->data))
+    {
+      ROS_WARN_THROTTLE(1.0, "[PlannerManager] ignoring non-finite speed_scale command");
+      return;
+    }
+    const double clamped_scale = clampAdaptationScale(msg->data);
+    speed_scale_ = clamped_scale;
+    speed_scale_topic_received_ = true;
+    ROS_INFO_THROTTLE(1.0, "[PlannerManager] speed_scale topic raw=%.3f clamped=%.3f", msg->data, clamped_scale);
+  }
+
+  void PlannerManager::accelerationScaleCallback(const std_msgs::Float64::ConstPtr &msg)
+  {
+    if (!std::isfinite(msg->data))
+    {
+      ROS_WARN_THROTTLE(1.0, "[PlannerManager] ignoring non-finite acceleration_scale command");
+      return;
+    }
+    const double clamped_scale = clampAdaptationScale(msg->data);
+    acceleration_scale_ = clamped_scale;
+    acceleration_scale_topic_received_ = true;
+    ROS_INFO_THROTTLE(1.0, "[PlannerManager] acceleration_scale topic raw=%.3f clamped=%.3f", msg->data, clamped_scale);
+  }
+
+  double PlannerManager::effectiveMaxVel() const
+  {
+    if (!isCommandAdaptationActive())
       return pp_.max_vel_;
-    return pp_.max_vel_ * clampAdaptationScale(speed_scale_);
+    return pp_.max_vel_ * speed_scale_;
   }
 
   double PlannerManager::effectiveMaxAcc() const
   {
-    if (!enable_command_adaptation_)
+    if (!isCommandAdaptationActive())
       return pp_.max_acc_;
-    return pp_.max_acc_ * clampAdaptationScale(acceleration_scale_);
+    return pp_.max_acc_ * acceleration_scale_;
   }
 
   bool PlannerManager::computeInitReferenceState(const Eigen::Vector3d &start_pt,

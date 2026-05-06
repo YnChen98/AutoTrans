@@ -410,6 +410,13 @@ namespace payload_planner
     if (msg->pose.position.z < -0.1)
       return;
 
+    if (!planner_manager_->commandAdaptationReady())
+    {
+      ROS_WARN_THROTTLE(1.0, "[ReplanFSM] waiting for command adaptation scale topics before accepting goal: %s",
+                        planner_manager_->commandAdaptationStatusString().c_str());
+      return;
+    }
+
     cout << "Triggered!" << endl;
     have_trigger_ = true;
     init_pt_ = odom_pos_;
