@@ -191,6 +191,20 @@ def max_or_nan(values):
     return max(values)
 
 
+def min_or_nan(values):
+    values = valid_values(values)
+    if not values:
+        return math.nan
+    return min(values)
+
+
+def final_or_nan(values):
+    for value in reversed(values):
+        if math.isfinite(value):
+            return value
+    return math.nan
+
+
 def has_column(rows, name):
     return bool(rows) and name in rows[0]
 
@@ -291,6 +305,12 @@ def compute_metrics(csv_path, rows):
     has_trajectory = column(rows, "has_trajectory")
     valid_has_trajectory = valid_values(has_trajectory)
     wind_force_norm = column(rows, "wind_force_norm") if has_column(rows, "wind_force_norm") else []
+    command_speed_scale = column(rows, "command_speed_scale") if has_column(rows, "command_speed_scale") else []
+    command_acceleration_scale = (
+        column(rows, "command_acceleration_scale")
+        if has_column(rows, "command_acceleration_scale")
+        else []
+    )
 
     duration_sec, effective_log_rate_hz = compute_duration_and_rate(rows)
     final_valid_uav_position = final_position(uav_pos_x, uav_pos_y, uav_pos_z)
@@ -376,6 +396,24 @@ def compute_metrics(csv_path, rows):
     if wind_force_norm:
         metrics["mean_wind_force_norm"] = mean(wind_force_norm)
         metrics["max_wind_force_norm"] = max_or_nan(wind_force_norm)
+
+    if command_speed_scale:
+        if valid_values(command_speed_scale):
+            metrics["mean_command_speed_scale"] = mean(command_speed_scale)
+            metrics["min_command_speed_scale"] = min_or_nan(command_speed_scale)
+            metrics["max_command_speed_scale"] = max_or_nan(command_speed_scale)
+            metrics["final_command_speed_scale"] = final_or_nan(command_speed_scale)
+        else:
+            print("WARNING: command_speed_scale has no finite numeric data.", file=sys.stderr)
+
+    if command_acceleration_scale:
+        if valid_values(command_acceleration_scale):
+            metrics["mean_command_acceleration_scale"] = mean(command_acceleration_scale)
+            metrics["min_command_acceleration_scale"] = min_or_nan(command_acceleration_scale)
+            metrics["max_command_acceleration_scale"] = max_or_nan(command_acceleration_scale)
+            metrics["final_command_acceleration_scale"] = final_or_nan(command_acceleration_scale)
+        else:
+            print("WARNING: command_acceleration_scale has no finite numeric data.", file=sys.stderr)
 
     return metrics
 
@@ -571,6 +609,32 @@ def make_plots(rows, output_dir):
                 [("wind_force_norm", column(rows, "wind_force_norm"))],
                 "force [N]",
                 "Wind force norm",
+            ),
+        )
+
+    if "command_speed_scale" in rows[0]:
+        plot_or_warn(
+            output_dir,
+            "command_speed_scale.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [("command_speed_scale", column(rows, "command_speed_scale"))],
+                "scale",
+                "Command speed scale",
+            ),
+        )
+
+    if "command_acceleration_scale" in rows[0]:
+        plot_or_warn(
+            output_dir,
+            "command_acceleration_scale.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [("command_acceleration_scale", column(rows, "command_acceleration_scale"))],
+                "scale",
+                "Command acceleration scale",
             ),
         )
 

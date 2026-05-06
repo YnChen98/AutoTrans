@@ -159,6 +159,27 @@ cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/set_drag_wind_config.py --level none
 ```
 
+## Stage 3-B heuristic command adapter
+
+`experiments/command_adaptation` 提供第一个 heuristic runtime command adapter。它发布：
+
+- `/command_adaptation/speed_scale`
+- `/command_adaptation/acceleration_scale`
+
+构建后启动：
+
+```bash
+roslaunch command_adaptation heuristic_command_adapter.launch
+```
+
+使用它时，planner 应设置为 topic mode，并启用 topic readiness gate：
+
+- `manager/enable_command_adaptation=true`
+- `manager/adaptation_mode=topic`
+- `manager/require_adaptation_topic_ready=true`
+
+详细流程见 `experiments/command_adaptation/README.md` 和 `experiments/protocols/stage3b_heuristic_command_adapter_protocol.md`。
+
 ## 查看生成结果
 
 CSV logs:

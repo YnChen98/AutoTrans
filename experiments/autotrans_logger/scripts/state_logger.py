@@ -13,6 +13,7 @@ from mavros_msgs.msg import AttitudeTarget
 from nav_msgs.msg import Odometry
 from quadrotor_msgs.msg import PolynomialTraj
 from sensor_msgs.msg import Imu
+from std_msgs.msg import Float64
 
 
 class StateLogger:
@@ -45,6 +46,8 @@ class StateLogger:
         "wind_force_y",
         "wind_force_z",
         "wind_force_norm",
+        "command_speed_scale",
+        "command_acceleration_scale",
     ]
 
     def __init__(self):
@@ -53,6 +56,8 @@ class StateLogger:
         self.cable_info = None
         self.so3cmd = None
         self.wind_force = None
+        self.command_speed_scale = None
+        self.command_acceleration_scale = None
         self.has_trajectory = False
 
         self.log_path = self._make_log_path()
@@ -67,6 +72,8 @@ class StateLogger:
         rospy.Subscriber("/so3cmd", AttitudeTarget, self._so3cmd_callback, queue_size=50)
         rospy.Subscriber("/planning/trajectory", PolynomialTraj, self._trajectory_callback, queue_size=10)
         rospy.Subscriber("/wind_force", Vector3Stamped, self._wind_force_callback, queue_size=50)
+        rospy.Subscriber("/command_adaptation/speed_scale", Float64, self._command_speed_scale_callback, queue_size=50)
+        rospy.Subscriber("/command_adaptation/acceleration_scale", Float64, self._command_acceleration_scale_callback, queue_size=50)
 
         log_rate = rospy.get_param("~log_rate", 20.0)
         self.timer = rospy.Timer(rospy.Duration(1.0 / max(log_rate, 1e-3)), self._timer_callback)
@@ -98,6 +105,12 @@ class StateLogger:
 
     def _wind_force_callback(self, msg):
         self.wind_force = msg
+
+    def _command_speed_scale_callback(self, msg):
+        self.command_speed_scale = msg
+
+    def _command_acceleration_scale_callback(self, msg):
+        self.command_acceleration_scale = msg
 
     def _timer_callback(self, _event):
         self.writer.writerow(self._make_row())
@@ -139,6 +152,12 @@ class StateLogger:
             row["wind_force_norm"] = self._fmt(
                 math.sqrt(wind.x * wind.x + wind.y * wind.y + wind.z * wind.z)
             )
+
+        if self.command_speed_scale is not None:
+            row["command_speed_scale"] = self._fmt(self.command_speed_scale.data)
+
+        if self.command_acceleration_scale is not None:
+            row["command_acceleration_scale"] = self._fmt(self.command_acceleration_scale.data)
 
         return row
 
