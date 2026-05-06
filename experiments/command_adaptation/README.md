@@ -52,6 +52,8 @@ rostopic echo /command_adaptation/acceleration_scale
 - `command_speed_scale.png`
 - `command_acceleration_scale.png`
 
+Current strong-wind trial evidence is summarized in `experiments/protocols/stage3b_heuristic_strong_trial_summary.md`.
+
 ## Strong Wind Experiment
 
 Set the simulator drag-wind level:
