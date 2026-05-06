@@ -104,6 +104,21 @@ def parse_args():
         default=str(figures_dir),
         help="Directory for metrics_summary.txt and PNG plots.",
     )
+    parser.add_argument("--target_x", type=float, default=None, help="Target x position for optional final-error metrics.")
+    parser.add_argument("--target_y", type=float, default=None, help="Target y position for optional final-error metrics.")
+    parser.add_argument("--target_z", type=float, default=None, help="UAV target z position for optional final-error metrics.")
+    parser.add_argument(
+        "--payload_target_z",
+        type=float,
+        default=None,
+        help="Payload target z position for optional final-error metrics.",
+    )
+    parser.add_argument(
+        "--target_xy_tolerance",
+        type=float,
+        default=0.5,
+        help="Maximum allowed final UAV XY error when target_x and target_y are provided.",
+    )
     parser.set_defaults(default_logs_dir=str(logs_dir), experiments_dir=str(experiments_dir))
     return parser.parse_args()
 
@@ -244,6 +259,32 @@ def last_position(xs, ys, zs):
     return (xs[-1], ys[-1], zs[-1])
 
 
+def xy_error(position, target_x, target_y):
+    if position is None:
+        return math.nan
+    if target_x is None or target_y is None:
+        return math.nan
+    return math.sqrt((position[0] - target_x) ** 2 + (position[1] - target_y) ** 2)
+
+
+def z_error(position, target_z):
+    if position is None or target_z is None:
+        return math.nan
+    return abs(position[2] - target_z)
+
+
+def position_error_3d(position, target_x, target_y, target_z):
+    if position is None:
+        return math.nan
+    if target_x is None or target_y is None or target_z is None:
+        return math.nan
+    return math.sqrt(
+        (position[0] - target_x) ** 2
+        + (position[1] - target_y) ** 2
+        + (position[2] - target_z) ** 2
+    )
+
+
 def invalid_value_counts(rows, fields):
     counts = {}
     first_invalid_index = None
@@ -284,7 +325,7 @@ def compute_duration_and_rate(rows):
     return duration, (len(rows) - 1) / duration
 
 
-def compute_metrics(csv_path, rows):
+def compute_metrics(csv_path, rows, args):
     uav_pos_x = column(rows, "uav_pos_x")
     uav_pos_y = column(rows, "uav_pos_y")
     uav_pos_z = column(rows, "uav_pos_z")
@@ -336,6 +377,28 @@ def compute_metrics(csv_path, rows):
     max_uav_speed = max_or_nan(uav_speed)
     max_payload_speed = max_or_nan(payload_speed)
     max_swing_angle_deg = max_or_nan(swing_angle)
+    has_target_xy = args.target_x is not None and args.target_y is not None
+    final_uav_xy_error = xy_error(final_valid_uav_position, args.target_x, args.target_y)
+    final_payload_xy_error = xy_error(final_valid_payload_position, args.target_x, args.target_y)
+    final_uav_z_error = z_error(final_valid_uav_position, args.target_z)
+    final_payload_z_error = z_error(final_valid_payload_position, args.payload_target_z)
+    final_uav_position_error_3d = position_error_3d(
+        final_valid_uav_position,
+        args.target_x,
+        args.target_y,
+        args.target_z,
+    )
+    final_payload_position_error_3d = position_error_3d(
+        final_valid_payload_position,
+        args.target_x,
+        args.target_y,
+        args.payload_target_z,
+    )
+    target_xy_failure = (
+        has_target_xy
+        and math.isfinite(final_uav_xy_error)
+        and final_uav_xy_error > args.target_xy_tolerance
+    )
 
     unreasonable_final_altitude = (
         final_valid_uav_position is not None
@@ -355,6 +418,7 @@ def compute_metrics(csv_path, rows):
         or (math.isfinite(max_payload_speed) and max_payload_speed > MAX_REASONABLE_SPEED_MPS)
         or (math.isfinite(max_swing_angle_deg) and max_swing_angle_deg > MAX_REASONABLE_SWING_DEG)
         or unreasonable_final_altitude
+        or target_xy_failure
     )
 
     if valid_has_trajectory and max(valid_has_trajectory) <= 0.0:
@@ -396,6 +460,21 @@ def compute_metrics(csv_path, rows):
     if wind_force_norm:
         metrics["mean_wind_force_norm"] = mean(wind_force_norm)
         metrics["max_wind_force_norm"] = max_or_nan(wind_force_norm)
+
+    if has_target_xy:
+        metrics["target_xy_tolerance"] = args.target_xy_tolerance
+        metrics["final_uav_xy_error"] = final_uav_xy_error
+        metrics["final_payload_xy_error"] = final_payload_xy_error
+
+    if args.target_z is not None:
+        metrics["final_uav_z_error"] = final_uav_z_error
+        if has_target_xy:
+            metrics["final_uav_position_error_3d"] = final_uav_position_error_3d
+
+    if args.payload_target_z is not None:
+        metrics["final_payload_z_error"] = final_payload_z_error
+        if has_target_xy:
+            metrics["final_payload_position_error_3d"] = final_payload_position_error_3d
 
     if command_speed_scale:
         if valid_values(command_speed_scale):
@@ -653,7 +732,7 @@ def main():
             file=sys.stderr,
         )
 
-    metrics = compute_metrics(csv_path, rows)
+    metrics = compute_metrics(csv_path, rows, args)
     write_metrics(output_dir, metrics)
     make_plots(rows, output_dir)
     return 0

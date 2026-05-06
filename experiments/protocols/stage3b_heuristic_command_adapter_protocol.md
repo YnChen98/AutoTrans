@@ -125,6 +125,14 @@ The risk-reactive v1 policy produced mixed strong-wind results and should be tre
 
 5. Run strong wind Trial 2 with planner topic readiness enabled.
 
+6. For target-specific validation, analyze logs with target arguments:
+
+   ```bash
+   python3 experiments/autotrans_logger/scripts/analyze_log.py --target_x 0.0 --target_y -1.2 --target_z 1.468415 --payload_target_z 0.799970
+   ```
+
+   When `--target_x` and `--target_y` are provided, `valid_run_suggested` also requires `final_uav_xy_error <= target_xy_tolerance`.
+
 ## Validity Criteria
 
 - No NaN/Inf is published on either command adaptation topic.
