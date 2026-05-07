@@ -217,6 +217,10 @@ python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments
 
 完整 protocol 见 `experiments/protocols/stage4_risk_prediction_protocol.md`。生成的 `experiments/results/` 不应提交到 git。
 
+## Stage 4-C risk dataset expansion
+
+Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。
+
 ## 查看生成结果
 
 CSV logs:
