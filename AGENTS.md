@@ -150,6 +150,32 @@ After editing, report:
 - If a command triggers sandbox retry or approval, do not repeatedly retry it. Stop and report the exact command for the user to run manually.
 - Do not commit or push unless explicitly instructed.
 
+## Local Codex Sandbox Note
+
+- The local Codex sandbox may fail with `bwrap: Unknown option --perms`.
+- For documentation-only and small static-edit tasks, it is acceptable to use:
+
+  codex -C ~/projects/autotrans_ws/src/AutoTrans -s danger-full-access -a never
+
+- When using `danger-full-access`, Codex must obey strict project constraints:
+  - only edit allowed files
+  - do not run `catkin_make`
+  - do not run `roslaunch`
+  - do not run simulation
+  - do not launch RViz
+  - do not modify `build/`, `devel/`, `install/`
+  - do not stage generated CSV/PNG/TXT files
+  - do not push unless explicitly requested
+- Lightweight commands are allowed:
+  - `git status --short`
+  - `git diff --check`
+  - `git diff --stat`
+  - `sed`/`grep`/`rg` inspection
+  - `python3 -m py_compile` for edited Python scripts
+- If a command would require ROS runtime, long-running simulation, or workspace-level build, Codex should print the exact command and ask the user to run it manually.
+- `pre_codex_checkpoint.sh` should remain a pre-edit check, not a post-edit check.
+- For auto-commit tasks, Codex should commit only allowed files and report the latest SHA from `git rev-parse HEAD`.
+
 ## Auto-Commit Policy For Low-Risk Tasks
 
 - For documentation-only tasks and small static-code tasks, Codex may commit automatically only if the user explicitly says auto-commit is allowed.
