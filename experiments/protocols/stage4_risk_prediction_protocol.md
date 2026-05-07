@@ -4,7 +4,7 @@
 
 Stage 4-B establishes a lightweight training and evaluation pipeline for baseline failure-risk prediction from the Stage 4-A dataset. The immediate goal is to make the learning workflow repeatable before drawing any research conclusion about predictive performance.
 
-The current local dataset is intentionally small: 15 repeated strong-wind Trial 2 rows across original AutoTrans, fixed scale `0.85`, and `policy_mode=wind_level` scale `0.85`. It is useful for checking feature extraction, leakage avoidance, cross-validation, and output formatting. It is not enough to claim a final predictor, controller policy, or method ranking.
+The local datasets are intentionally small. The first Stage 4-B check used 15 repeated strong-wind Trial 2 rows; the Stage 4-C expansion adds Trial 1 and Trial 3 for a 45-row strong-wind dataset across original AutoTrans, fixed scale `0.85`, and `policy_mode=wind_level` scale `0.85`. These datasets are useful for checking feature extraction, leakage avoidance, cross-validation, and output formatting. They are not enough to claim a final predictor, controller policy, or method ranking.
 
 ## Script
 
@@ -41,7 +41,7 @@ The script also supports:
 - `label_speed_fail`
 - `label_swing_fail`
 
-If the selected label has only one class, the script stops with a clear error because leave-one-out evaluation would not be meaningful.
+If the selected label has only one class, the script stops with a clear error because cross-validation would not be meaningful.
 
 ## Feature Sets
 
@@ -60,6 +60,29 @@ If the selected label has only one class, the script stops with a clear error be
 `--feature-set early` uses the same metadata plus `early_*` features from the Stage 4-A builder.
 
 `--feature-set all` currently uses metadata plus `early_*` features. It intentionally does not include final run-outcome features. As the dataset grows, extra non-leaking pre-run or early-run features may be added here only after they are reviewed for leakage.
+
+## Feature Ablations
+
+Use ablations to check whether the predictor is learning early dynamics or shortcut metadata.
+
+`--drop-command-scale-features` removes features whose names contain:
+
+- `command_speed_scale`
+- `command_acceleration_scale`
+- `command_scale`
+- `command_scale_expected`
+
+This is important because command-scale values or missingness can encode whether a run used original AutoTrans, fixed XML scaling, or runtime command adaptation.
+
+`--drop-method-features` removes method/adaptation/policy identity features:
+
+- one-hot features starting with `method__`
+- one-hot features starting with `adaptation_mode__`
+- one-hot features starting with `policy_mode__`
+- raw identity columns named `method`, `adaptation_mode`, or `policy_mode` if they are ever added as direct features
+- `command_scale_expected`
+
+The two ablation flags are combinable. If an ablation removes all usable features, the script exits with a clear error.
 
 ## Leakage Avoidance
 
@@ -91,15 +114,25 @@ If `scikit-learn` is not available, the script still runs without installing pac
 - `majority`
 - `single_feature_threshold`
 
-Missing, `nan`, and `inf` numeric values are handled as missing values. For `scikit-learn` models, missing values are imputed from the training fold median inside each leave-one-out fold.
+Missing, `nan`, and `inf` numeric values are handled as missing values. For `scikit-learn` models, missing values are imputed from the training fold median inside each cross-validation fold.
 
-## Metrics
+## Cross-Validation And Metrics
 
-The current evaluation mode is leave-one-out cross-validation:
+The default evaluation mode is leave-one-out cross-validation:
 
 ```bash
 --cv loo
 ```
+
+LOO trains on all rows except one and tests on the held-out row. It is useful as a pipeline check, but it can be optimistic on small repeated-trial datasets because nearby rows can share the same target, method, wind level, and repeated-run structure.
+
+The script also supports group cross-validation modes:
+
+- `--cv leave-one-target-out`: holds out one target group at a time. It groups by `trial_name` when available and falls back to `target_x,target_y` otherwise.
+- `--cv leave-one-method-out`: holds out one `method` group at a time.
+- `--cv leave-one-trial-out`: holds out one `trial_name` group at a time.
+
+For each group fold, the model trains on all other groups and tests on the held-out group. If a training fold has only one class, that fold is skipped with a warning. If all folds are skipped, the script exits with an error. The terminal summary reports `folds_used`, `folds_skipped`, and held-out group names for group CV.
 
 The script reports:
 
@@ -130,6 +163,21 @@ cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --dry-run --print-summary
 ```
 
+Check whether early-window results survive target-level grouping:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --cv leave-one-target-out --dry-run --print-summary
+```
+
+Run command-scale and method-identity ablations:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --drop-command-scale-features --dry-run --print-summary
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --drop-method-features --dry-run --print-summary
+```
+
 Write local result files:
 
 ```bash
@@ -147,4 +195,4 @@ under `experiments/results/stage4_risk_predictor/`.
 
 ## What Not To Claim Yet
 
-Do not claim final Stage 4 performance from the current 15-row dataset. Do not claim `policy_mode=wind_level` is final. Do not use single-run evidence as the main result. Stage 4 conclusions should use repeated success-rate comparisons and a larger dataset with held-out validation once enough runs exist.
+Do not claim final Stage 4 performance from the current 15-row or 45-row datasets. Do not claim `policy_mode=wind_level` is final. Do not use single-run evidence as the main result. Stage 4 conclusions should use repeated success-rate comparisons, group-CV checks, ablations, and a larger dataset with held-out validation once enough runs exist.

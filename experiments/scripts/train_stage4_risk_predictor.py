@@ -76,6 +76,28 @@ LEAKAGE_COLUMNS = set(
     ]
 )
 
+COMMAND_SCALE_FEATURE_TOKENS = [
+    "command_speed_scale",
+    "command_acceleration_scale",
+    "command_scale",
+    "command_scale_expected",
+]
+
+METHOD_FEATURE_PREFIXES = [
+    "method__",
+    "adaptation_mode__",
+    "policy_mode__",
+]
+
+METHOD_FEATURE_NAMES = set(
+    [
+        "method",
+        "adaptation_mode",
+        "policy_mode",
+        "command_scale_expected",
+    ]
+)
+
 
 try:
     from sklearn.ensemble import RandomForestClassifier
@@ -112,7 +134,27 @@ def parse_args():
         choices=["basic", "early", "all"],
         help="Feature set to evaluate.",
     )
-    parser.add_argument("--cv", default="loo", choices=["loo"], help="Cross-validation mode.")
+    parser.add_argument(
+        "--cv",
+        default="loo",
+        choices=[
+            "loo",
+            "leave-one-target-out",
+            "leave-one-method-out",
+            "leave-one-trial-out",
+        ],
+        help="Cross-validation mode.",
+    )
+    parser.add_argument(
+        "--drop-command-scale-features",
+        action="store_true",
+        help="Drop features whose names contain command scale tokens.",
+    )
+    parser.add_argument(
+        "--drop-method-features",
+        action="store_true",
+        help="Drop method/adaptation/policy identity features.",
+    )
     parser.add_argument("--print-summary", action="store_true", help="Print selected features and model details.")
     parser.add_argument("--dry-run", action="store_true", help="Run evaluation without writing output files.")
     return parser.parse_args()
@@ -241,6 +283,45 @@ def selected_feature_specs(rows, fieldnames, feature_set):
     return specs
 
 
+def is_command_scale_feature(spec):
+    return any(token in spec["name"] for token in COMMAND_SCALE_FEATURE_TOKENS)
+
+
+def is_method_feature(spec):
+    name = spec["name"]
+    source_column = spec["source_column"]
+    return (
+        any(name.startswith(prefix) for prefix in METHOD_FEATURE_PREFIXES)
+        or name in METHOD_FEATURE_NAMES
+        or source_column in METHOD_FEATURE_NAMES
+    )
+
+
+def apply_feature_ablations(specs, args):
+    filtered = []
+    dropped = []
+    for spec in specs:
+        reasons = []
+        if args.drop_command_scale_features and is_command_scale_feature(spec):
+            reasons.append("command_scale")
+        if args.drop_method_features and is_method_feature(spec):
+            reasons.append("method_identity")
+        if reasons:
+            dropped.append(
+                {
+                    "feature": spec["name"],
+                    "source_column": spec["source_column"],
+                    "reasons": reasons,
+                }
+            )
+        else:
+            filtered.append(spec)
+
+    if not filtered:
+        raise ValueError("feature ablation removed all usable feature columns")
+    return filtered, dropped
+
+
 def build_feature_matrix(rows, specs):
     matrix = []
     for row in rows:
@@ -341,6 +422,134 @@ def impute_train_test(matrix, train_indices, test_index):
 def class_counts(labels):
     counts = Counter(labels)
     return {"0": counts.get(0, 0), "1": counts.get(1, 0)}
+
+
+def nonempty_text(value):
+    return str(value).strip() if value is not None else ""
+
+
+def require_column(fieldnames, column, cv_mode):
+    if column not in fieldnames:
+        raise ValueError("cv %s requires dataset column: %s" % (cv_mode, column))
+
+
+def trial_name_is_available(rows, fieldnames):
+    return "trial_name" in fieldnames and all(nonempty_text(row.get("trial_name")) for row in rows)
+
+
+def group_by_trial_name(rows, fieldnames, cv_mode):
+    require_column(fieldnames, "trial_name", cv_mode)
+    groups = []
+    for index, row in enumerate(rows):
+        group = nonempty_text(row.get("trial_name"))
+        if not group:
+            raise ValueError("cv %s found empty trial_name at row %d" % (cv_mode, index + 1))
+        groups.append(group)
+    return groups, "trial_name"
+
+
+def group_by_method(rows, fieldnames, cv_mode):
+    require_column(fieldnames, "method", cv_mode)
+    groups = []
+    for index, row in enumerate(rows):
+        group = nonempty_text(row.get("method"))
+        if not group:
+            raise ValueError("cv %s found empty method at row %d" % (cv_mode, index + 1))
+        groups.append(group)
+    return groups, "method"
+
+
+def group_by_target_xy(rows, fieldnames, cv_mode):
+    require_column(fieldnames, "target_x", cv_mode)
+    require_column(fieldnames, "target_y", cv_mode)
+    groups = []
+    for row in rows:
+        groups.append("target_x=%s,target_y=%s" % (row.get("target_x", ""), row.get("target_y", "")))
+    return groups, "target_x,target_y"
+
+
+def group_values_for_cv(rows, fieldnames, cv_mode):
+    if cv_mode == "leave-one-trial-out":
+        return group_by_trial_name(rows, fieldnames, cv_mode)
+    if cv_mode == "leave-one-method-out":
+        return group_by_method(rows, fieldnames, cv_mode)
+    if cv_mode == "leave-one-target-out":
+        if trial_name_is_available(rows, fieldnames):
+            return group_by_trial_name(rows, fieldnames, cv_mode)
+        return group_by_target_xy(rows, fieldnames, cv_mode)
+    raise ValueError("unsupported group cv mode: %s" % cv_mode)
+
+
+def build_cv_folds(rows, fieldnames, cv_mode):
+    if cv_mode == "loo":
+        folds = []
+        for test_index in range(len(rows)):
+            folds.append(
+                {
+                    "fold": test_index + 1,
+                    "held_out_group": "",
+                    "train_indices": [index for index in range(len(rows)) if index != test_index],
+                    "test_indices": [test_index],
+                }
+            )
+        return folds, {"group_by": "", "held_out_groups": []}
+
+    group_values, group_by = group_values_for_cv(rows, fieldnames, cv_mode)
+    group_order = []
+    grouped_indices = {}
+    for index, group in enumerate(group_values):
+        if group not in grouped_indices:
+            grouped_indices[group] = []
+            group_order.append(group)
+        grouped_indices[group].append(index)
+    if len(group_order) < 2:
+        raise ValueError("cv %s requires at least two held-out groups" % cv_mode)
+
+    folds = []
+    all_indices = list(range(len(rows)))
+    for fold_number, group in enumerate(group_order, start=1):
+        test_indices = grouped_indices[group]
+        test_set = set(test_indices)
+        folds.append(
+            {
+                "fold": fold_number,
+                "held_out_group": group,
+                "train_indices": [index for index in all_indices if index not in test_set],
+                "test_indices": test_indices,
+            }
+        )
+
+    return folds, {"group_by": group_by, "held_out_groups": group_order}
+
+
+def filter_usable_folds(folds, labels):
+    used = []
+    skipped = []
+    for fold in folds:
+        train_labels = [labels[index] for index in fold["train_indices"]]
+        counts = class_counts(train_labels)
+        if not train_labels:
+            reason = "training fold is empty"
+        elif counts["0"] == 0 or counts["1"] == 0:
+            reason = "training fold has one class: class_0=%d class_1=%d" % (
+                counts["0"],
+                counts["1"],
+            )
+        else:
+            reason = ""
+
+        if reason:
+            skipped.append(
+                {
+                    "fold": fold["fold"],
+                    "held_out_group": fold["held_out_group"],
+                    "reason": reason,
+                }
+            )
+        else:
+            used.append(fold)
+
+    return used, skipped
 
 
 def majority_probability(labels):
@@ -485,62 +694,65 @@ def threshold_probability(matrix, labels, feature_names, train_indices, test_ind
     ), predicted_label
 
 
-def evaluate_model(model_name, rows, matrix, labels, feature_names):
+def evaluate_model(model_name, rows, matrix, labels, feature_names, folds, cv_mode):
     predictions = []
     warnings = []
 
-    for test_index in range(len(labels)):
-        train_indices = [index for index in range(len(labels)) if index != test_index]
+    for fold in folds:
+        train_indices = fold["train_indices"]
         y_train = [labels[index] for index in train_indices]
-        probability = majority_probability(y_train)
-        forced_predicted_label = None
-        detail = ""
+        for test_index in fold["test_indices"]:
+            probability = majority_probability(y_train)
+            forced_predicted_label = None
+            detail = ""
 
-        if model_name == "majority":
-            detail = "train_positive_rate"
-            forced_predicted_label = 1 if probability > 0.5 else 0
-        elif model_name == "single_feature_threshold":
-            probability, detail, forced_predicted_label = threshold_probability(
-                matrix,
-                labels,
-                feature_names,
-                train_indices,
-                test_index,
+            if model_name == "majority":
+                detail = "train_positive_rate"
+                forced_predicted_label = 1 if probability > 0.5 else 0
+            elif model_name == "single_feature_threshold":
+                probability, detail, forced_predicted_label = threshold_probability(
+                    matrix,
+                    labels,
+                    feature_names,
+                    train_indices,
+                    test_index,
+                )
+            elif model_name in ("logistic_regression", "random_forest"):
+                x_train, x_test = impute_train_test(matrix, train_indices, test_index)
+                try:
+                    if model_name == "logistic_regression":
+                        probability, detail = sklearn_logistic_probability(x_train, y_train, x_test)
+                    else:
+                        probability, detail = sklearn_random_forest_probability(x_train, y_train, x_test)
+                except Exception as exc:
+                    probability = majority_probability(y_train)
+                    detail = "model failed; used majority probability: %s" % exc
+                    warnings.append("fold %d: %s" % (fold["fold"], detail))
+            else:
+                raise ValueError("unknown model: %s" % model_name)
+
+            probability = safe_probability(probability)
+            predicted_label = (
+                forced_predicted_label
+                if forced_predicted_label is not None
+                else 1 if probability > 0.5 else 0
             )
-        elif model_name in ("logistic_regression", "random_forest"):
-            x_train, x_test = impute_train_test(matrix, train_indices, test_index)
-            try:
-                if model_name == "logistic_regression":
-                    probability, detail = sklearn_logistic_probability(x_train, y_train, x_test)
-                else:
-                    probability, detail = sklearn_random_forest_probability(x_train, y_train, x_test)
-            except Exception as exc:
-                probability = majority_probability(y_train)
-                detail = "model failed; used majority probability: %s" % exc
-                warnings.append("fold %d: %s" % (test_index, detail))
-        else:
-            raise ValueError("unknown model: %s" % model_name)
-
-        probability = safe_probability(probability)
-        predicted_label = (
-            forced_predicted_label
-            if forced_predicted_label is not None
-            else 1 if probability > 0.5 else 0
-        )
-        row = rows[test_index]
-        predictions.append(
-            {
-                "model": model_name,
-                "fold": test_index + 1,
-                "run_id": row.get("run_id", "row_%d" % test_index),
-                "method": row.get("method", ""),
-                "label": labels[test_index],
-                "predicted_label": predicted_label,
-                "probability": probability,
-                "correct": 1 if predicted_label == labels[test_index] else 0,
-                "detail": detail,
-            }
-        )
+            row = rows[test_index]
+            predictions.append(
+                {
+                    "model": model_name,
+                    "cv": cv_mode,
+                    "fold": fold["fold"],
+                    "held_out_group": fold["held_out_group"],
+                    "run_id": row.get("run_id", "row_%d" % test_index),
+                    "method": row.get("method", ""),
+                    "label": labels[test_index],
+                    "predicted_label": predicted_label,
+                    "probability": probability,
+                    "correct": 1 if predicted_label == labels[test_index] else 0,
+                    "detail": detail,
+                }
+            )
     return predictions, warnings
 
 
@@ -631,16 +843,36 @@ def model_names():
     return ["majority", "single_feature_threshold"]
 
 
-def make_metrics_summary(args, dataset_path, output_dir, rows, labels, specs, feature_summaries, results):
+def make_metrics_summary(
+    args,
+    dataset_path,
+    output_dir,
+    rows,
+    labels,
+    specs,
+    feature_summaries,
+    dropped_features,
+    cv_summary,
+    results,
+):
     return {
         "dataset": str(dataset_path),
         "label": args.label,
         "feature_set": args.feature_set,
         "cv": args.cv,
+        "folds_total": cv_summary["folds_total"],
+        "folds_used": cv_summary["folds_used"],
+        "folds_skipped": cv_summary["folds_skipped"],
+        "group_by": cv_summary["group_by"],
+        "held_out_groups": cv_summary["held_out_groups"],
+        "skipped_folds": cv_summary["skipped_folds"],
         "row_count": len(rows),
         "class_counts": class_counts(labels),
         "feature_count": len(specs),
         "features": [spec["name"] for spec in specs],
+        "drop_command_scale_features": args.drop_command_scale_features,
+        "drop_method_features": args.drop_method_features,
+        "dropped_features": dropped_features,
         "sklearn_available": SKLEARN_AVAILABLE,
         "sklearn_import_error": "" if SKLEARN_AVAILABLE else SKLEARN_IMPORT_ERROR,
         "leakage_avoidance": {
@@ -674,7 +906,9 @@ def write_metrics(path, summary):
 def write_predictions(path, label_name, prediction_rows):
     fieldnames = [
         "model",
+        "cv",
         "fold",
+        "held_out_group",
         "run_id",
         "method",
         "label_name",
@@ -727,14 +961,37 @@ def write_feature_summary(path, feature_summaries):
             )
 
 
-def print_terminal_summary(args, dataset_path, output_dir, labels, specs, results, feature_summaries):
+def print_terminal_summary(
+    args,
+    dataset_path,
+    output_dir,
+    labels,
+    specs,
+    dropped_features,
+    cv_summary,
+    results,
+    feature_summaries,
+):
     counts = class_counts(labels)
     print("Stage 4-B risk predictor baseline")
     print("dataset: %s" % dataset_path)
     print("label: %s" % args.label)
     print("rows: %d class_0=%d class_1=%d" % (len(labels), counts["0"], counts["1"]))
     print("feature_set: %s features=%d" % (args.feature_set, len(specs)))
+    print(
+        "ablations: drop_command_scale_features=%s drop_method_features=%s dropped_features=%d"
+        % (
+            "true" if args.drop_command_scale_features else "false",
+            "true" if args.drop_method_features else "false",
+            len(dropped_features),
+        )
+    )
     print("cv: %s" % args.cv)
+    print("folds_used: %d" % cv_summary["folds_used"])
+    print("folds_skipped: %d" % cv_summary["folds_skipped"])
+    if args.cv != "loo":
+        print("group_by: %s" % cv_summary["group_by"])
+        print("held_out_groups: %s" % ", ".join(cv_summary["held_out_groups"]))
     print("sklearn_available: %s" % ("true" if SKLEARN_AVAILABLE else "false"))
     if not SKLEARN_AVAILABLE:
         print("sklearn_import_error: %s" % SKLEARN_IMPORT_ERROR)
@@ -782,24 +1039,59 @@ def main():
         labels = build_labels(rows, args.label)
         counts = class_counts(labels)
         if len(labels) < 2:
-            raise ValueError("dataset must contain at least two rows for leave-one-out evaluation")
+            raise ValueError("dataset must contain at least two rows for cross-validation")
         if counts["0"] == 0 or counts["1"] == 0:
             raise ValueError(
                 "label %s has only one class: class_0=%d class_1=%d"
                 % (args.label, counts["0"], counts["1"])
             )
         specs = selected_feature_specs(rows, fieldnames, args.feature_set)
+        specs, dropped_features = apply_feature_ablations(specs, args)
         matrix = build_feature_matrix(rows, specs)
         feature_names = [spec["name"] for spec in specs]
         feature_summaries = summarize_features(specs, matrix)
+        folds, group_summary = build_cv_folds(rows, fieldnames, args.cv)
+        usable_folds, skipped_folds = filter_usable_folds(folds, labels)
+        cv_summary = {
+            "folds_total": len(folds),
+            "folds_used": len(usable_folds),
+            "folds_skipped": len(skipped_folds),
+            "group_by": group_summary["group_by"],
+            "held_out_groups": group_summary["held_out_groups"],
+            "skipped_folds": skipped_folds,
+        }
+        for skipped in skipped_folds:
+            group_text = (
+                " held_out_group=%s" % skipped["held_out_group"]
+                if skipped["held_out_group"]
+                else ""
+            )
+            print(
+                "WARNING: skipping fold %d%s: %s"
+                % (skipped["fold"], group_text, skipped["reason"]),
+                file=sys.stderr,
+            )
+        if not usable_folds:
+            raise ValueError(
+                "all folds were skipped for cv %s because no training fold had both classes"
+                % args.cv
+            )
 
         all_predictions = []
         results = {}
         for name in model_names():
-            prediction_rows, warnings = evaluate_model(name, rows, matrix, labels, feature_names)
+            prediction_rows, warnings = evaluate_model(
+                name,
+                rows,
+                matrix,
+                labels,
+                feature_names,
+                usable_folds,
+                args.cv,
+            )
             all_predictions.extend(prediction_rows)
             results[name] = {
-                "metrics": compute_metrics(labels, prediction_rows),
+                "metrics": compute_metrics([int(row["label"]) for row in prediction_rows], prediction_rows),
                 "warnings": warnings,
             }
 
@@ -811,10 +1103,22 @@ def main():
             labels,
             specs,
             feature_summaries,
+            dropped_features,
+            cv_summary,
             results,
         )
 
-        print_terminal_summary(args, dataset_path, output_dir, labels, specs, results, feature_summaries)
+        print_terminal_summary(
+            args,
+            dataset_path,
+            output_dir,
+            labels,
+            specs,
+            dropped_features,
+            cv_summary,
+            results,
+            feature_summaries,
+        )
 
         if not args.dry_run:
             output_dir.mkdir(parents=True, exist_ok=True)

@@ -215,6 +215,34 @@ cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --dry-run --print-summary
 ```
 
+显式运行 LOO CV 的 `early` feature set：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --cv loo --dry-run --print-summary
+```
+
+按 target group 做 `leave-one-target-out`：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --cv leave-one-target-out --dry-run --print-summary
+```
+
+测试去掉 command-scale 相关特征后的 `early` feature set：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --drop-command-scale-features --dry-run --print-summary
+```
+
+测试去掉 method/adaptation/policy identity 特征后的 `early` feature set：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --drop-method-features --dry-run --print-summary
+```
+
 完整 protocol 见 `experiments/protocols/stage4_risk_prediction_protocol.md`。生成的 `experiments/results/` 不应提交到 git。
 
 ## Stage 4-C risk dataset expansion

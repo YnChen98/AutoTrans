@@ -10,6 +10,8 @@ The 45-row `sklearn` run confirms that early-time dynamics substantially improve
 
 These results are promising, but they are not final. The dataset is still small and narrow, so this should be treated as stronger pipeline evidence, not as a deployable risk predictor claim.
 
+Important evaluation note: the reported `sklearn` numbers below used `--cv loo`. Group-CV checks and feature ablations are required before making strong claims about generalization or about whether the signal comes from early dynamics rather than target/method structure.
+
 ## Dataset Snapshot
 
 Dataset:
@@ -70,13 +72,14 @@ Early dynamics improve the overall risk-prediction profile. Compared with `basic
 - Only 45 rows are available.
 - The dataset covers only `strong` wind.
 - The dataset covers only 3 targets.
-- The evaluation uses leave-one-out cross-validation only.
-- There is no leave-one-target-out evaluation yet.
+- The reported evaluation uses leave-one-out cross-validation only.
+- Leave-one-target-out, leave-one-method-out, and leave-one-trial-out evaluations still need to be run and compared.
 - Command-scale missingness may encode method information, so some predictive signal may come from method identity rather than only early dynamics.
+- Command-scale and method-identity ablations still need to be run before treating the early-feature improvement as robust.
 
 ## Next Steps
 
-- Add group cross-validation and leave-one-target-out support.
-- Add a no-command-scale ablation to test whether command-scale missingness is leaking method information.
+- Run group cross-validation and compare against the LOO results.
+- Run command-scale and method-identity ablations to test whether command-scale missingness or method labels are carrying too much signal.
 - Expand the dataset beyond `strong` wind.
 - Later develop risk-conditioned command adaptation after the risk predictor is validated on broader data.
