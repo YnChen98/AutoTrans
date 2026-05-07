@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Stage 4-C expands the Stage 4 risk dataset from the initial 15 rows to at least 45 rows by adding strong-wind Trial 1 and Trial 3 repeats for the same three method groups already used in Trial 2.
+Stage 4-C expands the Stage 4 risk dataset from the initial 15 rows to 45 rows by adding strong-wind Trial 1 and Trial 3 repeats for the same three method groups already used in Trial 2.
 
 The goal is to support early failure-risk prediction and later risk-conditioned command adaptation. The current 15-row dataset is useful for validating the pipeline, but it is too small for final learning claims, final model selection, or method superiority claims.
 
@@ -25,9 +25,23 @@ Stage 4-C Trial 1 has now been completed and added to `experiments/protocols/sta
 - `windlevel_s085` Trial 1: 5/5 valid, with larger mean target error than `original` and `fixed_s085`.
 - Manifest total after Trial 1 addition: 30 rows.
 
+Stage 4-C Trial 3 has now been completed and added to `experiments/protocols/stage4_risk_manifest.json`:
+
+- `original` Trial 3: 2/5 valid.
+- `fixed_s085` Trial 3: 0/5 valid.
+- `windlevel_s085` Trial 3: 3/5 valid.
+- Trial 3 is a strong stress case.
+- Manifest total after Trial 3 addition: 45 rows.
+
+Expected overall 45-run counts:
+
+- `original`: 9/15 valid.
+- `fixed_s085`: 7/15 valid.
+- `windlevel_s085`: 11/15 valid.
+
 ## Target Expansion
 
-Add Trial 1 and Trial 3 for the same three methods while keeping Trial 2 in the manifest.
+Trial 1 and Trial 3 have been added for the same three methods while keeping Trial 2 in the manifest.
 
 | Trial | Target `(x, y)` | Role |
 | --- | --- | --- |
@@ -101,13 +115,19 @@ Existing Trial 2 repeats should be reused:
 - `fixed_s085` Trial 2: 5 existing repeats.
 - `windlevel_s085` Trial 2: 5 existing repeats.
 
-New runs needed for the full 45-row expansion:
+Completed Trial 1 repeats in the current manifest:
+
+- `original` Trial 1: 5 repeats.
+- `fixed_s085` Trial 1: 5 repeats.
+- `windlevel_s085` Trial 1: 5 repeats.
+
+Completed Trial 3 repeats in the current manifest:
 
 - Trial 3 `original` x 5.
 - Trial 3 `fixed_s085` x 5.
 - Trial 3 `windlevel_s085` x 5.
 
-Trial 1 has already added 15 new rows. Trial 3 will add another 15 rows, bringing the expanded dataset to at least 45 rows.
+Trial 1 has already added 15 rows. Trial 3 has added another 15 rows, bringing the expanded manifest to 45 rows.
 
 ## Analyzer Commands
 
@@ -234,7 +254,7 @@ After each batch:
 
 ## Next Step After Expansion
 
-After the manifest reaches at least 45 rows:
+After the manifest reaches 45 rows:
 
 1. Regenerate `experiments/datasets/stage4_risk_dataset.csv`.
 2. Rerun `experiments/scripts/train_stage4_risk_predictor.py`.
