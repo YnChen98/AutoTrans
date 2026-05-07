@@ -2,13 +2,13 @@
 
 ## Executive Summary
 
-Stage 4-C expands the Stage 4 risk dataset from the current 15 rows to at least 45 rows by adding strong-wind Trial 1 and Trial 3 repeats for the same three method groups already used in Trial 2.
+Stage 4-C expands the Stage 4 risk dataset from the initial 15 rows to at least 45 rows by adding strong-wind Trial 1 and Trial 3 repeats for the same three method groups already used in Trial 2.
 
 The goal is to support early failure-risk prediction and later risk-conditioned command adaptation. The current 15-row dataset is useful for validating the pipeline, but it is too small for final learning claims, final model selection, or method superiority claims.
 
 ## Current Dataset
 
-The current Stage 4-A dataset contains:
+The initial Stage 4-A dataset contains:
 
 - Trial 2 only.
 - Methods: `original`, `fixed_s085`, `windlevel_s085`.
@@ -17,6 +17,13 @@ The current Stage 4-A dataset contains:
 - Invalid count: 7.
 
 These rows should be reused. Do not rerun Trial 2 unless a specific log is later found to be corrupted or mislabeled.
+
+Stage 4-C Trial 1 has now been completed and added to `experiments/protocols/stage4_risk_manifest.json`:
+
+- `original` Trial 1: 4/5 valid, with one invalid NaN run.
+- `fixed_s085` Trial 1: 5/5 valid.
+- `windlevel_s085` Trial 1: 5/5 valid, with larger mean target error than `original` and `fixed_s085`.
+- Manifest total after Trial 1 addition: 30 rows.
 
 ## Target Expansion
 
@@ -94,16 +101,13 @@ Existing Trial 2 repeats should be reused:
 - `fixed_s085` Trial 2: 5 existing repeats.
 - `windlevel_s085` Trial 2: 5 existing repeats.
 
-New runs needed:
+New runs needed for the full 45-row expansion:
 
-- Trial 1 `original` x 5.
-- Trial 1 `fixed_s085` x 5.
-- Trial 1 `windlevel_s085` x 5.
 - Trial 3 `original` x 5.
 - Trial 3 `fixed_s085` x 5.
 - Trial 3 `windlevel_s085` x 5.
 
-This adds 30 new rows. Together with the existing 15 Trial 2 rows, the expanded dataset should contain at least 45 rows.
+Trial 1 has already added 15 new rows. Trial 3 will add another 15 rows, bringing the expanded dataset to at least 45 rows.
 
 ## Analyzer Commands
 
