@@ -60,7 +60,7 @@ rostopic echo /command_adaptation/acceleration_scale
 - `command_speed_scale.png`
 - `command_acceleration_scale.png`
 
-Current strong-wind trial evidence is summarized in `experiments/protocols/stage3b_heuristic_strong_trial_summary.md`.
+Current strong-wind trial evidence is summarized in `experiments/protocols/stage3b_heuristic_strong_trial_summary.md`; the current `policy_mode=wind_level` strong-wind summary is in `experiments/protocols/stage3b_windlevel_strong_trial_summary.md`.
 
 ## Strong Wind Experiment
 
