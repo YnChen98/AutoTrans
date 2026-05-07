@@ -294,6 +294,20 @@ Stage 4-B risk predictor baseline:
 - Use `experiments/scripts/train_stage4_risk_predictor.py` to train/evaluate the baseline risk predictor.
 - Generated results under `experiments/results/` are ignored and should not be committed.
 
+Stage 4 sklearn experiments:
+
+- Use the dedicated Python venv:
+  ~/venvs/autotrans-stage4
+- Activate with:
+  source ~/venvs/autotrans-stage4/bin/activate
+- Verified versions:
+  numpy==1.24.4
+  scipy==1.10.1
+  scikit-learn==1.3.2
+- Do not use system Python for sklearn experiments because system Python has incompatible numpy/scipy/sklearn packages.
+- Generated outputs under `experiments/results/` and `experiments/datasets/*.csv` should not be committed.
+- The venv is only for offline learning scripts; do not run ROS/catkin/roslaunch from this venv.
+
 Current dataset status:
 
 - The first dataset has 15 Stage 3-C strong Trial 2 runs.
