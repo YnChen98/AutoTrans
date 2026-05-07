@@ -249,6 +249,10 @@ python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。
 
+## Stage 4-E target diversity expansion
+
+Stage 4-D group-CV 和 feature-ablation 结果显示 `leave-one-target-out` generalization 仍然偏弱。进入 risk-conditioned policy learning 前，先按 `experiments/protocols/stage4e_target_diversity_expansion_protocol.md` 将 dataset 从 45 rows 扩展到 90 rows，并增加 Trial 4、Trial 5、Trial 6 的 target diversity。
+
 ## 查看生成结果
 
 CSV logs:
