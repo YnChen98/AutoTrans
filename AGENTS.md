@@ -11,20 +11,25 @@ Environment:
 - ROS: Noetic
 - Workspace root: ~/projects/autotrans_ws
 - Repository root: ~/projects/autotrans_ws/src/AutoTrans
-- Current working branch: autotrans-deploy
+- Current active branch: high-level-command-adaptation
 - Main demo launch command:
   cd ~/projects/autotrans_ws
   source /opt/ros/noetic/setup.bash
   source devel/setup.bash
   roslaunch payload_planner simple_run.launch
 
-Deployment status:
+Current project status:
 - ROS Noetic is installed successfully.
 - catkin_make -DCMAKE_BUILD_TYPE=Release succeeds.
 - RViz opens successfully.
 - roslaunch payload_planner simple_run.launch starts successfully.
 - 2D Nav Goal in RViz triggers planning and simulation response.
-- The current GitHub remote branch autotrans-deploy exists.
+- Stage 2-B drag-wind benchmark has been implemented.
+- Stage 3 planner-side command adaptation has been added.
+- Current focus is Stage 3-C strong-wind repeated validation.
+- Current comparison goal: original AutoTrans vs fixed scale 0.85 vs `policy_mode=wind_level` scale 0.85 using repeated Trial 2 success rate.
+- Original AutoTrans strong-wind Trial 2 showed mixed repeated evidence: 1/3 valid, 2/3 invalid.
+- Future Stage 3 evaluation should use repeated success-rate comparisons, not single-run conclusions.
 
 ## Important Paths
 
@@ -44,6 +49,11 @@ Do not modify generated files under:
 - ~/projects/autotrans_ws/build
 - ~/projects/autotrans_ws/devel
 - ~/projects/autotrans_ws/install
+
+Do not commit generated experiment outputs:
+- CSV files
+- PNG files
+- TXT log/output files
 
 ## Important Packages
 
@@ -83,6 +93,17 @@ source /opt/ros/noetic/setup.bash
 source devel/setup.bash 2>/dev/null || true
 catkin_make -DCMAKE_BUILD_TYPE=Release 2>&1 | tee build_autotrans.log
 
+## Standard Experiment Commands
+
+Run baseline trial scripts from the repository root:
+
+cd ~/projects/autotrans_ws/src/AutoTrans
+
+Set drag-wind configuration:
+
+python3 experiments/scripts/set_drag_wind_config.py --level none
+python3 experiments/scripts/set_drag_wind_config.py --level strong
+
 ## Run Command
 
 Use this command to run the main demo:
@@ -98,15 +119,97 @@ roslaunch payload_planner simple_run.launch
 2. For read-only tasks, do not modify files.
 3. For edit tasks, first inspect relevant files and propose a minimal edit plan.
 4. Do not modify generated files under build/, devel/, or install/.
-5. Do not change core algorithm logic unless explicitly requested.
-6. Prefer small, reversible changes.
-7. After editing, report:
+5. Do not modify controller, simulator, planner source, or generated directories unless explicitly requested.
+6. Do not change core algorithm logic unless explicitly requested.
+7. Prefer small, reversible changes.
+8. Do not run simulation or RViz unless explicitly requested.
+9. Do not commit or push unless explicitly instructed.
+10. Do not commit generated CSV/PNG/TXT files.
+11. Keep explanations beginner-friendly.
+12. Preserve all file paths, function names, variable names, package names, topic names, launch file names, and commands in English.
+13. Do not run long simulations unless explicitly requested.
+
+After editing, report:
    - exact changed files
    - why each file was changed
    - verification command
-8. Keep explanations beginner-friendly.
-9. Preserve all file paths, function names, variable names, package names, topic names, and commands in English.
-10. Do not run long simulations unless explicitly requested.
+   - whether commit was created
+   - whether push was performed
+
+## Frozen Safety Constraints
+
+- Do not modify `controller/**`, `uav_simulator/**`, `planner/**`, or generated directories unless explicitly requested.
+- Do not modify `build/**`, `devel/**`, or `install/**`.
+- Do not commit generated CSV/PNG/TXT files.
+- Do not run simulation or RViz unless explicitly asked.
+- For edit tasks, inspect files first and propose a minimal edit plan before modifying.
+- Do not commit or push unless explicitly instructed.
+
+## Stage 2-B Wind Benchmark Notes
+
+- Stage 2-B drag-wind benchmark is implemented.
+- Strong wind uses `wind_max_force: 0.0075`.
+- Strong wind logging annotation uses `wind_force_norm: 0.007500`.
+- `wind_signal_publisher` publishes `/wind_force` as an annotation/logging signal.
+- Actual drag wind is configured through `uav_simulator/uav_simulator/config/so3_quadrotor.yaml`.
+- Use `experiments/scripts/set_drag_wind_config.py` to switch wind levels.
+- Always restore wind config to `none` after wind experiments.
+
+## Stage 3 Command-Adaptation Notes
+
+Planner runtime adaptation topics are absolute topic names:
+
+- `/command_adaptation/speed_scale`
+- `/command_adaptation/acceleration_scale`
+
+Planner topic mode should use:
+
+- `manager/enable_command_adaptation=true`
+- `manager/adaptation_mode=topic`
+- `manager/require_adaptation_topic_ready=true`
+
+Restore planner params to no-op after experiments:
+
+- `enable_command_adaptation=false`
+- `adaptation_mode=none`
+- `speed_scale=1.0`
+- `acceleration_scale=1.0`
+- `require_adaptation_topic_ready=false`
+
+## Heuristic Adapter Notes
+
+- The independent `command_adaptation` package lives under `experiments/command_adaptation`.
+- `heuristic_command_adapter` supports `policy_mode=wind_level`.
+- `heuristic_command_adapter` also supports `policy_mode=risk_reactive`.
+- `policy_mode=wind_level` is the current recommended/default candidate.
+- `policy_mode=risk_reactive` is experimental, not default, because it can react too late and produced mixed/invalid runs.
+- `wind_level` strong scale is currently `0.85` unless a task explicitly changes it.
+- Do not claim `wind_level` is final; it is a candidate requiring repeated validation.
+
+## Analyzer and Validity Notes
+
+Formal Stage 3 analysis should use target-error args:
+
+--target_x
+--target_y
+--target_z
+--payload_target_z
+--target_xy_tolerance 0.5
+
+- Interpret `valid_run_suggested` together with target-error metrics.
+- `command_speed_scale` and `command_acceleration_scale` are logged and analyzed.
+
+## Current Experiment Direction
+
+Next major task: Stage 3-C success-rate comparison.
+
+Compare:
+
+- A. original AutoTrans
+- B. fixed XML scale `0.85`
+- C. `policy_mode=wind_level` scale `0.85`
+
+Use repeated Trial 2 runs, not single-run metrics. Record invalid runs; do not hide them.
 
 ## Research Direction
 
