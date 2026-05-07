@@ -12,3 +12,4 @@ experiments/figures/*.txt
 experiments/datasets/*.csv
 experiments/datasets/*.npz
 experiments/datasets/*.jsonl
+experiments/results/

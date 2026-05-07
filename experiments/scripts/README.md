@@ -197,6 +197,26 @@ python3 experiments/scripts/build_stage4_risk_dataset.py --manifest experiments/
 
 完整 schema、labels 和 early-window features 见 `experiments/protocols/stage4_risk_dataset_protocol.md`。生成的 `experiments/datasets/*.csv` 不应提交到 git。
 
+## Stage 4-B risk predictor baseline
+
+`experiments/scripts/train_stage4_risk_predictor.py` 用于在 Stage 4-A dataset 上训练和评估 failure-risk prediction baseline。当前 dataset 很小，这一步只建立 learning/evaluation pipeline，不应声明最终性能。
+
+先用 dry-run 检查 `basic` feature set：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set basic --dry-run --print-summary
+```
+
+检查 `early` feature set：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --dry-run --print-summary
+```
+
+完整 protocol 见 `experiments/protocols/stage4_risk_prediction_protocol.md`。生成的 `experiments/results/` 不应提交到 git。
+
 ## 查看生成结果
 
 CSV logs:
