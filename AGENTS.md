@@ -150,6 +150,36 @@ After editing, report:
 - If a command triggers sandbox retry or approval, do not repeatedly retry it. Stop and report the exact command for the user to run manually.
 - Do not commit or push unless explicitly instructed.
 
+## Auto-Commit Policy For Low-Risk Tasks
+
+- For documentation-only tasks and small static-code tasks, Codex may commit automatically only if the user explicitly says auto-commit is allowed.
+- Auto-commit is allowed only when all of these are true:
+  - `git diff --check` passes
+  - `git status --short` contains only allowed files
+  - no generated CSV/PNG/TXT files are staged
+  - no `build/`, `devel/`, or `install/` files are staged
+  - no planner/controller/simulator files are modified unless explicitly allowed
+  - no simulation/RViz was run
+- Standard pre-edit commands:
+  - `tools/pre_codex_checkpoint.sh`
+  - `git branch --show-current`
+  - `git rev-parse HEAD`
+  - `git status --short`
+- Standard post-edit commands:
+  - `git diff --check`
+  - `git status --short`
+  - `git add <allowed files only>`
+  - `git commit -m "<task-specific message>"`
+  - `git rev-parse HEAD`
+  - `git status`
+- Codex should output:
+  - changed files
+  - verification results
+  - commit SHA from `git rev-parse HEAD`
+  - whether push was performed
+- Do not push unless the user explicitly requests push.
+- If any command triggers sandbox retry or approval, do not repeatedly retry. Stop and report the exact command for the user to run manually.
+
 ## Frozen Safety Constraints
 
 - Do not modify `controller/**`, `uav_simulator/**`, `planner/**`, or generated directories unless explicitly requested.
