@@ -180,6 +180,23 @@ roslaunch command_adaptation heuristic_command_adapter.launch
 
 详细流程见 `experiments/command_adaptation/README.md` 和 `experiments/protocols/stage3b_heuristic_command_adapter_protocol.md`。
 
+## Stage 4-A risk dataset builder
+
+`experiments/scripts/build_stage4_risk_dataset.py` 从 manifest 中列出的 AutoTrans CSV logs 构建 failure-risk prediction dataset。初始 manifest 是：
+
+```bash
+experiments/protocols/stage4_risk_manifest.json
+```
+
+先 dry-run 检查 planned rows 和 aggregate labels：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/build_stage4_risk_dataset.py --manifest experiments/protocols/stage4_risk_manifest.json --output experiments/datasets/stage4_risk_dataset.csv --dry-run --print-summary
+```
+
+完整 schema、labels 和 early-window features 见 `experiments/protocols/stage4_risk_dataset_protocol.md`。生成的 `experiments/datasets/*.csv` 不应提交到 git。
+
 ## 查看生成结果
 
 CSV logs:

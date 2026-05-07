@@ -9,3 +9,6 @@ quadrotor_payload_mpc_with_ext_force_codegen
 experiments/logs/*.csv
 experiments/figures/*.png
 experiments/figures/*.txt
+experiments/datasets/*.csv
+experiments/datasets/*.npz
+experiments/datasets/*.jsonl
