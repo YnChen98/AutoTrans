@@ -281,6 +281,38 @@ Compare:
 
 Use repeated Trial 2 runs, not single-run metrics. Record invalid runs; do not hide them.
 
+## Stage 4 Risk Learning Workflow
+
+Stage 4-A dataset builder:
+
+- Use `experiments/scripts/build_stage4_risk_dataset.py` to build the supervised risk dataset.
+- The manifest is `experiments/protocols/stage4_risk_manifest.json`.
+- Generated datasets under `experiments/datasets/` are ignored and should not be committed.
+
+Stage 4-B risk predictor baseline:
+
+- Use `experiments/scripts/train_stage4_risk_predictor.py` to train/evaluate the baseline risk predictor.
+- Generated results under `experiments/results/` are ignored and should not be committed.
+
+Current dataset status:
+
+- The first dataset has 15 Stage 3-C strong Trial 2 runs.
+- `original`: 3/5 valid.
+- `fixed_s085`: 2/5 valid.
+- `windlevel_s085`: 3/5 valid.
+- The dataset is too small for final claims.
+
+Current learning conclusion:
+
+- Early dynamic features show more promise than metadata-only features.
+- The current predictor is pipeline validation, not a final algorithm result.
+
+Safety:
+
+- Do not modify planner/controller/simulator for Stage 4 dataset/model tasks.
+- Do not run simulation, RViz, or `catkin_make` in Codex for Stage 4 learning scripts.
+- Use static checks only unless the user explicitly asks otherwise.
+
 ## Research Direction
 
 The intended research use of this project is not merely reproducing the demo. The goal is to turn AutoTrans into a benchmark and research platform for:
