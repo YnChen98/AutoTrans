@@ -136,6 +136,20 @@ After editing, report:
    - whether commit was created
    - whether push was performed
 
+## Codex Approval and Sandbox Policy
+
+- Prefer static checks over heavy commands.
+- Do not run `catkin_make`, `roslaunch`, RViz, simulation, or long-running trial commands unless explicitly requested.
+- For most edit tasks, Codex should provide the build/run commands for the user to execute manually.
+- Lightweight commands allowed by default:
+  - `sed` / `grep` / `rg` file inspection
+  - `git diff --check`
+  - `git diff --stat`
+  - `git status --short`
+  - `python3 -m py_compile` for edited Python scripts
+- If a command triggers sandbox retry or approval, do not repeatedly retry it. Stop and report the exact command for the user to run manually.
+- Do not commit or push unless explicitly instructed.
+
 ## Frozen Safety Constraints
 
 - Do not modify `controller/**`, `uav_simulator/**`, `planner/**`, or generated directories unless explicitly requested.
