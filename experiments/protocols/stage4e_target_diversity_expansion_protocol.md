@@ -4,7 +4,7 @@
 
 Stage 4-E expands the Stage 4 risk dataset from 45 rows to 90 rows by adding three new target points: Trial 4, Trial 5, and Trial 6.
 
-Trial 4 and Trial 5 expansion are completed. After adding the Trial 5 batch to `experiments/protocols/stage4_risk_manifest.json`, the manifest should contain 75 rows.
+Trial 4, Trial 5, and Trial 6 expansion are completed. After adding the Trial 6 batch to `experiments/protocols/stage4_risk_manifest.json`, the manifest should contain 90 rows.
 
 The motivation is the weak leave-one-target-out generalization observed in Stage 4-D group-CV and feature-ablation results. LOO and leave-one-method-out checks are useful pipeline diagnostics, but the current model is not ready for risk-conditioned policy learning because held-out target performance is still weak.
 
@@ -67,7 +67,7 @@ Totals:
 | --- | --- | ---: |
 | Trial 4 | Completed | 60 |
 | Trial 5 | Completed | 75 |
-| Trial 6 | Pending | 90 |
+| Trial 6 | Completed | 90 |
 
 ## Method Configurations
 
@@ -265,11 +265,11 @@ After each batch:
 - Mark collision-observed runs with `manual_invalid=true`.
 - Leave interrupted short logs out of the manifest, or mark them with `exclude_from_training=true` if explicit traceability is needed.
 
-## Next Step After Trial 5
+## Next Step After Trial 6
 
-After the Trial 5 manifest update, rebuild `experiments/datasets/stage4_risk_dataset.csv` and rerun the risk predictor on the 75-row dataset with both `label_invalid` and `label_strict_invalid`. Then decide whether to continue Trial 6.
+After the Trial 6 manifest update, rebuild `experiments/datasets/stage4_risk_dataset.csv` and rerun the risk predictor on the 90-row dataset with `label_strict_invalid`.
 
-For the 75-row checkpoint, rebuild the dataset:
+For the 90-row checkpoint, rebuild the dataset:
 
 ```bash
 cd ~/projects/autotrans_ws/src/AutoTrans
