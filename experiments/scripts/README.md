@@ -203,6 +203,8 @@ builder 会同时输出 legacy `label_invalid` 和推荐用于后续 risk predic
 
 `experiments/scripts/train_stage4_risk_predictor.py` 用于在 Stage 4-A dataset 上训练和评估 failure-risk prediction baseline。当前 dataset 很小，这一步只建立 learning/evaluation pipeline，不应声明最终性能。
 
+默认 `--label label_invalid` 保持 legacy analyzer validity 行为，便于和早期结果兼容。安全阈值相关的 risk prediction 推荐显式使用 `--label label_strict_invalid`；它由 dataset builder 合并 target、speed、swing、NaN/log-health 和 `manual_invalid=true` 条件，适合 Trial 5 这类 `valid_run_suggested=true` 但安全阈值或人工观察判定失败的 run。
+
 先用 dry-run 检查 `basic` feature set：
 
 ```bash
@@ -229,6 +231,13 @@ python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments
 ```bash
 cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --cv leave-one-target-out --dry-run --print-summary
+```
+
+用推荐的 strict-invalid label 做 safety-aware dry-run：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --dry-run --print-summary
 ```
 
 测试去掉 command-scale 相关特征后的 `early` feature set：

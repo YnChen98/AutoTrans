@@ -34,12 +34,23 @@ The default target is:
 
 - `label_invalid`
 
+`label_invalid` is the legacy analyzer validity label. It follows `valid_run_suggested` and is kept as the default for backward compatibility.
+
+For safety-aware risk prediction, prefer:
+
+- `label_strict_invalid`
+
+`label_strict_invalid` is built by `experiments/scripts/build_stage4_risk_dataset.py` from target, speed, swing, NaN/log-health, and manual invalid conditions. It is the recommended label when visually observed failures or safety-threshold failures should count as invalid even if the legacy analyzer validity label is still permissive.
+
 The script also supports:
 
+- `label_strict_invalid`
 - `label_nan`
 - `label_target_fail`
 - `label_speed_fail`
 - `label_swing_fail`
+
+If the selected label column is missing from a dataset, the script exits with a clear error and lists the available `label_*` columns.
 
 If the selected label has only one class, the script stops with a clear error because cross-validation would not be meaningful.
 
@@ -168,6 +179,13 @@ Check whether early-window results survive target-level grouping:
 ```bash
 cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --feature-set early --cv leave-one-target-out --dry-run --print-summary
+```
+
+Run the recommended safety-aware strict-invalid label:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --dry-run --print-summary
 ```
 
 Run command-scale and method-identity ablations:

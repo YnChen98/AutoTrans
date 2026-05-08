@@ -81,7 +81,7 @@ Missing numeric inputs are written as `nan`. Older CSV logs without `wind_force_
 The builder creates binary labels:
 
 - `label_invalid`: `1` when `valid_run_suggested` is false. This is kept unchanged for backward compatibility.
-- `label_strict_invalid`: `1` when any of `label_invalid`, `label_target_fail`, `label_speed_fail`, `label_swing_fail`, or `manual_invalid` is `1`/`true`.
+- `label_strict_invalid`: `1` when any of `label_invalid`, `label_target_fail`, `label_speed_fail`, `label_swing_fail`, or `manual_invalid` is `1`/`true`. Because `label_invalid` includes NaN/log-health failures, this strict label covers target, speed, swing, NaN, and manual invalid conditions from the builder.
 - `label_nan`: `1` when any key state field becomes `nan` or `inf` after finite data has appeared.
 - `label_target_fail`: `1` when `final_uav_xy_error > target_xy_tolerance`.
 - `label_speed_fail`: `1` when `max_uav_speed > 4.0` or `max_payload_speed > 4.0`.
@@ -89,7 +89,7 @@ The builder creates binary labels:
 
 The default `target_xy_tolerance` is `0.5`.
 
-`valid_run_suggested` is not the only learning label. It is computed from log health, final target error, speed, swing, and final altitude checks, but it cannot detect all visually observed transport failures. For future risk prediction, use `label_strict_invalid` as the recommended failure label unless an experiment explicitly needs the legacy `label_invalid`.
+`valid_run_suggested` is not the only learning label. It is computed from log health, final target error, speed, swing, and final altitude checks, but it cannot detect all visually observed transport failures. `label_invalid` is the legacy analyzer validity label. For future safety-aware risk prediction, use `label_strict_invalid` as the recommended failure label unless an experiment explicitly needs the legacy `label_invalid`.
 
 When a run visibly collides with an obstacle or otherwise fails transport even though `valid_run_suggested=true`, keep the run in the manifest and set:
 

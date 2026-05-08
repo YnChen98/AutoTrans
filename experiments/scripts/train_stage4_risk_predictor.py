@@ -14,6 +14,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 SUPPORTED_LABELS = [
     "label_invalid",
+    "label_strict_invalid",
     "label_nan",
     "label_target_fail",
     "label_speed_fail",
@@ -339,12 +340,18 @@ def build_feature_matrix(rows, specs):
     return matrix
 
 
-def build_labels(rows, label_column):
+def build_labels(rows, fieldnames, label_column):
+    if label_column not in fieldnames:
+        available_labels = sorted(column for column in fieldnames if column.startswith("label_"))
+        available_text = ", ".join(available_labels) if available_labels else "none"
+        raise ValueError(
+            "dataset is missing selected label column %s; available label_* columns: %s"
+            % (label_column, available_text)
+        )
+
     labels = []
     for index, row in enumerate(rows):
         run_id = row.get("run_id", "row_%d" % index)
-        if label_column not in row:
-            raise ValueError("dataset is missing label column: %s" % label_column)
         labels.append(parse_binary(row.get(label_column), label_column, run_id))
     return labels
 
@@ -1036,7 +1043,7 @@ def main():
         dataset_path = resolve_path(args.dataset)
         output_dir = resolve_path(args.output_dir)
         rows, fieldnames = read_dataset(dataset_path)
-        labels = build_labels(rows, args.label)
+        labels = build_labels(rows, fieldnames, args.label)
         counts = class_counts(labels)
         if len(labels) < 2:
             raise ValueError("dataset must contain at least two rows for cross-validation")
