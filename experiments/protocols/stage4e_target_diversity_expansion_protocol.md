@@ -4,6 +4,8 @@
 
 Stage 4-E expands the Stage 4 risk dataset from 45 rows to 90 rows by adding three new target points: Trial 4, Trial 5, and Trial 6.
 
+Trial 4 expansion is completed. After adding the Trial 4 batch to `experiments/protocols/stage4_risk_manifest.json`, the manifest should contain 60 rows.
+
 The motivation is the weak leave-one-target-out generalization observed in Stage 4-D group-CV and feature-ablation results. LOO and leave-one-method-out checks are useful pipeline diagnostics, but the current model is not ready for risk-conditioned policy learning because held-out target performance is still weak.
 
 Stage 4-E is a data-diversity expansion step, not an online policy-learning step. The result should be used to test whether target generalization improves after adding more target diversity.
@@ -56,7 +58,16 @@ Totals:
 - 3 methods per trial
 - 5 repeats per method-target condition
 - Total new rows: 45
-- Dataset size after expansion: 90 rows
+- Dataset size after Trial 4 update: 60 rows
+- Dataset size after full Trial 4/5/6 expansion: 90 rows
+
+## Current Completion Status
+
+| Trial | Status | Manifest rows after update |
+| --- | --- | ---: |
+| Trial 4 | Completed | 60 |
+| Trial 5 | Pending | 75 |
+| Trial 6 | Pending | 90 |
 
 ## Method Configurations
 
@@ -254,9 +265,20 @@ After each batch:
 - Mark collision-observed runs with `manual_invalid=true`.
 - Leave interrupted short logs out of the manifest, or mark them with `exclude_from_training=true` if explicit traceability is needed.
 
-## Next Step After Expansion
+## Next Step After Trial 4
 
-After Stage 4-E reaches 90 manifest rows, rebuild the dataset:
+After the Trial 4 manifest update, rebuild `experiments/datasets/stage4_risk_dataset.csv` and rerun the risk predictor on the 60-row dataset before continuing Trial 5 and Trial 6.
+
+For the 60-row checkpoint, rebuild the dataset:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/build_stage4_risk_dataset.py --manifest experiments/protocols/stage4_risk_manifest.json --output experiments/datasets/stage4_risk_dataset.csv --print-summary
+```
+
+## Next Step After Full Expansion
+
+After Stage 4-E reaches 90 manifest rows, rebuild the dataset again:
 
 ```bash
 cd ~/projects/autotrans_ws/src/AutoTrans
