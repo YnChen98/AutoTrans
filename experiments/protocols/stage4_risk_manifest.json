@@ -1,6 +1,13 @@
 {
-  "schema_version": "stage4_risk_manifest_v1",
-  "description": "Stage 4 risk dataset manifest for Stage 3-C strong Trial 2 and Stage 4-C strong Trial 1/Trial 3 repeated runs.",
+  "schema_version": "stage4_risk_manifest_v2",
+  "description": "Stage 4 risk dataset manifest for repeated strong-wind runs, with optional manual invalid and training-exclusion annotations.",
+  "optional_run_fields": [
+    "manual_invalid",
+    "manual_invalid_reason",
+    "exclude_from_training",
+    "exclude_reason",
+    "notes"
+  ],
   "runs": [
     {
       "run_id": "original_strong_trial2_repeat1",

@@ -38,6 +38,8 @@ If a target is consistently invalid because of an obvious map, reachability, or 
 
 Screening rows should only be added to `experiments/protocols/stage4_risk_manifest.json` if they follow the final naming convention, use the final method configuration, and are intended to count as one of the five repeats. Otherwise keep them as scratch logs and do not commit generated outputs.
 
+Interrupted scratch logs should not become training examples. If an interrupted run is kept in the manifest for traceability, set `exclude_from_training=true` and write a short `exclude_reason`; otherwise do not add it. The interrupted 4.7-second short log from Stage 4-E should remain outside the training dataset unless it is explicitly requested later.
+
 ## Full Expansion Matrix
 
 For each of Trial 4, Trial 5, and Trial 6, run:
@@ -177,7 +179,9 @@ python3 experiments/autotrans_logger/scripts/analyze_log.py \
   --target_xy_tolerance 0.5
 ```
 
-Interpret `valid_run_suggested` together with final target-error metrics. Record invalid runs explicitly; do not delete, hide, or replace them after the target passes feasibility screening.
+Interpret `valid_run_suggested` together with final target-error metrics and visual transport evidence. `valid_run_suggested` is not the only learning label: it can miss obstacle collisions or other observed transport failures when the log has no NaN and final target error is within tolerance.
+
+For collision-observed runs, keep the run and set `manual_invalid=true` plus a concise `manual_invalid_reason` in `experiments/protocols/stage4_risk_manifest.json`. The dataset builder will preserve the legacy `label_invalid` value and set `label_strict_invalid=1` through the manual annotation. Record invalid runs explicitly; do not delete, hide, or replace them after the target passes feasibility screening.
 
 ## Naming Convention
 
@@ -220,6 +224,8 @@ Each new manifest entry must include `csv_path` and metadata consistent with the
 - `trial_name`
 - `repeat_id`
 - optional `notes`
+- optional `manual_invalid` and `manual_invalid_reason` for observed transport failures such as obstacle collision
+- optional `exclude_from_training` and `exclude_reason` for interrupted or scratch logs that should not become training examples
 
 The manifest is committed because it is the reproducibility index for generated logs. Generated dataset CSV files under `experiments/datasets/` are ignored and should not be committed.
 
@@ -245,6 +251,8 @@ After each batch:
 - Run `git status --short`.
 - Confirm there are no XML/YAML temporary changes.
 - Record invalid runs explicitly instead of deleting or replacing them.
+- Mark collision-observed runs with `manual_invalid=true`.
+- Leave interrupted short logs out of the manifest, or mark them with `exclude_from_training=true` if explicit traceability is needed.
 
 ## Next Step After Expansion
 
@@ -254,6 +262,8 @@ After Stage 4-E reaches 90 manifest rows, rebuild the dataset:
 cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/build_stage4_risk_dataset.py --manifest experiments/protocols/stage4_risk_manifest.json --output experiments/datasets/stage4_risk_dataset.csv --print-summary
 ```
+
+For future risk prediction, prefer `label_strict_invalid` over the legacy `label_invalid` because it includes target, speed, swing, and manual collision annotations.
 
 Use the dedicated Stage 4 sklearn environment for predictor runs:
 

@@ -195,6 +195,8 @@ cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/build_stage4_risk_dataset.py --manifest experiments/protocols/stage4_risk_manifest.json --output experiments/datasets/stage4_risk_dataset.csv --dry-run --print-summary
 ```
 
+builder 会同时输出 legacy `label_invalid` 和推荐用于后续 risk prediction 的 `label_strict_invalid`。`label_strict_invalid` 会合并 target/speed/swing failure 和 manifest 中的 `manual_invalid=true`，因此碰撞观察但 `valid_run_suggested=true` 的 run 应在 manifest 中手工标为 `manual_invalid=true`。中断短日志应不加入 manifest，或用 `exclude_from_training=true` 标注；默认生成 dataset 时这些 excluded rows 不会写入 CSV，只有加 `--include-excluded` 才会写入。
+
 完整 schema、labels 和 early-window features 见 `experiments/protocols/stage4_risk_dataset_protocol.md`。生成的 `experiments/datasets/*.csv` 不应提交到 git。
 
 ## Stage 4-B risk predictor baseline

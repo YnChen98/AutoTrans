@@ -29,7 +29,15 @@ REQUIRED_RUN_FIELDS = [
     "repeat_id",
 ]
 
-METADATA_FIELDS = REQUIRED_RUN_FIELDS + ["notes", "target_xy_tolerance"]
+OPTIONAL_MANIFEST_FIELDS = [
+    "notes",
+    "manual_invalid",
+    "manual_invalid_reason",
+    "exclude_from_training",
+    "exclude_reason",
+]
+
+METADATA_FIELDS = REQUIRED_RUN_FIELDS + OPTIONAL_MANIFEST_FIELDS + ["target_xy_tolerance"]
 
 RUN_FEATURE_FIELDS = [
     "sample_count",
@@ -63,6 +71,7 @@ RUN_FEATURE_FIELDS = [
 
 LABEL_FIELDS = [
     "label_invalid",
+    "label_strict_invalid",
     "label_nan",
     "label_target_fail",
     "label_speed_fail",
@@ -121,6 +130,11 @@ def parse_args():
     parser.add_argument("--output", required=True, help="Output CSV dataset path.")
     parser.add_argument("--dry-run", action="store_true", help="Summarize planned rows without writing CSV output.")
     parser.add_argument(
+        "--include-excluded",
+        action="store_true",
+        help="Write rows marked exclude_from_training=true instead of filtering them from the dataset.",
+    )
+    parser.add_argument(
         "--target-xy-tolerance",
         type=float,
         default=0.5,
@@ -145,6 +159,26 @@ def parse_float(value):
         return float(text)
     except ValueError:
         return math.nan
+
+
+def parse_manifest_bool(run, field, default=False):
+    if field not in run:
+        return default
+    value = run.get(field)
+    if isinstance(value, bool):
+        return value
+    raise ValueError("%s for run_id=%s must be true or false" % (field, run.get("run_id", "<unknown>")))
+
+
+def parse_manifest_string(run, field, default=""):
+    if field not in run:
+        return default
+    value = run.get(field)
+    if value is None:
+        return default
+    if isinstance(value, str):
+        return value
+    raise ValueError("%s for run_id=%s must be a string" % (field, run.get("run_id", "<unknown>")))
 
 
 def parse_windows(text):
@@ -203,6 +237,10 @@ def load_manifest(path):
         if run_id in seen_run_ids:
             raise ValueError("duplicate run_id in manifest: %s" % run_id)
         seen_run_ids.add(run_id)
+        parse_manifest_bool(run, "manual_invalid")
+        parse_manifest_bool(run, "exclude_from_training")
+        parse_manifest_string(run, "manual_invalid_reason")
+        parse_manifest_string(run, "exclude_reason")
     return runs
 
 
@@ -505,6 +543,11 @@ def compute_run_row(run, args, windows):
     rows, fieldnames = read_csv_rows(csv_path)
     fieldnames = set(fieldnames)
 
+    manual_invalid = parse_manifest_bool(run, "manual_invalid")
+    manual_invalid_reason = parse_manifest_string(run, "manual_invalid_reason")
+    exclude_from_training = parse_manifest_bool(run, "exclude_from_training")
+    exclude_reason = parse_manifest_string(run, "exclude_reason")
+
     target_x = parse_float(run.get("target_x"))
     target_y = parse_float(run.get("target_y"))
     target_z = parse_float(run.get("target_z"))
@@ -590,7 +633,38 @@ def compute_run_row(run, args, windows):
     for field in REQUIRED_RUN_FIELDS:
         row[field] = run.get(field)
     row["notes"] = run.get("notes", "")
+    row["manual_invalid"] = manual_invalid
+    row["manual_invalid_reason"] = manual_invalid_reason
+    row["exclude_from_training"] = exclude_from_training
+    row["exclude_reason"] = exclude_reason
     row["target_xy_tolerance"] = args.target_xy_tolerance
+    label_invalid = 0 if valid_run_suggested else 1
+    label_nan = 1 if has_nan_state else 0
+    label_target_fail = 1 if target_xy_failure else 0
+    label_speed_fail = (
+        1
+        if (
+            (math.isfinite(max_uav_speed) and max_uav_speed > LABEL_SPEED_FAIL_MPS)
+            or (math.isfinite(max_payload_speed) and max_payload_speed > LABEL_SPEED_FAIL_MPS)
+        )
+        else 0
+    )
+    label_swing_fail = (
+        1
+        if math.isfinite(max_swing_angle_deg) and max_swing_angle_deg > LABEL_SWING_FAIL_DEG
+        else 0
+    )
+    label_strict_invalid = (
+        1
+        if (
+            label_invalid == 1
+            or label_target_fail == 1
+            or label_speed_fail == 1
+            or label_swing_fail == 1
+            or manual_invalid
+        )
+        else 0
+    )
     row.update(
         {
             "sample_count": len(rows),
@@ -620,18 +694,12 @@ def compute_run_row(run, args, windows):
             "min_command_speed_scale": min_or_nan(command_speed_scale),
             "max_command_speed_scale": max_or_nan(command_speed_scale),
             "final_command_speed_scale": final_or_nan(command_speed_scale),
-            "label_invalid": 0 if valid_run_suggested else 1,
-            "label_nan": 1 if has_nan_state else 0,
-            "label_target_fail": 1 if target_xy_failure else 0,
-            "label_speed_fail": 1
-            if (
-                (math.isfinite(max_uav_speed) and max_uav_speed > LABEL_SPEED_FAIL_MPS)
-                or (math.isfinite(max_payload_speed) and max_payload_speed > LABEL_SPEED_FAIL_MPS)
-            )
-            else 0,
-            "label_swing_fail": 1
-            if math.isfinite(max_swing_angle_deg) and max_swing_angle_deg > LABEL_SWING_FAIL_DEG
-            else 0,
+            "label_invalid": label_invalid,
+            "label_strict_invalid": label_strict_invalid,
+            "label_nan": label_nan,
+            "label_target_fail": label_target_fail,
+            "label_speed_fail": label_speed_fail,
+            "label_swing_fail": label_swing_fail,
         }
     )
     row.update(
@@ -688,29 +756,54 @@ def write_dataset(path, rows, fieldnames):
             writer.writerow({field: format_value(row.get(field)) for field in fieldnames})
 
 
-def print_summary(rows, skipped_count, output_path, dry_run):
-    total = len(rows)
-    label_totals = {field: sum(int(row.get(field, 0)) for row in rows) for field in LABEL_FIELDS}
-    method_counts = defaultdict(lambda: {"rows": 0, "valid": 0, "invalid": 0})
-    for row in rows:
+def row_is_excluded(row):
+    return bool(row.get("exclude_from_training", False))
+
+
+def rows_for_output(rows, include_excluded):
+    if include_excluded:
+        return list(rows)
+    return [row for row in rows if not row_is_excluded(row)]
+
+
+def print_summary(rows, skipped_count, output_path, dry_run, include_excluded):
+    output_rows = rows_for_output(rows, include_excluded)
+    total = len(output_rows)
+    label_totals = {field: sum(int(row.get(field, 0)) for row in output_rows) for field in LABEL_FIELDS}
+    manual_invalid_count = sum(1 for row in output_rows if bool(row.get("manual_invalid", False)))
+    excluded_count = sum(1 for row in rows if row_is_excluded(row))
+    method_counts = defaultdict(lambda: {"rows": 0, "valid": 0, "invalid": 0, "strict_invalid": 0})
+    for row in output_rows:
         method = str(row.get("method", "unknown"))
         method_counts[method]["rows"] += 1
         if int(row.get("label_invalid", 0)) == 1:
             method_counts[method]["invalid"] += 1
         else:
             method_counts[method]["valid"] += 1
+        if int(row.get("label_strict_invalid", 0)) == 1:
+            method_counts[method]["strict_invalid"] += 1
 
     action = "would write" if dry_run else "wrote"
     print("%s %d dataset rows to %s" % (action, total, output_path))
+    print("manifest_rows: %d" % len(rows))
+    print("include_excluded: %s" % ("true" if include_excluded else "false"))
     print("skipped_runs: %d" % skipped_count)
+    print("manual_invalid_count: %d" % manual_invalid_count)
+    print("excluded_count: %d" % excluded_count)
     for field in LABEL_FIELDS:
         print("%s_count: %d" % (field, label_totals[field]))
     print("method_counts:")
     for method in sorted(method_counts):
         counts = method_counts[method]
         print(
-            "  %s: rows=%d valid=%d invalid=%d"
-            % (method, counts["rows"], counts["valid"], counts["invalid"])
+            "  %s: rows=%d valid=%d invalid=%d strict_invalid=%d"
+            % (
+                method,
+                counts["rows"],
+                counts["valid"],
+                counts["invalid"],
+                counts["strict_invalid"],
+            )
         )
 
 
@@ -743,15 +836,20 @@ def main():
     if args.dry_run:
         for row in rows:
             print(
-                "planned_row run_id=%s method=%s valid_run_suggested=%s label_invalid=%s"
+                "planned_row run_id=%s method=%s valid_run_suggested=%s "
+                "label_invalid=%s label_strict_invalid=%s manual_invalid=%s "
+                "exclude_from_training=%s"
                 % (
                     row.get("run_id"),
                     row.get("method"),
                     format_value(row.get("valid_run_suggested")),
                     row.get("label_invalid"),
+                    row.get("label_strict_invalid"),
+                    format_value(row.get("manual_invalid")),
+                    format_value(row.get("exclude_from_training")),
                 )
             )
-        print_summary(rows, len(errors), output_path, dry_run=True)
+        print_summary(rows, len(errors), output_path, dry_run=True, include_excluded=args.include_excluded)
         return 1 if errors else 0
 
     if errors:
@@ -759,9 +857,10 @@ def main():
         return 1
 
     fieldnames = fieldnames_for(windows)
-    write_dataset(output_path, rows, fieldnames)
+    output_rows = rows_for_output(rows, args.include_excluded)
+    write_dataset(output_path, output_rows, fieldnames)
     if args.print_summary:
-        print_summary(rows, 0, output_path, dry_run=False)
+        print_summary(rows, 0, output_path, dry_run=False, include_excluded=args.include_excluded)
     return 0
 
 

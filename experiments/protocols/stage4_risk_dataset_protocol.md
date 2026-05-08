@@ -25,6 +25,10 @@ The manifest is a JSON object with a `runs` list. Each run describes one log fil
 - `trial_name`
 - `repeat_id`
 - `notes` optional
+- `manual_invalid` optional, default `false`
+- `manual_invalid_reason` optional
+- `exclude_from_training` optional, default `false`
+- `exclude_reason` optional
 
 The initial manifest is:
 
@@ -38,6 +42,10 @@ It includes the known Stage 3-C strong Trial 2 repeats for original AutoTrans, f
 
 The builder writes one CSV row per manifest run. Each row preserves the manifest metadata, then adds run-level features:
 
+- `manual_invalid`
+- `manual_invalid_reason`
+- `exclude_from_training`
+- `exclude_reason`
 - `sample_count`
 - `duration_sec`
 - `effective_log_rate_hz`
@@ -72,13 +80,32 @@ Missing numeric inputs are written as `nan`. Older CSV logs without `wind_force_
 
 The builder creates binary labels:
 
-- `label_invalid`: `1` when `valid_run_suggested` is false.
+- `label_invalid`: `1` when `valid_run_suggested` is false. This is kept unchanged for backward compatibility.
+- `label_strict_invalid`: `1` when any of `label_invalid`, `label_target_fail`, `label_speed_fail`, `label_swing_fail`, or `manual_invalid` is `1`/`true`.
 - `label_nan`: `1` when any key state field becomes `nan` or `inf` after finite data has appeared.
 - `label_target_fail`: `1` when `final_uav_xy_error > target_xy_tolerance`.
 - `label_speed_fail`: `1` when `max_uav_speed > 4.0` or `max_payload_speed > 4.0`.
 - `label_swing_fail`: `1` when `max_swing_angle_deg > 60.0`.
 
 The default `target_xy_tolerance` is `0.5`.
+
+`valid_run_suggested` is not the only learning label. It is computed from log health, final target error, speed, swing, and final altitude checks, but it cannot detect all visually observed transport failures. For future risk prediction, use `label_strict_invalid` as the recommended failure label unless an experiment explicitly needs the legacy `label_invalid`.
+
+When a run visibly collides with an obstacle or otherwise fails transport even though `valid_run_suggested=true`, keep the run in the manifest and set:
+
+```json
+"manual_invalid": true,
+"manual_invalid_reason": "observed obstacle collision"
+```
+
+Do not use `manual_invalid` for incomplete scratch logs. If a run was interrupted early, for example a short 4.7-second log, either do not add it to the manifest or mark it with:
+
+```json
+"exclude_from_training": true,
+"exclude_reason": "interrupted short log"
+```
+
+Rows marked `exclude_from_training=true` are shown in dry-run summaries as excluded. They are not written to the output dataset unless `--include-excluded` is passed.
 
 ## Early-Window Features
 
@@ -112,6 +139,8 @@ python3 experiments/scripts/build_stage4_risk_dataset.py --manifest experiments/
 ```
 
 This reads the manifest and CSV logs, prints planned rows and aggregate counts, and does not write `experiments/datasets/stage4_risk_dataset.csv`.
+
+To inspect excluded rows in the generated CSV for debugging only, add `--include-excluded`. Do not use that flag for normal training dataset generation.
 
 ## Generate Dataset Locally
 
