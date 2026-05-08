@@ -99,6 +99,8 @@ METHOD_FEATURE_NAMES = set(
     ]
 )
 
+THRESHOLD_SWEEP_VALUES = [index / 10.0 for index in range(1, 10)]
+
 
 try:
     from sklearn.ensemble import RandomForestClassifier
@@ -127,7 +129,7 @@ def parse_args():
     parser.add_argument(
         "--output-dir",
         default="experiments/results/stage4_risk_predictor",
-        help="Output directory for metrics_summary.json, predictions.csv, and feature_summary.csv.",
+        help="Output directory for metrics, predictions, feature summary, and diagnostics CSV files.",
     )
     parser.add_argument(
         "--feature-set",
@@ -158,6 +160,27 @@ def parse_args():
     )
     parser.add_argument("--print-summary", action="store_true", help="Print selected features and model details.")
     parser.add_argument("--dry-run", action="store_true", help="Run evaluation without writing output files.")
+    parser.add_argument(
+        "--calibration-bins",
+        type=int,
+        default=10,
+        help="Number of equal-width bins to use for calibration diagnostics.",
+    )
+    parser.add_argument(
+        "--threshold-sweep",
+        action="store_true",
+        help="Evaluate fixed probability thresholds from 0.1 to 0.9.",
+    )
+    parser.add_argument(
+        "--group-metrics",
+        action="store_true",
+        help="Report per-group metrics for the selected cross-validation mode.",
+    )
+    parser.add_argument(
+        "--positive-label-name",
+        default="failure",
+        help="Human-readable name for the positive class in diagnostic outputs.",
+    )
     return parser.parse_args()
 
 
@@ -844,6 +867,119 @@ def compute_metrics(labels, prediction_rows):
     }
 
 
+def compute_calibration_diagnostics(labels, prediction_rows, bin_count):
+    if bin_count < 1:
+        raise ValueError("--calibration-bins must be at least 1")
+    probabilities = [float(row["probability"]) for row in prediction_rows]
+    total = len(labels)
+    bins = []
+    ece = 0.0
+    for bin_index in range(bin_count):
+        low = bin_index / float(bin_count)
+        high = (bin_index + 1) / float(bin_count)
+        indices = []
+        for index, probability in enumerate(probabilities):
+            if bin_index == bin_count - 1:
+                in_bin = low <= probability <= high
+            else:
+                in_bin = low <= probability < high
+            if in_bin:
+                indices.append(index)
+
+        if indices:
+            mean_pred_prob = sum(probabilities[index] for index in indices) / float(len(indices))
+            empirical_positive_rate = sum(labels[index] for index in indices) / float(len(indices))
+            ece_contribution = (len(indices) / float(total)) * abs(
+                mean_pred_prob - empirical_positive_rate
+            )
+            ece += ece_contribution
+        else:
+            mean_pred_prob = math.nan
+            empirical_positive_rate = math.nan
+            ece_contribution = 0.0
+
+        bins.append(
+            {
+                "bin_index": bin_index,
+                "bin_low": low,
+                "bin_high": high,
+                "count": len(indices),
+                "mean_pred_prob": mean_pred_prob,
+                "empirical_positive_rate": empirical_positive_rate,
+                "ece_contribution": ece_contribution,
+            }
+        )
+
+    return {"ece": ece, "bins": bins}
+
+
+def metrics_at_threshold(labels, probabilities, threshold):
+    predicted_labels = [1 if probability >= threshold else 0 for probability in probabilities]
+    matrix = confusion_matrix(labels, predicted_labels)
+    tp = matrix["tp"]
+    fp = matrix["fp"]
+    fn = matrix["fn"]
+    precision = tp / float(tp + fp) if (tp + fp) else 0.0
+    recall = tp / float(tp + fn) if (tp + fn) else 0.0
+    f1_value = 2.0 * precision * recall / (precision + recall) if (precision + recall) else 0.0
+    return {
+        "threshold": threshold,
+        "predicted_positive_count": tp + fp,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1_value,
+        "false_positive_count": fp,
+        "false_negative_count": fn,
+    }
+
+
+def compute_threshold_sweep(labels, prediction_rows):
+    probabilities = [float(row["probability"]) for row in prediction_rows]
+    return [
+        metrics_at_threshold(labels, probabilities, threshold)
+        for threshold in THRESHOLD_SWEEP_VALUES
+    ]
+
+
+def group_name_for_prediction(row, cv_mode):
+    if cv_mode == "loo":
+        return "all"
+    group = str(row.get("held_out_group", "")).strip()
+    return group or "unlabeled_group"
+
+
+def compute_group_metrics(prediction_rows, cv_mode):
+    grouped = {}
+    group_order = []
+    for row in prediction_rows:
+        group_name = group_name_for_prediction(row, cv_mode)
+        if group_name not in grouped:
+            grouped[group_name] = []
+            group_order.append(group_name)
+        grouped[group_name].append(row)
+
+    group_rows = []
+    for group_name in group_order:
+        rows = grouped[group_name]
+        labels = [int(row["label"]) for row in rows]
+        metrics = compute_metrics(labels, rows)
+        group_rows.append(
+            {
+                "group": group_name,
+                "count": len(rows),
+                "positive_count": sum(labels),
+                "accuracy": metrics["accuracy"],
+                "precision": metrics["precision"],
+                "recall": metrics["recall"],
+                "f1": metrics["f1"],
+                "auroc": metrics["auroc"],
+                "auprc": metrics["auprc"],
+                "brier": metrics["brier"],
+            }
+        )
+    return group_rows
+
+
 def model_names():
     if SKLEARN_AVAILABLE:
         return ["majority", "logistic_regression", "random_forest"]
@@ -879,6 +1015,10 @@ def make_metrics_summary(
         "features": [spec["name"] for spec in specs],
         "drop_command_scale_features": args.drop_command_scale_features,
         "drop_method_features": args.drop_method_features,
+        "calibration_bins": args.calibration_bins,
+        "threshold_sweep": args.threshold_sweep,
+        "group_metrics": args.group_metrics,
+        "positive_label_name": args.positive_label_name,
         "dropped_features": dropped_features,
         "sklearn_available": SKLEARN_AVAILABLE,
         "sklearn_import_error": "" if SKLEARN_AVAILABLE else SKLEARN_IMPORT_ERROR,
@@ -968,6 +1108,113 @@ def write_feature_summary(path, feature_summaries):
             )
 
 
+def write_calibration_bins(path, results, positive_label_name):
+    fieldnames = [
+        "model",
+        "positive_label_name",
+        "ece",
+        "bin_index",
+        "bin_low",
+        "bin_high",
+        "count",
+        "mean_pred_prob",
+        "empirical_positive_rate",
+        "ece_contribution",
+    ]
+    with path.open("w", newline="", encoding="utf-8") as output_file:
+        writer = csv.DictWriter(output_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for model_name in model_names():
+            calibration = results[model_name]["calibration"]
+            for bin_row in calibration["bins"]:
+                writer.writerow(
+                    {
+                        "model": model_name,
+                        "positive_label_name": positive_label_name,
+                        "ece": format_number(calibration["ece"]),
+                        "bin_index": bin_row["bin_index"],
+                        "bin_low": format_number(bin_row["bin_low"]),
+                        "bin_high": format_number(bin_row["bin_high"]),
+                        "count": bin_row["count"],
+                        "mean_pred_prob": format_number(bin_row["mean_pred_prob"]),
+                        "empirical_positive_rate": format_number(
+                            bin_row["empirical_positive_rate"]
+                        ),
+                        "ece_contribution": format_number(bin_row["ece_contribution"]),
+                    }
+                )
+
+
+def write_threshold_sweep(path, results, positive_label_name):
+    fieldnames = [
+        "model",
+        "positive_label_name",
+        "threshold",
+        "predicted_positive_count",
+        "precision",
+        "recall",
+        "f1",
+        "false_positive_count",
+        "false_negative_count",
+    ]
+    with path.open("w", newline="", encoding="utf-8") as output_file:
+        writer = csv.DictWriter(output_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for model_name in model_names():
+            for row in results[model_name].get("threshold_sweep", []):
+                writer.writerow(
+                    {
+                        "model": model_name,
+                        "positive_label_name": positive_label_name,
+                        "threshold": format_number(row["threshold"]),
+                        "predicted_positive_count": row["predicted_positive_count"],
+                        "precision": format_number(row["precision"]),
+                        "recall": format_number(row["recall"]),
+                        "f1": format_number(row["f1"]),
+                        "false_positive_count": row["false_positive_count"],
+                        "false_negative_count": row["false_negative_count"],
+                    }
+                )
+
+
+def write_group_metrics(path, results, positive_label_name):
+    fieldnames = [
+        "model",
+        "positive_label_name",
+        "group",
+        "count",
+        "positive_count",
+        "accuracy",
+        "precision",
+        "recall",
+        "f1",
+        "auroc",
+        "auprc",
+        "brier",
+    ]
+    with path.open("w", newline="", encoding="utf-8") as output_file:
+        writer = csv.DictWriter(output_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for model_name in model_names():
+            for row in results[model_name].get("group_metrics", []):
+                writer.writerow(
+                    {
+                        "model": model_name,
+                        "positive_label_name": positive_label_name,
+                        "group": row["group"],
+                        "count": row["count"],
+                        "positive_count": row["positive_count"],
+                        "accuracy": format_number(row["accuracy"]),
+                        "precision": format_number(row["precision"]),
+                        "recall": format_number(row["recall"]),
+                        "f1": format_number(row["f1"]),
+                        "auroc": format_number(row["auroc"]),
+                        "auprc": format_number(row["auprc"]),
+                        "brier": format_number(row["brier"]),
+                    }
+                )
+
+
 def print_terminal_summary(
     args,
     dataset_path,
@@ -1008,9 +1255,10 @@ def print_terminal_summary(
     print("models:")
     for name in model_names():
         metrics = results[name]["metrics"]
+        calibration = results[name]["calibration"]
         matrix = metrics["confusion_matrix"]
         print(
-            "  %s: accuracy=%s precision=%s recall=%s f1=%s auroc=%s auprc=%s brier=%s cm[tn=%d fp=%d fn=%d tp=%d]"
+            "  %s: accuracy=%s precision=%s recall=%s f1=%s auroc=%s auprc=%s brier=%s ece=%s cm[tn=%d fp=%d fn=%d tp=%d]"
             % (
                 name,
                 format_number(metrics["accuracy"]),
@@ -1020,6 +1268,7 @@ def print_terminal_summary(
                 format_number(metrics["auroc"]),
                 format_number(metrics["auprc"]),
                 format_number(metrics["brier"]),
+                format_number(calibration["ece"]),
                 matrix["tn"],
                 matrix["fp"],
                 matrix["fn"],
@@ -1028,6 +1277,45 @@ def print_terminal_summary(
         )
         if results[name]["warnings"]:
             print("    warnings: %d fold warning(s)" % len(results[name]["warnings"]))
+    if args.threshold_sweep:
+        print("threshold_sweep:")
+        print("  model threshold predicted_positive precision recall f1 fp fn")
+        for name in model_names():
+            for row in results[name]["threshold_sweep"]:
+                print(
+                    "  %s %s %d %s %s %s %d %d"
+                    % (
+                        name,
+                        format_number(row["threshold"]),
+                        row["predicted_positive_count"],
+                        format_number(row["precision"]),
+                        format_number(row["recall"]),
+                        format_number(row["f1"]),
+                        row["false_positive_count"],
+                        row["false_negative_count"],
+                    )
+                )
+    if args.group_metrics:
+        print("group_metrics:")
+        print("  model group count positive accuracy precision recall f1 auroc auprc brier")
+        for name in model_names():
+            for row in results[name]["group_metrics"]:
+                print(
+                    "  %s %s %d %d %s %s %s %s %s %s %s"
+                    % (
+                        name,
+                        row["group"],
+                        row["count"],
+                        row["positive_count"],
+                        format_number(row["accuracy"]),
+                        format_number(row["precision"]),
+                        format_number(row["recall"]),
+                        format_number(row["f1"]),
+                        format_number(row["auroc"]),
+                        format_number(row["auprc"]),
+                        format_number(row["brier"]),
+                    )
+                )
     if args.print_summary:
         print("selected_features:")
         for summary in feature_summaries:
@@ -1040,6 +1328,8 @@ def print_terminal_summary(
 def main():
     args = parse_args()
     try:
+        if args.calibration_bins < 1:
+            raise ValueError("--calibration-bins must be at least 1")
         dataset_path = resolve_path(args.dataset)
         output_dir = resolve_path(args.output_dir)
         rows, fieldnames = read_dataset(dataset_path)
@@ -1097,10 +1387,26 @@ def main():
                 args.cv,
             )
             all_predictions.extend(prediction_rows)
+            prediction_labels = [int(row["label"]) for row in prediction_rows]
             results[name] = {
-                "metrics": compute_metrics([int(row["label"]) for row in prediction_rows], prediction_rows),
+                "metrics": compute_metrics(prediction_labels, prediction_rows),
+                "calibration": compute_calibration_diagnostics(
+                    prediction_labels,
+                    prediction_rows,
+                    args.calibration_bins,
+                ),
                 "warnings": warnings,
             }
+            if args.threshold_sweep:
+                results[name]["threshold_sweep"] = compute_threshold_sweep(
+                    prediction_labels,
+                    prediction_rows,
+                )
+            if args.group_metrics:
+                results[name]["group_metrics"] = compute_group_metrics(
+                    prediction_rows,
+                    args.cv,
+                )
 
         metrics_summary = make_metrics_summary(
             args,
@@ -1132,6 +1438,23 @@ def main():
             write_metrics(output_dir / "metrics_summary.json", metrics_summary)
             write_predictions(output_dir / "predictions.csv", args.label, all_predictions)
             write_feature_summary(output_dir / "feature_summary.csv", feature_summaries)
+            write_calibration_bins(
+                output_dir / "calibration_bins.csv",
+                results,
+                args.positive_label_name,
+            )
+            if args.threshold_sweep:
+                write_threshold_sweep(
+                    output_dir / "threshold_sweep.csv",
+                    results,
+                    args.positive_label_name,
+                )
+            if args.group_metrics:
+                write_group_metrics(
+                    output_dir / "group_metrics.csv",
+                    results,
+                    args.positive_label_name,
+                )
 
     except Exception as exc:
         print("ERROR: %s" % exc, file=sys.stderr)

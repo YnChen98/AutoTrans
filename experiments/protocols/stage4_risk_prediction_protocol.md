@@ -154,9 +154,48 @@ The script reports:
 - AUROC when possible
 - AUPRC when possible
 - Brier score when probabilities are available
+- ECE when probabilities are available
 - confusion matrix
 
 For this small dataset, metrics are pipeline checks and rough diagnostics only.
+
+## Calibration And Threshold Diagnostics
+
+Probability-producing models also report calibration diagnostics. The number of
+equal-width calibration bins is controlled by:
+
+```bash
+--calibration-bins 10
+```
+
+The default is `10`. The calibration table records `bin_low`, `bin_high`,
+`count`, `mean_pred_prob`, and `empirical_positive_rate` for each model. The
+summary also includes ECE, while Brier score remains the main proper scoring
+rule already reported by the baseline metrics.
+
+Use threshold sweep diagnostics when choosing candidate operating points:
+
+```bash
+--threshold-sweep
+```
+
+This evaluates thresholds `0.1, 0.2, ..., 0.9` and reports
+`predicted_positive_count`, precision, recall, F1, false positives, and false
+negatives. The positive class can be named in output files and summaries with:
+
+```bash
+--positive-label-name failure
+```
+
+Use group diagnostics to inspect the held-out groups for the selected CV mode:
+
+```bash
+--group-metrics
+```
+
+For `--cv leave-one-target-out`, the group rows correspond to held-out target
+groups. For `--cv leave-one-method-out`, they correspond to held-out methods.
+For `--cv loo`, the script reports one aggregate `all` group.
 
 ## Dry Run
 
@@ -188,6 +227,13 @@ cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --dry-run --print-summary
 ```
 
+Run Stage 4-F calibration, threshold, and group diagnostics:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --threshold-sweep --group-metrics --dry-run --print-summary
+```
+
 Run command-scale and method-identity ablations:
 
 ```bash
@@ -208,6 +254,12 @@ This writes:
 - `metrics_summary.json`
 - `predictions.csv`
 - `feature_summary.csv`
+- `calibration_bins.csv`
+
+When enabled, diagnostics also write:
+
+- `threshold_sweep.csv`
+- `group_metrics.csv`
 
 under `experiments/results/stage4_risk_predictor/`.
 

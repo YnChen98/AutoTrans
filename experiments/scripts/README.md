@@ -240,6 +240,25 @@ cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --dry-run --print-summary
 ```
 
+运行 Stage 4-F calibration、threshold sweep 和 group diagnostics：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --threshold-sweep --group-metrics --dry-run --print-summary
+```
+
+新增 diagnostics：
+
+- `--calibration-bins 10` 控制 ECE/calibration bins 的 equal-width bin 数量，默认是 `10`。
+- `--threshold-sweep` 会检查 thresholds `0.1` 到 `0.9`，输出 precision、recall、F1、false positives 和 false negatives。
+- `--group-metrics` 会按当前 `--cv` 的 held-out group 输出 per-target 或 per-method metrics。
+- `--positive-label-name failure` 用于给 positive class 一个 human-readable 名称，默认是 `failure`。
+
+非 `--dry-run` 时，脚本继续写入 `metrics_summary.json`、`predictions.csv` 和
+`feature_summary.csv`，并额外写入 `calibration_bins.csv`。启用对应 diagnostics
+时，还会写入 `threshold_sweep.csv` 和 `group_metrics.csv`。这些文件位于
+`experiments/results/` 下，不应提交到 git。
+
 测试去掉 command-scale 相关特征后的 `early` feature set：
 
 ```bash
