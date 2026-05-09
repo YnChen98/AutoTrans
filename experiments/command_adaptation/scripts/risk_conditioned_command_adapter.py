@@ -221,6 +221,14 @@ class RiskConditionedCommandAdapter:
         self.hard_scale_5s = float(rospy.get_param("~hard_scale_5s", 0.65))
         self.scale_rate_limit_per_sec = float(rospy.get_param("~scale_rate_limit_per_sec", 0.5))
         self.publish_same_acceleration_scale = bool(rospy.get_param("~publish_same_acceleration_scale", True))
+        self.same_goal_position_tolerance = max(
+            0.0,
+            float(rospy.get_param("~same_goal_position_tolerance", 0.05)),
+        )
+        self.reset_on_new_distinct_goal = bool(rospy.get_param("~reset_on_new_distinct_goal", True))
+        self.reset_on_first_trajectory_after_goal = bool(
+            rospy.get_param("~reset_on_first_trajectory_after_goal", False)
+        )
 
         self.model_3s = LogRegJsonModel(str(rospy.get_param("~model_json_3s", "")), "3s")
         self.model_5s = LogRegJsonModel(str(rospy.get_param("~model_json_5s", "")), "5s")
@@ -233,9 +241,11 @@ class RiskConditionedCommandAdapter:
         self.payload_odom = None
         self.wind_force = None
         self.goal_received = False
+        self.last_goal_received_time = None
         self.has_trajectory = False
         self.trajectory_seen_for_goal = False
         self.episode_start_time = None
+        self.current_goal_position = None
         self.target_x = math.nan
         self.target_y = math.nan
         self.samples = []
@@ -270,12 +280,17 @@ class RiskConditionedCommandAdapter:
         rospy.loginfo(
             (
                 "risk_conditioned_command_adapter publishing command adaptation scales at %.3f Hz "
-                "policy_mode=%s enable_risk_conditioning=%s models_ready=%s"
+                "policy_mode=%s enable_risk_conditioning=%s models_ready=%s "
+                "same_goal_position_tolerance=%.3f reset_on_new_distinct_goal=%s "
+                "reset_on_first_trajectory_after_goal=%s"
             ),
             self.publish_rate,
             self.policy_mode,
             str(self.enable_risk_conditioning).lower(),
             str(self.models_ready).lower(),
+            self.same_goal_position_tolerance,
+            str(self.reset_on_new_distinct_goal).lower(),
+            str(self.reset_on_first_trajectory_after_goal).lower(),
         )
 
     def _warn_model_state(self):
@@ -318,30 +333,83 @@ class RiskConditionedCommandAdapter:
 
     def _goal_callback(self, msg):
         position = msg.pose.position
-        if not self._all_finite(position.x, position.y):
-            rospy.logwarn("ignoring non-finite /move_base_simple/goal")
+        if not self._all_finite(position.x, position.y, position.z):
+            rospy.logwarn_throttle(1.0, "ignoring non-finite /move_base_simple/goal")
             return
 
         now = rospy.Time.now().to_sec()
+        goal_position = (position.x, position.y, position.z)
+        distance_from_current = self._goal_distance_from_current(goal_position)
+        is_same_goal = (
+            distance_from_current is not None
+            and distance_from_current < self.same_goal_position_tolerance
+        )
+
+        if is_same_goal:
+            self.goal_received = True
+            self.last_goal_received_time = now
+            rospy.loginfo_throttle(
+                1.0,
+                (
+                    "risk_conditioned_command_adapter ignored repeated goal "
+                    "distance=%.3f tolerance=%.3f episode_age=%.3f"
+                ),
+                distance_from_current,
+                self.same_goal_position_tolerance,
+                self._episode_age(now),
+            )
+            return
+
+        active_episode = self._has_active_episode()
         self.goal_received = True
-        self.has_trajectory = False
-        self.trajectory_seen_for_goal = False
-        self.episode_start_time = now
+        self.last_goal_received_time = now
+        self.current_goal_position = goal_position
         self.target_x = position.x
         self.target_y = position.y
-        self.samples = []
-        self.latest_risk_score_3s = -1.0
-        self.latest_risk_score_5s = -1.0
-        rospy.loginfo(
-            "risk_conditioned_command_adapter reset episode target_x=%.3f target_y=%.3f",
+        self.has_trajectory = False
+        self.trajectory_seen_for_goal = False
+
+        if not active_episode:
+            self._reset_episode(now, "first_distinct_goal")
+            return
+
+        if self.reset_on_new_distinct_goal:
+            self._reset_episode(now, "new_distinct_goal")
+            return
+
+        rospy.loginfo_throttle(
+            1.0,
+            (
+                "risk_conditioned_command_adapter accepted distinct goal without reset "
+                "distance=%.3f episode_age=%.3f target_x=%.3f target_y=%.3f"
+            ),
+            distance_from_current if distance_from_current is not None else -1.0,
+            self._episode_age(now),
             self.target_x,
             self.target_y,
         )
 
     def _trajectory_callback(self, _msg):
-        if self.goal_received and not self.trajectory_seen_for_goal:
+        if not self.goal_received:
+            return
+
+        now = rospy.Time.now().to_sec()
+        if not self.trajectory_seen_for_goal:
             self.has_trajectory = True
             self.trajectory_seen_for_goal = True
+            if not self._has_active_episode():
+                self._reset_episode(now, "first_trajectory_without_active_episode")
+            elif self.reset_on_first_trajectory_after_goal:
+                self._reset_episode(now, "first_trajectory_after_goal")
+                self.has_trajectory = True
+                self.trajectory_seen_for_goal = True
+            rospy.logdebug(
+                "risk_conditioned_command_adapter first trajectory for goal episode_age=%.3f",
+                self._episode_age(now),
+            )
+            return
+
+        self.has_trajectory = True
 
     def _timer_callback(self, _event):
         now = rospy.Time.now().to_sec()
@@ -372,7 +440,7 @@ class RiskConditionedCommandAdapter:
             1.0,
             (
                 "risk_conditioned_command_adapter base_scale=%.3f target_scale=%.3f speed_scale=%.3f "
-                "risk_3s=%.3f risk_5s=%.3f goal=%s has_trajectory=%s samples=%d"
+                "risk_3s=%.3f risk_5s=%.3f goal=%s has_trajectory=%s samples=%d episode_age=%.3f"
             ),
             base_scale,
             target_scale,
@@ -382,7 +450,45 @@ class RiskConditionedCommandAdapter:
             str(self.goal_received).lower(),
             str(self.has_trajectory).lower(),
             len(self.samples),
+            self._episode_age(now),
         )
+
+    def _reset_episode(self, now, reason):
+        self.episode_start_time = now
+        self.samples = []
+        self.latest_risk_score_3s = -1.0
+        self.latest_risk_score_5s = -1.0
+        rospy.loginfo_throttle(
+            1.0,
+            (
+                "risk_conditioned_command_adapter reset episode reason=%s "
+                "target_x=%.3f target_y=%.3f episode_age=%.3f"
+            ),
+            reason,
+            self.target_x,
+            self.target_y,
+            self._episode_age(now),
+        )
+
+    def _has_active_episode(self):
+        return self.goal_received and self.episode_start_time is not None
+
+    def _goal_distance_from_current(self, goal_position):
+        if self.current_goal_position is None:
+            return None
+        if not self._all_finite(*(self.current_goal_position + goal_position)):
+            return None
+        dx = goal_position[0] - self.current_goal_position[0]
+        dy = goal_position[1] - self.current_goal_position[1]
+        dz = goal_position[2] - self.current_goal_position[2]
+        distance = math.sqrt(dx * dx + dy * dy + dz * dz)
+        return distance if math.isfinite(distance) else None
+
+    def _episode_age(self, now):
+        if self.episode_start_time is None:
+            return -1.0
+        age = now - self.episode_start_time
+        return age if math.isfinite(age) else -1.0
 
     def _compute_target_scale(self, now, base_scale):
         base_scale = self._clamp_scale(base_scale)

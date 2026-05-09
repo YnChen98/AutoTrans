@@ -118,6 +118,9 @@ Core parameters:
 - `publish_rate`, default `5.0`
 - `scale_rate_limit_per_sec`, default `0.5`
 - `publish_same_acceleration_scale`, default `true`
+- `same_goal_position_tolerance`, default `0.05`
+- `reset_on_new_distinct_goal`, default `true`
+- `reset_on_first_trajectory_after_goal`, default `false`
 
 Risk policy parameters:
 
@@ -144,10 +147,25 @@ Wind-level fallback parameters match `heuristic_command_adapter.py`:
 
 ## Feature Computation
 
-The episode buffer resets when a new `/move_base_simple/goal` arrives.
-`/planning/trajectory` is used only to mark `has_trajectory=true` after the
-goal. The v0 features are computed from the first 3 seconds and first 5 seconds
-after the current goal start.
+The episode buffer resets on the first distinct `/move_base_simple/goal`.
+Repeated `/move_base_simple/goal` messages with the same 3D position do not
+reset the buffer; they only update the last goal receive time. Two goals are
+treated as the same when their 3D position distance is below
+`same_goal_position_tolerance`, default `0.05` m. This prevents repeated
+baseline-trial goal publication from clearing the early odometry window.
+
+For a new distinct goal, `reset_on_new_distinct_goal=true` keeps the default
+behavior of starting a fresh episode. `/planning/trajectory` is used only to
+mark `has_trajectory=true` by default. It does not reset the episode unless
+`reset_on_first_trajectory_after_goal=true`, and it should never reset on every
+trajectory publication.
+
+The v0 features are computed from the first 3 seconds and first 5 seconds after
+the current episode start. In a normal run with stable odometry, the first finite
+3s risk score should appear after about 3 seconds of episode history, and the
+first finite 5s risk score should normally appear about 2 seconds after the 3s
+score. A 5s score appearing tens of seconds later is evidence to inspect episode
+reset diagnostics before changing risk-to-scale thresholds.
 
 Online features follow the JSON `feature_names` order and names:
 

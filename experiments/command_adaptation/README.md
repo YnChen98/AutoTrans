@@ -127,6 +127,16 @@ Subscribed:
 - `/move_base_simple/goal` (`geometry_msgs/PoseStamped`)
 - `/planning/trajectory` as an optional has-trajectory signal
 
+Episode timing is anchored to the first distinct `/move_base_simple/goal`.
+Repeated goal messages with the same position do not reset the feature buffer.
+This is important because `run_baseline_trial.sh` republishes
+`/move_base_simple/goal`; those repeated messages should update only the latest
+goal receive time and keep the collected odometry samples. A goal is treated as
+the same when its 3D position is within `same_goal_position_tolerance`, default
+`0.05` m. `/planning/trajectory` does not reset the episode by default; it only
+marks `has_trajectory=true` and can initialize timing only if no active episode
+exists.
+
 Default launch settings are conservative:
 
 ```bash
@@ -138,6 +148,18 @@ node behaves like the wind-level fallback and publishes risk scores as
 unavailable (`-1`) until risk conditioning is explicitly enabled. Missing or
 invalid model JSON files do not crash the node; the adapter logs `ROS_WARN` and
 falls back to wind-level scale selection.
+
+Useful episode timing parameters:
+
+- `same_goal_position_tolerance`, default `0.05`
+- `reset_on_new_distinct_goal`, default `true`
+- `reset_on_first_trajectory_after_goal`, default `false`
+
+With stable odometry and one active episode, the first finite
+`/command_adaptation/risk_score_3s` should appear after about 3 seconds of
+episode history, and `/command_adaptation/risk_score_5s` should normally appear
+about 2 seconds later. If the 5s score appears much later, check for episode
+reset logs before changing the risk thresholds or planner settings.
 
 Generated model JSON files live under:
 
