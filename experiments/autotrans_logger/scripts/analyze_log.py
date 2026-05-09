@@ -220,6 +220,32 @@ def final_or_nan(values):
     return math.nan
 
 
+def first_finite_time(values, time_values):
+    start_times = valid_values(time_values)
+    if not start_times:
+        return math.nan
+    start_time = start_times[0]
+    for value, time_value in zip(values, time_values):
+        if math.isfinite(value) and math.isfinite(time_value):
+            return time_value - start_time
+    return math.nan
+
+
+def first_below_time(values, time_values, threshold):
+    start_times = valid_values(time_values)
+    if not start_times:
+        return math.nan
+    start_time = start_times[0]
+    for value, time_value in zip(values, time_values):
+        if math.isfinite(value) and math.isfinite(time_value) and value < threshold:
+            return time_value - start_time
+    return math.nan
+
+
+def risk_score_values(values):
+    return [value if math.isfinite(value) and value >= 0.0 else math.nan for value in values]
+
+
 def has_column(rows, name):
     return bool(rows) and name in rows[0]
 
@@ -352,6 +378,21 @@ def compute_metrics(csv_path, rows, args):
         if has_column(rows, "command_acceleration_scale")
         else []
     )
+    command_risk_score_3s = (
+        risk_score_values(column(rows, "command_risk_score_3s"))
+        if has_column(rows, "command_risk_score_3s")
+        else []
+    )
+    command_risk_score_5s = (
+        risk_score_values(column(rows, "command_risk_score_5s"))
+        if has_column(rows, "command_risk_score_5s")
+        else []
+    )
+    command_risk_scale_selected = (
+        column(rows, "command_risk_scale_selected")
+        if has_column(rows, "command_risk_scale_selected")
+        else []
+    )
 
     duration_sec, effective_log_rate_hz = compute_duration_and_rate(rows)
     final_valid_uav_position = final_position(uav_pos_x, uav_pos_y, uav_pos_z)
@@ -482,6 +523,12 @@ def compute_metrics(csv_path, rows, args):
             metrics["min_command_speed_scale"] = min_or_nan(command_speed_scale)
             metrics["max_command_speed_scale"] = max_or_nan(command_speed_scale)
             metrics["final_command_speed_scale"] = final_or_nan(command_speed_scale)
+            metrics["first_command_scale_below_0p85_time"] = first_below_time(
+                command_speed_scale, ros_times, 0.85
+            )
+            metrics["first_command_scale_below_0p75_time"] = first_below_time(
+                command_speed_scale, ros_times, 0.75
+            )
         else:
             print("WARNING: command_speed_scale has no finite numeric data.", file=sys.stderr)
 
@@ -493,6 +540,37 @@ def compute_metrics(csv_path, rows, args):
             metrics["final_command_acceleration_scale"] = final_or_nan(command_acceleration_scale)
         else:
             print("WARNING: command_acceleration_scale has no finite numeric data.", file=sys.stderr)
+
+    if command_risk_score_3s:
+        if valid_values(command_risk_score_3s):
+            metrics["mean_command_risk_score_3s"] = mean(command_risk_score_3s)
+            metrics["max_command_risk_score_3s"] = max_or_nan(command_risk_score_3s)
+            metrics["final_command_risk_score_3s"] = final_or_nan(command_risk_score_3s)
+            metrics["first_finite_command_risk_score_3s_time"] = first_finite_time(
+                command_risk_score_3s, ros_times
+            )
+        else:
+            print("WARNING: command_risk_score_3s has no finite non-negative data.", file=sys.stderr)
+
+    if command_risk_score_5s:
+        if valid_values(command_risk_score_5s):
+            metrics["mean_command_risk_score_5s"] = mean(command_risk_score_5s)
+            metrics["max_command_risk_score_5s"] = max_or_nan(command_risk_score_5s)
+            metrics["final_command_risk_score_5s"] = final_or_nan(command_risk_score_5s)
+            metrics["first_finite_command_risk_score_5s_time"] = first_finite_time(
+                command_risk_score_5s, ros_times
+            )
+        else:
+            print("WARNING: command_risk_score_5s has no finite non-negative data.", file=sys.stderr)
+
+    if command_risk_scale_selected:
+        if valid_values(command_risk_scale_selected):
+            metrics["mean_command_risk_scale_selected"] = mean(command_risk_scale_selected)
+            metrics["min_command_risk_scale_selected"] = min_or_nan(command_risk_scale_selected)
+            metrics["max_command_risk_scale_selected"] = max_or_nan(command_risk_scale_selected)
+            metrics["final_command_risk_scale_selected"] = final_or_nan(command_risk_scale_selected)
+        else:
+            print("WARNING: command_risk_scale_selected has no finite numeric data.", file=sys.stderr)
 
     return metrics
 
@@ -714,6 +792,45 @@ def make_plots(rows, output_dir):
                 [("command_acceleration_scale", column(rows, "command_acceleration_scale"))],
                 "scale",
                 "Command acceleration scale",
+            ),
+        )
+
+    if "command_risk_score_3s" in rows[0]:
+        plot_or_warn(
+            output_dir,
+            "command_risk_score_3s.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [("command_risk_score_3s", risk_score_values(column(rows, "command_risk_score_3s")))],
+                "risk score",
+                "Command risk score 3s",
+            ),
+        )
+
+    if "command_risk_score_5s" in rows[0]:
+        plot_or_warn(
+            output_dir,
+            "command_risk_score_5s.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [("command_risk_score_5s", risk_score_values(column(rows, "command_risk_score_5s")))],
+                "risk score",
+                "Command risk score 5s",
+            ),
+        )
+
+    if "command_risk_scale_selected" in rows[0]:
+        plot_or_warn(
+            output_dir,
+            "command_risk_scale_selected.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [("command_risk_scale_selected", column(rows, "command_risk_scale_selected"))],
+                "scale",
+                "Command risk scale selected",
             ),
         )
 

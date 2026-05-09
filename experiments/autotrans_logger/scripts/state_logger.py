@@ -48,6 +48,9 @@ class StateLogger:
         "wind_force_norm",
         "command_speed_scale",
         "command_acceleration_scale",
+        "command_risk_score_3s",
+        "command_risk_score_5s",
+        "command_risk_scale_selected",
     ]
 
     def __init__(self):
@@ -58,6 +61,9 @@ class StateLogger:
         self.wind_force = None
         self.command_speed_scale = None
         self.command_acceleration_scale = None
+        self.command_risk_score_3s = None
+        self.command_risk_score_5s = None
+        self.command_risk_scale_selected = None
         self.has_trajectory = False
 
         self.log_path = self._make_log_path()
@@ -74,6 +80,14 @@ class StateLogger:
         rospy.Subscriber("/wind_force", Vector3Stamped, self._wind_force_callback, queue_size=50)
         rospy.Subscriber("/command_adaptation/speed_scale", Float64, self._command_speed_scale_callback, queue_size=50)
         rospy.Subscriber("/command_adaptation/acceleration_scale", Float64, self._command_acceleration_scale_callback, queue_size=50)
+        rospy.Subscriber("/command_adaptation/risk_score_3s", Float64, self._command_risk_score_3s_callback, queue_size=50)
+        rospy.Subscriber("/command_adaptation/risk_score_5s", Float64, self._command_risk_score_5s_callback, queue_size=50)
+        rospy.Subscriber(
+            "/command_adaptation/risk_scale_selected",
+            Float64,
+            self._command_risk_scale_selected_callback,
+            queue_size=50,
+        )
 
         log_rate = rospy.get_param("~log_rate", 20.0)
         self.timer = rospy.Timer(rospy.Duration(1.0 / max(log_rate, 1e-3)), self._timer_callback)
@@ -111,6 +125,15 @@ class StateLogger:
 
     def _command_acceleration_scale_callback(self, msg):
         self.command_acceleration_scale = msg
+
+    def _command_risk_score_3s_callback(self, msg):
+        self.command_risk_score_3s = msg
+
+    def _command_risk_score_5s_callback(self, msg):
+        self.command_risk_score_5s = msg
+
+    def _command_risk_scale_selected_callback(self, msg):
+        self.command_risk_scale_selected = msg
 
     def _timer_callback(self, _event):
         self.writer.writerow(self._make_row())
@@ -158,6 +181,15 @@ class StateLogger:
 
         if self.command_acceleration_scale is not None:
             row["command_acceleration_scale"] = self._fmt(self.command_acceleration_scale.data)
+
+        if self.command_risk_score_3s is not None:
+            row["command_risk_score_3s"] = self._fmt(self.command_risk_score_3s.data)
+
+        if self.command_risk_score_5s is not None:
+            row["command_risk_score_5s"] = self._fmt(self.command_risk_score_5s.data)
+
+        if self.command_risk_scale_selected is not None:
+            row["command_risk_scale_selected"] = self._fmt(self.command_risk_scale_selected.data)
 
         return row
 

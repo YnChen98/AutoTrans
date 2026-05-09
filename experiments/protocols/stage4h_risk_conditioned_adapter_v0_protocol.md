@@ -45,6 +45,45 @@ Published:
 - `/command_adaptation/risk_score_5s` (`std_msgs/Float64`)
 - `/command_adaptation/risk_scale_selected` (`std_msgs/Float64`)
 
+## Required Diagnostics
+
+Risk-score logging is required before evaluating the v0 policy. A run that only
+records `command_speed_scale` and `command_acceleration_scale` can prove that
+the adapter was active, but it cannot show whether the LogisticRegression model
+predicted risk early enough or whether the risk-to-scale rule was too weak.
+
+`autotrans_logger` should record these CSV columns for every Stage 4-H run:
+
+- `command_risk_score_3s`
+- `command_risk_score_5s`
+- `command_risk_scale_selected`
+
+Analyze the log with target-error arguments so the risk diagnostics can be read
+together with `valid_run_suggested`, `first_nan_time`, and final target errors:
+
+```bash
+python3 experiments/autotrans_logger/scripts/analyze_log.py \
+  --csv <log.csv> \
+  --target_x <x> \
+  --target_y <y> \
+  --target_z <z> \
+  --payload_target_z <payload_z> \
+  --target_xy_tolerance 0.5
+```
+
+Use `first_finite_command_risk_score_3s_time`,
+`first_finite_command_risk_score_5s_time`,
+`first_command_scale_below_0p85_time`, and
+`first_command_scale_below_0p75_time` to diagnose timing:
+
+- If `first_nan_time` occurs before the first finite risk-score time, the model
+  did not produce a usable risk estimate before the failure.
+- If risk scores are finite before `first_nan_time` but command scale drops late
+  or not far enough, inspect `command_risk_scale_selected` and the threshold
+  parameters before changing the policy.
+- If risk scores stay low before an invalid run, treat it as model prediction
+  evidence, not as a planner/controller conclusion.
+
 ## Parameters
 
 Core parameters:

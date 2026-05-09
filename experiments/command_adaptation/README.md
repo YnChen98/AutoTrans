@@ -54,11 +54,31 @@ rostopic echo /command_adaptation/acceleration_scale
 
 - `command_speed_scale`
 - `command_acceleration_scale`
+- `command_risk_score_3s`
+- `command_risk_score_5s`
+- `command_risk_scale_selected`
 
 `analyze_log.py` summarizes these columns when finite data is available and generates:
 
 - `command_speed_scale.png`
 - `command_acceleration_scale.png`
+- `command_risk_score_3s.png`
+- `command_risk_score_5s.png`
+- `command_risk_scale_selected.png`
+
+For Stage 4-H diagnostics, use the risk-score summaries to decide whether an
+invalid run failed before risk activation or after risk activation:
+
+- `first_finite_command_risk_score_3s_time`
+- `first_finite_command_risk_score_5s_time`
+- `first_command_scale_below_0p85_time`
+- `first_command_scale_below_0p75_time`
+
+If `first_nan_time` is earlier than the first finite risk-score time, the model
+did not produce a usable online risk estimate before failure. If risk scores are
+finite before `first_nan_time` but scale reduction is late or weak, inspect
+`command_risk_scale_selected` and the risk-to-scale thresholds before changing
+planner, controller, or simulator code.
 
 Current strong-wind trial evidence is summarized in `experiments/protocols/stage3b_heuristic_strong_trial_summary.md`; the current `policy_mode=wind_level` strong-wind summary is in `experiments/protocols/stage3b_windlevel_strong_trial_summary.md`.
 
