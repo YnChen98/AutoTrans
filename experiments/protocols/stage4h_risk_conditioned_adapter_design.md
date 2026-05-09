@@ -164,8 +164,21 @@ experiments/models/stage4_risk_logreg_model.json
 Generated model files should not be committed unless explicitly approved.
 The detailed offline export protocol is
 `experiments/protocols/stage4_risk_model_export_protocol.md`.
-Do not implement the online adapter until JSON-vs-sklearn consistency has been
-checked on representative dataset rows.
+Do not implement the online adapter until Stage 4-H2 JSON inference verification
+passes on representative dataset rows.
+
+The required Stage 4-H2 gate is:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/verify_stage4_logreg_json.py --dataset experiments/datasets/stage4_risk_dataset.csv --model-json experiments/models/stage4_risk_logreg_3s.json --print-summary
+python3 experiments/scripts/verify_stage4_logreg_json.py --dataset experiments/datasets/stage4_risk_dataset.csv --model-json experiments/models/stage4_risk_logreg_5s.json --print-summary
+python3 experiments/scripts/verify_stage4_logreg_json.py --dataset experiments/datasets/stage4_risk_dataset.csv --model-json experiments/models/stage4_risk_logreg_15s.json --print-summary
+```
+
+Online adapter work is blocked if any checker run reports missing required
+features, non-finite exported statistics, or probability mismatch against
+available sklearn reference probabilities.
 
 ## Implementation Plan
 
@@ -230,10 +243,10 @@ because the policy changed command scale.
 
 The smallest next coding task is:
 
-- add `LogisticRegression` JSON export to
-  `experiments/scripts/train_stage4_risk_predictor.py`
-- add a protocol for the model export format
-- do not implement the online adapter yet
+- run Stage 4-H2 JSON-only inference verification with
+  `experiments/scripts/verify_stage4_logreg_json.py`
+- keep generated `experiments/models/*.json` out of git
+- do not implement the online adapter until the verifier passes
 
-This keeps Stage 4-H focused on reproducible offline model export before adding
-new ROS runtime behavior.
+This keeps Stage 4-H focused on reproducible offline model inference before
+adding new ROS runtime behavior.

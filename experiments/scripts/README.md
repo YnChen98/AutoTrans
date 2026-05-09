@@ -331,6 +331,38 @@ python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments
 
 `--export-logreg-json` 必须和 `--export-train-on-all` 一起使用，避免无意中把 cross-validation fold model 当成 deployable model。生成的 `experiments/models/*.json`、`experiments/models/*.pkl` 和 `experiments/models/*.joblib` 默认不应提交。完整 export protocol 见 `experiments/protocols/stage4_risk_model_export_protocol.md`。
 
+## Stage 4-H2 LogisticRegression JSON inference verification
+
+`experiments/scripts/verify_stage4_logreg_json.py` 用于在不依赖 `sklearn` 的情况下，检查导出的
+`LogisticRegression` JSON 能否在 dataset rows 上完成一致的 feature reconstruction、median
+imputation、`StandardScaler` transform 和 probability inference。
+
+3s JSON checker:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/verify_stage4_logreg_json.py --dataset experiments/datasets/stage4_risk_dataset.csv --model-json experiments/models/stage4_risk_logreg_3s.json --print-summary
+```
+
+5s JSON checker:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/verify_stage4_logreg_json.py --dataset experiments/datasets/stage4_risk_dataset.csv --model-json experiments/models/stage4_risk_logreg_5s.json --print-summary
+```
+
+15s JSON checker:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/verify_stage4_logreg_json.py --dataset experiments/datasets/stage4_risk_dataset.csv --model-json experiments/models/stage4_risk_logreg_15s.json --print-summary
+```
+
+如果 JSON 未来包含 sklearn reference probabilities，checker 会用默认
+`--max-abs-diff-tol 1e-8` 比较 JSON-only probabilities 和 reference probabilities；如果
+当前 JSON 没有 reference probabilities，它会明确报告只完成了 JSON inference check。在线
+ROS adapter implementation 必须等这些检查通过后再开始。
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。
