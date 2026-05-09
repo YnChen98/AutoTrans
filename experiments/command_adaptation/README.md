@@ -57,6 +57,7 @@ rostopic echo /command_adaptation/acceleration_scale
 - `command_risk_score_3s`
 - `command_risk_score_5s`
 - `command_risk_scale_selected`
+- `command_risk_target_scale_raw`
 
 `analyze_log.py` summarizes these columns when finite data is available and generates:
 
@@ -65,20 +66,39 @@ rostopic echo /command_adaptation/acceleration_scale
 - `command_risk_score_3s.png`
 - `command_risk_score_5s.png`
 - `command_risk_scale_selected.png`
+- `command_risk_target_scale_raw.png`
 
 For Stage 4-H diagnostics, use the risk-score summaries to decide whether an
 invalid run failed before risk activation or after risk activation:
 
 - `first_finite_command_risk_score_3s_time`
 - `first_finite_command_risk_score_5s_time`
+- `first_command_risk_score_3s_ge_0p5_time`
+- `first_command_risk_score_5s_ge_0p5_time`
+- `first_command_risk_score_5s_ge_0p7_time`
+- `first_swing_angle_ge_30_time`
+- `first_swing_angle_ge_60_time`
+- `first_payload_speed_ge_4_time`
+- `first_uav_speed_ge_4_time`
 - `first_command_scale_below_0p85_time`
 - `first_command_scale_below_0p75_time`
+- `first_command_risk_target_scale_raw_below_0p85_time`
+- `first_command_risk_target_scale_raw_below_0p75_time`
+- `first_command_risk_target_scale_raw_below_0p65_time`
 
 If `first_nan_time` is earlier than the first finite risk-score time, the model
 did not produce a usable online risk estimate before failure. If risk scores are
 finite before `first_nan_time` but scale reduction is late or weak, inspect
-`command_risk_scale_selected` and the risk-to-scale thresholds before changing
-planner, controller, or simulator code.
+`command_risk_target_scale_raw`, `command_risk_scale_selected`, and the
+risk-to-scale thresholds before changing planner, controller, or simulator code.
+`command_risk_target_scale_raw` is the policy's immediate target before rate
+limiting. `command_risk_scale_selected` is the rate-limited selected scale that
+is actually published to the planner as `/command_adaptation/speed_scale`. If
+the raw target drops early but the selected scale crosses late, the rate limit
+is likely too slow for the observed failure timing. If the raw target itself
+drops only after `first_swing_angle_ge_30_time`, `first_swing_angle_ge_60_time`,
+`first_payload_speed_ge_4_time`, or `first_uav_speed_ge_4_time`, treat the
+prediction or threshold trigger as too late before changing the policy.
 
 Current strong-wind trial evidence is summarized in `experiments/protocols/stage3b_heuristic_strong_trial_summary.md`; the current `policy_mode=wind_level` strong-wind summary is in `experiments/protocols/stage3b_windlevel_strong_trial_summary.md`.
 
@@ -97,6 +117,7 @@ Published:
 - `/command_adaptation/risk_score_3s` (`std_msgs/Float64`)
 - `/command_adaptation/risk_score_5s` (`std_msgs/Float64`)
 - `/command_adaptation/risk_scale_selected` (`std_msgs/Float64`)
+- `/command_adaptation/risk_target_scale_raw` (`std_msgs/Float64`)
 
 Subscribed:
 

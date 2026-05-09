@@ -254,6 +254,9 @@ class RiskConditionedCommandAdapter:
         self.risk_scale_selected_pub = rospy.Publisher(
             "/command_adaptation/risk_scale_selected", Float64, queue_size=10
         )
+        self.risk_target_scale_raw_pub = rospy.Publisher(
+            "/command_adaptation/risk_target_scale_raw", Float64, queue_size=10
+        )
 
         rospy.Subscriber("/visual_slam/odom", Odometry, self._uav_odom_callback, queue_size=20)
         rospy.Subscriber("/payload_odom", Odometry, self._payload_odom_callback, queue_size=20)
@@ -363,14 +366,16 @@ class RiskConditionedCommandAdapter:
         self.risk_score_3s_pub.publish(Float64(data=self._safe_score(self.latest_risk_score_3s)))
         self.risk_score_5s_pub.publish(Float64(data=self._safe_score(self.latest_risk_score_5s)))
         self.risk_scale_selected_pub.publish(Float64(data=speed_scale))
+        self.risk_target_scale_raw_pub.publish(Float64(data=target_scale))
 
         rospy.loginfo_throttle(
             1.0,
             (
-                "risk_conditioned_command_adapter base_scale=%.3f speed_scale=%.3f "
+                "risk_conditioned_command_adapter base_scale=%.3f target_scale=%.3f speed_scale=%.3f "
                 "risk_3s=%.3f risk_5s=%.3f goal=%s has_trajectory=%s samples=%d"
             ),
             base_scale,
+            target_scale,
             speed_scale,
             self._safe_score(self.latest_risk_score_3s),
             self._safe_score(self.latest_risk_score_5s),

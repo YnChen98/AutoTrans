@@ -242,6 +242,17 @@ def first_below_time(values, time_values, threshold):
     return math.nan
 
 
+def first_ge_time(values, time_values, threshold):
+    start_times = valid_values(time_values)
+    if not start_times:
+        return math.nan
+    start_time = start_times[0]
+    for value, time_value in zip(values, time_values):
+        if math.isfinite(value) and math.isfinite(time_value) and value >= threshold:
+            return time_value - start_time
+    return math.nan
+
+
 def risk_score_values(values):
     return [value if math.isfinite(value) and value >= 0.0 else math.nan for value in values]
 
@@ -393,6 +404,11 @@ def compute_metrics(csv_path, rows, args):
         if has_column(rows, "command_risk_scale_selected")
         else []
     )
+    command_risk_target_scale_raw = (
+        column(rows, "command_risk_target_scale_raw")
+        if has_column(rows, "command_risk_target_scale_raw")
+        else []
+    )
 
     duration_sec, effective_log_rate_hz = compute_duration_and_rate(rows)
     final_valid_uav_position = final_position(uav_pos_x, uav_pos_y, uav_pos_z)
@@ -495,6 +511,17 @@ def compute_metrics(csv_path, rows, args):
         "last_row_uav_position": last_row_uav_position,
         "last_row_payload_position": last_row_payload_position,
     }
+
+    if has_column(rows, "swing_angle_deg"):
+        metrics["first_swing_angle_ge_30_time"] = first_ge_time(swing_angle, ros_times, 30.0)
+        metrics["first_swing_angle_ge_60_time"] = first_ge_time(swing_angle, ros_times, 60.0)
+
+    if all(has_column(rows, field) for field in ("uav_vel_x", "uav_vel_y", "uav_vel_z")):
+        metrics["first_uav_speed_ge_4_time"] = first_ge_time(uav_speed, ros_times, 4.0)
+
+    if all(has_column(rows, field) for field in ("payload_vel_x", "payload_vel_y", "payload_vel_z")):
+        metrics["first_payload_speed_ge_4_time"] = first_ge_time(payload_speed, ros_times, 4.0)
+
     for field in KEY_STATE_FIELDS:
         metrics["nan_count_%s" % field] = nan_counts[field]
 
@@ -542,6 +569,9 @@ def compute_metrics(csv_path, rows, args):
             print("WARNING: command_acceleration_scale has no finite numeric data.", file=sys.stderr)
 
     if command_risk_score_3s:
+        metrics["first_command_risk_score_3s_ge_0p5_time"] = first_ge_time(
+            command_risk_score_3s, ros_times, 0.5
+        )
         if valid_values(command_risk_score_3s):
             metrics["mean_command_risk_score_3s"] = mean(command_risk_score_3s)
             metrics["max_command_risk_score_3s"] = max_or_nan(command_risk_score_3s)
@@ -553,6 +583,12 @@ def compute_metrics(csv_path, rows, args):
             print("WARNING: command_risk_score_3s has no finite non-negative data.", file=sys.stderr)
 
     if command_risk_score_5s:
+        metrics["first_command_risk_score_5s_ge_0p5_time"] = first_ge_time(
+            command_risk_score_5s, ros_times, 0.5
+        )
+        metrics["first_command_risk_score_5s_ge_0p7_time"] = first_ge_time(
+            command_risk_score_5s, ros_times, 0.7
+        )
         if valid_values(command_risk_score_5s):
             metrics["mean_command_risk_score_5s"] = mean(command_risk_score_5s)
             metrics["max_command_risk_score_5s"] = max_or_nan(command_risk_score_5s)
@@ -571,6 +607,23 @@ def compute_metrics(csv_path, rows, args):
             metrics["final_command_risk_scale_selected"] = final_or_nan(command_risk_scale_selected)
         else:
             print("WARNING: command_risk_scale_selected has no finite numeric data.", file=sys.stderr)
+
+    if command_risk_target_scale_raw:
+        metrics["mean_command_risk_target_scale_raw"] = mean(command_risk_target_scale_raw)
+        metrics["min_command_risk_target_scale_raw"] = min_or_nan(command_risk_target_scale_raw)
+        metrics["max_command_risk_target_scale_raw"] = max_or_nan(command_risk_target_scale_raw)
+        metrics["final_command_risk_target_scale_raw"] = final_or_nan(command_risk_target_scale_raw)
+        metrics["first_command_risk_target_scale_raw_below_0p85_time"] = first_below_time(
+            command_risk_target_scale_raw, ros_times, 0.85
+        )
+        metrics["first_command_risk_target_scale_raw_below_0p75_time"] = first_below_time(
+            command_risk_target_scale_raw, ros_times, 0.75
+        )
+        metrics["first_command_risk_target_scale_raw_below_0p65_time"] = first_below_time(
+            command_risk_target_scale_raw, ros_times, 0.65
+        )
+        if not valid_values(command_risk_target_scale_raw):
+            print("WARNING: command_risk_target_scale_raw has no finite numeric data.", file=sys.stderr)
 
     return metrics
 
@@ -831,6 +884,19 @@ def make_plots(rows, output_dir):
                 [("command_risk_scale_selected", column(rows, "command_risk_scale_selected"))],
                 "scale",
                 "Command risk scale selected",
+            ),
+        )
+
+    if "command_risk_target_scale_raw" in rows[0]:
+        plot_or_warn(
+            output_dir,
+            "command_risk_target_scale_raw.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [("command_risk_target_scale_raw", column(rows, "command_risk_target_scale_raw"))],
+                "scale",
+                "Command risk target scale raw",
             ),
         )
 

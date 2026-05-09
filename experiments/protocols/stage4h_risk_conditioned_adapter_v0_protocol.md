@@ -44,6 +44,7 @@ Published:
 - `/command_adaptation/risk_score_3s` (`std_msgs/Float64`)
 - `/command_adaptation/risk_score_5s` (`std_msgs/Float64`)
 - `/command_adaptation/risk_scale_selected` (`std_msgs/Float64`)
+- `/command_adaptation/risk_target_scale_raw` (`std_msgs/Float64`)
 
 ## Required Diagnostics
 
@@ -57,6 +58,7 @@ predicted risk early enough or whether the risk-to-scale rule was too weak.
 - `command_risk_score_3s`
 - `command_risk_score_5s`
 - `command_risk_scale_selected`
+- `command_risk_target_scale_raw`
 
 Analyze the log with target-error arguments so the risk diagnostics can be read
 together with `valid_run_suggested`, `first_nan_time`, and final target errors:
@@ -73,14 +75,32 @@ python3 experiments/autotrans_logger/scripts/analyze_log.py \
 
 Use `first_finite_command_risk_score_3s_time`,
 `first_finite_command_risk_score_5s_time`,
+`first_command_risk_score_3s_ge_0p5_time`,
+`first_command_risk_score_5s_ge_0p5_time`,
+`first_command_risk_score_5s_ge_0p7_time`,
+`first_swing_angle_ge_30_time`,
+`first_swing_angle_ge_60_time`,
+`first_payload_speed_ge_4_time`,
+`first_uav_speed_ge_4_time`,
 `first_command_scale_below_0p85_time`, and
-`first_command_scale_below_0p75_time` to diagnose timing:
+`first_command_scale_below_0p75_time`,
+`first_command_risk_target_scale_raw_below_0p85_time`,
+`first_command_risk_target_scale_raw_below_0p75_time`, and
+`first_command_risk_target_scale_raw_below_0p65_time` to diagnose timing:
 
 - If `first_nan_time` occurs before the first finite risk-score time, the model
   did not produce a usable risk estimate before the failure.
 - If risk scores are finite before `first_nan_time` but command scale drops late
-  or not far enough, inspect `command_risk_scale_selected` and the threshold
-  parameters before changing the policy.
+  or not far enough, inspect `command_risk_target_scale_raw`,
+  `command_risk_scale_selected`, and the threshold parameters before changing
+  the policy.
+- If `command_risk_target_scale_raw` crosses below `0.85`, `0.75`, or `0.65`
+  early but `command_risk_scale_selected` crosses late, the risk trigger likely
+  fired but `scale_rate_limit_per_sec` was too slow for the failure timing.
+- If `command_risk_target_scale_raw` does not drop until after
+  `first_swing_angle_ge_30_time`, `first_swing_angle_ge_60_time`,
+  `first_payload_speed_ge_4_time`, or `first_uav_speed_ge_4_time`, diagnose a
+  late prediction or high threshold before changing the rate limit.
 - If risk scores stay low before an invalid run, treat it as model prediction
   evidence, not as a planner/controller conclusion.
 
@@ -156,6 +176,13 @@ score `-1`.
 
 Let `base_scale` be the wind-level fallback scale.
 
+The adapter publishes two scale diagnostics:
+
+- `risk_target_scale_raw` is the raw policy target after risk thresholding and
+  clamping, before rate limiting.
+- `risk_scale_selected` is the rate-limited selected scale and should match the
+  scale actually published through `/command_adaptation/speed_scale`.
+
 If `enable_risk_conditioning=false`, publish `base_scale`.
 
 If risk conditioning is enabled:
@@ -170,8 +197,10 @@ Scale rule:
 - if `risk_score_3s >= risk_threshold_3s`, use `min(selected_scale, soft_scale_3s)`
 - if `risk_score_5s >= risk_threshold_5s`, use `min(selected_scale, soft_scale_5s)`
 - if `risk_score_5s >= hard_threshold_5s`, use `min(selected_scale, hard_scale_5s)`
-- clamp to `[min_scale, max_scale]`
-- rate-limit both decreasing and increasing scale changes
+- clamp to `[min_scale, max_scale]`; this is published as
+  `/command_adaptation/risk_target_scale_raw`
+- rate-limit both decreasing and increasing scale changes; this is published as
+  `/command_adaptation/risk_scale_selected`
 
 The same value is published to `speed_scale` and `acceleration_scale` in v0.
 

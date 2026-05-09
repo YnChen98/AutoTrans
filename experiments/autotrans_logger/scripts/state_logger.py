@@ -51,6 +51,7 @@ class StateLogger:
         "command_risk_score_3s",
         "command_risk_score_5s",
         "command_risk_scale_selected",
+        "command_risk_target_scale_raw",
     ]
 
     def __init__(self):
@@ -64,6 +65,7 @@ class StateLogger:
         self.command_risk_score_3s = None
         self.command_risk_score_5s = None
         self.command_risk_scale_selected = None
+        self.command_risk_target_scale_raw = None
         self.has_trajectory = False
 
         self.log_path = self._make_log_path()
@@ -86,6 +88,12 @@ class StateLogger:
             "/command_adaptation/risk_scale_selected",
             Float64,
             self._command_risk_scale_selected_callback,
+            queue_size=50,
+        )
+        rospy.Subscriber(
+            "/command_adaptation/risk_target_scale_raw",
+            Float64,
+            self._command_risk_target_scale_raw_callback,
             queue_size=50,
         )
 
@@ -134,6 +142,9 @@ class StateLogger:
 
     def _command_risk_scale_selected_callback(self, msg):
         self.command_risk_scale_selected = msg
+
+    def _command_risk_target_scale_raw_callback(self, msg):
+        self.command_risk_target_scale_raw = msg
 
     def _timer_callback(self, _event):
         self.writer.writerow(self._make_row())
@@ -190,6 +201,9 @@ class StateLogger:
 
         if self.command_risk_scale_selected is not None:
             row["command_risk_scale_selected"] = self._fmt(self.command_risk_scale_selected.data)
+
+        if self.command_risk_target_scale_raw is not None:
+            row["command_risk_target_scale_raw"] = self._fmt(self.command_risk_target_scale_raw.data)
 
         return row
 
