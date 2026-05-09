@@ -72,6 +72,28 @@ If the selected label has only one class, the script stops with a clear error be
 
 `--feature-set all` currently uses metadata plus `early_*` features. It intentionally does not include final run-outcome features. As the dataset grows, extra non-leaking pre-run or early-run features may be added here only after they are reviewed for leakage.
 
+## Prediction-Horizon Ablation
+
+Online risk-conditioned command adaptation needs predictions early enough to change the command before the run has already entered a fast failure mode. For that reason, the risk predictor supports a prediction-horizon ablation over the early-window features:
+
+```bash
+--max-early-window 3
+--max-early-window 5
+--max-early-window 10
+--max-early-window 15
+```
+
+This option applies only when `--feature-set early` or `--feature-set all` is selected. It filters only `early_*` features and leaves metadata features unchanged unless another ablation flag removes them. The supported settings are:
+
+- `--max-early-window 3`: keep only `early_3s_*`
+- `--max-early-window 5`: keep `early_3s_*` and `early_5s_*`
+- `--max-early-window 10`: keep `early_3s_*`, `early_5s_*`, and `early_10s_*`
+- `--max-early-window 15`: keep `early_3s_*`, `early_5s_*`, `early_10s_*`, and `early_15s_*`
+
+The default is `--max-early-window 15`, so existing commands behave as before.
+
+The `3s` and `5s` settings are the most relevant for online risk-conditioned command adaptation because they test whether useful risk information appears soon enough for a runtime adapter to slow commands before instability grows. The `10s` and `15s` settings are still useful diagnostics, but they may be too late for fast failure modes where the payload swing, tracking error, or speed violation has already developed.
+
 ## Feature Ablations
 
 Use ablations to check whether the predictor is learning early dynamics or shortcut metadata.
@@ -225,6 +247,15 @@ Run the recommended safety-aware strict-invalid label:
 ```bash
 cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --dry-run --print-summary
+```
+
+Run prediction-horizon ablations for online adaptation timing:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --max-early-window 3 --dry-run --print-summary
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --max-early-window 5 --dry-run --print-summary
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --max-early-window 15 --dry-run --print-summary
 ```
 
 Run Stage 4-F calibration, threshold, and group diagnostics:

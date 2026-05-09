@@ -240,6 +240,29 @@ cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --dry-run --print-summary
 ```
 
+做 prediction-horizon ablation，检查在线 risk-conditioned command adaptation 需要的早期窗口：
+
+3s-only `leave-one-target-out`：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --max-early-window 3 --dry-run --print-summary
+```
+
+5s-window `leave-one-target-out`：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --max-early-window 5 --dry-run --print-summary
+```
+
+all-window `leave-one-target-out`：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --cv leave-one-target-out --drop-command-scale-features --drop-method-features --max-early-window 15 --dry-run --print-summary
+```
+
 运行 Stage 4-F calibration、threshold sweep 和 group diagnostics：
 
 ```bash
@@ -249,6 +272,7 @@ python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments
 
 新增 diagnostics：
 
+- `--max-early-window 3|5|10|15` 控制 `early_*` feature 的最大 prediction horizon。默认 `15` 保持旧命令行为；`3` 和 `5` 更适合检查在线 adapter 是否能足够早地得到 risk signal，`10` 和 `15` 可能对快速失败模式太晚。
 - `--calibration-bins 10` 控制 ECE/calibration bins 的 equal-width bin 数量，默认是 `10`。
 - `--threshold-sweep` 会检查 thresholds `0.1` 到 `0.9`，输出 precision、recall、F1、false positives 和 false negatives。
 - `--group-metrics` 会按当前 `--cv` 的 held-out group 输出 per-target 或 per-method metrics。

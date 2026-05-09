@@ -138,6 +138,13 @@ def parse_args():
         help="Feature set to evaluate.",
     )
     parser.add_argument(
+        "--max-early-window",
+        type=int,
+        default=15,
+        choices=[3, 5, 10, 15],
+        help="Largest early feature window to include for early/all feature sets.",
+    )
+    parser.add_argument(
         "--cv",
         default="loo",
         choices=[
@@ -321,11 +328,40 @@ def is_method_feature(spec):
     )
 
 
+def early_feature_window(spec):
+    source_column = spec["source_column"]
+    if not source_column.startswith("early_"):
+        return None
+    parts = source_column.split("_", 2)
+    if len(parts) < 3:
+        return None
+    window_token = parts[1]
+    if not window_token.endswith("s"):
+        return None
+    window_text = window_token[:-1]
+    if not window_text.isdigit():
+        return None
+    return int(window_text)
+
+
+def is_dropped_by_early_window(spec, max_early_window):
+    if not spec["source_column"].startswith("early_"):
+        return False
+    window = early_feature_window(spec)
+    return window is None or window > max_early_window
+
+
+def count_dropped_by_reason(dropped_features, reason):
+    return sum(1 for item in dropped_features if reason in item["reasons"])
+
+
 def apply_feature_ablations(specs, args):
     filtered = []
     dropped = []
     for spec in specs:
         reasons = []
+        if is_dropped_by_early_window(spec, args.max_early_window):
+            reasons.append("early_window")
         if args.drop_command_scale_features and is_command_scale_feature(spec):
             reasons.append("command_scale")
         if args.drop_method_features and is_method_feature(spec):
@@ -1002,6 +1038,7 @@ def make_metrics_summary(
         "dataset": str(dataset_path),
         "label": args.label,
         "feature_set": args.feature_set,
+        "max_early_window": args.max_early_window,
         "cv": args.cv,
         "folds_total": cv_summary["folds_total"],
         "folds_used": cv_summary["folds_used"],
@@ -1015,6 +1052,10 @@ def make_metrics_summary(
         "features": [spec["name"] for spec in specs],
         "drop_command_scale_features": args.drop_command_scale_features,
         "drop_method_features": args.drop_method_features,
+        "early_window_dropped_feature_count": count_dropped_by_reason(
+            dropped_features,
+            "early_window",
+        ),
         "calibration_bins": args.calibration_bins,
         "threshold_sweep": args.threshold_sweep,
         "group_metrics": args.group_metrics,
@@ -1232,6 +1273,12 @@ def print_terminal_summary(
     print("label: %s" % args.label)
     print("rows: %d class_0=%d class_1=%d" % (len(labels), counts["0"], counts["1"]))
     print("feature_set: %s features=%d" % (args.feature_set, len(specs)))
+    print("max_early_window: %d" % args.max_early_window)
+    print(
+        "early_window_dropped_features: %d"
+        % count_dropped_by_reason(dropped_features, "early_window")
+    )
+    print("final_selected_feature_count: %d" % len(specs))
     print(
         "ablations: drop_command_scale_features=%s drop_method_features=%s dropped_features=%d"
         % (
