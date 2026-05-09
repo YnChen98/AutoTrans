@@ -119,6 +119,9 @@ Core parameters:
 - `scale_rate_limit_per_sec`, default `0.5`
 - `publish_same_acceleration_scale`, default `true`
 - `same_goal_position_tolerance`, default `0.05`
+- `episode_idle_timeout_sec`, default `3.0`
+- `same_goal_new_episode_timeout_sec`, default `10.0`
+- `reset_scale_on_new_episode`, default `true`
 - `reset_on_new_distinct_goal`, default `true`
 - `reset_on_first_trajectory_after_goal`, default `false`
 
@@ -147,12 +150,20 @@ Wind-level fallback parameters match `heuristic_command_adapter.py`:
 
 ## Feature Computation
 
-The episode buffer resets on the first distinct `/move_base_simple/goal`.
-Repeated `/move_base_simple/goal` messages with the same 3D position do not
-reset the buffer; they only update the last goal receive time. Two goals are
-treated as the same when their 3D position distance is below
-`same_goal_position_tolerance`, default `0.05` m. This prevents repeated
-baseline-trial goal publication from clearing the early odometry window.
+The episode buffer resets on an accepted `/move_base_simple/goal`. Repeated
+`/move_base_simple/goal` messages with the same 3D position inside one active
+trial do not reset the buffer. Two goals are treated as the same when their 3D
+position distance is below `same_goal_position_tolerance`, default `0.05` m.
+This prevents repeated baseline-trial goal publication from clearing the early
+odometry window.
+
+Repeated run loops must still start clean episodes. The same goal after
+`same_goal_new_episode_timeout_sec`, default `10.0` s, is accepted as a new
+episode and resets the online buffers, cached risk scores, raw/selected risk
+scale state, and rate-limit previous scale when `reset_scale_on_new_episode=true`.
+If finite `/visual_slam/odom` stops for `episode_idle_timeout_sec`, default
+`3.0` s, the adapter treats the gap as a cross-trial boundary, clears stale
+episode state, and makes the next goal start a new episode.
 
 For a new distinct goal, `reset_on_new_distinct_goal=true` keeps the default
 behavior of starting a fresh episode. `/planning/trajectory` is used only to
@@ -166,6 +177,12 @@ the current episode start. In a normal run with stable odometry, the first finit
 first finite 5s risk score should normally appear about 2 seconds after the 3s
 score. A 5s score appearing tens of seconds later is evidence to inspect episode
 reset diagnostics before changing risk-to-scale thresholds.
+
+At the start of every repeated run, `command_risk_score_3s` and
+`command_risk_score_5s` should remain `-1` until enough fresh 3s/5s data has
+been collected. High finite risk scores or a selected scale already below the
+wind-level base scale near time 0 indicate stale episode state and should be
+treated as a bug in reset handling.
 
 Online features follow the JSON `feature_names` order and names:
 

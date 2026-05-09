@@ -127,15 +127,19 @@ Subscribed:
 - `/move_base_simple/goal` (`geometry_msgs/PoseStamped`)
 - `/planning/trajectory` as an optional has-trajectory signal
 
-Episode timing is anchored to the first distinct `/move_base_simple/goal`.
-Repeated goal messages with the same position do not reset the feature buffer.
-This is important because `run_baseline_trial.sh` republishes
-`/move_base_simple/goal`; those repeated messages should update only the latest
-goal receive time and keep the collected odometry samples. A goal is treated as
-the same when its 3D position is within `same_goal_position_tolerance`, default
-`0.05` m. `/planning/trajectory` does not reset the episode by default; it only
-marks `has_trajectory=true` and can initialize timing only if no active episode
-exists.
+Episode timing is anchored to an accepted `/move_base_simple/goal`. Repeated
+goal messages with the same position inside one active trial do not reset the
+feature buffer. This is important because `run_baseline_trial.sh` republishes
+`/move_base_simple/goal`; those repeated messages are ignored so they do not
+clear the early odometry window. A goal is treated as the same when its 3D
+position is within `same_goal_position_tolerance`, default `0.05` m. The same
+goal after `same_goal_new_episode_timeout_sec`, default `10.0` s, is treated as
+a new episode and resets stale online state. Repeated run loops also require
+odom idle-gap handling: if finite `/visual_slam/odom` stops for
+`episode_idle_timeout_sec`, default `3.0` s, the adapter clears the episode
+buffers and the next goal starts fresh. `/planning/trajectory` does not reset
+the episode by default; it only marks `has_trajectory=true` and can initialize
+timing only if no active episode exists.
 
 Default launch settings are conservative:
 
@@ -152,6 +156,9 @@ falls back to wind-level scale selection.
 Useful episode timing parameters:
 
 - `same_goal_position_tolerance`, default `0.05`
+- `episode_idle_timeout_sec`, default `3.0`
+- `same_goal_new_episode_timeout_sec`, default `10.0`
+- `reset_scale_on_new_episode`, default `true`
 - `reset_on_new_distinct_goal`, default `true`
 - `reset_on_first_trajectory_after_goal`, default `false`
 
@@ -159,7 +166,10 @@ With stable odometry and one active episode, the first finite
 `/command_adaptation/risk_score_3s` should appear after about 3 seconds of
 episode history, and `/command_adaptation/risk_score_5s` should normally appear
 about 2 seconds later. If the 5s score appears much later, check for episode
-reset logs before changing the risk thresholds or planner settings.
+reset logs before changing the risk thresholds or planner settings. At the
+start of a repeated run, both risk scores should publish `-1` until enough fresh
+3s/5s data exists. Stale high risk scores or a stale selected scale near time
+0 indicate an episode reset bug, not a valid model prediction.
 
 Generated model JSON files live under:
 

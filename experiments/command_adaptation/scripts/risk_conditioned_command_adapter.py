@@ -225,6 +225,15 @@ class RiskConditionedCommandAdapter:
             0.0,
             float(rospy.get_param("~same_goal_position_tolerance", 0.05)),
         )
+        self.episode_idle_timeout_sec = max(
+            0.0,
+            float(rospy.get_param("~episode_idle_timeout_sec", 3.0)),
+        )
+        self.same_goal_new_episode_timeout_sec = max(
+            0.0,
+            float(rospy.get_param("~same_goal_new_episode_timeout_sec", 10.0)),
+        )
+        self.reset_scale_on_new_episode = bool(rospy.get_param("~reset_scale_on_new_episode", True))
         self.reset_on_new_distinct_goal = bool(rospy.get_param("~reset_on_new_distinct_goal", True))
         self.reset_on_first_trajectory_after_goal = bool(
             rospy.get_param("~reset_on_first_trajectory_after_goal", False)
@@ -242,6 +251,9 @@ class RiskConditionedCommandAdapter:
         self.wind_force = None
         self.goal_received = False
         self.last_goal_received_time = None
+        self.last_accepted_goal_time = None
+        self.last_finite_odom_receive_time = None
+        self.force_next_goal_new_episode = False
         self.has_trajectory = False
         self.trajectory_seen_for_goal = False
         self.episode_start_time = None
@@ -251,6 +263,8 @@ class RiskConditionedCommandAdapter:
         self.samples = []
         self.latest_risk_score_3s = -1.0
         self.latest_risk_score_5s = -1.0
+        self.latest_risk_target_scale_raw = None
+        self.latest_risk_scale_selected = None
         self.previous_speed_scale = None
         self.previous_acceleration_scale = None
         self.last_publish_time = None
@@ -282,7 +296,8 @@ class RiskConditionedCommandAdapter:
                 "risk_conditioned_command_adapter publishing command adaptation scales at %.3f Hz "
                 "policy_mode=%s enable_risk_conditioning=%s models_ready=%s "
                 "same_goal_position_tolerance=%.3f reset_on_new_distinct_goal=%s "
-                "reset_on_first_trajectory_after_goal=%s"
+                "reset_on_first_trajectory_after_goal=%s episode_idle_timeout_sec=%.3f "
+                "same_goal_new_episode_timeout_sec=%.3f reset_scale_on_new_episode=%s"
             ),
             self.publish_rate,
             self.policy_mode,
@@ -291,6 +306,9 @@ class RiskConditionedCommandAdapter:
             self.same_goal_position_tolerance,
             str(self.reset_on_new_distinct_goal).lower(),
             str(self.reset_on_first_trajectory_after_goal).lower(),
+            self.episode_idle_timeout_sec,
+            self.same_goal_new_episode_timeout_sec,
+            str(self.reset_scale_on_new_episode).lower(),
         )
 
     def _warn_model_state(self):
@@ -314,6 +332,9 @@ class RiskConditionedCommandAdapter:
 
     def _uav_odom_callback(self, msg):
         if self._odom_is_finite(msg):
+            now = rospy.Time.now().to_sec()
+            self._check_odom_idle_gap(now)
+            self.last_finite_odom_receive_time = now
             self.uav_odom = msg
         else:
             rospy.logwarn_throttle(1.0, "ignoring non-finite /visual_slam/odom")
@@ -346,23 +367,44 @@ class RiskConditionedCommandAdapter:
         )
 
         if is_same_goal:
-            self.goal_received = True
             self.last_goal_received_time = now
+            if self.force_next_goal_new_episode:
+                self._accept_goal_for_new_episode(now, goal_position, position, "odom_idle_gap")
+                return
+
+            accepted_goal_age = self._accepted_goal_age(now)
+            if self._has_active_episode() and accepted_goal_age < self.same_goal_new_episode_timeout_sec:
+                rospy.loginfo_throttle(
+                    1.0,
+                    (
+                        "risk_conditioned_command_adapter ignored repeated same goal within active episode "
+                        "distance=%.3f tolerance=%.3f accepted_goal_age=%.3f episode_age=%.3f"
+                    ),
+                    distance_from_current,
+                    self.same_goal_position_tolerance,
+                    accepted_goal_age,
+                    self._episode_age(now),
+                )
+                return
+
+            self._accept_goal_for_new_episode(now, goal_position, position, "same_goal_after_timeout")
             rospy.loginfo_throttle(
                 1.0,
                 (
-                    "risk_conditioned_command_adapter ignored repeated goal "
-                    "distance=%.3f tolerance=%.3f episode_age=%.3f"
+                    "risk_conditioned_command_adapter same goal starts new episode after timeout "
+                    "distance=%.3f tolerance=%.3f accepted_goal_age=%.3f"
                 ),
                 distance_from_current,
                 self.same_goal_position_tolerance,
-                self._episode_age(now),
+                accepted_goal_age,
             )
             return
 
         active_episode = self._has_active_episode()
+        self.force_next_goal_new_episode = False
         self.goal_received = True
         self.last_goal_received_time = now
+        self.last_accepted_goal_time = now
         self.current_goal_position = goal_position
         self.target_x = position.x
         self.target_y = position.y
@@ -389,6 +431,75 @@ class RiskConditionedCommandAdapter:
             self.target_y,
         )
 
+    def _accept_goal_for_new_episode(self, now, goal_position, position, reason):
+        self.force_next_goal_new_episode = False
+        self.goal_received = True
+        self.last_goal_received_time = now
+        self.last_accepted_goal_time = now
+        self.current_goal_position = goal_position
+        self.target_x = position.x
+        self.target_y = position.y
+        self.has_trajectory = False
+        self.trajectory_seen_for_goal = False
+        self._reset_episode(now, reason)
+
+    def _check_odom_idle_gap(self, now):
+        if self.episode_idle_timeout_sec <= 0.0:
+            return
+        if self.last_finite_odom_receive_time is None:
+            return
+
+        previous_odom_time = self.last_finite_odom_receive_time
+        idle_gap = now - previous_odom_time
+        if not math.isfinite(idle_gap) or idle_gap < self.episode_idle_timeout_sec:
+            return
+
+        fresh_goal_during_gap = (
+            self.goal_received
+            and self.last_accepted_goal_time is not None
+            and self.last_accepted_goal_time > previous_odom_time
+        )
+        self._clear_episode_state(reset_trajectory=True)
+        if fresh_goal_during_gap:
+            self.force_next_goal_new_episode = False
+            self.episode_start_time = now
+        else:
+            self.force_next_goal_new_episode = True
+            self.goal_received = False
+            self.episode_start_time = None
+
+        rospy.loginfo_throttle(
+            1.0,
+            (
+                "risk_conditioned_command_adapter episode reset due to odom idle gap "
+                "idle_gap=%.3f timeout=%.3f next_goal_starts_new_episode=%s"
+            ),
+            idle_gap,
+            self.episode_idle_timeout_sec,
+            str(not fresh_goal_during_gap).lower(),
+        )
+
+    def _clear_episode_state(self, reset_trajectory):
+        self.uav_odom = None
+        self.payload_odom = None
+        self.samples = []
+        self.latest_risk_score_3s = -1.0
+        self.latest_risk_score_5s = -1.0
+        self.latest_risk_target_scale_raw = None
+        self.latest_risk_scale_selected = None
+        if reset_trajectory:
+            self.has_trajectory = False
+            self.trajectory_seen_for_goal = False
+        if self.reset_scale_on_new_episode:
+            self.previous_speed_scale = None
+            self.previous_acceleration_scale = None
+
+    def _accepted_goal_age(self, now):
+        if self.last_accepted_goal_time is None:
+            return float("inf")
+        age = now - self.last_accepted_goal_time
+        return age if math.isfinite(age) and age >= 0.0 else float("inf")
+
     def _trajectory_callback(self, _msg):
         if not self.goal_received:
             return
@@ -399,6 +510,8 @@ class RiskConditionedCommandAdapter:
             self.trajectory_seen_for_goal = True
             if not self._has_active_episode():
                 self._reset_episode(now, "first_trajectory_without_active_episode")
+                self.has_trajectory = True
+                self.trajectory_seen_for_goal = True
             elif self.reset_on_first_trajectory_after_goal:
                 self._reset_episode(now, "first_trajectory_after_goal")
                 self.has_trajectory = True
@@ -427,6 +540,8 @@ class RiskConditionedCommandAdapter:
         acceleration_scale = self._clamp_scale(acceleration_scale)
         self.previous_speed_scale = speed_scale
         self.previous_acceleration_scale = acceleration_scale
+        self.latest_risk_target_scale_raw = target_scale
+        self.latest_risk_scale_selected = speed_scale
         self.last_publish_time = now
 
         self.speed_scale_pub.publish(Float64(data=speed_scale))
@@ -455,20 +570,33 @@ class RiskConditionedCommandAdapter:
 
     def _reset_episode(self, now, reason):
         self.episode_start_time = now
-        self.samples = []
-        self.latest_risk_score_3s = -1.0
-        self.latest_risk_score_5s = -1.0
+        self._clear_episode_state(reset_trajectory=True)
         rospy.loginfo_throttle(
             1.0,
             (
-                "risk_conditioned_command_adapter reset episode reason=%s "
+                "risk_conditioned_command_adapter episode reset due to %s reason=%s "
                 "target_x=%.3f target_y=%.3f episode_age=%.3f"
             ),
+            self._episode_reset_log_reason(reason),
             reason,
             self.target_x,
             self.target_y,
             self._episode_age(now),
         )
+
+    @staticmethod
+    def _episode_reset_log_reason(reason):
+        if reason in ("first_distinct_goal", "new_distinct_goal"):
+            return "distinct goal"
+        if reason == "same_goal_after_timeout":
+            return "same goal after timeout"
+        if reason == "odom_idle_gap":
+            return "odom idle gap"
+        if reason == "first_trajectory_after_goal":
+            return "first trajectory after goal"
+        if reason == "first_trajectory_without_active_episode":
+            return "first trajectory without active episode"
+        return reason
 
     def _has_active_episode(self):
         return self.goal_received and self.episode_start_time is not None
