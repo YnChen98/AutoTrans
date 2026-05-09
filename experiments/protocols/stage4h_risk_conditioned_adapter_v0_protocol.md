@@ -1,0 +1,184 @@
+# Stage 4-H Risk-Conditioned Command Adapter v0 Protocol
+
+## Purpose
+
+Stage 4-H adds a conservative online adapter that uses early risk predictions
+from exported LogisticRegression JSON models to reduce planner command scale.
+The v0 adapter is a soft experimental policy. It is not a hard safety guard and
+must not be used to claim final robustness.
+
+## Architecture
+
+The adapter is an external ROS node in:
+
+```bash
+experiments/command_adaptation/scripts/risk_conditioned_command_adapter.py
+```
+
+It publishes the existing planner-side command adaptation topics and never
+modifies planner, controller, simulator, or logger internals.
+
+The launch file is:
+
+```bash
+experiments/command_adaptation/launch/risk_conditioned_command_adapter.launch
+```
+
+Default launch behavior is safe: `enable_risk_conditioning=false` and
+`policy_mode=wind_level`.
+
+## Topics
+
+Subscribed:
+
+- `/visual_slam/odom` (`nav_msgs/Odometry`)
+- `/payload_odom` (`nav_msgs/Odometry`)
+- `/wind_force` (`geometry_msgs/Vector3Stamped`)
+- `/move_base_simple/goal` (`geometry_msgs/PoseStamped`)
+- `/planning/trajectory` as an optional has-trajectory signal
+
+Published:
+
+- `/command_adaptation/speed_scale` (`std_msgs/Float64`)
+- `/command_adaptation/acceleration_scale` (`std_msgs/Float64`)
+- `/command_adaptation/risk_score_3s` (`std_msgs/Float64`)
+- `/command_adaptation/risk_score_5s` (`std_msgs/Float64`)
+- `/command_adaptation/risk_scale_selected` (`std_msgs/Float64`)
+
+## Parameters
+
+Core parameters:
+
+- `enable_risk_conditioning`, default `false`
+- `policy_mode`, default `wind_level`
+- `model_json_3s`
+- `model_json_5s`
+- `model_json_15s`
+- `target_z`, default `1.468415`
+- `payload_target_z`, default `0.799970`
+- `publish_rate`, default `5.0`
+- `scale_rate_limit_per_sec`, default `0.5`
+- `publish_same_acceleration_scale`, default `true`
+
+Risk policy parameters:
+
+- `risk_threshold_3s`, default `0.5`
+- `risk_threshold_5s`, default `0.5`
+- `hard_threshold_5s`, default `0.7`
+- `soft_scale_3s`, default `0.85`
+- `soft_scale_5s`, default `0.75`
+- `hard_scale_5s`, default `0.65`
+- `min_scale`, default `0.4`
+- `max_scale`, default `1.0`
+
+Wind-level fallback parameters match `heuristic_command_adapter.py`:
+
+- `weak_wind_norm`, default `0.002`
+- `moderate_wind_norm`, default `0.005`
+- `strong_wind_norm`, default `0.0075`
+- `boundary_wind_norm`, default `0.010`
+- `no_wind_scale`, default `1.0`
+- `weak_scale`, default `0.95`
+- `moderate_scale`, default `0.90`
+- `strong_scale`, default `0.85`
+- `boundary_scale`, default `0.70`
+
+## Feature Computation
+
+The episode buffer resets when a new `/move_base_simple/goal` arrives.
+`/planning/trajectory` is used only to mark `has_trajectory=true` after the
+goal. The v0 features are computed from the first 3 seconds and first 5 seconds
+after the current goal start.
+
+Online features follow the JSON `feature_names` order and names:
+
+- `max_uav_speed`
+- `max_payload_speed`
+- `mean_uav_speed`
+- `mean_payload_speed`
+- `max_swing_angle_deg`
+- `p95_swing_angle_deg`
+- `mean_swing_angle_deg`
+- `max_wind_force_norm`
+- `mean_wind_force_norm`
+- `target_distance_end`
+- `target_progress`
+
+Target fields are:
+
+- `target_x` and `target_y` from the latest `/move_base_simple/goal`
+- `target_z` from ROS param
+- `payload_target_z` from ROS param
+
+If no goal has been received, the adapter publishes fallback scale and risk
+score `-1`.
+
+## Risk-To-Scale v0
+
+Let `base_scale` be the wind-level fallback scale.
+
+If `enable_risk_conditioning=false`, publish `base_scale`.
+
+If risk conditioning is enabled:
+
+- before 3 seconds of usable history, publish `base_scale`
+- after 3 seconds, compute `risk_score_3s`
+- after 5 seconds, compute `risk_score_5s`
+
+Scale rule:
+
+- start with `selected_scale = base_scale`
+- if `risk_score_3s >= risk_threshold_3s`, use `min(selected_scale, soft_scale_3s)`
+- if `risk_score_5s >= risk_threshold_5s`, use `min(selected_scale, soft_scale_5s)`
+- if `risk_score_5s >= hard_threshold_5s`, use `min(selected_scale, hard_scale_5s)`
+- clamp to `[min_scale, max_scale]`
+- rate-limit both decreasing and increasing scale changes
+
+The same value is published to `speed_scale` and `acceleration_scale` in v0.
+
+## Safety Rules
+
+- No-op/fallback by default.
+- No hard stop.
+- Never publish NaN.
+- Never publish outside `[min_scale, max_scale]`.
+- Ignore non-finite odometry or wind input and keep the previous safe value.
+- If a required online feature cannot be computed, fall back safely.
+- If a model file is missing or invalid, log `ROS_WARN` and use wind-level
+  fallback.
+- If model output is non-finite, keep the previous safe scale.
+- Never command thrust or bodyrate.
+- Do not run `catkin_make`, `roslaunch`, RViz, simulation, or long trial
+  commands from Codex for this task.
+
+## First Tests
+
+Static check:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 -m py_compile experiments/command_adaptation/scripts/risk_conditioned_command_adapter.py
+git diff --check
+git status --short
+```
+
+Manual no-risk regression, run by the user when ready:
+
+```bash
+roslaunch command_adaptation risk_conditioned_command_adapter.launch enable_risk_conditioning:=false
+```
+
+Confirm that `/command_adaptation/speed_scale` and
+`/command_adaptation/acceleration_scale` match wind-level fallback behavior
+before any risk-conditioned experiment.
+
+## What Not To Claim
+
+- Do not claim online robustness improvement before repeated closed-loop
+  evaluation.
+- Do not claim RL.
+- Do not claim real-world robustness.
+- Do not claim a hard safety guarantee.
+- Do not hide invalid runs.
+- Do not claim `risk_conditioned_v0` is better than `windlevel_s085` until
+  repeated comparisons support that conclusion.

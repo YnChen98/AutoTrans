@@ -1,0 +1,71 @@
+<launch>
+  <arg name="enable_risk_conditioning" default="false"/>
+  <arg name="policy_mode" default="wind_level"/>
+
+  <arg name="model_json_3s" default="$(find command_adaptation)/../models/stage4_risk_logreg_3s.json"/>
+  <arg name="model_json_5s" default="$(find command_adaptation)/../models/stage4_risk_logreg_5s.json"/>
+  <arg name="model_json_15s" default=""/>
+
+  <arg name="target_z" default="1.468415"/>
+  <arg name="payload_target_z" default="0.799970"/>
+
+  <arg name="risk_threshold_3s" default="0.5"/>
+  <arg name="risk_threshold_5s" default="0.5"/>
+  <arg name="hard_threshold_5s" default="0.7"/>
+  <arg name="soft_scale_3s" default="0.85"/>
+  <arg name="soft_scale_5s" default="0.75"/>
+  <arg name="hard_scale_5s" default="0.65"/>
+
+  <arg name="publish_rate" default="5.0"/>
+  <arg name="min_scale" default="0.4"/>
+  <arg name="max_scale" default="1.0"/>
+  <arg name="scale_rate_limit_per_sec" default="0.5"/>
+  <arg name="publish_same_acceleration_scale" default="true"/>
+
+  <arg name="weak_wind_norm" default="0.002"/>
+  <arg name="moderate_wind_norm" default="0.005"/>
+  <arg name="strong_wind_norm" default="0.0075"/>
+  <arg name="boundary_wind_norm" default="0.010"/>
+
+  <arg name="no_wind_scale" default="1.0"/>
+  <arg name="weak_scale" default="0.95"/>
+  <arg name="moderate_scale" default="0.90"/>
+  <arg name="strong_scale" default="0.85"/>
+  <arg name="boundary_scale" default="0.70"/>
+
+  <node pkg="command_adaptation" type="risk_conditioned_command_adapter.py" name="risk_conditioned_command_adapter" output="screen">
+    <param name="enable_risk_conditioning" value="$(arg enable_risk_conditioning)" type="bool"/>
+    <param name="policy_mode" value="$(arg policy_mode)" type="string"/>
+
+    <param name="model_json_3s" value="$(arg model_json_3s)" type="string"/>
+    <param name="model_json_5s" value="$(arg model_json_5s)" type="string"/>
+    <param name="model_json_15s" value="$(arg model_json_15s)" type="string"/>
+
+    <param name="target_z" value="$(arg target_z)" type="double"/>
+    <param name="payload_target_z" value="$(arg payload_target_z)" type="double"/>
+
+    <param name="risk_threshold_3s" value="$(arg risk_threshold_3s)" type="double"/>
+    <param name="risk_threshold_5s" value="$(arg risk_threshold_5s)" type="double"/>
+    <param name="hard_threshold_5s" value="$(arg hard_threshold_5s)" type="double"/>
+    <param name="soft_scale_3s" value="$(arg soft_scale_3s)" type="double"/>
+    <param name="soft_scale_5s" value="$(arg soft_scale_5s)" type="double"/>
+    <param name="hard_scale_5s" value="$(arg hard_scale_5s)" type="double"/>
+
+    <param name="publish_rate" value="$(arg publish_rate)" type="double"/>
+    <param name="min_scale" value="$(arg min_scale)" type="double"/>
+    <param name="max_scale" value="$(arg max_scale)" type="double"/>
+    <param name="scale_rate_limit_per_sec" value="$(arg scale_rate_limit_per_sec)" type="double"/>
+    <param name="publish_same_acceleration_scale" value="$(arg publish_same_acceleration_scale)" type="bool"/>
+
+    <param name="weak_wind_norm" value="$(arg weak_wind_norm)" type="double"/>
+    <param name="moderate_wind_norm" value="$(arg moderate_wind_norm)" type="double"/>
+    <param name="strong_wind_norm" value="$(arg strong_wind_norm)" type="double"/>
+    <param name="boundary_wind_norm" value="$(arg boundary_wind_norm)" type="double"/>
+
+    <param name="no_wind_scale" value="$(arg no_wind_scale)" type="double"/>
+    <param name="weak_scale" value="$(arg weak_scale)" type="double"/>
+    <param name="moderate_scale" value="$(arg moderate_scale)" type="double"/>
+    <param name="strong_scale" value="$(arg strong_scale)" type="double"/>
+    <param name="boundary_scale" value="$(arg boundary_scale)" type="double"/>
+  </node>
+</launch>

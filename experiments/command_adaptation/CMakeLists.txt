@@ -12,6 +12,7 @@ catkin_package()
 
 catkin_install_python(PROGRAMS
   scripts/heuristic_command_adapter.py
+  scripts/risk_conditioned_command_adapter.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
