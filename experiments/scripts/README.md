@@ -331,11 +331,15 @@ python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments
 
 `--export-logreg-json` 必须和 `--export-train-on-all` 一起使用，避免无意中把 cross-validation fold model 当成 deployable model。生成的 `experiments/models/*.json`、`experiments/models/*.pkl` 和 `experiments/models/*.joblib` 默认不应提交。完整 export protocol 见 `experiments/protocols/stage4_risk_model_export_protocol.md`。
 
-## Stage 4-H2 LogisticRegression JSON inference verification
+## Stage 4-H2 LogisticRegression strict JSON-vs-sklearn verification
 
 `experiments/scripts/verify_stage4_logreg_json.py` 用于在不依赖 `sklearn` 的情况下，检查导出的
 `LogisticRegression` JSON 能否在 dataset rows 上完成一致的 feature reconstruction、median
-imputation、`StandardScaler` transform 和 probability inference。
+imputation、`StandardScaler` transform 和 probability inference。新的
+`--export-logreg-json --export-train-on-all` export 会写入 `reference_predictions`，
+其中每一行包含 `row_index`、可用时的 `run_id`、`label` 和
+`sklearn_probability_positive`，这些概率来自同一个被导出的 sklearn
+`LogisticRegression` model。
 
 3s JSON checker:
 
@@ -358,10 +362,14 @@ cd ~/projects/autotrans_ws/src/AutoTrans
 python3 experiments/scripts/verify_stage4_logreg_json.py --dataset experiments/datasets/stage4_risk_dataset.csv --model-json experiments/models/stage4_risk_logreg_15s.json --print-summary
 ```
 
-如果 JSON 未来包含 sklearn reference probabilities，checker 会用默认
-`--max-abs-diff-tol 1e-8` 比较 JSON-only probabilities 和 reference probabilities；如果
-当前 JSON 没有 reference probabilities，它会明确报告只完成了 JSON inference check。在线
-ROS adapter implementation 必须等这些检查通过后再开始。
+如果 JSON 包含 `reference_predictions`，checker 会按 `row_index` 匹配 dataset rows，
+用默认 `--max-abs-diff-tol 1e-8` 比较 JSON-only probabilities 和
+`sklearn_probability_positive`，并输出 `reference_probability_check: passed`、
+`max_abs_diff`、`mean_abs_diff` 和 `rows_compared`。旧 JSON 没有
+`reference_predictions` 时仍可兼容检查，但会明确输出
+`reference_probability_check: not_available` 和
+`json_inference_check: passed_without_sklearn_reference`。在线 ROS adapter
+implementation 必须等 strict JSON-vs-sklearn reference probability verification 通过后再开始。
 
 ## Stage 4-C risk dataset expansion
 

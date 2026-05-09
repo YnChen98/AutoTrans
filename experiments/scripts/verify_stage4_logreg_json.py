@@ -12,22 +12,6 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
-REFERENCE_PROBABILITY_KEYS = [
-    "reference_probabilities",
-    "sklearn_reference_probabilities",
-    "sklearn_probabilities",
-    "reference_predictions",
-]
-
-REFERENCE_ROW_PROBABILITY_KEYS = [
-    "probability",
-    "positive_probability",
-    "reference_probability",
-    "sklearn_probability",
-    "prob_failure",
-]
-
-
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
@@ -303,75 +287,74 @@ def maybe_build_labels(model, rows, fieldnames):
     return label_name, labels
 
 
-def candidate_reference_containers(model):
-    containers = [model]
-    if isinstance(model.get("training_data"), dict):
-        containers.append(model["training_data"])
-    if isinstance(model.get("reference"), dict):
-        containers.append(model["reference"])
-    return containers
+def parse_reference_row_index(value):
+    if isinstance(value, bool):
+        raise ValueError("reference_predictions row_index must be an integer")
+    if isinstance(value, int):
+        return value
+    text = str(value).strip()
+    if text == "":
+        raise ValueError("reference_predictions row_index is empty")
+    try:
+        number = int(text)
+    except ValueError:
+        raise ValueError("reference_predictions row_index must be an integer: %r" % value)
+    if str(number) != text and not (text.startswith("+") and str(number) == text[1:]):
+        raise ValueError("reference_predictions row_index must be an integer: %r" % value)
+    return number
 
 
-def reference_probability_from_row(item):
-    for key in REFERENCE_ROW_PROBABILITY_KEYS:
-        if key in item:
-            value = parse_float(item.get(key))
-            if math.isfinite(value):
-                return value
-    return math.nan
+def parse_reference_predictions(candidate, row_count):
+    if not isinstance(candidate, list):
+        raise ValueError("reference_predictions must be a list")
+
+    probabilities = [math.nan] * row_count
+    seen = set()
+    for position, item in enumerate(candidate):
+        if not isinstance(item, dict):
+            raise ValueError("reference_predictions item %d must be an object" % position)
+        if "row_index" not in item:
+            raise ValueError("reference_predictions item %d is missing row_index" % position)
+        if "sklearn_probability_positive" not in item:
+            raise ValueError(
+                "reference_predictions item %d is missing sklearn_probability_positive"
+                % position
+            )
+        row_index = parse_reference_row_index(item.get("row_index"))
+        if row_index < 0 or row_index >= row_count:
+            raise ValueError(
+                "reference_predictions row_index %d is outside dataset row range 0..%d"
+                % (row_index, row_count - 1)
+            )
+        if row_index in seen:
+            raise ValueError("reference_predictions has duplicate row_index %d" % row_index)
+        probability = parse_float(item.get("sklearn_probability_positive"))
+        if not math.isfinite(probability):
+            raise ValueError(
+                "reference_predictions row_index %d has non-finite sklearn_probability_positive"
+                % row_index
+            )
+        probabilities[row_index] = probability
+        seen.add(row_index)
+
+    if len(seen) != row_count:
+        missing = [str(index) for index in range(row_count) if index not in seen]
+        raise ValueError(
+            "reference_predictions is missing row_index value(s): %s"
+            % ", ".join(missing)
+        )
+    return probabilities
 
 
 def extract_reference_probabilities(model, rows):
     row_count = len(rows)
-    run_ids = [row.get("run_id", "") for row in rows]
-    run_id_to_index = {
-        run_id: index
-        for index, run_id in enumerate(run_ids)
-        if run_id
-    }
-
-    for container in candidate_reference_containers(model):
-        for key in REFERENCE_PROBABILITY_KEYS:
-            if key not in container:
-                continue
-            candidate = container[key]
-            parsed = parse_reference_candidate(candidate, row_count, run_id_to_index)
-            if parsed is not None:
-                return key, parsed
-        if "probabilities" in container:
-            parsed = parse_reference_candidate(container["probabilities"], row_count, run_id_to_index)
-            if parsed is not None:
-                return "probabilities", parsed
-    return "", None
-
-
-def parse_reference_candidate(candidate, row_count, run_id_to_index):
-    if not isinstance(candidate, list):
-        return None
-    if len(candidate) == row_count and all(not isinstance(item, dict) for item in candidate):
-        probabilities = [parse_float(item) for item in candidate]
-        if all(math.isfinite(value) for value in probabilities):
-            return probabilities
-
-    if all(isinstance(item, dict) for item in candidate):
-        if len(candidate) == row_count and not any("run_id" in item for item in candidate):
-            probabilities = [reference_probability_from_row(item) for item in candidate]
-            if all(math.isfinite(value) for value in probabilities):
-                return probabilities
-
-        probabilities = [math.nan] * row_count
-        matched = 0
-        for item in candidate:
-            run_id = str(item.get("run_id", "")).strip()
-            if not run_id or run_id not in run_id_to_index:
-                continue
-            probability = reference_probability_from_row(item)
-            if math.isfinite(probability):
-                probabilities[run_id_to_index[run_id]] = probability
-                matched += 1
-        if matched == row_count and all(math.isfinite(value) for value in probabilities):
-            return probabilities
-    return None
+    if "reference_predictions" in model:
+        return (
+            "reference_predictions",
+            parse_reference_predictions(model["reference_predictions"], row_count),
+            row_count,
+        )
+    return "", None, 0
 
 
 def compare_reference_probabilities(probabilities, reference_probabilities):
@@ -381,7 +364,7 @@ def compare_reference_probabilities(probabilities, reference_probabilities):
     ]
     max_diff = max(differences) if differences else 0.0
     mean_diff = sum(differences) / float(len(differences)) if differences else 0.0
-    return max_diff, mean_diff
+    return max_diff, mean_diff, len(differences)
 
 
 def print_report(args, dataset_path, model_path, model, probabilities, imputed_counts, label_name, labels, reference_result):
@@ -415,14 +398,16 @@ def print_report(args, dataset_path, model_path, model, probabilities, imputed_c
             % (matrix["tn"], matrix["fp"], matrix["fn"], matrix["tp"])
         )
 
-    reference_name, reference_probabilities, max_diff, mean_diff = reference_result
+    reference_name, reference_probabilities, max_diff, mean_diff, rows_compared = reference_result
     if reference_probabilities is None:
         print("reference_probability_check: not_available")
         print("json_inference_check: passed_without_sklearn_reference")
     else:
-        print("reference_probability_check: %s" % reference_name)
+        print("reference_probability_check: passed")
+        print("reference_probability_source: %s" % reference_name)
         print("max_abs_diff: %s" % format_number(max_diff))
         print("mean_abs_diff: %s" % format_number(mean_diff))
+        print("rows_compared: %d" % rows_compared)
         print("max_abs_diff_tol: %s" % format_number(args.max_abs_diff_tol))
 
     if args.print_summary:
@@ -450,10 +435,13 @@ def main():
         probabilities, imputed_counts = infer_probabilities(model, rows)
         label_name, labels = maybe_build_labels(model, rows, fieldnames)
 
-        reference_name, reference_probabilities = extract_reference_probabilities(model, rows)
+        reference_name, reference_probabilities, rows_compared = extract_reference_probabilities(model, rows)
         max_diff = mean_diff = None
         if reference_probabilities is not None:
-            max_diff, mean_diff = compare_reference_probabilities(probabilities, reference_probabilities)
+            max_diff, mean_diff, rows_compared = compare_reference_probabilities(
+                probabilities,
+                reference_probabilities,
+            )
             if max_diff > args.max_abs_diff_tol:
                 raise ValueError(
                     "JSON probability differs from reference probabilities: max_abs_diff=%s tol=%s"
@@ -469,7 +457,7 @@ def main():
             imputed_counts,
             label_name,
             labels,
-            (reference_name, reference_probabilities, max_diff, mean_diff),
+            (reference_name, reference_probabilities, max_diff, mean_diff, rows_compared),
         )
     except Exception as exc:
         print("ERROR: %s" % exc, file=sys.stderr)

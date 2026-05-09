@@ -1174,6 +1174,27 @@ def exported_logreg_probability(exported_model, feature_row):
     return exp_positive / (1.0 + exp_positive)
 
 
+def build_reference_predictions(rows, labels, model, x_train):
+    probabilities = model.predict_proba(x_train)
+    classes = list(model.named_steps["logisticregression"].classes_)
+    if 1 not in classes:
+        raise ValueError("exported LogisticRegression model has no positive class")
+    positive_index = classes.index(1)
+
+    reference_predictions = []
+    for row_index, row in enumerate(rows):
+        item = {
+            "row_index": row_index,
+            "label": int(labels[row_index]),
+            "sklearn_probability_positive": float(probabilities[row_index][positive_index]),
+        }
+        run_id = str(row.get("run_id", "")).strip()
+        if run_id:
+            item["run_id"] = run_id
+        reference_predictions.append(item)
+    return reference_predictions
+
+
 def export_logreg_json(
     args,
     export_path,
@@ -1200,6 +1221,7 @@ def export_logreg_json(
     scaler = model.named_steps["standardscaler"]
     classifier = model.named_steps["logisticregression"]
     feature_names = [spec["name"] for spec in specs]
+    reference_predictions = build_reference_predictions(rows, labels, model, x_train)
 
     export = {
         "schema_version": "stage4_logreg_json_v1",
@@ -1268,6 +1290,7 @@ def export_logreg_json(
             "row_count": len(rows),
             "class_counts": class_counts(labels),
         },
+        "reference_predictions": reference_predictions,
         "notes": [
             "Generated model files are not committed by default.",
             "This model is for offline validation before ROS adapter integration.",

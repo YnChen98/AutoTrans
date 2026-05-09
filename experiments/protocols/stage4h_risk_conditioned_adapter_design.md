@@ -164,8 +164,9 @@ experiments/models/stage4_risk_logreg_model.json
 Generated model files should not be committed unless explicitly approved.
 The detailed offline export protocol is
 `experiments/protocols/stage4_risk_model_export_protocol.md`.
-Do not implement the online adapter until Stage 4-H2 JSON inference verification
-passes on representative dataset rows.
+Do not implement the online adapter until Stage 4-H2 strict
+JSON-vs-sklearn reference probability verification passes on representative
+dataset rows.
 
 The required Stage 4-H2 gate is:
 
@@ -177,8 +178,8 @@ python3 experiments/scripts/verify_stage4_logreg_json.py --dataset experiments/d
 ```
 
 Online adapter work is blocked if any checker run reports missing required
-features, non-finite exported statistics, or probability mismatch against
-available sklearn reference probabilities.
+features, non-finite exported statistics, missing `reference_predictions` in
+new exports, or probability mismatch against sklearn reference probabilities.
 
 ## Implementation Plan
 
@@ -191,8 +192,8 @@ Phase 1:
 Phase 2:
 
 - Add an offline model inference test script.
-- Verify that the JSON model reproduces sklearn predictions on the same input
-  rows.
+- Verify that the JSON model reproduces sklearn reference probabilities on the
+  same input rows.
 - Check missing, NaN, and Inf handling before any ROS integration.
 
 Phase 3:

@@ -35,6 +35,7 @@ must show:
 - `StandardScaler` means and standard deviations
 - `LogisticRegression` coefficients and intercept
 - training metadata and class counts
+- `reference_predictions` with full-dataset sklearn reference probabilities
 
 Generated model files are ignored by default and should not be committed unless
 explicitly approved.
@@ -52,8 +53,8 @@ The export command must include `--export-train-on-all`. Without it,
 because the JSON file must represent a deliberate full-dataset training run
 after normal evaluation.
 
-Do not implement the online adapter until JSON-vs-sklearn consistency is checked
-on representative dataset rows.
+Do not implement the online adapter until strict JSON-vs-sklearn reference
+probability consistency is checked on representative dataset rows.
 
 ## Recommended Export Commands
 
@@ -104,16 +105,28 @@ Protocol files under `experiments/protocols/` are not ignored.
 Before implementing an online adapter, compare JSON inference against sklearn
 `predict_proba` on the same rows used for export.
 
+New `--export-logreg-json --export-train-on-all` outputs include a
+`reference_predictions` section. It contains one object per dataset row:
+
+- `row_index`: zero-based row position in the CSV data rows
+- `run_id`: copied from the dataset when available
+- `label`: selected label value when available
+- `sklearn_probability_positive`: `P(class=1)` from the exact fitted
+  `LogisticRegression` pipeline that was exported
+
 The check should verify:
 
 - exact selected `feature_names` order
 - identical categorical one-hot expansion
 - identical missing-value imputation
 - identical `StandardScaler` transform
-- close probability agreement between JSON inference and sklearn
+- close probability agreement between JSON inference and sklearn reference
+  probabilities
 
-Only after this consistency check should Stage 4-H move from offline export to
-adapter implementation under `experiments/command_adaptation`.
+Only after this strict check passes should Stage 4-H move from offline export to
+adapter implementation under `experiments/command_adaptation`. Online adapter
+implementation is blocked until strict JSON-vs-sklearn reference probability
+verification passes for the intended exported model files.
 
 Stage 4-H2 adds a JSON-only checker for this gate:
 
@@ -130,8 +143,12 @@ The checker reconstructs the feature vector from `feature_names` and
 directly from the JSON coefficients and intercept. It does not require
 `sklearn`.
 
-If a future export includes stored sklearn reference probabilities, the checker
-compares JSON-only probabilities against them using `--max-abs-diff-tol`
-(`1e-8` by default). If no reference probabilities are present, it reports that
-only JSON inference was checked. Missing required dataset feature columns must
-be fixed before the model is considered adapter-ready.
+When `reference_predictions` exists, the checker matches rows by `row_index`,
+reports `reference_probability_check: passed`, `max_abs_diff`,
+`mean_abs_diff`, and `rows_compared`, and fails if `max_abs_diff` exceeds
+`--max-abs-diff-tol` (`1e-8` by default). If an old JSON file does not contain
+`reference_predictions`, the checker remains backward-compatible and reports
+`reference_probability_check: not_available` plus
+`json_inference_check: passed_without_sklearn_reference`. Missing required
+dataset feature columns or reference probability mismatches must be fixed
+before the model is considered adapter-ready.
