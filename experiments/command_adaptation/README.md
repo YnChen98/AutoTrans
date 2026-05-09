@@ -137,9 +137,10 @@ goal after `same_goal_new_episode_timeout_sec`, default `10.0` s, is treated as
 a new episode and resets stale online state. Repeated run loops also require
 odom idle-gap handling: if finite `/visual_slam/odom` stops for
 `episode_idle_timeout_sec`, default `3.0` s, the adapter clears the episode
-buffers and the next goal starts fresh. `/planning/trajectory` does not reset
-the episode by default; it only marks `has_trajectory=true` and can initialize
-timing only if no active episode exists.
+buffers, cached risk scores, and risk scale diagnostics in the timer loop before
+the next trial begins. The next goal then starts fresh. `/planning/trajectory`
+does not reset the episode by default; it only marks `has_trajectory=true` and
+can initialize timing only if no active episode exists.
 
 Default launch settings are conservative:
 
@@ -168,8 +169,12 @@ episode history, and `/command_adaptation/risk_score_5s` should normally appear
 about 2 seconds later. If the 5s score appears much later, check for episode
 reset logs before changing the risk thresholds or planner settings. At the
 start of a repeated run, both risk scores should publish `-1` until enough fresh
-3s/5s data exists. Stale high risk scores or a stale selected scale near time
-0 indicate an episode reset bug, not a valid model prediction.
+3s/5s data exists. A finite or high stale risk score at about time 0 indicates
+a failed reset, not a valid model prediction from a fresh online feature window.
+The timer-based idle reset is expected to clear cached risk scores before the
+next trial, so `/command_adaptation/risk_score_3s` and
+`/command_adaptation/risk_score_5s` remain unavailable (`-1`) until their
+windows are available.
 
 Generated model JSON files live under:
 

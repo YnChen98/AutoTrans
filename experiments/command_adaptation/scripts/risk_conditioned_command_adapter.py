@@ -391,7 +391,7 @@ class RiskConditionedCommandAdapter:
             rospy.loginfo_throttle(
                 1.0,
                 (
-                    "risk_conditioned_command_adapter same goal starts new episode after timeout "
+                    "risk_conditioned_command_adapter new episode started after same-goal timeout "
                     "distance=%.3f tolerance=%.3f accepted_goal_age=%.3f"
                 ),
                 distance_from_current,
@@ -446,6 +446,8 @@ class RiskConditionedCommandAdapter:
     def _check_odom_idle_gap(self, now):
         if self.episode_idle_timeout_sec <= 0.0:
             return
+        if not self._has_active_episode():
+            return
         if self.last_finite_odom_receive_time is None:
             return
 
@@ -459,7 +461,8 @@ class RiskConditionedCommandAdapter:
             and self.last_accepted_goal_time is not None
             and self.last_accepted_goal_time > previous_odom_time
         )
-        self._clear_episode_state(reset_trajectory=True)
+        base_scale = self._base_wind_scale(self._wind_force_norm())
+        self._clear_episode_state(reset_trajectory=True, base_scale=base_scale)
         if fresh_goal_during_gap:
             self.force_next_goal_new_episode = False
             self.episode_start_time = now
@@ -479,18 +482,32 @@ class RiskConditionedCommandAdapter:
             str(not fresh_goal_during_gap).lower(),
         )
 
-    def _clear_episode_state(self, reset_trajectory):
+    def _clear_episode_state(self, reset_trajectory, base_scale=None):
         self.uav_odom = None
         self.payload_odom = None
         self.samples = []
-        self.latest_risk_score_3s = -1.0
-        self.latest_risk_score_5s = -1.0
-        self.latest_risk_target_scale_raw = None
-        self.latest_risk_scale_selected = None
+        if base_scale is None:
+            base_scale = self._base_wind_scale(self._wind_force_norm())
+        self._set_unavailable_risk_state(
+            base_scale,
+            reset_selected_scale=self.reset_scale_on_new_episode,
+        )
         if reset_trajectory:
             self.has_trajectory = False
             self.trajectory_seen_for_goal = False
-        if self.reset_scale_on_new_episode:
+
+    def _set_unavailable_risk_state(self, base_scale, reset_selected_scale=False):
+        base_scale = self._clamp_scale(base_scale)
+        self.latest_risk_score_3s = -1.0
+        self.latest_risk_score_5s = -1.0
+        self.latest_risk_target_scale_raw = base_scale
+        if (
+            reset_selected_scale
+            or self.latest_risk_scale_selected is None
+            or not math.isfinite(self.latest_risk_scale_selected)
+        ):
+            self.latest_risk_scale_selected = base_scale
+        if reset_selected_scale:
             self.previous_speed_scale = None
             self.previous_acceleration_scale = None
 
@@ -526,11 +543,24 @@ class RiskConditionedCommandAdapter:
 
     def _timer_callback(self, _event):
         now = rospy.Time.now().to_sec()
-        self._append_episode_sample(now)
-
         wind_force_norm = self._wind_force_norm()
         base_scale = self._base_wind_scale(wind_force_norm)
-        target_scale = self._compute_target_scale(now, base_scale)
+        self._reset_idle_episode_from_timer_if_needed(now, base_scale)
+
+        if self._has_active_episode():
+            self._append_episode_sample(now)
+            target_scale = self._compute_target_scale(now, base_scale)
+        else:
+            self._set_unavailable_risk_state(base_scale)
+            target_scale = self._clamp_scale(base_scale)
+            rospy.loginfo_throttle(
+                1.0,
+                (
+                    "risk_conditioned_command_adapter publishing unavailable risk "
+                    "because no active episode base_scale=%.3f"
+                ),
+                base_scale,
+            )
         target_acceleration_scale = target_scale if self.publish_same_acceleration_scale else target_scale
 
         speed_scale = self._apply_rate_limit(target_scale, self.previous_speed_scale, now)
@@ -568,20 +598,56 @@ class RiskConditionedCommandAdapter:
             self._episode_age(now),
         )
 
+    def _reset_idle_episode_from_timer_if_needed(self, now, base_scale):
+        if self.episode_idle_timeout_sec <= 0.0:
+            return False
+        if not self._has_active_episode():
+            return False
+
+        reference_time = self.last_finite_odom_receive_time
+        if (
+            reference_time is None
+            or not math.isfinite(reference_time)
+            or reference_time < self.episode_start_time
+        ):
+            reference_time = self.episode_start_time
+
+        idle_gap = now - reference_time
+        if not math.isfinite(idle_gap) or idle_gap < self.episode_idle_timeout_sec:
+            return False
+
+        self._clear_episode_state(reset_trajectory=True, base_scale=base_scale)
+        self.force_next_goal_new_episode = True
+        self.goal_received = False
+        self.episode_start_time = None
+        rospy.loginfo_throttle(
+            1.0,
+            (
+                "risk_conditioned_command_adapter idle timeout reset in timer "
+                "idle_gap=%.3f timeout=%.3f base_scale=%.3f"
+            ),
+            idle_gap,
+            self.episode_idle_timeout_sec,
+            base_scale,
+        )
+        return True
+
     def _reset_episode(self, now, reason):
+        base_scale = self._base_wind_scale(self._wind_force_norm())
         self.episode_start_time = now
-        self._clear_episode_state(reset_trajectory=True)
+        self._clear_episode_state(reset_trajectory=True, base_scale=base_scale)
         rospy.loginfo_throttle(
             1.0,
             (
                 "risk_conditioned_command_adapter episode reset due to %s reason=%s "
-                "target_x=%.3f target_y=%.3f episode_age=%.3f"
+                "target_x=%.3f target_y=%.3f episode_age=%.3f base_scale=%.3f"
             ),
             self._episode_reset_log_reason(reason),
             reason,
             self.target_x,
             self.target_y,
             self._episode_age(now),
+            base_scale,
         )
 
     @staticmethod

@@ -163,7 +163,9 @@ episode and resets the online buffers, cached risk scores, raw/selected risk
 scale state, and rate-limit previous scale when `reset_scale_on_new_episode=true`.
 If finite `/visual_slam/odom` stops for `episode_idle_timeout_sec`, default
 `3.0` s, the adapter treats the gap as a cross-trial boundary, clears stale
-episode state, and makes the next goal start a new episode.
+episode state in the timer loop, clears cached risk scores, resets the raw
+risk target scale to the wind-level base scale, and makes the next goal start a
+new episode.
 
 For a new distinct goal, `reset_on_new_distinct_goal=true` keeps the default
 behavior of starting a fresh episode. `/planning/trajectory` is used only to
@@ -182,7 +184,11 @@ At the start of every repeated run, `command_risk_score_3s` and
 `command_risk_score_5s` should remain `-1` until enough fresh 3s/5s data has
 been collected. High finite risk scores or a selected scale already below the
 wind-level base scale near time 0 indicate stale episode state and should be
-treated as a bug in reset handling.
+treated as a bug in reset handling. A stale risk score at about time 0 means the
+adapter failed to reset; it is not possible evidence from a fresh 5s online
+feature window. The expected fresh repeat behavior is `risk_score=-1` until the
+3s and 5s windows are available, with timer-based idle reset clearing cached
+risk scores before the next trial starts.
 
 Online features follow the JSON `feature_names` order and names:
 
