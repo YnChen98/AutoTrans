@@ -188,6 +188,15 @@ def parse_args():
         default="failure",
         help="Human-readable name for the positive class in diagnostic outputs.",
     )
+    parser.add_argument(
+        "--export-logreg-json",
+        help="Export a full-dataset LogisticRegression model to this JSON path.",
+    )
+    parser.add_argument(
+        "--export-train-on-all",
+        action="store_true",
+        help="Allow export by training LogisticRegression on the full selected dataset after evaluation.",
+    )
     return parser.parse_args()
 
 
@@ -634,10 +643,8 @@ def safe_probability(value):
     return float(value)
 
 
-def sklearn_logistic_probability(x_train, y_train, x_test):
-    if len(set(y_train)) < 2:
-        return float(y_train[0]), "train fold has one class; used constant probability"
-    model = make_pipeline(
+def make_logistic_regression_pipeline():
+    return make_pipeline(
         StandardScaler(),
         LogisticRegression(
             solver="liblinear",
@@ -646,6 +653,12 @@ def sklearn_logistic_probability(x_train, y_train, x_test):
             random_state=0,
         ),
     )
+
+
+def sklearn_logistic_probability(x_train, y_train, x_test):
+    if len(set(y_train)) < 2:
+        return float(y_train[0]), "train fold has one class; used constant probability"
+    model = make_logistic_regression_pipeline()
     model.fit(x_train, y_train)
     probabilities = model.predict_proba([x_test])[0]
     classes = list(model.classes_)
@@ -1085,6 +1098,190 @@ def json_ready(value):
     return value
 
 
+def sklearn_version_text():
+    if not SKLEARN_AVAILABLE:
+        return ""
+    try:
+        import sklearn
+
+        return str(sklearn.__version__)
+    except Exception:
+        return ""
+
+
+def imputation_values(matrix):
+    return [
+        median([matrix[row_index][column_index] for row_index in range(len(matrix))])
+        for column_index in range(len(matrix[0]))
+    ]
+
+
+def impute_matrix_with_values(matrix, values):
+    imputed = []
+    for row in matrix:
+        imputed_row = []
+        for column_index, value in enumerate(row):
+            if math.isfinite(value):
+                imputed_row.append(value)
+            else:
+                imputed_row.append(values[column_index])
+        imputed.append(imputed_row)
+    return imputed
+
+
+def feature_value_from_row(spec, feature_row):
+    feature_name = spec["name"]
+    source_column = spec["source_column"]
+    if spec["kind"] == "categorical_onehot":
+        if source_column in feature_row:
+            return 1.0 if clean_category(feature_row.get(source_column)) == spec["category"] else 0.0
+        if feature_name in feature_row:
+            return parse_float(feature_row.get(feature_name))
+        return math.nan
+    if source_column in feature_row:
+        return parse_float(feature_row.get(source_column))
+    if feature_name in feature_row:
+        return parse_float(feature_row.get(feature_name))
+    return math.nan
+
+
+def exported_logreg_probability(exported_model, feature_row):
+    """Compute P(class=1) from an exported LogisticRegression JSON object."""
+    preprocessing = exported_model["preprocessing"]
+    feature_specs = preprocessing["feature_specs"]
+    feature_names = exported_model["feature_names"]
+    imputation = preprocessing["imputation_values"]
+    means = preprocessing["mean_values"]
+    standard_deviations = preprocessing["standard_deviations"]
+    coefficients = exported_model["model"]["coefficients"][0]
+    intercept = exported_model["model"]["intercept"][0]
+
+    logit = float(intercept)
+    for index, spec in enumerate(feature_specs):
+        feature_name = feature_names[index]
+        value = feature_value_from_row(spec, feature_row)
+        if not math.isfinite(value):
+            value = float(imputation[feature_name])
+        mean_value = float(means[feature_name])
+        std_value = float(standard_deviations[feature_name])
+        scaled = (value - mean_value) / std_value if std_value else value - mean_value
+        logit += float(coefficients[index]) * scaled
+
+    if logit >= 0.0:
+        exp_negative = math.exp(-logit)
+        return 1.0 / (1.0 + exp_negative)
+    exp_positive = math.exp(logit)
+    return exp_positive / (1.0 + exp_positive)
+
+
+def export_logreg_json(
+    args,
+    export_path,
+    dataset_path,
+    rows,
+    labels,
+    specs,
+    matrix,
+):
+    if not SKLEARN_AVAILABLE:
+        raise ValueError(
+            "--export-logreg-json requires sklearn, but sklearn import failed: %s"
+            % SKLEARN_IMPORT_ERROR
+        )
+    if not args.export_train_on_all:
+        raise ValueError(
+            "--export-logreg-json requires --export-train-on-all so the JSON file is explicitly trained on the full selected dataset"
+        )
+
+    fill_values = imputation_values(matrix)
+    x_train = impute_matrix_with_values(matrix, fill_values)
+    model = make_logistic_regression_pipeline()
+    model.fit(x_train, labels)
+    scaler = model.named_steps["standardscaler"]
+    classifier = model.named_steps["logisticregression"]
+    feature_names = [spec["name"] for spec in specs]
+
+    export = {
+        "schema_version": "stage4_logreg_json_v1",
+        "created_by": Path(__file__).name,
+        "label": args.label,
+        "feature_set": args.feature_set,
+        "max_early_window": args.max_early_window,
+        "drop_command_scale_features": args.drop_command_scale_features,
+        "drop_method_features": args.drop_method_features,
+        "class_mapping": {
+            "negative_class": 0,
+            "positive_class": 1,
+            "sklearn_classes": [int(value) for value in classifier.classes_],
+            "positive_probability_class": 1,
+        },
+        "feature_names": feature_names,
+        "preprocessing": {
+            "feature_specs": specs,
+            "mean_values": {
+                feature_name: float(scaler.mean_[index])
+                for index, feature_name in enumerate(feature_names)
+            },
+            "standard_deviations": {
+                feature_name: float(scaler.scale_[index])
+                for index, feature_name in enumerate(feature_names)
+            },
+            "variance_values": {
+                feature_name: float(scaler.var_[index])
+                for index, feature_name in enumerate(feature_names)
+            },
+            "imputation_values": {
+                feature_name: float(fill_values[index])
+                for index, feature_name in enumerate(feature_names)
+            },
+            "categorical_one_hot": [
+                {
+                    "feature": spec["name"],
+                    "source_column": spec["source_column"],
+                    "category": spec["category"],
+                    "missing_category": "__missing__",
+                }
+                for spec in specs
+                if spec["kind"] == "categorical_onehot"
+            ],
+            "missing_value_handling": (
+                "CSV missing, NaN, and Inf numeric values are imputed with the full-training-set median before StandardScaler. "
+                "Empty categorical values are encoded as __missing__ before one-hot expansion."
+            ),
+            "scaler": "StandardScaler applied after median imputation; standard_deviations are the fitted scaler scale_ values.",
+        },
+        "model": {
+            "type": "LogisticRegression",
+            "solver": "liblinear",
+            "max_iter": 1000,
+            "class_weight": "balanced",
+            "random_state": 0,
+            "coefficients": [
+                [float(value) for value in row]
+                for row in classifier.coef_.tolist()
+            ],
+            "intercept": [float(value) for value in classifier.intercept_.tolist()],
+            "sklearn_version": sklearn_version_text(),
+        },
+        "training_data": {
+            "dataset_path": str(dataset_path),
+            "row_count": len(rows),
+            "class_counts": class_counts(labels),
+        },
+        "notes": [
+            "Generated model files are not committed by default.",
+            "This model is for offline validation before ROS adapter integration.",
+            "Check JSON-vs-sklearn probability consistency before using this model in an online adapter.",
+        ],
+    }
+
+    export_path.parent.mkdir(parents=True, exist_ok=True)
+    with export_path.open("w", encoding="utf-8") as output_file:
+        json.dump(json_ready(export), output_file, indent=2, sort_keys=True)
+        output_file.write("\n")
+    return export
+
+
 def write_metrics(path, summary):
     with path.open("w", encoding="utf-8") as output_file:
         json.dump(json_ready(summary), output_file, indent=2, sort_keys=True)
@@ -1377,8 +1574,20 @@ def main():
     try:
         if args.calibration_bins < 1:
             raise ValueError("--calibration-bins must be at least 1")
+        if args.export_logreg_json and args.dry_run:
+            raise ValueError("--export-logreg-json cannot be used with --dry-run because export writes a JSON file")
+        if args.export_logreg_json and not args.export_train_on_all:
+            raise ValueError(
+                "--export-logreg-json requires --export-train-on-all; export is only allowed when full-dataset training is explicit"
+            )
+        if args.export_logreg_json and not SKLEARN_AVAILABLE:
+            raise ValueError(
+                "--export-logreg-json requires sklearn, but sklearn import failed: %s"
+                % SKLEARN_IMPORT_ERROR
+            )
         dataset_path = resolve_path(args.dataset)
         output_dir = resolve_path(args.output_dir)
+        export_path = resolve_path(args.export_logreg_json) if args.export_logreg_json else None
         rows, fieldnames = read_dataset(dataset_path)
         labels = build_labels(rows, fieldnames, args.label)
         counts = class_counts(labels)
@@ -1502,6 +1711,17 @@ def main():
                     results,
                     args.positive_label_name,
                 )
+        if export_path:
+            export_logreg_json(
+                args,
+                export_path,
+                dataset_path,
+                rows,
+                labels,
+                specs,
+                matrix,
+            )
+            print("export_logreg_json: %s" % export_path)
 
     except Exception as exc:
         print("ERROR: %s" % exc, file=sys.stderr)

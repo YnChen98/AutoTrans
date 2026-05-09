@@ -162,6 +162,10 @@ experiments/models/stage4_risk_logreg_model.json
 ```
 
 Generated model files should not be committed unless explicitly approved.
+The detailed offline export protocol is
+`experiments/protocols/stage4_risk_model_export_protocol.md`.
+Do not implement the online adapter until JSON-vs-sklearn consistency has been
+checked on representative dataset rows.
 
 ## Implementation Plan
 

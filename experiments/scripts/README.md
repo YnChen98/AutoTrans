@@ -299,6 +299,38 @@ python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments
 
 完整 protocol 见 `experiments/protocols/stage4_risk_prediction_protocol.md`。生成的 `experiments/results/` 不应提交到 git。
 
+## Stage 4-H1 LogisticRegression JSON export
+
+Stage 4-H1 只做离线 `LogisticRegression` model export，不实现在线 ROS adapter。推荐先在
+`~/venvs/autotrans-stage4` 中运行，并使用 `label_strict_invalid`、`feature-set early`、
+`--drop-command-scale-features` 和 `--drop-method-features`。
+
+3s early soft-warning candidate:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+source ~/venvs/autotrans-stage4/bin/activate
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --max-early-window 3 --drop-command-scale-features --drop-method-features --export-logreg-json experiments/models/stage4_risk_logreg_3s.json --export-train-on-all --print-summary
+```
+
+5s early soft-warning candidate:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+source ~/venvs/autotrans-stage4/bin/activate
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --max-early-window 5 --drop-command-scale-features --drop-method-features --export-logreg-json experiments/models/stage4_risk_logreg_5s.json --export-train-on-all --print-summary
+```
+
+15s offline/high-confidence monitoring candidate:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+source ~/venvs/autotrans-stage4/bin/activate
+python3 experiments/scripts/train_stage4_risk_predictor.py --dataset experiments/datasets/stage4_risk_dataset.csv --label label_strict_invalid --feature-set early --max-early-window 15 --drop-command-scale-features --drop-method-features --export-logreg-json experiments/models/stage4_risk_logreg_15s.json --export-train-on-all --print-summary
+```
+
+`--export-logreg-json` 必须和 `--export-train-on-all` 一起使用，避免无意中把 cross-validation fold model 当成 deployable model。生成的 `experiments/models/*.json`、`experiments/models/*.pkl` 和 `experiments/models/*.joblib` 默认不应提交。完整 export protocol 见 `experiments/protocols/stage4_risk_model_export_protocol.md`。
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

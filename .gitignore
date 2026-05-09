@@ -13,3 +13,6 @@ experiments/datasets/*.csv
 experiments/datasets/*.npz
 experiments/datasets/*.jsonl
 experiments/results/
+experiments/models/*.json
+experiments/models/*.pkl
+experiments/models/*.joblib
