@@ -18,6 +18,8 @@ UAV_VEL_COLUMNS = ["uav_vel_x", "uav_vel_y", "uav_vel_z"]
 PAYLOAD_POS_COLUMNS = ["payload_pos_x", "payload_pos_y", "payload_pos_z"]
 PAYLOAD_VEL_COLUMNS = ["payload_vel_x", "payload_vel_y", "payload_vel_z"]
 SO3_BODYRATE_COLUMNS = ["so3_bodyrate_x", "so3_bodyrate_y", "so3_bodyrate_z"]
+STATE_COLUMNS = UAV_POS_COLUMNS + UAV_VEL_COLUMNS + PAYLOAD_POS_COLUMNS + PAYLOAD_VEL_COLUMNS + ["swing_angle_deg"]
+COMMAND_COLUMNS = ["so3_thrust"] + SO3_BODYRATE_COLUMNS
 
 OUTPUT_FIELDS = [
     "csv_path",
@@ -30,6 +32,13 @@ OUTPUT_FIELDS = [
     "metrics_max_payload_speed",
     "metrics_max_swing_angle_deg",
     "metrics_final_uav_xy_error",
+    "has_any_nonfinite",
+    "has_state_nonfinite",
+    "has_command_nonfinite",
+    "has_command_saturation",
+    "has_high_speed",
+    "has_position_jump",
+    "has_swing_threshold_crossing",
     "first_nonfinite_time",
     "first_nonfinite_column",
     "first_so3_thrust_nan_time",
@@ -204,6 +213,13 @@ def inspect_csv(path, args, metrics=None):
         "metrics_max_payload_speed": "",
         "metrics_max_swing_angle_deg": "",
         "metrics_final_uav_xy_error": "",
+        "has_any_nonfinite": "",
+        "has_state_nonfinite": "",
+        "has_command_nonfinite": "",
+        "has_command_saturation": "",
+        "has_high_speed": "",
+        "has_position_jump": "",
+        "has_swing_threshold_crossing": "",
         "first_nonfinite_time": "",
         "first_nonfinite_column": "",
         "first_so3_thrust_nan_time": "",
@@ -242,6 +258,8 @@ def inspect_csv(path, args, metrics=None):
     last_finite_uav_before_nonfinite = None
     last_finite_payload_before_nonfinite = None
     first_nonfinite_seen = False
+    has_state_nonfinite = False
+    has_command_nonfinite = False
     numeric_columns = [column for column in fieldnames if column not in ("")]
 
     for row in rows:
@@ -262,6 +280,16 @@ def inspect_csv(path, args, metrics=None):
                     result["last_finite_payload_position_before_nan"] = format_position(last_finite_payload_before_nonfinite)
                     first_nonfinite_seen = True
                     break
+
+        for column in STATE_COLUMNS:
+            text = str(row.get(column, "")).strip()
+            if text and not math.isfinite(parse_float(text)):
+                has_state_nonfinite = True
+
+        for column in COMMAND_COLUMNS:
+            text = str(row.get(column, "")).strip()
+            if text and not math.isfinite(parse_float(text)):
+                has_command_nonfinite = True
 
         so3_thrust = parse_float(row.get("so3_thrust"))
         if not math.isfinite(so3_thrust):
@@ -323,8 +351,32 @@ def inspect_csv(path, args, metrics=None):
     if result["last_finite_payload_position_before_nan"] == "" and last_finite_payload_before_nonfinite:
         result["last_finite_payload_position_before_nan"] = format_position(last_finite_payload_before_nonfinite)
 
+    result["has_state_nonfinite"] = bool_text(has_state_nonfinite)
+    result["has_command_nonfinite"] = bool_text(has_command_nonfinite)
+    result["has_any_nonfinite"] = bool_text(has_state_nonfinite or has_command_nonfinite)
+    result["has_command_saturation"] = bool_text(
+        is_time_set(result, "first_so3_thrust_saturation_time")
+        or is_time_set(result, "first_so3_bodyrate_saturation_time")
+    )
+    result["has_high_speed"] = bool_text(
+        is_time_set(result, "first_uav_speed_gt4_time")
+        or is_time_set(result, "first_payload_speed_gt4_time")
+    )
+    result["has_position_jump"] = bool_text(
+        is_time_set(result, "first_uav_position_jump_gt1m_time")
+        or is_time_set(result, "first_payload_position_jump_gt1m_time")
+    )
+    result["has_swing_threshold_crossing"] = bool_text(is_time_set(result, "first_swing_ge30_time"))
     result["failure_mode_guess"] = guess_failure_mode(result)
     return result, rows, fieldnames, time_column, first_time
+
+
+def bool_text(value):
+    return "true" if value else "false"
+
+
+def is_time_set(result, key):
+    return math.isfinite(time_value(result, key))
 
 
 def time_value(result, key):
@@ -343,6 +395,7 @@ def max_metric(result, key):
 
 def guess_failure_mode(result):
     first_nonfinite = time_value(result, "first_nonfinite_time")
+    first_state_or_command_nonfinite = first_nonfinite if bool_metric(result, "has_any_nonfinite") else math.nan
     command_nan_times = [
         time_value(result, "first_so3_thrust_nan_time"),
         time_value(result, "first_so3_bodyrate_nan_time"),
@@ -364,15 +417,25 @@ def guess_failure_mode(result):
     state_divergence_times = [value for value in state_divergence_times if math.isfinite(value)]
     first_state_divergence = min(state_divergence_times) if state_divergence_times else math.nan
 
-    has_nan = bool_metric(result, "has_nan_state") or math.isfinite(first_nonfinite)
+    has_any_nonfinite = bool_metric(result, "has_any_nonfinite")
+    has_command_nonfinite = bool_metric(result, "has_command_nonfinite")
+    has_command_saturation = bool_metric(result, "has_command_saturation")
+    has_high_speed = bool_metric(result, "has_high_speed")
+    has_position_jump = bool_metric(result, "has_position_jump")
+    has_swing_threshold_crossing = bool_metric(result, "has_swing_threshold_crossing")
+    has_nan = bool_metric(result, "has_nan_state") or has_any_nonfinite
     max_uav_speed = max_metric(result, "metrics_max_uav_speed")
     max_payload_speed = max_metric(result, "metrics_max_payload_speed")
     max_swing = max_metric(result, "metrics_max_swing_angle_deg")
     final_xy_error = max_metric(result, "metrics_final_uav_xy_error")
+    valid_run_text = str(result.get("valid_run_suggested", "")).strip().lower()
+    metrics_says_invalid = valid_run_text in ("false", "0", "no") or bool_metric(result, "has_nan_state")
     safety_no_nan = (
         not has_nan
         and (
-            (math.isfinite(max_uav_speed) and max_uav_speed > 4.0)
+            has_high_speed
+            or has_swing_threshold_crossing
+            or (math.isfinite(max_uav_speed) and max_uav_speed > 4.0)
             or (math.isfinite(max_payload_speed) and max_payload_speed > 4.0)
             or (math.isfinite(max_swing) and max_swing >= 60.0)
         )
@@ -384,16 +447,38 @@ def guess_failure_mode(result):
         and not safety_no_nan
     )
 
-    if math.isfinite(time_value(result, "first_uav_position_jump_gt1m_time")) or math.isfinite(
-        time_value(result, "first_payload_position_jump_gt1m_time")
+    no_invalid_evidence = not (
+        has_any_nonfinite
+        or has_high_speed
+        or has_position_jump
+        or has_swing_threshold_crossing
+        or target_error_only
+        or safety_no_nan
+    )
+    if no_invalid_evidence:
+        if metrics_says_invalid:
+            return "unknown_invalid"
+        if has_command_saturation:
+            return "command_saturation_without_divergence"
+        return "no_divergence_detected"
+
+    if math.isfinite(first_saturation) and (
+        (math.isfinite(first_state_or_command_nonfinite) and first_saturation <= first_state_or_command_nonfinite)
+        or (
+            not math.isfinite(first_state_or_command_nonfinite)
+            and math.isfinite(first_state_divergence)
+            and first_saturation <= first_state_divergence
+        )
     ):
-        return "teleport_like_position_jump"
-    if math.isfinite(first_command_nan) and (
-        not math.isfinite(first_state_divergence) or first_command_nan <= first_state_divergence
+        return "command_saturation_before_nan"
+
+    if math.isfinite(first_command_nan) and math.isfinite(first_state_divergence) and (
+        first_command_nan <= first_state_divergence
     ):
         return "command_nan_before_state_divergence"
-    if math.isfinite(first_saturation) and (not math.isfinite(first_nonfinite) or first_saturation <= first_nonfinite):
-        return "command_saturation_before_nan"
+
+    if has_position_jump:
+        return "teleport_like_position_jump"
     if has_nan and math.isfinite(first_command_nan) and math.isfinite(first_nonfinite) and first_nonfinite < first_command_nan:
         return "state_nan_before_command_nan"
     if has_nan and (
@@ -409,7 +494,13 @@ def guess_failure_mode(result):
         return "target_error_only"
     if has_nan:
         return "manual_collision_or_path_infeasible_needed"
-    return "unknown_invalid"
+    if has_command_saturation:
+        return "command_saturation_without_divergence"
+    if has_command_nonfinite:
+        return "manual_collision_or_path_infeasible_needed"
+    if metrics_says_invalid:
+        return "unknown_invalid"
+    return "no_divergence_detected"
 
 
 def parse_metrics_summary(path):
@@ -430,6 +521,13 @@ def inspect_metrics_glob(pattern, args):
         metrics = parse_metrics_summary(metrics_path)
         csv_path = resolve_path(metrics.get("csv_path"), base=metrics_path.parent)
         if not csv_path or not csv_path.exists():
+            valid_text = parse_bool_text(metrics.get("valid_run_suggested", ""))
+            has_nan_text = parse_bool_text(metrics.get("has_nan_state", ""))
+            failure_mode_guess = (
+                "unknown_invalid"
+                if valid_text == "false" or has_nan_text == "true"
+                else "no_divergence_detected"
+            )
             row = {field: "" for field in OUTPUT_FIELDS}
             row.update(
                 {
@@ -442,7 +540,7 @@ def inspect_metrics_glob(pattern, args):
                     "metrics_max_payload_speed": metrics.get("max_payload_speed", ""),
                     "metrics_max_swing_angle_deg": metrics.get("max_swing_angle_deg", ""),
                     "metrics_final_uav_xy_error": metrics.get("final_uav_xy_error", ""),
-                    "failure_mode_guess": "unknown_invalid",
+                    "failure_mode_guess": failure_mode_guess,
                 }
             )
             results.append(row)

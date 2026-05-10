@@ -2,9 +2,11 @@
 
 ## Executive Summary
 
-The Stage 4 divergence audit found `command_saturation_before_nan` as the
-dominant detected failure-mode guess. Teleport-like position jumps are also
-frequent.
+The Stage 4 divergence audit now separates transient command saturation from
+invalid divergence. With the corrected classifier, the dominant diagnostic
+label is `command_saturation_without_divergence`, while
+`command_saturation_before_nan` remains the dominant detected invalid
+divergence precursor.
 
 Invalid runs should be separated by failure mode before strong claims are
 made. This audit is diagnostic evidence for failure classification and
@@ -22,7 +24,7 @@ python3 experiments/scripts/inspect_stage4_log_divergence.py \
 ```
 
 The glob includes historical, smoke, debug, resetcheck, and old experiment
-logs. Therefore `rows_inspected=175` should not be treated as the final
+logs. Therefore `rows_inspected=177` should not be treated as the final
 balanced evaluation sample.
 
 Generated output under `experiments/results/` should remain uncommitted.
@@ -31,11 +33,16 @@ Generated output under `experiments/results/` should remain uncommitted.
 
 | Failure-mode guess | Count |
 | --- | ---: |
-| rows inspected | `175` |
-| `command_nan_before_state_divergence` | `1` |
-| `command_saturation_before_nan` | `114` |
-| `teleport_like_position_jump` | `54` |
-| `unknown_invalid` | `6` |
+| rows inspected | `177` |
+| `command_saturation_before_nan` | `57` |
+| `command_saturation_without_divergence` | `90` |
+| `no_divergence_detected` | `7` |
+| `strict_safety_no_nan` | `17` |
+| `target_error_only` | `6` |
+
+This table uses the corrected classifier. Earlier diagnostic wording did not
+separate transient command saturation from saturation followed by
+NaN/divergence.
 
 ## Motivating Example: original Trial 6 repeat10
 
@@ -70,11 +77,13 @@ launch flows that publish `quadrotor_msgs/PositionCommand`.
 
 ## Interpretation
 
-`command_saturation_before_nan` means SO3 thrust or bodyrate saturation often
-appears before NaN or state divergence.
+`command_saturation_without_divergence` means SO3 thrust or bodyrate saturation
+appeared, but the CSV did not show NaN/nonfinite state, high-speed divergence,
+position jump, or swing threshold crossing. It is a diagnostic signal, not an
+invalid divergence label by itself.
 
-`teleport_like_position_jump` means the logged state has an abrupt position
-jump after apparently stable flight.
+`command_saturation_before_nan` means SO3 thrust or bodyrate saturation appears
+before NaN/nonfinite state or later high-speed/position-jump divergence.
 
 These are invalid safety failures, but they should not automatically be
 assigned to `risk_adapter_v1` or any single command-adaptation method.
@@ -95,8 +104,10 @@ Use the following proposed labels when annotating invalid runs:
 - `target_error_only`
 - `strict_safety_no_nan`
 - `command_saturation_before_nan`
+- `command_saturation_without_divergence`
 - `command_nan_before_state_divergence`
 - `teleport_like_position_jump`
+- `no_divergence_detected`
 - `manual_collision_observed`
 - `manual_path_infeasible`
 - `unknown_invalid`
@@ -127,8 +138,10 @@ UAV-reference tracking error. Then run small root-cause isolation tests:
 
 ## What Not To Claim
 
-- Do not claim statistical significance from this 175-row diagnostic scan.
+- Do not claim statistical significance from this 177-row diagnostic scan.
 - Do not use this scan as the main evaluation table.
 - Do not hide mixed failure mechanisms.
 - Do not claim root cause is proven without desired/reference trajectory
   logging.
+- Do not treat transient command saturation alone as proof of invalid
+  divergence.

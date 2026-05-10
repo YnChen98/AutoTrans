@@ -396,7 +396,9 @@ python3 experiments/scripts/summarize_stage4h_adapter_results.py \
 `experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的
 SO3 command saturation、command NaN、speed threshold、swing threshold 和 position jump
 timing，帮助区分 sudden fly-away / teleport-like divergence。它不运行 ROS、simulation、RViz
-或 `catkin_make`。
+或 `catkin_make`。`failure_mode_guess` 是 heuristic label；clean valid runs 应显示
+`no_divergence_detected`，transient saturation without NaN/divergence 会显示
+`command_saturation_without_divergence`，不应当作 invalid divergence。
 
 检查单个 CSV，并打印一个相对时间窗口内的关键列：
 

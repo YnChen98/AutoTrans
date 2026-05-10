@@ -75,6 +75,8 @@ or an unlogged planner/controller mechanism.
 
 For each CSV log, the tool reports timing for:
 
+- evidence flags for nonfinite values, command saturation, high speed,
+  position jump, and swing threshold crossing
 - first nonfinite value and its column
 - first SO3 thrust/bodyrate NaN
 - first SO3 thrust/bodyrate saturation
@@ -119,8 +121,25 @@ Generated reports under `experiments/results/` should not be committed.
 The `failure_mode_guess` field is best-effort. It is intended for triage and
 manifest annotation, not as a definitive physical diagnosis.
 
+`no_divergence_detected` means the CSV did not show nonfinite state/SO3
+commands, UAV/payload high speed, swing threshold crossing, or position jump.
+It should not be treated as an invalid divergence label.
+
+`command_saturation_without_divergence` means SO3 thrust or bodyrate reached
+the configured saturation threshold, but no NaN/nonfinite state, high-speed
+divergence, position jump, or swing threshold crossing was detected. Transient
+command saturation alone is a diagnostic signal, not necessarily a failure.
+
+`command_saturation_before_nan` should be used only when command saturation
+precedes a nonfinite SO3/state value, or precedes high-speed/position-jump
+divergence when no NaN is available.
+
 Command NaN before state divergence is possible. In those cases, the first
 visible fly-away may be downstream of an earlier command failure.
+
+`unknown_invalid` should be reserved for cases where analyzer metrics indicate
+`valid_run_suggested=false` or `has_nan_state=true`, but the inspector cannot
+classify the failure from available CSV evidence.
 
 Obstacle collision and path infeasibility remain manual annotations unless
 they are explicitly logged. Visual inspection is still required for cases
