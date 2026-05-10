@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "stage": "Stage 4-I",
+    "description": "Limited-repeat strong-wind adapter comparison for Stage 4-H risk_adapter_v1 evaluation.",
+    "repeat_policy": "Five repeats per available method/target entry.",
+    "limitations": "Simulation-only, limited-repeat evidence; not a statistical robustness proof."
+  },
+  "results": [
+    {
+      "trial_id": "trial4",
+      "target_x": -3.5,
+      "target_y": -1.2,
+      "method": "original",
+      "repeat_count": 5,
+      "valid_count": 4,
+      "invalid_count": 1,
+      "success_rate": 0.8,
+      "notes": "Historical strong-wind Trial 4 baseline.",
+      "source_protocol_doc": "experiments/protocols/stage4_trial4_expansion_summary.md"
+    },
+    {
+      "trial_id": "trial4",
+      "target_x": -3.5,
+      "target_y": -1.2,
+      "method": "fixed_s085",
+      "repeat_count": 5,
+      "valid_count": 5,
+      "invalid_count": 0,
+      "success_rate": 1.0,
+      "notes": "Historical fixed XML scale 0.85 baseline; best Trial 4 result.",
+      "source_protocol_doc": "experiments/protocols/stage4_trial4_expansion_summary.md"
+    },
+    {
+      "trial_id": "trial4",
+      "target_x": -3.5,
+      "target_y": -1.2,
+      "method": "windlevel_s085",
+      "repeat_count": 5,
+      "valid_count": 1,
+      "invalid_count": 4,
+      "success_rate": 0.2,
+      "notes": "Historical policy_mode=wind_level scale 0.85 baseline.",
+      "source_protocol_doc": "experiments/protocols/stage4_trial4_expansion_summary.md"
+    },
+    {
+      "trial_id": "trial4",
+      "target_x": -3.5,
+      "target_y": -1.2,
+      "method": "risk_adapter_v1",
+      "repeat_count": 5,
+      "valid_count": 4,
+      "invalid_count": 1,
+      "success_rate": 0.8,
+      "notes": "repeat5 failed with NaN at first_nan_time=24.900021; risk trigger arrived after the critical failure window.",
+      "source_protocol_doc": "experiments/protocols/stage4h_risk_adapter_v1_trial4_repeat_result.md"
+    },
+    {
+      "trial_id": "trial5",
+      "target_x": 3.5,
+      "target_y": 0.8,
+      "method": "original",
+      "repeat_count": 5,
+      "valid_count": 3,
+      "invalid_count": 2,
+      "success_rate": 0.6,
+      "notes": "Historical strong-wind Trial 5 baseline using strict-valid count.",
+      "source_protocol_doc": "experiments/protocols/stage4_trial5_expansion_summary.md"
+    },
+    {
+      "trial_id": "trial5",
+      "target_x": 3.5,
+      "target_y": 0.8,
+      "method": "fixed_s085",
+      "repeat_count": 5,
+      "valid_count": 2,
+      "invalid_count": 3,
+      "success_rate": 0.4,
+      "notes": "Historical fixed XML scale 0.85 baseline.",
+      "source_protocol_doc": "experiments/protocols/stage4_trial5_expansion_summary.md"
+    },
+    {
+      "trial_id": "trial5",
+      "target_x": 3.5,
+      "target_y": 0.8,
+      "method": "windlevel_s085",
+      "repeat_count": 5,
+      "valid_count": 3,
+      "invalid_count": 2,
+      "success_rate": 0.6,
+      "notes": "Historical policy_mode=wind_level scale 0.85 baseline.",
+      "source_protocol_doc": "experiments/protocols/stage4_trial5_expansion_summary.md"
+    },
+    {
+      "trial_id": "trial5",
+      "target_x": 3.5,
+      "target_y": 0.8,
+      "method": "risk_adapter_v0",
+      "repeat_count": 5,
+      "valid_count": 2,
+      "invalid_count": 3,
+      "success_rate": 0.4,
+      "notes": "Prior risk-conditioned adapter result; v0 failures motivated stronger v1 early intervention.",
+      "source_protocol_doc": "experiments/protocols/stage4h_risk_adapter_v0_trial5_repeat_result.md"
+    },
+    {
+      "trial_id": "trial5",
+      "target_x": 3.5,
+      "target_y": 0.8,
+      "method": "risk_adapter_v1",
+      "repeat_count": 5,
+      "valid_count": 5,
+      "invalid_count": 0,
+      "success_rate": 1.0,
+      "notes": "Best Trial 5 result; suggests stronger early intervention addressed v0 failures.",
+      "source_protocol_doc": "experiments/protocols/stage4h_risk_adapter_v1_trial5_repeat_result.md"
+    },
+    {
+      "trial_id": "trial6",
+      "target_x": 0.0,
+      "target_y": 1.5,
+      "method": "original",
+      "repeat_count": 5,
+      "valid_count": 2,
+      "invalid_count": 3,
+      "success_rate": 0.4,
+      "notes": "Historical strong-wind Trial 6 baseline.",
+      "source_protocol_doc": "experiments/protocols/stage4_trial6_expansion_summary.md"
+    },
+    {
+      "trial_id": "trial6",
+      "target_x": 0.0,
+      "target_y": 1.5,
+      "method": "fixed_s085",
+      "repeat_count": 5,
+      "valid_count": 2,
+      "invalid_count": 3,
+      "success_rate": 0.4,
+      "notes": "Historical fixed XML scale 0.85 baseline.",
+      "source_protocol_doc": "experiments/protocols/stage4_trial6_expansion_summary.md"
+    },
+    {
+      "trial_id": "trial6",
+      "target_x": 0.0,
+      "target_y": 1.5,
+      "method": "windlevel_s085",
+      "repeat_count": 5,
+      "valid_count": 2,
+      "invalid_count": 3,
+      "success_rate": 0.4,
+      "notes": "Historical policy_mode=wind_level scale 0.85 baseline.",
+      "source_protocol_doc": "experiments/protocols/stage4_trial6_expansion_summary.md"
+    },
+    {
+      "trial_id": "trial6",
+      "target_x": 0.0,
+      "target_y": 1.5,
+      "method": "risk_adapter_v0",
+      "repeat_count": 5,
+      "valid_count": 4,
+      "invalid_count": 1,
+      "success_rate": 0.8,
+      "notes": "Prior risk-conditioned adapter result.",
+      "source_protocol_doc": "experiments/protocols/stage4h_risk_adapter_v0_trial6_repeat_result.md"
+    },
+    {
+      "trial_id": "trial6",
+      "target_x": 0.0,
+      "target_y": 1.5,
+      "method": "risk_adapter_v1",
+      "repeat_count": 5,
+      "valid_count": 4,
+      "invalid_count": 1,
+      "success_rate": 0.8,
+      "notes": "repeat1 failed with NaN at first_nan_time=25.099965; early risk activated but hard threshold arrived after NaN.",
+      "source_protocol_doc": "experiments/protocols/stage4h_risk_adapter_v1_trial6_repeat_result.md"
+    }
+  ]
+}

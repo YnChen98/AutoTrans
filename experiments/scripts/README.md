@@ -371,6 +371,25 @@ python3 experiments/scripts/verify_stage4_logreg_json.py --dataset experiments/d
 `json_inference_check: passed_without_sklearn_reference`。在线 ROS adapter
 implementation 必须等 strict JSON-vs-sklearn reference probability verification 通过后再开始。
 
+## Stage 4-I adapter result table generator
+
+`experiments/scripts/summarize_stage4h_adapter_results.py` 从 committed manifest 生成 Stage 4-H
+`risk_adapter_v1` limited evaluation 的 Markdown/CSV summary table。它只做离线表格整理，不运行
+ROS、simulation、RViz 或 `catkin_make`。
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/summarize_stage4h_adapter_results.py \
+  --manifest experiments/protocols/stage4h_adapter_limited_eval_manifest.json \
+  --output-md experiments/results/stage4h_adapter_limited_eval_summary.md \
+  --output-csv experiments/results/stage4h_adapter_limited_eval_summary.csv \
+  --print-summary
+```
+
+生成的 `experiments/results/stage4h_adapter_limited_eval_summary.md` 和
+`experiments/results/stage4h_adapter_limited_eval_summary.csv` 不应提交。完整 protocol 见
+`experiments/protocols/stage4h_adapter_result_table_protocol.md`。
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。
