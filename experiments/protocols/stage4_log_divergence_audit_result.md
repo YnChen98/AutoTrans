@@ -44,6 +44,15 @@ This table uses the corrected classifier. Earlier diagnostic wording did not
 separate transient command saturation from saturation followed by
 NaN/divergence.
 
+## Correction Note
+
+The previous audit over-counted `command_saturation_before_nan` because the
+classifier did not distinguish transient command saturation without later
+NaN/nonfinite state, high-speed divergence, position jump, or swing threshold
+crossing. The corrected audit shows that command saturation can occur without
+failure and should be treated as a diagnostic signal, not automatically as an
+invalid divergence.
+
 ## Motivating Example: original Trial 6 repeat10
 
 The motivating log is:
@@ -56,16 +65,21 @@ Detailed inspection showed this timing sequence:
 
 | Event | Relative time |
 | --- | ---: |
-| Saturated SO3 commands: `so3_thrust=60.0`, `so3_bodyrate_x=-3.0`, `so3_bodyrate_y=3.0`, `so3_bodyrate_z=1.2` | `14.900` |
-| `so3_thrust` / bodyrate NaN | `14.950` |
-| UAV speed `> 4` | `15.250` |
-| payload speed `> 4` | `15.350` |
-| UAV position jump `> 1 m` | `15.849` |
+| Saturated SO3 commands: `so3_thrust=60.0`, `so3_bodyrate_x=-3.0`, `so3_bodyrate_y=3.0`, `so3_bodyrate_z=1.2` | `14.900053` |
+| `so3_thrust` / bodyrate NaN | `14.950161` |
+| UAV speed `> 4` and swing `> 30 deg` | `15.250058` |
+| swing `> 60 deg` | `15.299990` |
+| payload speed `> 4` | `15.350023` |
+| UAV position jump `> 1 m` | `15.849978` |
 
 In this run, command NaN appears before state divergence. The CSV currently
 lacks reference, desired-state, or full trajectory columns beyond
 `has_trajectory`, so planner reference discontinuity cannot be proven from
 this log alone.
+
+The corrected `failure_mode_guess` for this run remains
+`command_saturation_before_nan`, so original Trial 6 repeat10 remains a true
+divergence example.
 
 Stage 4 reference logging is the next diagnostic step after this audit. New
 logs should record the detected controller reference topic as `ref_*` columns
@@ -97,6 +111,20 @@ appeared associated with obstacle contact or a planned path passing through an
 obstacle. These observations reinforce that Stage 4 invalids can mix simulator
 or contact instability, path feasibility, and command adaptation effects.
 
+## Root-Cause Smoke Checks
+
+Two root-cause diagnostic smoke checks were run after reference logging was
+added:
+
+| Smoke check | Validity | Reference discontinuity | Corrected classification |
+| --- | --- | --- | --- |
+| `goal_repeat=1` | `valid_run_suggested=true`, `has_nan_state=false` | none detected | `command_saturation_without_divergence` |
+| `goal_repeat=10` | `valid_run_suggested=true`, `has_nan_state=false` | none detected | `no_divergence_detected` |
+
+These smoke checks did not reproduce sudden fly-away. Therefore repeated goal
+publishing or replanning discontinuity remains a possible factor, but it is
+not proven by these two runs.
+
 ## Failure-Mode Label Taxonomy
 
 Use the following proposed labels when annotating invalid runs:
@@ -121,6 +149,9 @@ must remain cautious.
 Do not claim all NaN failures are control-policy failures. Do not claim all
 `risk_adapter_v1` failures are model false negatives.
 
+Main paper results should use strict-valid / `label_strict_invalid` and should
+also report failure-mode labels or distributions for invalid runs.
+
 ## Next Step
 
 Add manual annotations for `collision_observed`, `path_infeasible`, and
@@ -135,6 +166,11 @@ UAV-reference tracking error. Then run small root-cause isolation tests:
 - open map / no obstacle if supported
 - same target with desired/reference logging
 - command NaN guard diagnostic later if needed
+
+Future root-cause tests should use reference logging and multiple repeats
+before assigning a mechanism to repeated goal publishing, replanning
+discontinuity, collision/contact interaction, or controller/simulator
+instability.
 
 ## What Not To Claim
 

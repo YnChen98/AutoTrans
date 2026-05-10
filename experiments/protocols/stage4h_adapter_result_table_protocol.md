@@ -56,6 +56,12 @@ comparison.
 Invalid runs should also include failure-mode labels so success rate is not
 interpreted without failure context.
 
+For paper-facing tables, strict-valid / `label_strict_invalid` remains the
+success metric, while failure-mode labels explain why invalid runs failed.
+Transient labels such as `command_saturation_without_divergence` should not be
+counted as invalid by themselves unless strict-valid / `label_strict_invalid`
+also marks the run invalid.
+
 Future result manifests should support manual annotations such as
 `collision_observed` and `path_infeasible` when visual inspection identifies
 obstacle contact, abnormal post-contact motion, or planned path-through-
