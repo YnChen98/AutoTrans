@@ -2,8 +2,9 @@
   "metadata": {
     "stage": "Stage 4-I",
     "description": "Limited-repeat strong-wind adapter comparison for Stage 4-H risk_adapter_v1 evaluation.",
-    "repeat_policy": "Five repeats per available method/target entry.",
-    "limitations": "Simulation-only, limited-repeat evidence; not a statistical robustness proof."
+    "repeat_policy": "Trial 4 has been expanded to 10 repeats for original, fixed_s085, windlevel_s085, and risk_adapter_v1; Trial 5 and Trial 6 remain at 5 repeats for now.",
+    "limitations": "Simulation-only, limited-repeat evidence; not a statistical robustness proof. Current manifest has unequal per-target repeat counts.",
+    "manual_observation_note": "Trial 4 includes manual visual observations of obstacle-collision/path-feasibility-related failures; some invalids may not be purely command-adaptation or risk-prediction failures."
   },
   "results": [
     {
@@ -11,48 +12,48 @@
       "target_x": -3.5,
       "target_y": -1.2,
       "method": "original",
-      "repeat_count": 5,
-      "valid_count": 4,
-      "invalid_count": 1,
+      "repeat_count": 10,
+      "valid_count": 8,
+      "invalid_count": 2,
       "success_rate": 0.8,
-      "notes": "Historical strong-wind Trial 4 baseline.",
-      "source_protocol_doc": "experiments/protocols/stage4_trial4_expansion_summary.md"
+      "notes": "Trial 4 expanded to 10 repeats; invalid repeats were target-error failures. Manual visual observations indicate some Trial 4 invalids may involve obstacle-collision/path-feasibility interaction.",
+      "source_protocol_doc": "experiments/protocols/stage4j_trial4_10repeat_fair_comparison.md"
     },
     {
       "trial_id": "trial4",
       "target_x": -3.5,
       "target_y": -1.2,
       "method": "fixed_s085",
-      "repeat_count": 5,
-      "valid_count": 5,
-      "invalid_count": 0,
-      "success_rate": 1.0,
-      "notes": "Historical fixed XML scale 0.85 baseline; best Trial 4 result.",
-      "source_protocol_doc": "experiments/protocols/stage4_trial4_expansion_summary.md"
+      "repeat_count": 10,
+      "valid_count": 9,
+      "invalid_count": 1,
+      "success_rate": 0.9,
+      "notes": "Trial 4 expanded to 10 repeats; best Trial 4 method. One invalid repeat was a NaN failure. Manual visual observations indicate some Trial 4 invalids may involve obstacle-collision/path-feasibility interaction.",
+      "source_protocol_doc": "experiments/protocols/stage4j_trial4_10repeat_fair_comparison.md"
     },
     {
       "trial_id": "trial4",
       "target_x": -3.5,
       "target_y": -1.2,
       "method": "windlevel_s085",
-      "repeat_count": 5,
-      "valid_count": 1,
-      "invalid_count": 4,
-      "success_rate": 0.2,
-      "notes": "Historical policy_mode=wind_level scale 0.85 baseline.",
-      "source_protocol_doc": "experiments/protocols/stage4_trial4_expansion_summary.md"
+      "repeat_count": 10,
+      "valid_count": 4,
+      "invalid_count": 6,
+      "success_rate": 0.4,
+      "notes": "Trial 4 expanded to 10 repeats; invalids include many NaN failures and one target-error/high-swing case. Manual visual observations indicate some Trial 4 invalids may involve obstacle-collision/path-feasibility interaction.",
+      "source_protocol_doc": "experiments/protocols/stage4j_trial4_10repeat_fair_comparison.md"
     },
     {
       "trial_id": "trial4",
       "target_x": -3.5,
       "target_y": -1.2,
       "method": "risk_adapter_v1",
-      "repeat_count": 5,
-      "valid_count": 4,
-      "invalid_count": 1,
-      "success_rate": 0.8,
-      "notes": "repeat5 failed with NaN at first_nan_time=24.900021; risk trigger arrived after the critical failure window.",
-      "source_protocol_doc": "experiments/protocols/stage4h_risk_adapter_v1_trial4_repeat_result.md"
+      "repeat_count": 10,
+      "valid_count": 7,
+      "invalid_count": 3,
+      "success_rate": 0.7,
+      "notes": "Trial 4 expanded to 10 repeats; repeat5 and repeat9 were late-risk NaN/safety failures, and repeat7 was a target-error failure. Manual visual observations indicate some Trial 4 invalids may involve obstacle-collision/path-feasibility interaction.",
+      "source_protocol_doc": "experiments/protocols/stage4j_trial4_10repeat_fair_comparison.md"
     },
     {
       "trial_id": "trial5",
