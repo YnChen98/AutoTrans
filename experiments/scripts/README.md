@@ -391,6 +391,37 @@ python3 experiments/scripts/summarize_stage4h_adapter_results.py \
 `experiments/results/stage4h_adapter_limited_eval_summary.csv` 不应提交。完整 protocol 见
 `experiments/protocols/stage4h_adapter_result_table_protocol.md`。
 
+## Stage 4 log divergence inspector
+
+`experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的
+SO3 command saturation、command NaN、speed threshold、swing threshold 和 position jump
+timing，帮助区分 sudden fly-away / teleport-like divergence。它不运行 ROS、simulation、RViz
+或 `catkin_make`。
+
+检查单个 CSV，并打印一个相对时间窗口内的关键列：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/inspect_stage4_log_divergence.py \
+  --csv experiments/logs/autotrans_log_20260510_190453.csv \
+  --window-start 13.5 \
+  --window-end 16.5 \
+  --print-summary
+```
+
+扫描所有 metrics summaries，并把报告写到 ignored `experiments/results/`：
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/inspect_stage4_log_divergence.py \
+  --metrics-glob "experiments/figures/*_metrics_summary.txt" \
+  --output-csv experiments/results/stage4_log_divergence_report.csv \
+  --print-summary
+```
+
+生成的 `experiments/results/stage4_log_divergence_report.csv` 不应提交。完整 protocol 见
+`experiments/protocols/stage4_log_divergence_inspection_protocol.md`。
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

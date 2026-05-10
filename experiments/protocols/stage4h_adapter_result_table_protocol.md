@@ -57,6 +57,18 @@ Future result manifests should support manual annotations such as
 obstacle contact, abnormal post-contact motion, or planned path-through-
 obstacle behavior.
 
+Invalid runs should be classified beyond valid/invalid whenever possible.
+Future manifests should support:
+
+- `manual_collision_observed`
+- `manual_path_infeasible`
+- `manual_teleport_like_divergence`
+- `divergence_failure_mode`
+
+Use `experiments/scripts/inspect_stage4_log_divergence.py` to produce
+repeatable timing evidence for command saturation, command NaN, speed
+threshold crossings, swing thresholds, and teleport-like position jumps.
+
 ## How To Run
 
 From the repository root:
