@@ -321,6 +321,77 @@ Current learning conclusion:
 - Early dynamic features show more promise than metadata-only features.
 - The current predictor is pipeline validation, not a final algorithm result.
 
+Stage 4-H risk-conditioned adapter status:
+
+- `risk_adapter_v1` is the current strongest candidate.
+- `risk_adapter_v1` policy:
+  - `soft_scale_3s=0.75`
+  - `soft_scale_5s=0.65`
+  - `hard_scale_5s=0.60`
+  - `risk_threshold_3s=0.5`
+  - `risk_threshold_5s=0.5`
+  - `hard_threshold_5s=0.7`
+  - `scale_rate_limit_per_sec=0.5`
+
+Stage 4-H limited-repeat results:
+
+Trial 4:
+
+- `original`: 4/5 valid.
+- `fixed_s085`: 5/5 valid.
+- `windlevel_s085`: 1/5 valid.
+- `risk_adapter_v1`: 4/5 valid.
+
+Trial 5:
+
+- `original`: 3/5 strict-valid.
+- `fixed_s085`: 2/5 valid.
+- `windlevel_s085`: 3/5 valid.
+- `risk_adapter_v0`: 2/5 valid.
+- `risk_adapter_v1`: 5/5 valid.
+
+Trial 6:
+
+- `original`: 2/5 valid.
+- `fixed_s085`: 2/5 valid.
+- `windlevel_s085`: 2/5 valid.
+- `risk_adapter_v0`: 4/5 valid.
+- `risk_adapter_v1`: 4/5 valid.
+
+Aggregate Trial 4+5+6:
+
+- `original`: 9/15.
+- `fixed_s085`: 9/15.
+- `windlevel_s085`: 6/15.
+- `risk_adapter_v1`: 13/15.
+
+Stage 4-I result table generator:
+
+- Use `experiments/scripts/summarize_stage4h_adapter_results.py` to generate
+  Stage 4-H limited evaluation Markdown/CSV tables.
+- The committed manifest is
+  `experiments/protocols/stage4h_adapter_limited_eval_manifest.json`.
+- Generated outputs under `experiments/results/` are ignored and should not be
+  committed.
+
+Stage 4-H/4-I claim limits:
+
+- Do not claim statistical significance.
+- Do not claim a safety guarantee.
+- Do not claim final online robustness.
+- Do not hide the Trial 4 repeat5 and Trial 6 repeat1 `risk_adapter_v1`
+  failures.
+- Do not claim `risk_adapter_v1` beats `fixed_s085` on every target, because
+  `fixed_s085` is 5/5 on Trial 4 while `risk_adapter_v1` is 4/5.
+
+Next recommended Stage 4-H work:
+
+- Do not tune `risk_adapter_v2` yet.
+- First expand `risk_adapter_v1` repeats on Trial 4, Trial 5, and Trial 6 from
+  5 to 10 repeats per target.
+- Then consider balanced baseline repeat expansion or `risk_adapter_v2`
+  design.
+
 Safety:
 
 - Do not modify planner/controller/simulator for Stage 4 dataset/model tasks.
