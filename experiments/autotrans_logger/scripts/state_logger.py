@@ -11,9 +11,15 @@ import rospkg
 from geometry_msgs.msg import Vector3Stamped
 from mavros_msgs.msg import AttitudeTarget
 from nav_msgs.msg import Odometry
+from nav_msgs.msg import Path as NavPath
 from quadrotor_msgs.msg import PolynomialTraj
 from sensor_msgs.msg import Imu
 from std_msgs.msg import Float64
+
+try:
+    from quadrotor_msgs.msg import PositionCommand
+except ImportError:
+    PositionCommand = None
 
 
 class StateLogger:
@@ -42,6 +48,19 @@ class StateLogger:
         "so3_bodyrate_z",
         "swing_angle_deg",
         "has_trajectory",
+        "ref_pos_x",
+        "ref_pos_y",
+        "ref_pos_z",
+        "ref_vel_x",
+        "ref_vel_y",
+        "ref_vel_z",
+        "ref_acc_x",
+        "ref_acc_y",
+        "ref_acc_z",
+        "ref_yaw",
+        "ref_yaw_dot",
+        "ref_msg_ros_time",
+        "ref_available",
         "wind_force_x",
         "wind_force_y",
         "wind_force_z",
@@ -67,6 +86,12 @@ class StateLogger:
         self.command_risk_scale_selected = None
         self.command_risk_target_scale_raw = None
         self.has_trajectory = False
+        self.reference_cmd = None
+
+        self.enable_reference_logging = bool(rospy.get_param("~enable_reference_logging", True))
+        self.reference_topic = rospy.get_param("~reference_topic", "/mpc_controller_node/mpc/all_ref_data")
+        self.reference_message_type = rospy.get_param("~reference_message_type", "mpc_all_ref_data")
+        self.reference_required = bool(rospy.get_param("~reference_required", False))
 
         self.log_path = self._make_log_path()
         self.csv_file = open(self.log_path, "w", newline="")
@@ -79,6 +104,7 @@ class StateLogger:
         rospy.Subscriber("/cable_info", Imu, self._cable_info_callback, queue_size=50)
         rospy.Subscriber("/so3cmd", AttitudeTarget, self._so3cmd_callback, queue_size=50)
         rospy.Subscriber("/planning/trajectory", PolynomialTraj, self._trajectory_callback, queue_size=10)
+        self._subscribe_reference_command()
         rospy.Subscriber("/wind_force", Vector3Stamped, self._wind_force_callback, queue_size=50)
         rospy.Subscriber("/command_adaptation/speed_scale", Float64, self._command_speed_scale_callback, queue_size=50)
         rospy.Subscriber("/command_adaptation/acceleration_scale", Float64, self._command_acceleration_scale_callback, queue_size=50)
@@ -103,6 +129,43 @@ class StateLogger:
 
         rospy.loginfo("autotrans_logger writing CSV to: %s", self.log_path)
 
+    def _subscribe_reference_command(self):
+        if not self.enable_reference_logging:
+            rospy.loginfo("reference command logging disabled")
+            return
+        if self.reference_message_type == "mpc_all_ref_data":
+            rospy.Subscriber(
+                self.reference_topic,
+                NavPath,
+                self._reference_path_callback,
+                queue_size=50,
+            )
+            rospy.loginfo("reference path logging enabled on topic: %s", self.reference_topic)
+            return
+        if self.reference_message_type != "position_command":
+            message = "unsupported reference_message_type=%s; reference logging disabled" % (
+                self.reference_message_type
+            )
+            if self.reference_required:
+                rospy.logerr(message)
+            else:
+                rospy.logwarn(message)
+            return
+        if PositionCommand is None:
+            message = "quadrotor_msgs/PositionCommand import failed; reference logging disabled"
+            if self.reference_required:
+                rospy.logerr(message)
+            else:
+                rospy.logwarn(message)
+            return
+        rospy.Subscriber(
+            self.reference_topic,
+            PositionCommand,
+            self._reference_cmd_callback,
+            queue_size=50,
+        )
+        rospy.loginfo("reference PositionCommand logging enabled on topic: %s", self.reference_topic)
+
     def _make_log_path(self):
         package_path = rospkg.RosPack().get_path("autotrans_logger")
         log_dir = os.path.abspath(os.path.join(package_path, "..", "logs"))
@@ -124,6 +187,19 @@ class StateLogger:
 
     def _trajectory_callback(self, _msg):
         self.has_trajectory = True
+
+    def _reference_cmd_callback(self, msg):
+        self.reference_cmd = msg
+
+    def _reference_path_callback(self, msg):
+        if len(msg.poses) < 2:
+            return
+        self.reference_cmd = {
+            "header": msg.header,
+            "position": msg.poses[0].pose.position,
+            "orientation": msg.poses[0].pose.orientation,
+            "velocity": msg.poses[1].pose.position,
+        }
 
     def _wind_force_callback(self, msg):
         self.wind_force = msg
@@ -155,6 +231,7 @@ class StateLogger:
         row["ros_time"] = "%.9f" % rospy.Time.now().to_sec()
         row["wall_time"] = "%.9f" % time.time()
         row["has_trajectory"] = int(self.has_trajectory)
+        row["ref_available"] = 1 if self.reference_cmd is not None else 0
 
         if self.uav_odom is not None:
             self._fill_odom(row, "uav", self.uav_odom)
@@ -173,6 +250,9 @@ class StateLogger:
             row["so3_bodyrate_x"] = self._fmt(self.so3cmd.body_rate.x)
             row["so3_bodyrate_y"] = self._fmt(self.so3cmd.body_rate.y)
             row["so3_bodyrate_z"] = self._fmt(self.so3cmd.body_rate.z)
+
+        if self.reference_cmd is not None:
+            self._fill_reference_command(row, self.reference_cmd)
 
         swing_angle = self._compute_swing_angle_deg()
         if swing_angle is not None:
@@ -214,6 +294,39 @@ class StateLogger:
         row["%s_vel_x" % prefix] = self._fmt(odom.twist.twist.linear.x)
         row["%s_vel_y" % prefix] = self._fmt(odom.twist.twist.linear.y)
         row["%s_vel_z" % prefix] = self._fmt(odom.twist.twist.linear.z)
+
+    def _fill_reference_command(self, row, msg):
+        if isinstance(msg, dict):
+            position = msg["position"]
+            velocity = msg["velocity"]
+            row["ref_pos_x"] = self._fmt(position.x)
+            row["ref_pos_y"] = self._fmt(position.y)
+            row["ref_pos_z"] = self._fmt(position.z)
+            row["ref_vel_x"] = self._fmt(velocity.x)
+            row["ref_vel_y"] = self._fmt(velocity.y)
+            row["ref_vel_z"] = self._fmt(velocity.z)
+            row["ref_yaw"] = self._fmt(self._yaw_from_quaternion(msg["orientation"]))
+            row["ref_msg_ros_time"] = self._fmt(msg["header"].stamp.to_sec())
+            return
+
+        row["ref_pos_x"] = self._fmt(msg.position.x)
+        row["ref_pos_y"] = self._fmt(msg.position.y)
+        row["ref_pos_z"] = self._fmt(msg.position.z)
+        row["ref_vel_x"] = self._fmt(msg.velocity.x)
+        row["ref_vel_y"] = self._fmt(msg.velocity.y)
+        row["ref_vel_z"] = self._fmt(msg.velocity.z)
+        row["ref_acc_x"] = self._fmt(msg.acceleration.x)
+        row["ref_acc_y"] = self._fmt(msg.acceleration.y)
+        row["ref_acc_z"] = self._fmt(msg.acceleration.z)
+        row["ref_yaw"] = self._fmt(msg.yaw)
+        row["ref_yaw_dot"] = self._fmt(msg.yaw_dot)
+        row["ref_msg_ros_time"] = self._fmt(msg.header.stamp.to_sec())
+
+    @staticmethod
+    def _yaw_from_quaternion(quat):
+        siny_cosp = 2.0 * (quat.w * quat.z + quat.x * quat.y)
+        cosy_cosp = 1.0 - 2.0 * (quat.y * quat.y + quat.z * quat.z)
+        return math.atan2(siny_cosp, cosy_cosp)
 
     def _compute_swing_angle_deg(self):
         if self.uav_odom is None or self.payload_odom is None:

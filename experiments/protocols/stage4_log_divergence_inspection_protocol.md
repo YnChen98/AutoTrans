@@ -29,6 +29,48 @@ This ordering suggests that command saturation or command NaN can precede
 state divergence. The inspection tool is intended to make that timing
 repeatable instead of relying on ad hoc manual checks.
 
+## Reference Logging
+
+Stage 4 root-cause diagnosis now requires desired/reference command logging in
+addition to state and SO3 command logging. In the current `simple_run.launch`
+flow, `payload_mpc_controller` publishes current MPC reference data on
+`/mpc_controller_node/mpc/all_ref_data` as `nav_msgs/Path`; pose 0 stores
+reference position and pose 1 stores reference velocity. `autotrans_logger`
+uses this topic by default when `enable_reference_logging=true`.
+
+The logger also supports `quadrotor_msgs/PositionCommand` on `/position_cmd`
+by setting `reference_message_type=position_command` and
+`reference_topic=/position_cmd` for launch flows that publish that command
+topic.
+
+The CSV records available fields as:
+
+- `ref_pos_x`, `ref_pos_y`, `ref_pos_z`
+- `ref_vel_x`, `ref_vel_y`, `ref_vel_z`
+- `ref_acc_x`, `ref_acc_y`, `ref_acc_z`
+- `ref_yaw`
+- `ref_yaw_dot`
+- `ref_msg_ros_time`
+- `ref_available`
+
+For `/mpc_controller_node/mpc/all_ref_data`, acceleration and yaw-rate are not
+available and remain blank. For `quadrotor_msgs/PositionCommand`, position,
+velocity, acceleration, yaw, and yaw-rate are logged directly.
+
+Without these reference columns, planner reference discontinuity cannot be
+proven from CSV logs alone. `has_trajectory` only confirms that a trajectory
+message was seen; it does not expose the desired position, velocity, or
+acceleration being tracked by the controller.
+
+When analyzing new logs, inspect reference metrics such as
+`first_ref_pos_jump_gt1m_time`, `first_ref_vel_jump_gt2mps_time`,
+`first_ref_acc_gt5_time`, and `first_ref_acc_gt10_time`. A reference position
+jump or acceleration spike before SO3 saturation would support a reference or
+trajectory discontinuity hypothesis. SO3 saturation before any reference
+spike would point away from a simple logged-reference discontinuity and toward
+controller saturation, simulator/contact interaction, numerical instability,
+or an unlogged planner/controller mechanism.
+
 ## What The Tool Computes
 
 For each CSV log, the tool reports timing for:
@@ -85,6 +127,6 @@ they are explicitly logged. Visual inspection is still required for cases
 where the UAV appears to contact an obstacle or where the planned path appears
 to pass through an obstacle.
 
-Current logs do not include the full reference trajectory. Therefore planner
-trajectory discontinuity or planned path-through-obstacle behavior cannot be
-proven from the CSV alone.
+Historical logs without `ref_*` columns do not include the full reference
+trajectory. Therefore planner trajectory discontinuity or planned
+path-through-obstacle behavior cannot be proven from those CSVs alone.

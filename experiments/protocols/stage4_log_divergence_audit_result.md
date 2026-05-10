@@ -60,6 +60,14 @@ lacks reference, desired-state, or full trajectory columns beyond
 `has_trajectory`, so planner reference discontinuity cannot be proven from
 this log alone.
 
+Stage 4 reference logging is the next diagnostic step after this audit. New
+logs should record the detected controller reference topic as `ref_*` columns
+so reference position jumps, velocity jumps, or acceleration spikes can be
+compared against SO3 command saturation and NaN timing. In the current
+`simple_run.launch` flow, the default source is
+`/mpc_controller_node/mpc/all_ref_data`; `/position_cmd` remains supported for
+launch flows that publish `quadrotor_msgs/PositionCommand`.
+
 ## Interpretation
 
 `command_saturation_before_nan` means SO3 thrust or bodyrate saturation often
@@ -107,8 +115,10 @@ Do not claim all NaN failures are control-policy failures. Do not claim all
 Add manual annotations for `collision_observed`, `path_infeasible`, and
 `teleport_like_divergence` to final comparison manifests.
 
-Add desired/reference trajectory logging before root-cause tests. Then run
-small root-cause isolation tests:
+Add desired/reference trajectory logging before root-cause tests. This logging
+should capture controller reference fields in the CSV and let the analyzer
+report reference jumps, reference acceleration spikes when available, and
+UAV-reference tracking error. Then run small root-cause isolation tests:
 
 - repeated goal disabled / `goal_repeat=1`
 - open map / no obstacle if supported

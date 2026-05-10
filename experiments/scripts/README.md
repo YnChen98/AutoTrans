@@ -422,6 +422,22 @@ python3 experiments/scripts/inspect_stage4_log_divergence.py \
 生成的 `experiments/results/stage4_log_divergence_report.csv` 不应提交。完整 protocol 见
 `experiments/protocols/stage4_log_divergence_inspection_protocol.md`。
 
+## Stage 4-L reference logging
+
+`experiments/autotrans_logger/scripts/state_logger.py` can now log the controller
+reference stream when `enable_reference_logging=true`。默认 source 是当前
+`simple_run.launch` 中的 `/mpc_controller_node/mpc/all_ref_data`
+(`nav_msgs/Path`)；如果某个 launch flow 发布 `/position_cmd`
+(`quadrotor_msgs/PositionCommand`)，可以设置
+`reference_message_type=position_command` 和 `reference_topic=/position_cmd`。
+新增 CSV columns 包括 `ref_pos_*`、`ref_vel_*`、`ref_acc_*`、`ref_yaw`、
+`ref_yaw_dot`、`ref_msg_ros_time` 和 `ref_available`。
+
+`experiments/autotrans_logger/scripts/analyze_log.py` 会在这些 columns 存在时输出
+`first_ref_pos_jump_gt1m_time`、`first_ref_acc_gt5_time`、`max_uav_ref_position_error`
+等 reference diagnostics，并尝试生成 `ref_xyz.png`、`ref_speed.png` 和
+`uav_ref_error.png`。旧 CSV 没有 `ref_*` columns 时仍可正常分析。
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

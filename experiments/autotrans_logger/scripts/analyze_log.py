@@ -77,6 +77,16 @@ KEY_STATE_FIELDS = [
     "swing_angle_deg",
 ]
 
+REF_POS_FIELDS = ["ref_pos_x", "ref_pos_y", "ref_pos_z"]
+REF_VEL_FIELDS = ["ref_vel_x", "ref_vel_y", "ref_vel_z"]
+REF_ACC_FIELDS = ["ref_acc_x", "ref_acc_y", "ref_acc_z"]
+REF_NUMERIC_FIELDS = (
+    REF_POS_FIELDS
+    + REF_VEL_FIELDS
+    + REF_ACC_FIELDS
+    + ["ref_yaw", "ref_yaw_dot", "ref_msg_ros_time"]
+)
+
 MAX_REASONABLE_SPEED_MPS = 10.0
 MAX_REASONABLE_SWING_DEG = 90.0
 MIN_REASONABLE_UAV_Z = 0.2
@@ -253,6 +263,56 @@ def first_ge_time(values, time_values, threshold):
     return math.nan
 
 
+def first_nonfinite_after_available_time(rows, fields, time_values, availability_values):
+    start_times = valid_values(time_values)
+    if not start_times:
+        return math.nan
+    start_time = start_times[0]
+    seen_available = False
+    for row, time_value, available in zip(rows, time_values, availability_values):
+        if not math.isfinite(time_value):
+            continue
+        if math.isfinite(available) and available > 0.5:
+            seen_available = True
+        if not seen_available:
+            continue
+        for field in fields:
+            if field in row and not math.isfinite(parse_float(row.get(field))):
+                return time_value - start_time
+    return math.nan
+
+
+def first_vector_jump_time(xs, ys, zs, time_values, threshold):
+    start_times = valid_values(time_values)
+    if not start_times:
+        return math.nan
+    start_time = start_times[0]
+    previous = None
+    for point, time_value in zip(zip(xs, ys, zs), time_values):
+        if not math.isfinite(time_value):
+            continue
+        if not all(math.isfinite(value) for value in point):
+            continue
+        if previous is not None:
+            jump = math.sqrt(sum((point[index] - previous[index]) ** 2 for index in range(3)))
+            if jump > threshold:
+                return time_value - start_time
+        previous = point
+    return math.nan
+
+
+def vector_error_triplets(xs_a, ys_a, zs_a, xs_b, ys_b, zs_b):
+    errors = []
+    for point_a, point_b in zip(zip(xs_a, ys_a, zs_a), zip(xs_b, ys_b, zs_b)):
+        if all(math.isfinite(value) for value in point_a + point_b):
+            errors.append(
+                math.sqrt(sum((point_a[index] - point_b[index]) ** 2 for index in range(3)))
+            )
+        else:
+            errors.append(math.nan)
+    return errors
+
+
 def risk_score_values(values):
     return [value if math.isfinite(value) and value >= 0.0 else math.nan for value in values]
 
@@ -409,6 +469,17 @@ def compute_metrics(csv_path, rows, args):
         if has_column(rows, "command_risk_target_scale_raw")
         else []
     )
+    has_reference_columns = all(has_column(rows, field) for field in REF_POS_FIELDS)
+    ref_pos_x = column(rows, "ref_pos_x") if has_reference_columns else []
+    ref_pos_y = column(rows, "ref_pos_y") if has_reference_columns else []
+    ref_pos_z = column(rows, "ref_pos_z") if has_reference_columns else []
+    ref_vel_x = column(rows, "ref_vel_x") if all(has_column(rows, field) for field in REF_VEL_FIELDS) else []
+    ref_vel_y = column(rows, "ref_vel_y") if ref_vel_x else []
+    ref_vel_z = column(rows, "ref_vel_z") if ref_vel_x else []
+    ref_acc_x = column(rows, "ref_acc_x") if all(has_column(rows, field) for field in REF_ACC_FIELDS) else []
+    ref_acc_y = column(rows, "ref_acc_y") if ref_acc_x else []
+    ref_acc_z = column(rows, "ref_acc_z") if ref_acc_x else []
+    ref_available = column(rows, "ref_available") if has_column(rows, "ref_available") else []
 
     duration_sec, effective_log_rate_hz = compute_duration_and_rate(rows)
     final_valid_uav_position = final_position(uav_pos_x, uav_pos_y, uav_pos_z)
@@ -624,6 +695,63 @@ def compute_metrics(csv_path, rows, args):
         )
         if not valid_values(command_risk_target_scale_raw):
             print("WARNING: command_risk_target_scale_raw has no finite numeric data.", file=sys.stderr)
+
+    if has_reference_columns:
+        ref_speed = vector_norm_triplets(ref_vel_x, ref_vel_y, ref_vel_z) if ref_vel_x else []
+        ref_acc_norm = vector_norm_triplets(ref_acc_x, ref_acc_y, ref_acc_z) if ref_acc_x else []
+        final_ref_position = final_position(ref_pos_x, ref_pos_y, ref_pos_z)
+        uav_ref_position_error = vector_error_triplets(
+            uav_pos_x,
+            uav_pos_y,
+            uav_pos_z,
+            ref_pos_x,
+            ref_pos_y,
+            ref_pos_z,
+        )
+        metrics["has_reference_ratio"] = (
+            mean([1.0 if value > 0.5 else 0.0 for value in valid_values(ref_available)])
+            if ref_available
+            else mean([1.0 if math.isfinite(value) else 0.0 for value in ref_pos_x])
+        )
+        metrics["first_finite_ref_time"] = first_finite_time(ref_pos_x, ros_times)
+        finite_ref_fields = [
+            field for field in REF_NUMERIC_FIELDS if has_column(rows, field) and valid_values(column(rows, field))
+        ]
+        reference_availability = ref_available or [
+            1.0
+            if any(math.isfinite(parse_float(row.get(field))) for field in finite_ref_fields)
+            else 0.0
+            for row in rows
+        ]
+        metrics["first_ref_nonfinite_time"] = first_nonfinite_after_available_time(
+            rows,
+            finite_ref_fields,
+            ros_times,
+            reference_availability,
+        )
+        metrics["max_ref_speed"] = max_or_nan(ref_speed)
+        metrics["max_ref_acc_norm"] = max_or_nan(ref_acc_norm)
+        metrics["first_ref_pos_jump_gt1m_time"] = first_vector_jump_time(
+            ref_pos_x,
+            ref_pos_y,
+            ref_pos_z,
+            ros_times,
+            1.0,
+        )
+        if ref_vel_x:
+            metrics["first_ref_vel_jump_gt2mps_time"] = first_vector_jump_time(
+                ref_vel_x,
+                ref_vel_y,
+                ref_vel_z,
+                ros_times,
+                2.0,
+            )
+        if ref_acc_norm:
+            metrics["first_ref_acc_gt5_time"] = first_ge_time(ref_acc_norm, ros_times, 5.0)
+            metrics["first_ref_acc_gt10_time"] = first_ge_time(ref_acc_norm, ros_times, 10.0)
+        metrics["final_ref_position"] = final_ref_position
+        metrics["final_uav_ref_position_error"] = final_or_nan(uav_ref_position_error)
+        metrics["max_uav_ref_position_error"] = max_or_nan(uav_ref_position_error)
 
     return metrics
 
@@ -897,6 +1025,62 @@ def make_plots(rows, output_dir):
                 [("command_risk_target_scale_raw", column(rows, "command_risk_target_scale_raw"))],
                 "scale",
                 "Command risk target scale raw",
+            ),
+        )
+
+    if all(field in rows[0] for field in REF_POS_FIELDS):
+        plot_or_warn(
+            output_dir,
+            "ref_xyz.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [
+                    ("ref_x", column(rows, "ref_pos_x")),
+                    ("ref_y", column(rows, "ref_pos_y")),
+                    ("ref_z", column(rows, "ref_pos_z")),
+                ],
+                "position [m]",
+                "Reference position",
+            ),
+        )
+
+    if all(field in rows[0] for field in REF_VEL_FIELDS):
+        ref_speed = vector_norm_triplets(
+            column(rows, "ref_vel_x"),
+            column(rows, "ref_vel_y"),
+            column(rows, "ref_vel_z"),
+        )
+        plot_or_warn(
+            output_dir,
+            "ref_speed.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [("ref_speed", ref_speed)],
+                "speed [m/s]",
+                "Reference speed",
+            ),
+        )
+
+    if all(field in rows[0] for field in REF_POS_FIELDS):
+        uav_ref_position_error = vector_error_triplets(
+            column(rows, "uav_pos_x"),
+            column(rows, "uav_pos_y"),
+            column(rows, "uav_pos_z"),
+            column(rows, "ref_pos_x"),
+            column(rows, "ref_pos_y"),
+            column(rows, "ref_pos_z"),
+        )
+        plot_or_warn(
+            output_dir,
+            "uav_ref_error.png",
+            lambda plt: plot_time_series(
+                plt,
+                time_sec,
+                [("uav_ref_error", uav_ref_position_error)],
+                "error [m]",
+                "UAV-reference position error",
             ),
         )
 
