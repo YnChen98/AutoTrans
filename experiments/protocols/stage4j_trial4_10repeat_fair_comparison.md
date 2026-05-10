@@ -16,6 +16,13 @@ Manual visual observation suggests that some invalid runs may involve obstacle
 collision or path-feasibility failure, not only command-adaptation or
 risk-prediction failure.
 
+The later Stage 4 divergence audit in
+`experiments/protocols/stage4_log_divergence_audit_result.md` provides a
+cross-target diagnostic scan showing frequent command saturation before NaN and
+teleport-like position jumps. That audit reinforces that Trial 4 invalids may
+include mixed mechanisms, and not all failures should be interpreted as pure
+command-adaptation failures.
+
 ## Trial 4 Method Comparison Table
 
 | Method | Valid runs | Invalid runs | Success rate | Invalid repeat summary |
@@ -72,7 +79,10 @@ Trial 4 invalids mix several mechanisms:
 - possible path-infeasibility failures
 
 Therefore Trial 4 should not be used alone to claim `risk_adapter_v1`
-superiority or failure.
+superiority or failure. Trial 4 failure wording should stay cautious because
+some invalids may involve path feasibility, obstacle/contact interaction,
+simulator divergence, or controller saturation in addition to command
+adaptation behavior.
 
 ## Comparison With Existing Trial 4 Baselines
 

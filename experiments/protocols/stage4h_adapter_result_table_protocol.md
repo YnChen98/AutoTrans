@@ -45,12 +45,16 @@ Final fair comparison should equalize repeats across Trial 4, Trial 5, and
 Trial 6 before making broader claims.
 
 Paper-facing safety comparison should use strict-valid /
-`label_strict_invalid` interpretation. `valid_run_suggested` can overestimate
-safety success when swing or payload speed exceeds strict thresholds, as seen
-in Trial 5 runs that passed target/NaN checks but violated safety limits.
+`label_strict_invalid` interpretation as the primary success metric.
+`valid_run_suggested` can overestimate safety success when swing or payload
+speed exceeds strict thresholds, as seen in Trial 5 runs that passed
+target/NaN checks but violated safety limits.
 
 Trial 6 still needs repeat expansion to 10 repeats for a balanced Stage 4-H
 comparison.
+
+Invalid runs should also include failure-mode labels so success rate is not
+interpreted without failure context.
 
 Future result manifests should support manual annotations such as
 `collision_observed` and `path_infeasible` when visual inspection identifies
@@ -64,10 +68,13 @@ Future manifests should support:
 - `manual_path_infeasible`
 - `manual_teleport_like_divergence`
 - `divergence_failure_mode`
+- `manual_failure_note`
 
 Use `experiments/scripts/inspect_stage4_log_divergence.py` to produce
 repeatable timing evidence for command saturation, command NaN, speed
 threshold crossings, swing thresholds, and teleport-like position jumps.
+Final fair comparison should report both success rate and failure-mode
+distribution.
 
 ## How To Run
 
