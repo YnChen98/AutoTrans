@@ -36,12 +36,21 @@ The manifest includes `original`, `fixed_s085`, `windlevel_s085`,
 `risk_adapter_v0` where available, and `risk_adapter_v1`.
 
 Manifest entries may temporarily have unequal per-target repeat counts. The
-current manifest uses 10 repeats for Trial 4 while Trial 5 and Trial 6 remain
-at 5 repeats. The generated aggregate table is therefore a weighted aggregate
-over currently available repeats, not a final balanced comparison.
+current manifest uses 10 repeats for the main Trial 4 and Trial 5 methods,
+while Trial 6 remains at 5 repeats and `risk_adapter_v0` remains 5-repeat
+where applicable. The generated aggregate table is therefore a weighted
+aggregate over currently available repeats, not a final balanced comparison.
 
 Final fair comparison should equalize repeats across Trial 4, Trial 5, and
 Trial 6 before making broader claims.
+
+Paper-facing safety comparison should use strict-valid /
+`label_strict_invalid` interpretation. `valid_run_suggested` can overestimate
+safety success when swing or payload speed exceeds strict thresholds, as seen
+in Trial 5 runs that passed target/NaN checks but violated safety limits.
+
+Trial 6 still needs repeat expansion to 10 repeats for a balanced Stage 4-H
+comparison.
 
 Future result manifests should support manual annotations such as
 `collision_observed` and `path_infeasible` when visual inspection identifies
@@ -109,12 +118,12 @@ The current aggregate result is:
 
 | Method | Current available valid runs |
 | --- | ---: |
-| `original` | `13/20` |
-| `fixed_s085` | `13/20` |
-| `windlevel_s085` | `9/20` |
-| `risk_adapter_v1` | `16/20` |
+| `original` | `17/25` |
+| `fixed_s085` | `16/25` |
+| `windlevel_s085` | `12/25` |
+| `risk_adapter_v1` | `20/25` |
 
 `risk_adapter_v1` is the current strongest weighted aggregate candidate, but
 `fixed_s085` remains best on Trial 4 with `9/10` valid runs. This aggregate is
-not final because Trial 4 has 10 repeats while Trial 5 and Trial 6 still have
-5 repeats.
+not final because the main Trial 4 and Trial 5 methods have 10 repeats while
+Trial 6 still has 5 repeats.
