@@ -76,6 +76,11 @@ The Markdown output includes:
 - Interpretation
 - What Not To Claim
 
+The Interpretation section is derived from the manifest. It computes
+per-trial best method(s), aggregate best method(s), and per-method aggregate
+valid counts from the current `results` entries instead of relying on
+hard-coded Stage 4-H numbers.
+
 The CSV output contains one row per manifest result entry with:
 
 - `trial_id`
@@ -93,6 +98,12 @@ Generated files under `experiments/results/` should not be committed.
 The result table is based on manually recorded limited-repeat evaluation
 summaries. It is not a statistical test and does not prove final online
 robustness or safety.
+
+When per-target repeat counts are unequal, the aggregate table is a weighted
+available-repeat aggregate. It should be read as "what the current manifest
+contains", not as a final balanced comparison. Final paper comparison should
+equalize repeat counts across Trial 4, Trial 5, and Trial 6 before making
+broader claims.
 
 The current aggregate result is:
 

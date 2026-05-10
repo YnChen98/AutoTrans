@@ -374,8 +374,9 @@ implementation 必须等 strict JSON-vs-sklearn reference probability verificati
 ## Stage 4-I adapter result table generator
 
 `experiments/scripts/summarize_stage4h_adapter_results.py` 从 committed manifest 生成 Stage 4-H
-`risk_adapter_v1` limited evaluation 的 Markdown/CSV summary table。它只做离线表格整理，不运行
-ROS、simulation、RViz 或 `catkin_make`。
+`risk_adapter_v1` limited evaluation 的 Markdown/CSV summary table。Interpretation 会从
+manifest 动态计算 per-trial best、aggregate best 和 repeat-count caveat，避免旧结果硬编码。
+它只做离线表格整理，不运行 ROS、simulation、RViz 或 `catkin_make`。
 
 ```bash
 cd ~/projects/autotrans_ws/src/AutoTrans

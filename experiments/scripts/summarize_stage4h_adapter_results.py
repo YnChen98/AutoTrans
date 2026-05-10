@@ -99,6 +99,26 @@ def format_count_rate(valid_count, repeat_count):
     return "%d/%d (%.1f%%)" % (valid_count, repeat_count, 100.0 * valid_count / repeat_count)
 
 
+def format_method_list(rows):
+    return ", ".join("`%s`" % row["method"] for row in rows)
+
+
+def repeat_count_summary(grouped):
+    parts = []
+    for trial_id in sorted(grouped, key=trial_sort_key):
+        counts = sorted(set(row["repeat_count"] for row in grouped[trial_id]))
+        if len(counts) == 1:
+            parts.append("`%s`: %d" % (trial_id, counts[0]))
+        else:
+            parts.append("`%s`: %s" % (trial_id, "/".join(str(count) for count in counts)))
+    return ", ".join(parts)
+
+
+def has_unequal_trial_repeat_counts(grouped):
+    count_sets = {tuple(sorted(set(row["repeat_count"] for row in trial_rows))) for trial_rows in grouped.values()}
+    return len(count_sets) > 1
+
+
 def load_manifest(path):
     if not path.exists():
         raise FileNotFoundError("manifest does not exist: %s" % path)
@@ -216,34 +236,112 @@ def markdown_table(headers, rows):
     return "\n".join(lines)
 
 
+def build_interpretation(grouped, aggregates):
+    aggregate_winners = best_methods(aggregates)
+    repeat_summary = repeat_count_summary(grouped)
+    unequal_counts = has_unequal_trial_repeat_counts(grouped)
+    lines = [
+        "## Interpretation",
+        "",
+        "The best available-repeat aggregate method is %s with `%s`."
+        % (
+            format_method_list(aggregate_winners),
+            format_count_rate(aggregate_winners[0]["valid_count"], aggregate_winners[0]["repeat_count"]),
+        ),
+        "",
+        "Aggregate method totals from the manifest are:",
+        "",
+    ]
+    for row in aggregates:
+        lines.append(
+            "- `%s`: `%s`"
+            % (row["method"], format_count_rate(row["valid_count"], row["repeat_count"]))
+        )
+
+    lines.extend(
+        [
+            "",
+            "Per-trial repeat counts in the current manifest are: %s." % repeat_summary,
+        ]
+    )
+    if unequal_counts:
+        lines.extend(
+            [
+                "",
+                "The current aggregate is a weighted available-repeat aggregate because per-target repeat counts are unequal.",
+                "",
+                "Final fair comparison should equalize Trial 4, Trial 5, and Trial 6 repeat counts before making broader claims.",
+            ]
+        )
+
+    lines.extend(["", "Per-trial best methods are:", ""])
+    for trial_id in sorted(grouped, key=trial_sort_key):
+        winners = best_methods(grouped[trial_id])
+        lines.append(
+            "- `%s`: %s at `%s`"
+            % (trial_id, format_method_list(winners), format_count_rate(winners[0]["valid_count"], winners[0]["repeat_count"]))
+        )
+
+    risk_v1_wins_aggregate = any(row["method"] == "risk_adapter_v1" for row in aggregate_winners)
+    if risk_v1_wins_aggregate:
+        risk_row = next(row for row in aggregate_winners if row["method"] == "risk_adapter_v1")
+        lines.extend(
+            [
+                "",
+                "`risk_adapter_v1` is currently strongest in the available-repeat aggregate with `%s`."
+                % format_count_rate(risk_row["valid_count"], risk_row["repeat_count"]),
+            ]
+        )
+
+    trial4_rows = grouped.get("trial4")
+    if trial4_rows:
+        trial4_winners = best_methods(trial4_rows)
+        if any(row["method"] == "fixed_s085" for row in trial4_winners):
+            fixed_row = next(row for row in trial4_winners if row["method"] == "fixed_s085")
+            lines.extend(
+                [
+                    "",
+                    "`fixed_s085` remains strongest on Trial 4 with `%s`."
+                    % format_count_rate(fixed_row["valid_count"], fixed_row["repeat_count"]),
+                ]
+            )
+
+    lines.extend(
+        [
+            "",
+            "These results are limited-repeat and simulation-only, and the manifest notes should be checked for failure-mode caveats such as target-error, NaN/divergence, or manual collision/path-feasibility observations.",
+        ]
+    )
+    return lines
+
+
 def build_markdown(rows):
     grouped = group_by_trial(rows)
     aggregates = aggregate_by_method(rows)
     complete_trial_count = len(grouped)
 
-    risk_v1 = next((row for row in aggregates if row["method"] == "risk_adapter_v1"), None)
-    original = next((row for row in aggregates if row["method"] == "original"), None)
-    fixed = next((row for row in aggregates if row["method"] == "fixed_s085"), None)
-    windlevel = next((row for row in aggregates if row["method"] == "windlevel_s085"), None)
+    aggregate_winners = best_methods(aggregates)
 
     lines = [
         "# Stage 4-H Adapter Limited Evaluation Summary",
         "",
         "## Executive Summary",
         "",
-        "`risk_adapter_v1` is the best aggregate method in this limited-repeat strong-wind evaluation.",
+        "The best available-repeat aggregate method is %s with `%s`."
+        % (
+            format_method_list(aggregate_winners),
+            format_count_rate(aggregate_winners[0]["valid_count"], aggregate_winners[0]["repeat_count"]),
+        ),
     ]
-    if risk_v1 and original and fixed and windlevel:
+    if any(row["method"] == "risk_adapter_v1" for row in aggregate_winners):
+        lines.extend(["", "`risk_adapter_v1` is currently strongest in the available-repeat aggregate."])
+    if has_unequal_trial_repeat_counts(grouped):
         lines.extend(
             [
                 "",
-                "Across Trial 4, Trial 5, and Trial 6, `risk_adapter_v1` achieved `%s`, compared with `%s` for `original`, `%s` for `fixed_s085`, and `%s` for `windlevel_s085`."
-                % (
-                    format_count_rate(risk_v1["valid_count"], risk_v1["repeat_count"]),
-                    format_count_rate(original["valid_count"], original["repeat_count"]),
-                    format_count_rate(fixed["valid_count"], fixed["repeat_count"]),
-                    format_count_rate(windlevel["valid_count"], windlevel["repeat_count"]),
-                ),
+                "Current per-trial repeat counts are: %s." % repeat_count_summary(grouped),
+                "",
+                "The aggregate is weighted by available repeats and is not a final balanced comparison.",
             ]
         )
     lines.extend(
@@ -314,26 +412,17 @@ def build_markdown(rows):
         )
     )
 
+    lines.extend([""] + build_interpretation(grouped, aggregates))
     lines.extend(
         [
-            "",
-            "## Interpretation",
-            "",
-            "`risk_adapter_v1` is the best aggregate method over Trial 4, Trial 5, and Trial 6, with `13/15` valid runs.",
-            "",
-            "`fixed_s085` remains the best method on Trial 4 with `5/5` valid runs, while `risk_adapter_v1` achieved `4/5` on Trial 4.",
-            "",
-            "`risk_adapter_v1` is best on Trial 5 with `5/5` valid runs. On Trial 6, `risk_adapter_v1` matches `risk_adapter_v0` at `4/5` and beats the historical baselines.",
-            "",
-            "The Trial 4 repeat5 and Trial 6 repeat1 failures remain important. Trial 4 repeat5 suggests late risk detection; Trial 6 repeat1 suggests that early soft intervention or late hard-threshold detection can still be insufficient.",
             "",
             "## What Not To Claim",
             "",
             "- Do not claim statistical significance.",
             "- Do not claim a safety guarantee.",
             "- Do not claim final online robustness.",
-            "- Do not hide the Trial 4 repeat5 and Trial 6 repeat1 failures.",
-            "- Do not claim superiority over `fixed_s085` on every target, because `fixed_s085` remains best on Trial 4.",
+            "- Do not hide invalid or failure-mode-specific evidence recorded in the manifest notes.",
+            "- Do not claim one method is best on every target unless the per-trial table supports it.",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -357,16 +446,19 @@ def write_markdown(rows, path):
 def print_summary(rows):
     grouped = group_by_trial(rows)
     aggregates = aggregate_by_method(rows)
+    aggregate_winners = best_methods(aggregates)
     print("Stage 4-H adapter limited evaluation")
     for trial_id in sorted(grouped, key=trial_sort_key):
         winners = best_methods(grouped[trial_id])
         winner_text = ", ".join(row["method"] for row in winners)
         print("%s best: %s (%s)" % (trial_id, winner_text, format_rate(winners[0]["success_rate"])))
-    for row in aggregates:
-        if row["method"] == "risk_adapter_v1":
-            print("risk_adapter_v1 aggregate: %s" % format_count_rate(row["valid_count"], row["repeat_count"]))
-            break
-    print("Notes: limited-repeat, simulation-only; fixed_s085 remains best on Trial 4.")
+    winner_text = ", ".join(row["method"] for row in aggregate_winners)
+    count_text = ", ".join(format_count_rate(row["valid_count"], row["repeat_count"]) for row in aggregate_winners)
+    print("aggregate best: %s (%s)" % (winner_text, count_text))
+    if has_unequal_trial_repeat_counts(grouped):
+        print("repeat counts: %s" % repeat_count_summary(grouped))
+        print("Notes: aggregate is weighted by available repeats, not a final balanced comparison.")
+    print("Notes: limited-repeat, simulation-only; do not claim statistical significance.")
 
 
 def main():
