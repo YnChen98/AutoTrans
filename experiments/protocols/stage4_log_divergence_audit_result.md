@@ -53,6 +53,17 @@ crossing. The corrected audit shows that command saturation can occur without
 failure and should be treated as a diagnostic signal, not automatically as an
 invalid divergence.
 
+The inspector has also been updated to scan only numeric state, SO3 command,
+and reference fields for nonfinite detection. String diagnostic columns such
+as `command_invalid_reason` and `command_saturation_reason` are excluded from
+`first_nonfinite_column`.
+
+For logs with reference columns, the inspector now distinguishes late
+reference jumps from root-cause reference jumps. A reference jump observed
+after command NaN or after state divergence is marked with
+`reference_jump_after_divergence=true` and should not be interpreted as
+`reference_jump_before_command_nan`.
+
 ## Motivating Example: original Trial 6 repeat10
 
 The motivating log is:
@@ -134,10 +145,11 @@ Use the following proposed labels when annotating invalid runs:
 - `command_saturation_before_nan`
 - `command_saturation_without_divergence`
 - `command_nan_before_state_divergence`
-- `teleport_like_position_jump`
+- `command_nan_coincident_with_state_divergence`
+- `state_divergence_before_command_nan`
+- `reference_jump_before_command_nan`
+- `reference_jump_after_divergence`
 - `no_divergence_detected`
-- `manual_collision_observed`
-- `manual_path_infeasible`
 - `unknown_invalid`
 
 ## Paper-Facing Caveat

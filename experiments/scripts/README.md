@@ -400,6 +400,13 @@ timing，帮助区分 sudden fly-away / teleport-like divergence。它不运行 
 `no_divergence_detected`，transient saturation without NaN/divergence 会显示
 `command_saturation_without_divergence`，不应当作 invalid divergence。
 
+The inspector sorts rows by timestamp before timing analysis, ignores string
+diagnostic reason fields during nonfinite scans, and reports aggregate timing
+fields such as `first_command_nan_time`, `first_state_divergence_time`,
+`first_reference_jump_time`, and `reference_jump_after_divergence`. Late
+reference jumps after command NaN/state divergence should not be treated as
+initial planner reference root cause.
+
 检查单个 CSV，并打印一个相对时间窗口内的关键列：
 
 ```bash

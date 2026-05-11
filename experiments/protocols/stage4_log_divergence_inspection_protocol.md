@@ -163,8 +163,30 @@ invalid evidence follows.
 precedes a nonfinite SO3/state value, or precedes high-speed/position-jump
 divergence when no NaN is available.
 
+The inspector now reports aggregate timing fields for root-cause ordering:
+
+- `first_command_nan_time`
+- `first_state_divergence_time`
+- `first_reference_jump_time`
+- `first_reference_nonfinite_time`
+- `first_command_saturation_time`
+- `reference_jump_after_divergence`
+
+`first_state_divergence_time` is the earliest detected high-speed, position
+jump, or `swing_angle_deg >= 30` event. `first_command_nan_time` is the
+earliest nonfinite SO3 thrust/bodyrate value. `first_reference_jump_time` is
+the earliest reference position jump, reference velocity jump, or finite
+reference acceleration spike when those fields are available.
+
 Command NaN before state divergence is possible. In those cases, the first
-visible fly-away may be downstream of an earlier command failure.
+visible fly-away may be downstream of an earlier command failure. Command NaN
+and state divergence may also be coincident within one logger sample period,
+especially when the log rate is too low to resolve the exact ordering.
+
+Late reference jumps must not be over-interpreted. If a reference jump occurs
+after command NaN or after state divergence, the inspector sets
+`reference_jump_after_divergence=true` and does not classify the run as
+`reference_jump_before_command_nan`.
 
 `unknown_invalid` should be reserved for cases where analyzer metrics indicate
 `valid_run_suggested=false` or `has_nan_state=true`, but the inspector cannot
@@ -173,6 +195,20 @@ classify the failure from available CSV evidence.
 Failure-mode guesses are heuristic labels. They should be paired with
 strict-valid / `label_strict_invalid` when preparing paper-facing result
 tables.
+
+Current automatic labels include:
+
+- `no_divergence_detected`
+- `command_saturation_without_divergence`
+- `command_saturation_before_nan`
+- `command_nan_before_state_divergence`
+- `command_nan_coincident_with_state_divergence`
+- `state_divergence_before_command_nan`
+- `reference_jump_before_command_nan`
+- `reference_jump_after_divergence`
+- `target_error_only`
+- `strict_safety_no_nan`
+- `unknown_invalid`
 
 Obstacle collision and path infeasibility remain manual annotations unless
 they are explicitly logged. Visual inspection is still required for cases
