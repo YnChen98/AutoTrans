@@ -9,13 +9,14 @@ find_package(Eigen3 REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   quadrotor_msgs
   roscpp
+  std_msgs
   nodelet
   tf
 )
 
 catkin_package(
   INCLUDE_DIRS include ${EIGEN3_INCLUDE_DIR}
-  CATKIN_DEPENDS quadrotor_msgs roscpp nodelet tf
+  CATKIN_DEPENDS quadrotor_msgs roscpp std_msgs nodelet tf
   DEPENDS Eigen3 REQUIRED
 )
 

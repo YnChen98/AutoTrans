@@ -17,9 +17,14 @@ polluting simulator state, not to hide failures.
 Stage 4-N3 is the detection/logging-first step. It adds logger/analyzer
 diagnostics for SO3 command invalidity, finite saturation, sustained
 saturation, and guarded-command status without changing the command path.
-Because no active guard exists yet, `guarded_command_applied` is currently
-expected to remain `0` for all rows. An active C++ guard remains future
-Stage 4-N4 work.
+
+Stage 4-N4 is now implemented as an active C++ diagnostic guard in
+`uav_simulator/so3_quadrotor/src/so3_quadrotor_nodelet.cpp::cmd_callback()`.
+It is disabled by default through `enable_command_nan_guard: false`. When
+enabled, it blocks NaN/Inf SO3 commands from being copied into simulator
+command state, publishes `/so3_command_guard/guarded_command_applied`, and
+optionally holds the last finite command. Guarded runs are diagnostic-only
+runs, and NaN command events remain invalid safety events.
 
 The latest timing-aware divergence audit narrows the expected scope of this
 guard. It targets `command_nan_before_state_divergence` and
@@ -147,7 +152,7 @@ state pollution.
 
 ## Logging Requirements
 
-Stage 4-N3 logger/analyzer diagnostics should log or summarize:
+Stage 4-N3/Stage 4-N4 logger/analyzer diagnostics should log or summarize:
 
 - `command_invalid_event`
 - `command_invalid_reason`
@@ -156,9 +161,13 @@ Stage 4-N3 logger/analyzer diagnostics should log or summarize:
 - `sustained_command_saturation_event`
 - `guarded_command_applied`
 
-`guarded_command_applied` is currently false because Stage 4-N3 does not
-modify controller or simulator command behavior. Future active guard work
-should additionally log:
+`guarded_command_applied` is read from
+`/so3_command_guard/guarded_command_applied` when the Stage 4-N4 guard is
+enabled. If that topic is absent, the logger keeps `guarded_command_applied=0`
+for backward-compatible unguarded runs. A `1` value means the guard actively
+blocked/replaced a nonfinite SO3 command. It does not make the run valid.
+
+Future logging extensions may additionally log:
 
 - `command_invalid_time`
 - `last_finite_so3_thrust`
@@ -203,7 +212,7 @@ divergence.
 - Do not claim the guard can prevent failures where state divergence precedes
   command NaN.
 
-## Next Coding Task
+## Implementation Status
 
 Stage 4-N3 detection/logging-first edit:
 
@@ -213,13 +222,19 @@ Stage 4-N3 detection/logging-first edit:
    `guarded_command_applied`.
 3. Run `python3 -m py_compile` for the edited Python scripts.
 
-Recommended future Stage 4-N4 edit:
+Stage 4-N4 active diagnostic guard edit:
 
-1. Inspect the SO3 command publication/subscription path.
-2. Implement the guard disabled by default.
-3. Add command guard logging.
-4. Add analyzer support for `command_invalid_event` metrics.
-5. Run `python3 -m py_compile` only before any ROS test.
+1. Implemented the guard disabled by default in
+   `uav_simulator/so3_quadrotor/src/so3_quadrotor_nodelet.cpp::cmd_callback()`.
+2. Added `/so3_command_guard/guarded_command_applied` as a
+   `std_msgs/Bool` diagnostic topic when the guard is enabled.
+3. Updated `experiments/autotrans_logger/scripts/state_logger.py` so
+   `guarded_command_applied` reflects the topic when present and remains `0`
+   when absent.
+4. Kept finite saturation as log-only behavior. Saturation alone does not
+   trigger the active guard and should not be treated as invalid by itself.
+5. Kept the guard scoped to NaN/Inf command propagation. It does not solve
+   `state_divergence_before_command_nan` cases.
 
 Do not run `catkin_make`, `roslaunch`, RViz, simulation, or long-running trial
 commands during the initial static edit unless explicitly requested.

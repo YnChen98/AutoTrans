@@ -473,6 +473,20 @@ command-saturation, sustained-saturation, and guarded-command counts/timing
 when these columns exist. Old CSV logs without the Stage 4-N3 columns still
 analyze normally.
 
+## Stage 4-N4 active SO3 command NaN guard
+
+Stage 4-N4 adds an optional active diagnostic guard in
+`uav_simulator/so3_quadrotor/src/so3_quadrotor_nodelet.cpp::cmd_callback()`.
+It is disabled by default with `enable_command_nan_guard: false` in
+`uav_simulator/uav_simulator/config/so3_quadrotor.yaml`.
+
+When enabled, the guard blocks NaN/Inf `so3_thrust` or `so3_bodyrate_*` values
+from being copied into simulator command state, optionally holds the last
+finite command, and publishes `/so3_command_guard/guarded_command_applied` as
+`std_msgs/Bool`. `guarded_command_applied=1` marks a diagnostic-invalid safety
+event; guarded runs should not be mixed with unguarded baseline claims, and
+the guard does not address `state_divergence_before_command_nan` cases.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

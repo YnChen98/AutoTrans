@@ -14,6 +14,7 @@ from nav_msgs.msg import Odometry
 from nav_msgs.msg import Path as NavPath
 from quadrotor_msgs.msg import PolynomialTraj
 from sensor_msgs.msg import Imu
+from std_msgs.msg import Bool
 from std_msgs.msg import Float64
 
 try:
@@ -91,6 +92,7 @@ class StateLogger:
         self.command_risk_score_5s = None
         self.command_risk_scale_selected = None
         self.command_risk_target_scale_raw = None
+        self.guarded_command_applied = False
         self.has_trajectory = False
         self.reference_cmd = None
 
@@ -121,6 +123,12 @@ class StateLogger:
         rospy.Subscriber("/wind_force", Vector3Stamped, self._wind_force_callback, queue_size=50)
         rospy.Subscriber("/command_adaptation/speed_scale", Float64, self._command_speed_scale_callback, queue_size=50)
         rospy.Subscriber("/command_adaptation/acceleration_scale", Float64, self._command_acceleration_scale_callback, queue_size=50)
+        rospy.Subscriber(
+            "/so3_command_guard/guarded_command_applied",
+            Bool,
+            self._guarded_command_applied_callback,
+            queue_size=50,
+        )
         rospy.Subscriber("/command_adaptation/risk_score_3s", Float64, self._command_risk_score_3s_callback, queue_size=50)
         rospy.Subscriber("/command_adaptation/risk_score_5s", Float64, self._command_risk_score_5s_callback, queue_size=50)
         rospy.Subscriber(
@@ -223,6 +231,9 @@ class StateLogger:
     def _command_acceleration_scale_callback(self, msg):
         self.command_acceleration_scale = msg
 
+    def _guarded_command_applied_callback(self, msg):
+        self.guarded_command_applied = bool(msg.data)
+
     def _command_risk_score_3s_callback(self, msg):
         self.command_risk_score_3s = msg
 
@@ -249,7 +260,7 @@ class StateLogger:
         row["command_invalid_event"] = 0
         row["command_saturation_event"] = 0
         row["sustained_command_saturation_event"] = 0
-        row["guarded_command_applied"] = 0
+        row["guarded_command_applied"] = int(self.guarded_command_applied)
 
         if self.uav_odom is not None:
             self._fill_odom(row, "uav", self.uav_odom)

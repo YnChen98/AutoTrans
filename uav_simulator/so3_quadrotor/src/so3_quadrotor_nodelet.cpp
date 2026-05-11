@@ -5,11 +5,14 @@
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Imu.h>
+#include <std_msgs/Bool.h>
 
 #include <visualization_msgs/MarkerArray.h>
 #include <tf/transform_broadcaster.h>
 #include <mavros_msgs/AttitudeTarget.h>
+#include <cmath>
 #include <random>
+#include <string>
 namespace so3_quadrotor {
 
 class Nodelet : public nodelet::Nodelet {
@@ -17,8 +20,10 @@ class Nodelet : public nodelet::Nodelet {
   std::shared_ptr<Quadrotor> quadrotorPtr_;
   Control control_;
   Cmd cmd_;
+  Cmd last_finite_cmd_;
   ros::Publisher odom_pub_, imu_pub_, vis_pub_,odom_payload_pub_,cable_info_pub_;
   ros::Publisher rpm_pub_,load_imu_pub_;
+  ros::Publisher command_guard_pub_;
   ros::Subscriber cmd_sub_;
   ros::Timer simulation_timer;
   tf::TransformBroadcaster tf_br_;
@@ -29,6 +34,14 @@ class Nodelet : public nodelet::Nodelet {
   // parameters
   int simulation_rate_ = 1e3;
   int odom_rate_ = 400;
+  bool enable_command_nan_guard_ = false;
+  std::string command_nan_guard_mode_ = "mark_and_hold";
+  bool command_nan_guard_hold_last_finite_ = true;
+  bool command_saturation_log_only_ = true;
+  double thrust_saturation_threshold_ = 59.9;
+  double bodyrate_xy_saturation_threshold_ = 2.99;
+  double bodyrate_z_saturation_threshold_ = 1.19;
+  bool has_last_finite_cmd_ = false;
   // msgs
   nav_msgs::Odometry odom_msg_;
   nav_msgs::Odometry odom_payload_msg_;
@@ -53,10 +66,68 @@ class Nodelet : public nodelet::Nodelet {
   }
 
   void cmd_callback(const mavros_msgs::AttitudeTarget::ConstPtr& cmd_msg) {
+    if (!enable_command_nan_guard_) {
+      cmd_.thrust = cmd_msg->thrust;
+      cmd_.body_rates[0] = cmd_msg->body_rate.x;
+      cmd_.body_rates[1] = cmd_msg->body_rate.y;
+      cmd_.body_rates[2] = cmd_msg->body_rate.z;
+      return;
+    }
+
+    const bool finite_command =
+      std::isfinite(cmd_msg->thrust) &&
+      std::isfinite(cmd_msg->body_rate.x) &&
+      std::isfinite(cmd_msg->body_rate.y) &&
+      std::isfinite(cmd_msg->body_rate.z);
+
+    std_msgs::Bool guard_msg;
+    guard_msg.data = false;
+
+    if (!finite_command) {
+      guard_msg.data = true;
+      if (command_guard_pub_) {
+        command_guard_pub_.publish(guard_msg);
+      }
+      ROS_ERROR_THROTTLE(
+        0.5,
+        "SO3 command NaN guard blocked nonfinite command: thrust=%f body_rate=(%f, %f, %f)",
+        cmd_msg->thrust,
+        cmd_msg->body_rate.x,
+        cmd_msg->body_rate.y,
+        cmd_msg->body_rate.z);
+      if (command_nan_guard_mode_ == "mark_and_hold" &&
+          command_nan_guard_hold_last_finite_ &&
+          has_last_finite_cmd_) {
+        cmd_ = last_finite_cmd_;
+      }
+      return;
+    }
+
     cmd_.thrust = cmd_msg->thrust;
     cmd_.body_rates[0] = cmd_msg->body_rate.x;
     cmd_.body_rates[1] = cmd_msg->body_rate.y;
     cmd_.body_rates[2] = cmd_msg->body_rate.z;
+    last_finite_cmd_ = cmd_;
+    has_last_finite_cmd_ = true;
+
+    if (command_guard_pub_) {
+      command_guard_pub_.publish(guard_msg);
+    }
+
+    const bool saturated_command =
+      cmd_.thrust >= thrust_saturation_threshold_ ||
+      std::fabs(cmd_.body_rates[0]) >= bodyrate_xy_saturation_threshold_ ||
+      std::fabs(cmd_.body_rates[1]) >= bodyrate_xy_saturation_threshold_ ||
+      std::fabs(cmd_.body_rates[2]) >= bodyrate_z_saturation_threshold_;
+    if (command_saturation_log_only_ && saturated_command) {
+      ROS_WARN_THROTTLE(
+        0.5,
+        "SO3 command saturation diagnostic: thrust=%f body_rate=(%f, %f, %f)",
+        cmd_.thrust,
+        cmd_.body_rates[0],
+        cmd_.body_rates[1],
+        cmd_.body_rates[2]);
+    }
   }
   void timer_callback(const ros::TimerEvent& event) {
     auto last_control = control_;
@@ -299,6 +370,13 @@ class Nodelet : public nodelet::Nodelet {
     nh.getParam("simulation_rate", simulation_rate_);
     nh.getParam("odom_rate", odom_rate_);
     nh.getParam("payload_size", payload_size_);
+    nh.param("enable_command_nan_guard", enable_command_nan_guard_, false);
+    nh.param<std::string>("command_nan_guard_mode", command_nan_guard_mode_, "mark_and_hold");
+    nh.param("command_nan_guard_hold_last_finite", command_nan_guard_hold_last_finite_, true);
+    nh.param("command_saturation_log_only", command_saturation_log_only_, true);
+    nh.param("thrust_saturation_threshold", thrust_saturation_threshold_, 59.9);
+    nh.param("bodyrate_xy_saturation_threshold", bodyrate_xy_saturation_threshold_, 2.99);
+    nh.param("bodyrate_z_saturation_threshold", bodyrate_z_saturation_threshold_, 1.19);
     nh.param("enable_wind", config.enable_wind, false);
     nh.param<std::string>("wind_model", config.wind_model, "drag");
     nh.param("wind_force_x", config.wind_force_x, 0.0);
@@ -355,6 +433,8 @@ class Nodelet : public nodelet::Nodelet {
     quadrotorPtr_->setYpr(Eigen::Vector3d(init_yaw,0.0,0.0));
     cmd_.thrust =  (config.mass+config.mass_l) * config.g;
     cmd_.body_rates.setZero();
+    last_finite_cmd_ = cmd_;
+    has_last_finite_cmd_ = true;
     odom_pub_ = nh.advertise<nav_msgs::Odometry>("odom", 100);
     odom_payload_pub_ = nh.advertise<nav_msgs::Odometry>("odom_payload", 100);
     imu_pub_  = nh.advertise<sensor_msgs::Imu>("imu", 10);
@@ -362,6 +442,9 @@ class Nodelet : public nodelet::Nodelet {
     load_imu_pub_ = nh.advertise<sensor_msgs::Imu>("load_imu", 10);
     vis_pub_= nh.advertise<visualization_msgs::MarkerArray>("vis", 10);
     cmd_sub_  = nh.subscribe<mavros_msgs::AttitudeTarget>("so3cmd", 10, &Nodelet::cmd_callback, this, ros::TransportHints().tcpNoDelay());
+    if (enable_command_nan_guard_) {
+      command_guard_pub_ = nh.advertise<std_msgs::Bool>("/so3_command_guard/guarded_command_applied", 10);
+    }
     rpm_pub_ = nh.advertise<mavros_msgs::ESCTelemetry>("rpm", 10);
     simulation_timer = nh.createTimer(ros::Duration(1.0/simulation_rate_), &Nodelet::timer_callback, this);
 

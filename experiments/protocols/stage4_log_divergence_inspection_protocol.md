@@ -91,10 +91,18 @@ finite SO3 command reaches the diagnostic threshold:
 `abs(so3_bodyrate_z) >= 1.19`. `sustained_command_saturation_event` is set
 when the saturation condition remains true for at least `0.2s` by default.
 
-Because Stage 4-N3 is detection/logging only, `guarded_command_applied` should
-remain `0` until a future active command guard is implemented. These fields
-help distinguish transient finite saturation from saturation that is followed
-by command NaN and state divergence.
+For unguarded runs, or when `/so3_command_guard/guarded_command_applied` is
+absent, `guarded_command_applied` remains `0`. Stage 4-N4 adds an optional
+active diagnostic guard, disabled by default, that publishes this topic as
+`std_msgs/Bool`. A value of `1` means the guard actively blocked/replaced a
+NaN/Inf SO3 command before it was copied into simulator command state.
+
+`guarded_command_applied=1` must be interpreted as a diagnostic-invalid safety
+event, not as a successful robustness correction. It can help test whether a
+teleport-like fly-away was caused by NaN command propagation, but it does not
+explain or solve `state_divergence_before_command_nan` cases. These fields help
+distinguish transient finite saturation from saturation that is followed by
+command NaN and state divergence.
 
 ## What The Tool Computes
 

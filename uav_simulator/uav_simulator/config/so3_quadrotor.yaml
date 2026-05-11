@@ -27,6 +27,13 @@ wind_drag_linear: 0.0
 wind_drag_quad: 0.0
 wind_max_force: 0.0
 wind_apply_to: "quadrotor"
+enable_command_nan_guard: false
+command_nan_guard_mode: "mark_and_hold"
+command_nan_guard_hold_last_finite: true
+command_saturation_log_only: true
+thrust_saturation_threshold: 59.9
+bodyrate_xy_saturation_threshold: 2.99
+bodyrate_z_saturation_threshold: 1.19
 simulation_rate: 1000
 odom_rate: 400
 g: 9.795
