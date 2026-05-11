@@ -1,0 +1,45 @@
+{
+  "schema_version": "stage4o_manual_failure_annotations_v1",
+  "field_descriptions": {
+    "run_name": "Stable human-readable run identifier.",
+    "csv_path": "Absolute or repository-relative path to the CSV log for the run.",
+    "method": "Evaluation method or policy family, for example original, fixed_s085, windlevel_s085, or risk_adapter_v1.",
+    "trial": "Trial identifier.",
+    "wind": "Wind condition used for the run.",
+    "goal_repeat": "Number of goal publications used for the run.",
+    "manual_collision_observed": "True only when visual observation shows obstacle contact or clear physical blocking.",
+    "manual_path_infeasible": "True when the planned path visibly passes through an obstacle or occupied space.",
+    "manual_obstacle_stop_observed": "True when the UAV pauses or stalls at obstacle contact or apparent blockage.",
+    "manual_teleport_after_collision": "True when teleport-like fly-away follows an observed obstacle/collision interaction.",
+    "path_through_obstacle_observed": "True when the displayed planned path appeared to pass through an obstacle.",
+    "path_feasibility_unknown": "True when no visual evidence is available to judge path feasibility.",
+    "collision_observed_time": "Approximate first observed obstacle contact/blocking time in seconds, or null when not measured.",
+    "annotation_source": "Source of the annotation, such as manual visual observation, screen recording, or screenshot review.",
+    "annotation_confidence": "Confidence level for the manual annotation: low, medium, or high.",
+    "divergence_failure_mode": "Timing-based failure-mode label from divergence inspection when available.",
+    "guarded_command_applied_later": "True when guarded SO3 command blocking occurred after the earliest observed failure mechanism.",
+    "manual_failure_note": "Short free-form explanation of the observed path/collision evidence and timing."
+  },
+  "annotations": [
+    {
+      "run_name": "stage4n4_guard_enabled_original_strong_trial6_goalrepeat10_smoke3",
+      "csv_path": "/home/cccyn2004/projects/autotrans_ws/src/AutoTrans/experiments/logs/autotrans_log_20260511_225654.csv",
+      "method": "original",
+      "trial": "trial6",
+      "wind": "strong",
+      "goal_repeat": 10,
+      "manual_collision_observed": true,
+      "manual_path_infeasible": true,
+      "manual_obstacle_stop_observed": true,
+      "manual_teleport_after_collision": true,
+      "path_through_obstacle_observed": true,
+      "path_feasibility_unknown": false,
+      "collision_observed_time": null,
+      "annotation_source": "manual visual observation during run",
+      "annotation_confidence": "medium",
+      "divergence_failure_mode": "state_divergence_before_command_nan",
+      "guarded_command_applied_later": true,
+      "manual_failure_note": "planned path appeared to pass through an obstacle; UAV paused at obstacle; replanned path appeared to pass through another obstacle; after second obstacle interaction UAV teleported/flew away; SO3 command NaN and guard application occurred later."
+    }
+  ]
+}

@@ -67,6 +67,12 @@ Future result manifests should support manual annotations such as
 obstacle contact, abnormal post-contact motion, or planned path-through-
 obstacle behavior.
 
+Final result summaries should optionally join strict-valid metrics with
+Stage 4-O manual failure annotations from
+`experiments/protocols/stage4o_manual_failure_annotations.json`. These
+annotations should explain invalid-run failure causes, not replace
+strict-valid / `label_strict_invalid` success accounting.
+
 Invalid runs should be classified beyond valid/invalid whenever possible.
 Future manifests should support:
 

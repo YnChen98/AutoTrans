@@ -17,6 +17,11 @@ cannot solve failures that begin with obstacle/path/state divergence before
 command NaN. Guarded runs remain diagnostic-only and should not be used as main
 evaluation baselines.
 
+Stage 4-O records the path-feasibility / obstacle-collision interpretation in
+`experiments/protocols/stage4o_path_feasibility_annotation_protocol.md`.
+Smoke3 has an initial manual annotation entry in
+`experiments/protocols/stage4o_manual_failure_annotations.json`.
+
 ## Guard-disabled Smoke Summary
 
 Configuration: original Trial 6, strong wind, `goal_repeat=10`,
@@ -115,6 +120,8 @@ Manual observation for guard-enabled smoke3:
 This supports a path infeasibility / obstacle interaction interpretation. The
 observed behavior is consistent with obstacle interaction followed by state
 divergence, with command NaN occurring later rather than initiating the
+failure. Under Stage 4-O, this smoke should be treated as
+path/collision/state divergence before command NaN, not as a pure command NaN
 failure.
 
 ## Research Decision

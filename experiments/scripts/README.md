@@ -487,6 +487,17 @@ finite command, and publishes `/so3_command_guard/guarded_command_applied` as
 event; guarded runs should not be mixed with unguarded baseline claims, and
 the guard does not address `state_divergence_before_command_nan` cases.
 
+## Stage 4-O path-feasibility annotations
+
+`experiments/protocols/stage4o_path_feasibility_annotation_protocol.md`
+defines manual annotations for path-through-obstacle, obstacle contact,
+obstacle stop, and teleport-like divergence after obstacle interaction.
+Initial annotations are stored in
+`experiments/protocols/stage4o_manual_failure_annotations.json`. These fields
+explain failure causes alongside strict-valid / `label_strict_invalid`
+metrics; they do not change planner, controller, simulator, or logger
+behavior.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

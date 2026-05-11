@@ -233,6 +233,14 @@ they are explicitly logged. Visual inspection is still required for cases
 where the UAV appears to contact an obstacle or where the planned path appears
 to pass through an obstacle.
 
+When such visual evidence exists, combine the divergence label with the
+Stage 4-O manual path/collision annotations in
+`experiments/protocols/stage4o_manual_failure_annotations.json`. For example,
+`state_divergence_before_command_nan` plus `manual_path_infeasible=true` and
+`manual_collision_observed=true` should be interpreted as a path/collision
+failure candidate before later SO3 command NaN, not as pure command NaN
+propagation.
+
 Historical logs without `ref_*` columns do not include the full reference
 trajectory. Therefore planner trajectory discontinuity or planned
 path-through-obstacle behavior cannot be proven from those CSVs alone.
