@@ -498,6 +498,15 @@ explain failure causes alongside strict-valid / `label_strict_invalid`
 metrics; they do not change planner, controller, simulator, or logger
 behavior.
 
+Stage 4-O3 adds lightweight trajectory publish diagnostics to
+`experiments/autotrans_logger/scripts/state_logger.py` and
+`experiments/autotrans_logger/scripts/analyze_log.py`. New CSV metrics include
+`trajectory_publish_count`, `trajectory_update_count`,
+`trajectory_last_update_time`, `trajectory_time_since_last_update`, and
+`first_trajectory_time`. These values are a replan proxy only; they do not
+prove path infeasibility or collision without manual annotation or later
+path/ESDF checking.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

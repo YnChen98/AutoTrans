@@ -100,6 +100,13 @@ COMMAND_DIAGNOSTIC_FIELDS = [
     "sustained_command_saturation_event",
     "guarded_command_applied",
 ]
+TRAJECTORY_DIAGNOSTIC_FIELDS = [
+    "trajectory_publish_count",
+    "trajectory_update_count",
+    "trajectory_last_update_time",
+    "trajectory_time_since_last_update",
+    "first_trajectory_time",
+]
 
 MAX_REASONABLE_SPEED_MPS = 10.0
 MAX_REASONABLE_SWING_DEG = 90.0
@@ -244,6 +251,20 @@ def final_or_nan(values):
     return math.nan
 
 
+def first_or_nan(values):
+    for value in values:
+        if math.isfinite(value):
+            return value
+    return math.nan
+
+
+def final_count_or_nan(values):
+    value = final_or_nan(values)
+    if not math.isfinite(value):
+        return math.nan
+    return int(round(value))
+
+
 def first_finite_time(values, time_values):
     start_times = valid_values(time_values)
     if not start_times:
@@ -304,6 +325,27 @@ def relative_time_at_index(time_values, index):
     if not math.isfinite(time_value):
         return math.nan
     return time_value - start_times[0]
+
+
+def cumulative_count_at_or_before(count_values, time_values, event_relative_time):
+    if not math.isfinite(event_relative_time):
+        return math.nan
+    start_times = valid_values(time_values)
+    if not start_times:
+        return math.nan
+    start_time = start_times[0]
+    latest_count = math.nan
+    for count_value, time_value in zip(count_values, time_values):
+        if not math.isfinite(time_value):
+            continue
+        relative = time_value - start_time
+        if relative > event_relative_time:
+            break
+        if math.isfinite(count_value):
+            latest_count = count_value
+    if not math.isfinite(latest_count):
+        return math.nan
+    return int(round(latest_count))
 
 
 def first_event_reason(rows, index, reason_field):
@@ -556,6 +598,29 @@ def compute_metrics(csv_path, rows, args):
     ref_acc_y = column(rows, "ref_acc_y") if ref_acc_x else []
     ref_acc_z = column(rows, "ref_acc_z") if ref_acc_x else []
     ref_available = column(rows, "ref_available") if has_column(rows, "ref_available") else []
+    has_trajectory_diagnostic_columns = all(
+        has_column(rows, field) for field in TRAJECTORY_DIAGNOSTIC_FIELDS
+    )
+    trajectory_publish_count = (
+        column(rows, "trajectory_publish_count")
+        if has_trajectory_diagnostic_columns
+        else []
+    )
+    trajectory_update_count = (
+        column(rows, "trajectory_update_count")
+        if has_trajectory_diagnostic_columns
+        else []
+    )
+    trajectory_time_since_last_update = (
+        column(rows, "trajectory_time_since_last_update")
+        if has_trajectory_diagnostic_columns
+        else []
+    )
+    trajectory_first_times = (
+        column(rows, "first_trajectory_time")
+        if has_trajectory_diagnostic_columns
+        else []
+    )
 
     duration_sec, effective_log_rate_hz = compute_duration_and_rate(rows)
     final_valid_uav_position = final_position(uav_pos_x, uav_pos_y, uav_pos_z)
@@ -674,6 +739,33 @@ def compute_metrics(csv_path, rows, args):
     if has_column(rows, "swing_angle_deg"):
         metrics["first_swing_angle_ge_30_time"] = first_swing_angle_ge_30_time
         metrics["first_swing_angle_ge_60_time"] = first_swing_angle_ge_60_time
+
+    if has_trajectory_diagnostic_columns:
+        first_trajectory_time = first_or_nan(trajectory_first_times)
+        metrics["trajectory_publish_count_final"] = final_count_or_nan(trajectory_publish_count)
+        metrics["trajectory_update_count_final"] = final_count_or_nan(trajectory_update_count)
+        metrics["first_trajectory_time"] = first_trajectory_time
+        metrics["final_trajectory_time_since_last_update"] = final_or_nan(
+            trajectory_time_since_last_update
+        )
+        metrics["max_trajectory_time_since_last_update"] = max_or_nan(
+            trajectory_time_since_last_update
+        )
+        metrics["first_trajectory_update_after_start_time"] = first_trajectory_time
+        if math.isfinite(first_nan_relative_time):
+            metrics["trajectory_updates_before_first_nan"] = cumulative_count_at_or_before(
+                trajectory_update_count,
+                ros_times,
+                first_nan_relative_time,
+            )
+        if math.isfinite(first_swing_angle_ge_30_time):
+            metrics["trajectory_updates_before_first_swing_ge_30"] = (
+                cumulative_count_at_or_before(
+                    trajectory_update_count,
+                    ros_times,
+                    first_swing_angle_ge_30_time,
+                )
+            )
 
     if all(has_column(rows, field) for field in ("uav_vel_x", "uav_vel_y", "uav_vel_z")):
         metrics["first_uav_speed_ge_4_time"] = first_ge_time(uav_speed, ros_times, 4.0)

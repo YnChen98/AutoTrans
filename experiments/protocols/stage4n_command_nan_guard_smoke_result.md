@@ -21,6 +21,9 @@ Stage 4-O records the path-feasibility / obstacle-collision interpretation in
 `experiments/protocols/stage4o_path_feasibility_annotation_protocol.md`.
 Smoke3 has an initial manual annotation entry in
 `experiments/protocols/stage4o_manual_failure_annotations.json`.
+Future reruns can use Stage 4-O3 `trajectory_publish_count` and trajectory
+update timing to correlate obstacle pauses, apparent path changes, state
+divergence, and later SO3 command NaN.
 
 ## Guard-disabled Smoke Summary
 

@@ -74,6 +74,19 @@ It does not log full planned path/control points, obstacle clearance,
 collision/contact flags, replan count, goal publish count, or path feasibility
 flag.
 
+Stage 4-O3 adds low-risk trajectory publish / replan-proxy diagnostics in
+`experiments/autotrans_logger/scripts/state_logger.py`. The logger now records
+`trajectory_publish_count`, `trajectory_update_count`,
+`trajectory_last_update_time`, `trajectory_time_since_last_update`, and
+`first_trajectory_time` from the `planning/trajectory` stream. For now,
+`trajectory_update_count` is the same as `trajectory_publish_count` because
+there is no reliable duplicate-vs-new-trajectory discriminator.
+
+These fields are not proof of a replan and do not prove path infeasibility.
+They can indicate trajectory updates near obstacle pauses, state divergence,
+SO3 command NaN, or swing threshold crossings. Path infeasibility still
+requires manual annotation or a later automatic path/ESDF checking pipeline.
+
 ## Manual Annotation Fields
 
 - `manual_collision_observed`: boolean. True when visual observation shows
@@ -162,8 +175,8 @@ Possible future work:
 - compute `min_path_obstacle_distance`
 - log `path_collision_flag`
 - use a proximity heuristic from UAV/payload position to obstacle point cloud
-- add `trajectory_publish_count` or `replan_like_trajectory_count` as a weak
-  replan proxy
+- refine `trajectory_publish_count` into a stronger `replan_like_trajectory_count`
+  if a reliable duplicate-vs-new-trajectory discriminator becomes available
 - defer planner behavior modification until manual annotations show this
   failure mode is frequent enough to justify deeper integration
 

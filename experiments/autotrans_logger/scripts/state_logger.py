@@ -55,6 +55,11 @@ class StateLogger:
         "guarded_command_applied",
         "swing_angle_deg",
         "has_trajectory",
+        "trajectory_publish_count",
+        "trajectory_update_count",
+        "trajectory_last_update_time",
+        "trajectory_time_since_last_update",
+        "first_trajectory_time",
         "ref_pos_x",
         "ref_pos_y",
         "ref_pos_z",
@@ -94,8 +99,17 @@ class StateLogger:
         self.command_risk_target_scale_raw = None
         self.guarded_command_applied = False
         self.has_trajectory = False
+        self.trajectory_publish_count = 0
+        self.trajectory_update_count = 0
+        self.trajectory_last_update_time = None
+        self.first_trajectory_time = None
         self.reference_cmd = None
 
+        self.start_ros_time = rospy.Time.now().to_sec()
+        self.enable_trajectory_publish_logging = bool(
+            rospy.get_param("~enable_trajectory_publish_logging", True)
+        )
+        self.trajectory_topic = rospy.get_param("~trajectory_topic", "/planning/trajectory")
         self.enable_reference_logging = bool(rospy.get_param("~enable_reference_logging", True))
         self.reference_topic = rospy.get_param("~reference_topic", "/mpc_controller_node/mpc/all_ref_data")
         self.reference_message_type = rospy.get_param("~reference_message_type", "mpc_all_ref_data")
@@ -118,7 +132,7 @@ class StateLogger:
         rospy.Subscriber("/payload_odom", Odometry, self._payload_odom_callback, queue_size=50)
         rospy.Subscriber("/cable_info", Imu, self._cable_info_callback, queue_size=50)
         rospy.Subscriber("/so3cmd", AttitudeTarget, self._so3cmd_callback, queue_size=50)
-        rospy.Subscriber("/planning/trajectory", PolynomialTraj, self._trajectory_callback, queue_size=10)
+        self._subscribe_trajectory()
         self._subscribe_reference_command()
         rospy.Subscriber("/wind_force", Vector3Stamped, self._wind_force_callback, queue_size=50)
         rospy.Subscriber("/command_adaptation/speed_scale", Float64, self._command_speed_scale_callback, queue_size=50)
@@ -149,6 +163,18 @@ class StateLogger:
         rospy.on_shutdown(self.close)
 
         rospy.loginfo("autotrans_logger writing CSV to: %s", self.log_path)
+
+    def _subscribe_trajectory(self):
+        if not self.enable_trajectory_publish_logging:
+            rospy.loginfo("trajectory publish logging disabled")
+            return
+        rospy.Subscriber(
+            self.trajectory_topic,
+            PolynomialTraj,
+            self._trajectory_callback,
+            queue_size=10,
+        )
+        rospy.loginfo("trajectory publish logging enabled on topic: %s", self.trajectory_topic)
 
     def _subscribe_reference_command(self):
         if not self.enable_reference_logging:
@@ -208,6 +234,13 @@ class StateLogger:
 
     def _trajectory_callback(self, _msg):
         self.has_trajectory = True
+        now_relative = rospy.Time.now().to_sec() - self.start_ros_time
+        self.trajectory_publish_count += 1
+        # No reliable duplicate/new-trajectory discriminator is available yet.
+        self.trajectory_update_count = self.trajectory_publish_count
+        self.trajectory_last_update_time = now_relative
+        if self.first_trajectory_time is None:
+            self.first_trajectory_time = now_relative
 
     def _reference_cmd_callback(self, msg):
         self.reference_cmd = msg
@@ -256,6 +289,16 @@ class StateLogger:
         row["ros_time"] = "%.9f" % now_ros_time
         row["wall_time"] = "%.9f" % time.time()
         row["has_trajectory"] = int(self.has_trajectory)
+        row["trajectory_publish_count"] = self.trajectory_publish_count
+        row["trajectory_update_count"] = self.trajectory_update_count
+        if self.trajectory_last_update_time is not None:
+            now_relative = now_ros_time - self.start_ros_time
+            row["trajectory_last_update_time"] = self._fmt(self.trajectory_last_update_time)
+            row["trajectory_time_since_last_update"] = self._fmt(
+                now_relative - self.trajectory_last_update_time
+            )
+        if self.first_trajectory_time is not None:
+            row["first_trajectory_time"] = self._fmt(self.first_trajectory_time)
         row["ref_available"] = 1 if self.reference_cmd is not None else 0
         row["command_invalid_event"] = 0
         row["command_saturation_event"] = 0
