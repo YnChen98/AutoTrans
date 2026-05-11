@@ -160,8 +160,9 @@ Valid runs may still receive this label when saturation is transient and no
 invalid evidence follows.
 
 `command_saturation_before_nan` should be used only when command saturation
-precedes a nonfinite SO3/state value, or precedes high-speed/position-jump
-divergence when no NaN is available.
+precedes command NaN and command NaN occurs before or near state divergence.
+It should not be used for transient finite saturation that never develops
+into NaN or state divergence.
 
 The inspector now reports aggregate timing fields for root-cause ordering:
 
@@ -183,6 +184,11 @@ visible fly-away may be downstream of an earlier command failure. Command NaN
 and state divergence may also be coincident within one logger sample period,
 especially when the log rate is too low to resolve the exact ordering.
 
+State divergence before command NaN is also possible. In those cases, the
+first detected high-speed, swing, or position-jump event appears before any
+logged SO3 command NaN. Those runs should not be explained solely as command
+NaN propagation.
+
 Late reference jumps must not be over-interpreted. If a reference jump occurs
 after command NaN or after state divergence, the inspector sets
 `reference_jump_after_divergence=true` and does not classify the run as
@@ -192,22 +198,26 @@ after command NaN or after state divergence, the inspector sets
 `valid_run_suggested=false` or `has_nan_state=true`, but the inspector cannot
 classify the failure from available CSV evidence.
 
-Failure-mode guesses are heuristic labels. They should be paired with
-strict-valid / `label_strict_invalid` when preparing paper-facing result
-tables.
+Failure-mode guesses are heuristic labels. They provide timing-based triage,
+not definitive physical causality. They should be paired with strict-valid /
+`label_strict_invalid` when preparing paper-facing result tables.
 
-Current automatic labels include:
+Current batch-audit labels include:
 
-- `no_divergence_detected`
-- `command_saturation_without_divergence`
-- `command_saturation_before_nan`
 - `command_nan_before_state_divergence`
-- `command_nan_coincident_with_state_divergence`
+- `command_saturation_before_nan`
+- `command_saturation_without_divergence`
+- `no_divergence_detected`
 - `state_divergence_before_command_nan`
+- `strict_safety_no_nan`
+- `target_error_only`
+
+Additional labels may appear for targeted single-log diagnostics when evidence
+supports them:
+
+- `command_nan_coincident_with_state_divergence`
 - `reference_jump_before_command_nan`
 - `reference_jump_after_divergence`
-- `target_error_only`
-- `strict_safety_no_nan`
 - `unknown_invalid`
 
 Obstacle collision and path infeasibility remain manual annotations unless

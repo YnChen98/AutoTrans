@@ -407,6 +407,12 @@ fields such as `first_command_nan_time`, `first_state_divergence_time`,
 reference jumps after command NaN/state divergence should not be treated as
 initial planner reference root cause.
 
+The latest batch audit categories include `command_nan_before_state_divergence`,
+`command_saturation_before_nan`, `command_saturation_without_divergence`,
+`no_divergence_detected`, `state_divergence_before_command_nan`,
+`strict_safety_no_nan`, and `target_error_only`. These are heuristic
+classification labels, not final physical root-cause proof.
+
 检查单个 CSV，并打印一个相对时间窗口内的关键列：
 
 ```bash

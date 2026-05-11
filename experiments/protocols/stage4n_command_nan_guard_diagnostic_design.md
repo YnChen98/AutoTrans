@@ -21,6 +21,11 @@ Because no active guard exists yet, `guarded_command_applied` is currently
 expected to remain `0` for all rows. An active C++ guard remains future
 Stage 4-N4 work.
 
+The latest timing-aware divergence audit narrows the expected scope of this
+guard. It targets `command_nan_before_state_divergence` and
+`command_saturation_before_nan` cases, but it may not prevent
+`state_divergence_before_command_nan` cases.
+
 ## Motivation
 
 Stage 4 divergence/root-cause analysis found that many invalid runs are
@@ -35,21 +40,29 @@ divergence. A motivating example is original Trial 6 repeat10:
 | `15.299` | swing `> 60` |
 | `15.849` | UAV position jump `> 1m` |
 
-The corrected divergence audit also supports this pattern:
+The latest corrected divergence audit shows mixed timing patterns:
 
 | Classification | Count |
 | --- | ---: |
-| `rows_inspected` | 177 |
-| `command_saturation_before_nan` | 57 |
-| `command_saturation_without_divergence` | 90 |
+| `rows_inspected` | 184 |
+| `command_nan_before_state_divergence` | 1 |
+| `command_saturation_before_nan` | 35 |
+| `command_saturation_without_divergence` | 94 |
 | `no_divergence_detected` | 7 |
-| `strict_safety_no_nan` | 17 |
+| `state_divergence_before_command_nan` | 20 |
+| `strict_safety_no_nan` | 21 |
 | `target_error_only` | 6 |
 
 Transient command saturation alone is not a failure. The audit includes many
 `command_saturation_without_divergence` rows, and Stage 4-M smoke tests also
-showed valid runs with transient saturation. The failure-relevant pattern is
-saturation followed by SO3 command NaN and then state divergence.
+showed valid runs with transient saturation. The guard-relevant pattern is
+saturation followed by SO3 command NaN and then state divergence, or command
+NaN before state divergence.
+
+The `state_divergence_before_command_nan` class is significant enough that an
+active command NaN guard should not be presented as a complete failure fix. It
+is a diagnostic protection against NaN command propagation, not a general
+closed-loop robustness solution.
 
 NaN command propagation can pollute simulator state because a nonfinite thrust
 or bodyrate may enter integration, attitude, or force update logic. Once a NaN
@@ -175,12 +188,20 @@ After implementation:
 Guarded runs should be labeled explicitly and kept separate from main
 unguarded baseline results.
 
+The primary expected diagnostic value is in runs classified as
+`command_nan_before_state_divergence` or `command_saturation_before_nan`. If a
+run is classified as `state_divergence_before_command_nan`, the guard may still
+record command validity, but it should not be expected to prevent the initial
+divergence.
+
 ## What Not To Claim
 
 - Do not claim the guard improves controller robustness.
 - Do not claim final safety.
 - Do not claim root cause is fully proven from one or two smoke runs.
 - Do not replace unguarded main results with guarded diagnostic results.
+- Do not claim the guard can prevent failures where state divergence precedes
+  command NaN.
 
 ## Next Coding Task
 

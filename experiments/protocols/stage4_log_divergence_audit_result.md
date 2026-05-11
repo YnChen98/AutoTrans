@@ -2,11 +2,15 @@
 
 ## Executive Summary
 
-The Stage 4 divergence audit now separates transient command saturation from
-invalid divergence. With the corrected classifier, the dominant diagnostic
-label is `command_saturation_without_divergence`, while
-`command_saturation_before_nan` remains the dominant detected invalid
-divergence precursor.
+The Stage 4 divergence audit now separates transient command saturation,
+command NaN timing, state divergence timing, and late reference jumps. With the
+latest corrected classifier, the dominant diagnostic label is
+`command_saturation_without_divergence`, while
+`command_saturation_before_nan` remains a major real divergence class.
+
+The audit also now finds a significant `state_divergence_before_command_nan`
+category. This means an active command NaN guard remains useful for diagnosis,
+but it cannot explain or fix every invalid failure mode.
 
 Invalid runs should be separated by failure mode before strong claims are
 made. This audit is diagnostic evidence for failure classification and
@@ -24,7 +28,7 @@ python3 experiments/scripts/inspect_stage4_log_divergence.py \
 ```
 
 The glob includes historical, smoke, debug, resetcheck, and old experiment
-logs. Therefore `rows_inspected=177` should not be treated as the final
+logs. Therefore `rows_inspected=184` should not be treated as the final
 balanced evaluation sample.
 
 Generated output under `experiments/results/` should remain uncommitted.
@@ -33,25 +37,29 @@ Generated output under `experiments/results/` should remain uncommitted.
 
 | Failure-mode guess | Count |
 | --- | ---: |
-| rows inspected | `177` |
-| `command_saturation_before_nan` | `57` |
-| `command_saturation_without_divergence` | `90` |
+| rows inspected | `184` |
+| `command_nan_before_state_divergence` | `1` |
+| `command_saturation_before_nan` | `35` |
+| `command_saturation_without_divergence` | `94` |
 | `no_divergence_detected` | `7` |
-| `strict_safety_no_nan` | `17` |
+| `state_divergence_before_command_nan` | `20` |
+| `strict_safety_no_nan` | `21` |
 | `target_error_only` | `6` |
 
-This table uses the corrected classifier. Earlier diagnostic wording did not
-separate transient command saturation from saturation followed by
-NaN/divergence.
+This table uses the latest timing-aware classifier. Earlier diagnostic wording
+did not separate transient command saturation from saturation followed by
+NaN/divergence, and it did not separate state divergence before command NaN
+from command NaN before state divergence.
 
 ## Correction Note
 
-The previous audit over-counted `command_saturation_before_nan` because the
-classifier did not distinguish transient command saturation without later
+Earlier audits overemphasized `command_saturation_before_nan` because the
+classifier did not fully separate transient command saturation without later
 NaN/nonfinite state, high-speed divergence, position jump, or swing threshold
-crossing. The corrected audit shows that command saturation can occur without
-failure and should be treated as a diagnostic signal, not automatically as an
-invalid divergence.
+crossing. It also did not yet distinguish cases where state divergence appears
+before command NaN. The latest audit shows that command saturation is common
+and should be treated as a diagnostic signal, not automatically as an invalid
+divergence.
 
 The inspector has also been updated to scan only numeric state, SO3 command,
 and reference fields for nonfinite detection. String diagnostic columns such
@@ -63,6 +71,12 @@ reference jumps from root-cause reference jumps. A reference jump observed
 after command NaN or after state divergence is marked with
 `reference_jump_after_divergence=true` and should not be interpreted as
 `reference_jump_before_command_nan`.
+
+The `state_divergence_before_command_nan` category is now significant in the
+batch scan. This limits the expected scope of a future active command NaN
+guard: the guard can test whether command NaN propagation pollutes simulator
+state, but it should not be presented as a complete fix for all Stage 4
+invalids.
 
 ## Motivating Example: original Trial 6 repeat10
 
@@ -92,9 +106,32 @@ The corrected `failure_mode_guess` for this run remains
 `command_saturation_before_nan`, so original Trial 6 repeat10 remains a true
 divergence example.
 
-Stage 4 reference logging is the next diagnostic step after this audit. New
-logs should record the detected controller reference topic as `ref_*` columns
-so reference position jumps, velocity jumps, or acceleration spikes can be
+## Timing-Fix Example: late reference jump after divergence
+
+The Stage 4-N3 smoke log below exercised the latest timing fix:
+
+```bash
+experiments/logs/autotrans_log_20260511_131044.csv
+```
+
+The corrected inspector reports:
+
+| Field | Value |
+| --- | ---: |
+| `failure_mode_guess` | `command_saturation_before_nan` |
+| `first_command_nan_time` | `6.004893` |
+| `first_state_divergence_time` | `6.004893` |
+| `first_reference_jump_time` | `8.004397` |
+| `reference_jump_after_divergence` | `true` |
+
+This confirms that the reference jump was late relative to the command NaN and
+state divergence timing. It should not be treated as the initial planner
+reference root cause. The better interpretation is command saturation followed
+by command NaN and near-simultaneous state divergence.
+
+Stage 4 reference logging remains required for root-cause tests. New logs
+should record the detected controller reference topic as `ref_*` columns so
+reference position jumps, velocity jumps, or acceleration spikes can be
 compared against SO3 command saturation and NaN timing. In the current
 `simple_run.launch` flow, the default source is
 `/mpc_controller_node/mpc/all_ref_data`; `/position_cmd` remains supported for
@@ -108,7 +145,13 @@ position jump, or swing threshold crossing. It is a diagnostic signal, not an
 invalid divergence label by itself.
 
 `command_saturation_before_nan` means SO3 thrust or bodyrate saturation appears
-before NaN/nonfinite state or later high-speed/position-jump divergence.
+before command NaN and before or near state divergence. It remains a major
+real divergence class.
+
+`state_divergence_before_command_nan` means speed, swing, or position-jump
+divergence appears before any logged SO3 command NaN. These cases need
+separate investigation because an active command NaN guard may not prevent
+them.
 
 These are invalid safety failures, but they should not automatically be
 assigned to `risk_adapter_v1` or any single command-adaptation method.
@@ -124,17 +167,17 @@ or contact instability, path feasibility, and command adaptation effects.
 
 ## Root-Cause Smoke Checks
 
-Two root-cause diagnostic smoke checks were run after reference logging was
-added:
+Root-cause smoke checks after reference logging showed that both
+`goal_repeat=1` and `goal_repeat=10` can produce
+`command_saturation_without_divergence`, and both settings have reproduced
+`command_saturation_before_nan` in limited repeats. Therefore repeated goal
+publishing or replanning remains possible, but it is no longer the primary
+supported explanation.
 
-| Smoke check | Validity | Reference discontinuity | Corrected classification |
-| --- | --- | --- | --- |
-| `goal_repeat=1` | `valid_run_suggested=true`, `has_nan_state=false` | none detected | `command_saturation_without_divergence` |
-| `goal_repeat=10` | `valid_run_suggested=true`, `has_nan_state=false` | none detected | `no_divergence_detected` |
-
-These smoke checks did not reproduce sudden fly-away. Therefore repeated goal
-publishing or replanning discontinuity remains a possible factor, but it is
-not proven by these two runs.
+The failed reference-logging smoke runs did not show `ref_pos` or `ref_vel`
+nonfinite values or jumps before failure. However, `ref_acc` remains
+unavailable or NaN in the `nav_msgs/Path` reference source, so acceleration
+reference discontinuity is not fully ruled out.
 
 ## Failure-Mode Label Taxonomy
 
@@ -169,7 +212,7 @@ also report failure-mode labels or distributions for invalid runs.
 Add manual annotations for `collision_observed`, `path_infeasible`, and
 `teleport_like_divergence` to final comparison manifests.
 
-Add desired/reference trajectory logging before root-cause tests. This logging
+Use desired/reference trajectory logging for root-cause tests. This logging
 should capture controller reference fields in the CSV and let the analyzer
 report reference jumps, reference acceleration spikes when available, and
 UAV-reference tracking error. Then run small root-cause isolation tests:
@@ -177,7 +220,7 @@ UAV-reference tracking error. Then run small root-cause isolation tests:
 - repeated goal disabled / `goal_repeat=1`
 - open map / no obstacle if supported
 - same target with desired/reference logging
-- command NaN guard diagnostic later if needed
+- command NaN guard diagnostic for command-NaN propagation cases
 
 Future root-cause tests should use reference logging and multiple repeats
 before assigning a mechanism to repeated goal publishing, replanning
@@ -186,10 +229,12 @@ instability.
 
 ## What Not To Claim
 
-- Do not claim statistical significance from this 177-row diagnostic scan.
+- Do not claim statistical significance from this 184-row diagnostic scan.
 - Do not use this scan as the main evaluation table.
 - Do not hide mixed failure mechanisms.
 - Do not claim root cause is proven without desired/reference trajectory
   logging.
 - Do not treat transient command saturation alone as proof of invalid
   divergence.
+- Do not claim an active command NaN guard can solve
+  `state_divergence_before_command_nan` failures.
