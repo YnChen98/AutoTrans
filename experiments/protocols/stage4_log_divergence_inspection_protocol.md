@@ -71,6 +71,31 @@ spike would point away from a simple logged-reference discontinuity and toward
 controller saturation, simulator/contact interaction, numerical instability,
 or an unlogged planner/controller mechanism.
 
+## SO3 Command Validity Diagnostics
+
+Stage 4-N3 adds logger-level SO3 command diagnostics to `autotrans_logger`.
+These fields are derived from the raw `/so3cmd`
+`mavros_msgs/AttitudeTarget` stream and do not modify the command path:
+
+- `command_invalid_event`
+- `command_invalid_reason`
+- `command_saturation_event`
+- `command_saturation_reason`
+- `sustained_command_saturation_event`
+- `guarded_command_applied`
+
+`command_invalid_event` is set when `so3_thrust` or any
+`so3_bodyrate_*` field is NaN/Inf. `command_saturation_event` is set when a
+finite SO3 command reaches the diagnostic threshold:
+`so3_thrust >= 59.9`, `abs(so3_bodyrate_x/y) >= 2.99`, or
+`abs(so3_bodyrate_z) >= 1.19`. `sustained_command_saturation_event` is set
+when the saturation condition remains true for at least `0.2s` by default.
+
+Because Stage 4-N3 is detection/logging only, `guarded_command_applied` should
+remain `0` until a future active command guard is implemented. These fields
+help distinguish transient finite saturation from saturation that is followed
+by command NaN and state divergence.
+
 ## What The Tool Computes
 
 For each CSV log, the tool reports timing for:
@@ -86,6 +111,8 @@ For each CSV log, the tool reports timing for:
 - first `has_trajectory` time
 - last finite UAV/payload position before the first nonfinite value when
   available
+- logger-level command invalidity and sustained saturation metrics when the
+  Stage 4-N3 columns are available
 
 For batch mode, it reads `*_metrics_summary.txt` files, extracts the referenced
 `csv_path`, and combines analyzer summary fields with the same CSV divergence

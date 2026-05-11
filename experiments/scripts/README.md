@@ -440,6 +440,26 @@ reference stream when `enable_reference_logging=true`。默认 source 是当前
 等 reference diagnostics，并尝试生成 `ref_xyz.png`、`ref_speed.png` 和
 `uav_ref_error.png`。旧 CSV 没有 `ref_*` columns 时仍可正常分析。
 
+## Stage 4-N3 SO3 command validity diagnostics
+
+`experiments/autotrans_logger/scripts/state_logger.py` now derives SO3 command
+validity diagnostics from `/so3cmd` without changing the command path. New CSV
+columns include `command_invalid_event`, `command_invalid_reason`,
+`command_saturation_event`, `command_saturation_reason`,
+`sustained_command_saturation_event`, and `guarded_command_applied`.
+
+The default diagnostic thresholds are `thrust_saturation_threshold=59.9`,
+`bodyrate_xy_saturation_threshold=2.99`,
+`bodyrate_z_saturation_threshold=1.19`, and
+`sustained_saturation_duration_sec=0.2`. Since Stage 4-N3 is logging-only,
+`guarded_command_applied` should remain `0` until a future active C++ guard is
+implemented.
+
+`experiments/autotrans_logger/scripts/analyze_log.py` reports command-invalid,
+command-saturation, sustained-saturation, and guarded-command counts/timing
+when these columns exist. Old CSV logs without the Stage 4-N3 columns still
+analyze normally.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

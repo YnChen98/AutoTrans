@@ -14,6 +14,13 @@ Any NaN command event should still make the run invalid. The guard is intended
 to test whether teleport-like fly-away is caused by NaN command propagation
 polluting simulator state, not to hide failures.
 
+Stage 4-N3 is the detection/logging-first step. It adds logger/analyzer
+diagnostics for SO3 command invalidity, finite saturation, sustained
+saturation, and guarded-command status without changing the command path.
+Because no active guard exists yet, `guarded_command_applied` is currently
+expected to remain `0` for all rows. An active C++ guard remains future
+Stage 4-N4 work.
+
 ## Motivation
 
 Stage 4 divergence/root-cause analysis found that many invalid runs are
@@ -127,14 +134,20 @@ state pollution.
 
 ## Logging Requirements
 
-Future implementation should log:
+Stage 4-N3 logger/analyzer diagnostics should log or summarize:
 
 - `command_invalid_event`
-- `command_invalid_time`
 - `command_invalid_reason`
 - `command_saturation_event`
+- `command_saturation_reason`
 - `sustained_command_saturation_event`
 - `guarded_command_applied`
+
+`guarded_command_applied` is currently false because Stage 4-N3 does not
+modify controller or simulator command behavior. Future active guard work
+should additionally log:
+
+- `command_invalid_time`
 - `last_finite_so3_thrust`
 - `last_finite_so3_bodyrate_x`
 - `last_finite_so3_bodyrate_y`
@@ -171,7 +184,15 @@ unguarded baseline results.
 
 ## Next Coding Task
 
-Recommended follow-up safe edit:
+Stage 4-N3 detection/logging-first edit:
+
+1. Add SO3 command diagnostic columns to `state_logger.py`.
+2. Add analyzer support for `command_invalid_event`,
+   `command_saturation_event`, `sustained_command_saturation_event`, and
+   `guarded_command_applied`.
+3. Run `python3 -m py_compile` for the edited Python scripts.
+
+Recommended future Stage 4-N4 edit:
 
 1. Inspect the SO3 command publication/subscription path.
 2. Implement the guard disabled by default.

@@ -46,6 +46,12 @@ class StateLogger:
         "so3_bodyrate_x",
         "so3_bodyrate_y",
         "so3_bodyrate_z",
+        "command_invalid_event",
+        "command_invalid_reason",
+        "command_saturation_event",
+        "command_saturation_reason",
+        "sustained_command_saturation_event",
+        "guarded_command_applied",
         "swing_angle_deg",
         "has_trajectory",
         "ref_pos_x",
@@ -92,6 +98,13 @@ class StateLogger:
         self.reference_topic = rospy.get_param("~reference_topic", "/mpc_controller_node/mpc/all_ref_data")
         self.reference_message_type = rospy.get_param("~reference_message_type", "mpc_all_ref_data")
         self.reference_required = bool(rospy.get_param("~reference_required", False))
+        self.thrust_saturation_threshold = float(rospy.get_param("~thrust_saturation_threshold", 59.9))
+        self.bodyrate_xy_saturation_threshold = float(rospy.get_param("~bodyrate_xy_saturation_threshold", 2.99))
+        self.bodyrate_z_saturation_threshold = float(rospy.get_param("~bodyrate_z_saturation_threshold", 1.19))
+        self.sustained_saturation_duration_sec = float(
+            rospy.get_param("~sustained_saturation_duration_sec", 0.2)
+        )
+        self.saturation_start_time = None
 
         self.log_path = self._make_log_path()
         self.csv_file = open(self.log_path, "w", newline="")
@@ -228,10 +241,15 @@ class StateLogger:
 
     def _make_row(self):
         row = {field: "" for field in self.CSV_FIELDS}
-        row["ros_time"] = "%.9f" % rospy.Time.now().to_sec()
+        now_ros_time = rospy.Time.now().to_sec()
+        row["ros_time"] = "%.9f" % now_ros_time
         row["wall_time"] = "%.9f" % time.time()
         row["has_trajectory"] = int(self.has_trajectory)
         row["ref_available"] = 1 if self.reference_cmd is not None else 0
+        row["command_invalid_event"] = 0
+        row["command_saturation_event"] = 0
+        row["sustained_command_saturation_event"] = 0
+        row["guarded_command_applied"] = 0
 
         if self.uav_odom is not None:
             self._fill_odom(row, "uav", self.uav_odom)
@@ -250,6 +268,9 @@ class StateLogger:
             row["so3_bodyrate_x"] = self._fmt(self.so3cmd.body_rate.x)
             row["so3_bodyrate_y"] = self._fmt(self.so3cmd.body_rate.y)
             row["so3_bodyrate_z"] = self._fmt(self.so3cmd.body_rate.z)
+            self._fill_command_diagnostics(row, self.so3cmd, now_ros_time)
+        else:
+            self.saturation_start_time = None
 
         if self.reference_cmd is not None:
             self._fill_reference_command(row, self.reference_cmd)
@@ -294,6 +315,44 @@ class StateLogger:
         row["%s_vel_x" % prefix] = self._fmt(odom.twist.twist.linear.x)
         row["%s_vel_y" % prefix] = self._fmt(odom.twist.twist.linear.y)
         row["%s_vel_z" % prefix] = self._fmt(odom.twist.twist.linear.z)
+
+    def _fill_command_diagnostics(self, row, so3cmd, now_ros_time):
+        command_values = {
+            "so3_thrust": so3cmd.thrust,
+            "so3_bodyrate_x": so3cmd.body_rate.x,
+            "so3_bodyrate_y": so3cmd.body_rate.y,
+            "so3_bodyrate_z": so3cmd.body_rate.z,
+        }
+        invalid_fields = [
+            name for name, value in command_values.items() if not math.isfinite(value)
+        ]
+        if invalid_fields:
+            row["command_invalid_event"] = 1
+            row["command_invalid_reason"] = ",".join(invalid_fields)
+
+        saturated_fields = []
+        thrust = command_values["so3_thrust"]
+        bodyrate_x = command_values["so3_bodyrate_x"]
+        bodyrate_y = command_values["so3_bodyrate_y"]
+        bodyrate_z = command_values["so3_bodyrate_z"]
+        if math.isfinite(thrust) and thrust >= self.thrust_saturation_threshold:
+            saturated_fields.append("so3_thrust")
+        if math.isfinite(bodyrate_x) and abs(bodyrate_x) >= self.bodyrate_xy_saturation_threshold:
+            saturated_fields.append("so3_bodyrate_x")
+        if math.isfinite(bodyrate_y) and abs(bodyrate_y) >= self.bodyrate_xy_saturation_threshold:
+            saturated_fields.append("so3_bodyrate_y")
+        if math.isfinite(bodyrate_z) and abs(bodyrate_z) >= self.bodyrate_z_saturation_threshold:
+            saturated_fields.append("so3_bodyrate_z")
+
+        if saturated_fields:
+            row["command_saturation_event"] = 1
+            row["command_saturation_reason"] = ",".join(saturated_fields)
+            if self.saturation_start_time is None:
+                self.saturation_start_time = now_ros_time
+            elif now_ros_time - self.saturation_start_time >= self.sustained_saturation_duration_sec:
+                row["sustained_command_saturation_event"] = 1
+        else:
+            self.saturation_start_time = None
 
     def _fill_reference_command(self, row, msg):
         if isinstance(msg, dict):

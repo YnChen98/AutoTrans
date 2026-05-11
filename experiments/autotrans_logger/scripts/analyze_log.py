@@ -86,6 +86,20 @@ REF_NUMERIC_FIELDS = (
     + REF_ACC_FIELDS
     + ["ref_yaw", "ref_yaw_dot", "ref_msg_ros_time"]
 )
+SO3_COMMAND_FIELDS = [
+    "so3_thrust",
+    "so3_bodyrate_x",
+    "so3_bodyrate_y",
+    "so3_bodyrate_z",
+]
+COMMAND_DIAGNOSTIC_FIELDS = [
+    "command_invalid_event",
+    "command_invalid_reason",
+    "command_saturation_event",
+    "command_saturation_reason",
+    "sustained_command_saturation_event",
+    "guarded_command_applied",
+]
 
 MAX_REASONABLE_SPEED_MPS = 10.0
 MAX_REASONABLE_SWING_DEG = 90.0
@@ -261,6 +275,47 @@ def first_ge_time(values, time_values, threshold):
         if math.isfinite(value) and math.isfinite(time_value) and value >= threshold:
             return time_value - start_time
     return math.nan
+
+
+def event_values(rows, name):
+    return [parse_float(row.get(name)) for row in rows]
+
+
+def event_count(values):
+    return sum(1 for value in values if math.isfinite(value) and value > 0.5)
+
+
+def first_event_index(values):
+    for index, value in enumerate(values):
+        if math.isfinite(value) and value > 0.5:
+            return index
+    return None
+
+
+def relative_time_at_index(time_values, index):
+    if index is None:
+        return math.nan
+    start_times = valid_values(time_values)
+    if not start_times:
+        return math.nan
+    if index >= len(time_values):
+        return math.nan
+    time_value = time_values[index]
+    if not math.isfinite(time_value):
+        return math.nan
+    return time_value - start_times[0]
+
+
+def first_event_reason(rows, index, reason_field):
+    if index is None or index >= len(rows):
+        return ""
+    return str(rows[index].get(reason_field, "")).strip()
+
+
+def happened_before(event_time, reference_time):
+    if math.isfinite(event_time) and math.isfinite(reference_time):
+        return event_time < reference_time
+    return ""
 
 
 def first_nonfinite_after_available_time(rows, fields, time_values, availability_values):
@@ -469,6 +524,27 @@ def compute_metrics(csv_path, rows, args):
         if has_column(rows, "command_risk_target_scale_raw")
         else []
     )
+    has_so3_command_fields = all(has_column(rows, field) for field in SO3_COMMAND_FIELDS)
+    command_invalid_events = (
+        event_values(rows, "command_invalid_event")
+        if has_so3_command_fields and has_column(rows, "command_invalid_event")
+        else []
+    )
+    command_saturation_events = (
+        event_values(rows, "command_saturation_event")
+        if has_so3_command_fields and has_column(rows, "command_saturation_event")
+        else []
+    )
+    sustained_command_saturation_events = (
+        event_values(rows, "sustained_command_saturation_event")
+        if has_so3_command_fields and has_column(rows, "sustained_command_saturation_event")
+        else []
+    )
+    guarded_command_applied_events = (
+        event_values(rows, "guarded_command_applied")
+        if has_so3_command_fields and has_column(rows, "guarded_command_applied")
+        else []
+    )
     has_reference_columns = all(has_column(rows, field) for field in REF_POS_FIELDS)
     ref_pos_x = column(rows, "ref_pos_x") if has_reference_columns else []
     ref_pos_y = column(rows, "ref_pos_y") if has_reference_columns else []
@@ -495,16 +571,28 @@ def compute_metrics(csv_path, rows, args):
     first_ros_time = valid_ros_times[0] if valid_ros_times else math.nan
     first_nan_ros_time = ""
     first_nan_time = ""
+    first_nan_relative_time = math.nan
     if first_nan_index is not None:
         first_nan_ros_value = ros_times[first_nan_index] if first_nan_index < len(ros_times) else math.nan
         if math.isfinite(first_nan_ros_value):
             first_nan_ros_time = first_nan_ros_value
             if math.isfinite(first_ros_time):
-                first_nan_time = first_nan_ros_value - first_ros_time
+                first_nan_relative_time = first_nan_ros_value - first_ros_time
+                first_nan_time = first_nan_relative_time
 
     max_uav_speed = max_or_nan(uav_speed)
     max_payload_speed = max_or_nan(payload_speed)
     max_swing_angle_deg = max_or_nan(swing_angle)
+    first_swing_angle_ge_30_time = (
+        first_ge_time(swing_angle, ros_times, 30.0)
+        if has_column(rows, "swing_angle_deg")
+        else math.nan
+    )
+    first_swing_angle_ge_60_time = (
+        first_ge_time(swing_angle, ros_times, 60.0)
+        if has_column(rows, "swing_angle_deg")
+        else math.nan
+    )
     has_target_xy = args.target_x is not None and args.target_y is not None
     final_uav_xy_error = xy_error(final_valid_uav_position, args.target_x, args.target_y)
     final_payload_xy_error = xy_error(final_valid_payload_position, args.target_x, args.target_y)
@@ -584,8 +672,8 @@ def compute_metrics(csv_path, rows, args):
     }
 
     if has_column(rows, "swing_angle_deg"):
-        metrics["first_swing_angle_ge_30_time"] = first_ge_time(swing_angle, ros_times, 30.0)
-        metrics["first_swing_angle_ge_60_time"] = first_ge_time(swing_angle, ros_times, 60.0)
+        metrics["first_swing_angle_ge_30_time"] = first_swing_angle_ge_30_time
+        metrics["first_swing_angle_ge_60_time"] = first_swing_angle_ge_60_time
 
     if all(has_column(rows, field) for field in ("uav_vel_x", "uav_vel_y", "uav_vel_z")):
         metrics["first_uav_speed_ge_4_time"] = first_ge_time(uav_speed, ros_times, 4.0)
@@ -595,6 +683,62 @@ def compute_metrics(csv_path, rows, args):
 
     for field in KEY_STATE_FIELDS:
         metrics["nan_count_%s" % field] = nan_counts[field]
+
+    if command_invalid_events:
+        first_invalid_index = first_event_index(command_invalid_events)
+        first_invalid_time = relative_time_at_index(ros_times, first_invalid_index)
+        metrics["command_invalid_count"] = event_count(command_invalid_events)
+        metrics["first_command_invalid_time"] = first_invalid_time
+        metrics["first_command_invalid_reason"] = first_event_reason(
+            rows,
+            first_invalid_index,
+            "command_invalid_reason",
+        )
+        metrics["command_invalid_before_first_nan"] = happened_before(
+            first_invalid_time,
+            first_nan_relative_time,
+        )
+        metrics["command_invalid_before_first_swing_ge_30"] = happened_before(
+            first_invalid_time,
+            first_swing_angle_ge_30_time,
+        )
+
+    if command_saturation_events:
+        first_saturation_index = first_event_index(command_saturation_events)
+        first_saturation_time = relative_time_at_index(ros_times, first_saturation_index)
+        metrics["command_saturation_count"] = event_count(command_saturation_events)
+        metrics["first_command_saturation_time"] = first_saturation_time
+        metrics["first_command_saturation_reason"] = first_event_reason(
+            rows,
+            first_saturation_index,
+            "command_saturation_reason",
+        )
+        metrics["command_saturation_before_first_nan"] = happened_before(
+            first_saturation_time,
+            first_nan_relative_time,
+        )
+        metrics["command_saturation_before_first_swing_ge_30"] = happened_before(
+            first_saturation_time,
+            first_swing_angle_ge_30_time,
+        )
+
+    if sustained_command_saturation_events:
+        first_sustained_index = first_event_index(sustained_command_saturation_events)
+        metrics["sustained_command_saturation_count"] = event_count(
+            sustained_command_saturation_events
+        )
+        metrics["first_sustained_command_saturation_time"] = relative_time_at_index(
+            ros_times,
+            first_sustained_index,
+        )
+
+    if guarded_command_applied_events:
+        first_guarded_index = first_event_index(guarded_command_applied_events)
+        metrics["guarded_command_applied_count"] = event_count(guarded_command_applied_events)
+        metrics["first_guarded_command_applied_time"] = relative_time_at_index(
+            ros_times,
+            first_guarded_index,
+        )
 
     if wind_force_norm:
         metrics["mean_wind_force_norm"] = mean(wind_force_norm)
@@ -936,6 +1080,59 @@ def make_plots(rows, output_dir):
             "SO3 command",
         ),
     )
+
+    if all(field in rows[0] for field in SO3_COMMAND_FIELDS):
+        def plot_so3_command_diagnostics(plt):
+            thrust = column(rows, "so3_thrust")
+            bodyrate_x = column(rows, "so3_bodyrate_x")
+            bodyrate_y = column(rows, "so3_bodyrate_y")
+            bodyrate_z = column(rows, "so3_bodyrate_z")
+
+            ax_thrust = plt.subplot(2, 1, 1)
+            plotted = False
+            xs = []
+            ys = []
+            for time_value, value in zip(time_sec, thrust):
+                if math.isfinite(time_value) and math.isfinite(value):
+                    xs.append(time_value)
+                    ys.append(value)
+            if xs:
+                ax_thrust.plot(xs, ys, label="so3_thrust")
+                plotted = True
+            ax_thrust.axhline(59.9, color="red", linestyle="--", linewidth=1.0, label="thrust threshold")
+            ax_thrust.set_ylabel("thrust")
+            ax_thrust.set_title("SO3 command diagnostics")
+            ax_thrust.grid(True)
+            ax_thrust.legend()
+
+            ax_rate = plt.subplot(2, 1, 2, sharex=ax_thrust)
+            for label, values in (
+                ("bodyrate_x", bodyrate_x),
+                ("bodyrate_y", bodyrate_y),
+                ("bodyrate_z", bodyrate_z),
+            ):
+                xs = []
+                ys = []
+                for time_value, value in zip(time_sec, values):
+                    if math.isfinite(time_value) and math.isfinite(value):
+                        xs.append(time_value)
+                        ys.append(value)
+                if xs:
+                    ax_rate.plot(xs, ys, label=label)
+                    plotted = True
+            ax_rate.axhline(2.99, color="red", linestyle="--", linewidth=1.0, label="xy threshold")
+            ax_rate.axhline(-2.99, color="red", linestyle="--", linewidth=1.0)
+            ax_rate.axhline(1.19, color="orange", linestyle="--", linewidth=1.0, label="z threshold")
+            ax_rate.axhline(-1.19, color="orange", linestyle="--", linewidth=1.0)
+            ax_rate.set_xlabel("time [s]")
+            ax_rate.set_ylabel("bodyrate [rad/s]")
+            ax_rate.grid(True)
+            ax_rate.legend()
+
+            if not plotted:
+                raise ValueError("no finite SO3 command data")
+
+        plot_or_warn(output_dir, "so3_command_diagnostics.png", plot_so3_command_diagnostics)
 
     if "wind_force_norm" in rows[0]:
         plot_or_warn(
