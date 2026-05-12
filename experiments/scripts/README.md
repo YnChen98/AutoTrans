@@ -408,6 +408,26 @@ current paper-facing Stage 4 aggregate result, using strict-valid /
 `label_strict_invalid`; it remains simulation-only limited-repeat evidence and
 does not support statistical-significance or safety-guarantee claims.
 
+## Stage 4-P balanced paper assets
+
+`experiments/scripts/generate_stage4_balanced_paper_assets.py` generates
+paper-ready CSV/Markdown tables and an aggregate success-rate PNG for the
+Stage 4-J balanced Trial 4/5/6 comparison. It uses strict-valid /
+`label_strict_invalid`, excludes diagnostic smoke runs, and writes generated
+outputs under ignored `experiments/results/stage4_balanced_paper_assets/`.
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/generate_stage4_balanced_paper_assets.py \
+  --manifest experiments/protocols/stage4h_adapter_limited_eval_manifest.json \
+  --metrics-dir experiments/figures \
+  --output-dir experiments/results/stage4_balanced_paper_assets \
+  --print-summary
+```
+
+Generated CSV/Markdown/PNG outputs should not be committed. Full protocol:
+`experiments/protocols/stage4p_balanced_paper_assets_protocol.md`.
+
 ## Stage 4 log divergence inspector
 
 `experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的
