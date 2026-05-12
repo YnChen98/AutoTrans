@@ -89,18 +89,22 @@ Excluded diagnostic families include:
 - `resetcheck*`
 - `smoke*`
 
-## Failure-Mode Interpretation Caveat
+## Run-Level Diagnostic Label Caveat
 
-The failure-mode table uses
+The failure-mode table is better interpreted as a run-level diagnostic-label
+table. It uses
 `experiments/scripts/inspect_stage4_log_divergence.py` to classify timing
 evidence from the CSV referenced by each metrics summary.
 
-Failure modes explain mechanisms; they do not replace strict-valid /
+Some labels correspond to valid or warning-only runs rather than failures.
+`command_saturation_without_divergence` is not a failure by itself,
+`no_divergence_detected` is not a failure, and `swing_warning_no_nan` is
+warning-only.
+
+Diagnostic labels explain mechanisms; they do not replace strict-valid /
 `label_strict_invalid` success accounting. NaN/divergence failures should be
 counted as invalid, but they should not automatically be attributed to command
-adaptation or to any single method. Transient
-`command_saturation_without_divergence` is not a failure by itself, and
-`swing_angle_deg >= 30` is warning-only.
+adaptation or to any single method.
 
 Manual path/collision annotations should be joined later when visual evidence
 exists.

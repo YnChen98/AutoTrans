@@ -413,8 +413,10 @@ does not support statistical-significance or safety-guarantee claims.
 `experiments/scripts/generate_stage4_balanced_paper_assets.py` generates
 paper-ready CSV/Markdown tables and an aggregate success-rate PNG for the
 Stage 4-J balanced Trial 4/5/6 comparison. It uses strict-valid /
-`label_strict_invalid`, excludes diagnostic smoke runs, and writes generated
-outputs under ignored `experiments/results/stage4_balanced_paper_assets/`.
+`label_strict_invalid`, excludes diagnostic smoke runs, writes generated
+outputs under ignored `experiments/results/stage4_balanced_paper_assets/`, and
+describes divergence-inspector outputs as run-level diagnostic labels because
+some labels correspond to valid or warning-only runs.
 
 ```bash
 cd ~/projects/autotrans_ws/src/AutoTrans
