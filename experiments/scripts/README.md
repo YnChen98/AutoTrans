@@ -400,6 +400,14 @@ aggregate is `original=18/30`, `fixed_s085=18/30`, `windlevel_s085=16/30`,
 and `risk_adapter_v1=23/30`. Do not mix diagnostic smoke runs into this main
 repeat comparison.
 
+The Stage 4-J balanced 30-repeat aggregate result is documented in
+`experiments/protocols/stage4j_balanced_30repeat_aggregate_result.md`.
+`risk_adapter_v1` is the best aggregate method at `23/30`; `original` and
+`fixed_s085` are tied at `18/30`, and `windlevel_s085` is `16/30`. This is the
+current paper-facing Stage 4 aggregate result, using strict-valid /
+`label_strict_invalid`; it remains simulation-only limited-repeat evidence and
+does not support statistical-significance or safety-guarantee claims.
+
 ## Stage 4 log divergence inspector
 
 `experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的

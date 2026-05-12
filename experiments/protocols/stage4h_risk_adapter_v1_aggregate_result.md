@@ -2,6 +2,14 @@
 
 ## Executive Summary
 
+This earlier limited aggregate has been superseded by the balanced 30-repeat
+Stage 4-J aggregate in
+`experiments/protocols/stage4j_balanced_30repeat_aggregate_result.md`.
+
+The superseding balanced result is: `risk_adapter_v1` `23/30`, `original`
+`18/30`, `fixed_s085` `18/30`, and `windlevel_s085` `16/30`, using
+strict-valid / `label_strict_invalid` as the paper-facing metric.
+
 `risk_adapter_v1` is the strongest current candidate in the limited-repeat
 strong-wind Trial 4, Trial 5, and Trial 6 evaluation.
 

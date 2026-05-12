@@ -333,7 +333,22 @@ Stage 4-H risk-conditioned adapter status:
   - `hard_threshold_5s=0.7`
   - `scale_rate_limit_per_sec=0.5`
 
-Stage 4-H limited-repeat results:
+Stage 4-J balanced 30-repeat result:
+
+- Stage 4-J balanced Trial 4/5/6 comparison is complete.
+- Paper-facing metric is strict-valid / `label_strict_invalid`, not raw
+  `valid_run_suggested` alone.
+- `risk_adapter_v1`: 23/30.
+- `original`: 18/30.
+- `fixed_s085`: 18/30.
+- `windlevel_s085`: 16/30.
+- `risk_adapter_v1` is the strongest aggregate candidate.
+- `risk_adapter_v1` is strongest on Trial 5 and Trial 6.
+- `fixed_s085` remains strongest on Trial 4.
+- Do not claim statistical significance, safety guarantee, final online
+  robustness, or that `risk_adapter_v1` beats every baseline on every target.
+
+Earlier Stage 4-H limited-repeat results:
 
 Trial 4:
 
@@ -374,7 +389,7 @@ Stage 4-I result table generator:
 - Generated outputs under `experiments/results/` are ignored and should not be
   committed.
 
-Stage 4-H/4-I claim limits:
+Stage 4-H/4-I/4-J claim limits:
 
 - Do not claim statistical significance.
 - Do not claim a safety guarantee.
@@ -382,15 +397,16 @@ Stage 4-H/4-I claim limits:
 - Do not hide the Trial 4 repeat5 and Trial 6 repeat1 `risk_adapter_v1`
   failures.
 - Do not claim `risk_adapter_v1` beats `fixed_s085` on every target, because
-  `fixed_s085` is 5/5 on Trial 4 while `risk_adapter_v1` is 4/5.
+  `fixed_s085` is 9/10 on Trial 4 while `risk_adapter_v1` is 7/10.
 
-Next recommended Stage 4-H work:
+Next recommended Stage 4-J work:
 
-- Do not tune `risk_adapter_v2` yet.
-- First expand `risk_adapter_v1` repeats on Trial 4, Trial 5, and Trial 6 from
-  5 to 10 repeats per target.
-- Then consider balanced baseline repeat expansion or `risk_adapter_v2`
-  design.
+- Freeze the current Stage 4-J balanced comparison.
+- Next step should be paper-ready table/figure generation from the committed
+  manifest, not more simulation or `risk_adapter_v2` tuning.
+- Consider a failure-mode distribution table.
+- Only after documentation/table generation, consider `risk_adapter_v2` or
+  path-feasibility diagnostics.
 
 Safety:
 
