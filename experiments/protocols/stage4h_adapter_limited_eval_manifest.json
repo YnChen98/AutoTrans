@@ -2,10 +2,11 @@
   "metadata": {
     "stage": "Stage 4-I",
     "description": "Limited-repeat strong-wind adapter comparison for Stage 4-H risk_adapter_v1 evaluation.",
-    "repeat_policy": "Trial 4 and Trial 5 have been expanded to 10 repeats for original, fixed_s085, windlevel_s085, and risk_adapter_v1; Trial 6 remains at 5 repeats for now and should be expanded next.",
-    "limitations": "Simulation-only, limited-repeat evidence; not a statistical robustness proof. Current manifest has unequal per-target repeat counts.",
+    "repeat_policy": "Trial 4, Trial 5, and Trial 6 have been expanded to 10 repeats for original, fixed_s085, windlevel_s085, and risk_adapter_v1.",
+    "limitations": "Simulation-only, limited-repeat evidence; not a statistical robustness proof. The main four methods now support a balanced 30-repeat Trial 4/5/6 comparison.",
     "manual_observation_note": "Trial 4 includes manual visual observations of obstacle-collision/path-feasibility-related failures; some invalids may not be purely command-adaptation or risk-prediction failures.",
-    "label_convention": "Paper-facing comparison should use strict-valid / label_strict_invalid interpretation because valid_run_suggested can overestimate safety success when swing or payload-speed thresholds are exceeded."
+    "label_convention": "Paper-facing comparison should use strict-valid / label_strict_invalid interpretation because valid_run_suggested can overestimate safety success when swing or payload-speed thresholds are exceeded.",
+    "balanced_aggregate_note": "Main four-method Trial 4/5/6 aggregate: original 18/30, fixed_s085 18/30, windlevel_s085 16/30, risk_adapter_v1 23/30."
   },
   "results": [
     {
@@ -96,24 +97,12 @@
       "trial_id": "trial5",
       "target_x": 3.5,
       "target_y": 0.8,
-      "method": "risk_adapter_v0",
-      "repeat_count": 5,
-      "valid_count": 2,
-      "invalid_count": 3,
-      "success_rate": 0.4,
-      "notes": "Prior risk-conditioned adapter result; v0 failures motivated stronger v1 early intervention.",
-      "source_protocol_doc": "experiments/protocols/stage4h_risk_adapter_v0_trial5_repeat_result.md"
-    },
-    {
-      "trial_id": "trial5",
-      "target_x": 3.5,
-      "target_y": 0.8,
       "method": "risk_adapter_v1",
       "repeat_count": 10,
       "valid_count": 9,
       "invalid_count": 1,
       "success_rate": 0.9,
-      "notes": "Trial 5 expanded to 10 repeats; strongest Trial 5 method. repeat6 was a NaN/safety failure. Trial 6 remains 5-repeat and should be expanded next.",
+      "notes": "Trial 5 expanded to 10 repeats; strongest Trial 5 method. repeat6 was a NaN/safety failure. Trial 4/5/6 main-method balanced 10-repeat comparison is now available after Trial 6 expansion.",
       "source_protocol_doc": "experiments/protocols/stage4j_trial5_10repeat_fair_comparison.md"
     },
     {
@@ -121,60 +110,48 @@
       "target_x": 0.0,
       "target_y": 1.5,
       "method": "original",
-      "repeat_count": 5,
-      "valid_count": 2,
-      "invalid_count": 3,
-      "success_rate": 0.4,
-      "notes": "Historical strong-wind Trial 6 baseline.",
-      "source_protocol_doc": "experiments/protocols/stage4_trial6_expansion_summary.md"
+      "repeat_count": 10,
+      "valid_count": 3,
+      "invalid_count": 7,
+      "success_rate": 0.3,
+      "notes": "Trial 6 expanded to 10 repeats; strict-valid and raw valid_run_suggested are both 3/10. Failures are mostly state_divergence_before_command_nan, with NaN/divergence mechanisms mixed with saturation diagnostics.",
+      "source_protocol_doc": "experiments/protocols/stage4j_trial6_10repeat_fair_comparison.md"
     },
     {
       "trial_id": "trial6",
       "target_x": 0.0,
       "target_y": 1.5,
       "method": "fixed_s085",
-      "repeat_count": 5,
-      "valid_count": 2,
-      "invalid_count": 3,
+      "repeat_count": 10,
+      "valid_count": 4,
+      "invalid_count": 6,
       "success_rate": 0.4,
-      "notes": "Historical fixed XML scale 0.85 baseline.",
-      "source_protocol_doc": "experiments/protocols/stage4_trial6_expansion_summary.md"
+      "notes": "Trial 6 expanded to 10 repeats; strict-valid and raw valid_run_suggested are both 4/10. Failures are mostly command_saturation_before_nan, with one no-NaN strict safety / target failure.",
+      "source_protocol_doc": "experiments/protocols/stage4j_trial6_10repeat_fair_comparison.md"
     },
     {
       "trial_id": "trial6",
       "target_x": 0.0,
       "target_y": 1.5,
       "method": "windlevel_s085",
-      "repeat_count": 5,
-      "valid_count": 2,
-      "invalid_count": 3,
-      "success_rate": 0.4,
-      "notes": "Historical policy_mode=wind_level scale 0.85 baseline.",
-      "source_protocol_doc": "experiments/protocols/stage4_trial6_expansion_summary.md"
-    },
-    {
-      "trial_id": "trial6",
-      "target_x": 0.0,
-      "target_y": 1.5,
-      "method": "risk_adapter_v0",
-      "repeat_count": 5,
-      "valid_count": 4,
-      "invalid_count": 1,
-      "success_rate": 0.8,
-      "notes": "Prior risk-conditioned adapter result.",
-      "source_protocol_doc": "experiments/protocols/stage4h_risk_adapter_v0_trial6_repeat_result.md"
+      "repeat_count": 10,
+      "valid_count": 6,
+      "invalid_count": 4,
+      "success_rate": 0.6,
+      "notes": "Trial 6 expanded to 10 repeats; strict-valid and raw valid_run_suggested are both 6/10. Results include command_saturation_before_nan failures and valid command_saturation_without_divergence cases.",
+      "source_protocol_doc": "experiments/protocols/stage4j_trial6_10repeat_fair_comparison.md"
     },
     {
       "trial_id": "trial6",
       "target_x": 0.0,
       "target_y": 1.5,
       "method": "risk_adapter_v1",
-      "repeat_count": 5,
-      "valid_count": 4,
-      "invalid_count": 1,
-      "success_rate": 0.8,
-      "notes": "repeat1 failed with NaN at first_nan_time=25.099965; early risk activated but hard threshold arrived after NaN.",
-      "source_protocol_doc": "experiments/protocols/stage4h_risk_adapter_v1_trial6_repeat_result.md"
+      "repeat_count": 10,
+      "valid_count": 7,
+      "invalid_count": 3,
+      "success_rate": 0.7,
+      "notes": "Trial 6 expanded to 10 repeats; strict-valid and raw valid_run_suggested are both 7/10. Strongest Trial 6 method, but failures include state_divergence_before_command_nan and reference_jump_before_command_nan.",
+      "source_protocol_doc": "experiments/protocols/stage4j_trial6_10repeat_fair_comparison.md"
     }
   ]
 }

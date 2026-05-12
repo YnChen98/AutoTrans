@@ -391,6 +391,15 @@ python3 experiments/scripts/summarize_stage4h_adapter_results.py \
 `experiments/results/stage4h_adapter_limited_eval_summary.csv` 不应提交。完整 protocol 见
 `experiments/protocols/stage4h_adapter_result_table_protocol.md`。
 
+Stage 4-J Trial 6 10-repeat fair comparison is complete and documented in
+`experiments/protocols/stage4j_trial6_10repeat_fair_comparison.md`. Using
+strict-valid / `label_strict_invalid`, Trial 6 results are `original=3/10`,
+`fixed_s085=4/10`, `windlevel_s085=6/10`, and `risk_adapter_v1=7/10`. With
+Trial 4/5/6 all at 10 repeats for the main four methods, the balanced
+aggregate is `original=18/30`, `fixed_s085=18/30`, `windlevel_s085=16/30`,
+and `risk_adapter_v1=23/30`. Do not mix diagnostic smoke runs into this main
+repeat comparison.
+
 ## Stage 4 log divergence inspector
 
 `experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的

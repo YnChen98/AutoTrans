@@ -32,17 +32,18 @@ Each entry in `results` contains:
 - `notes`
 - `source_protocol_doc`
 
-The manifest includes `original`, `fixed_s085`, `windlevel_s085`,
-`risk_adapter_v0` where available, and `risk_adapter_v1`.
+The current balanced manifest includes `original`, `fixed_s085`,
+`windlevel_s085`, and `risk_adapter_v1`.
 
-Manifest entries may temporarily have unequal per-target repeat counts. The
-current manifest uses 10 repeats for the main Trial 4 and Trial 5 methods,
-while Trial 6 remains at 5 repeats and `risk_adapter_v0` remains 5-repeat
-where applicable. The generated aggregate table is therefore a weighted
-aggregate over currently available repeats, not a final balanced comparison.
+The current manifest supports a balanced 30-repeat comparison for the main
+Trial 4, Trial 5, and Trial 6 methods: `original`, `fixed_s085`,
+`windlevel_s085`, and `risk_adapter_v1` each have 10 repeats per target.
+Historical `risk_adapter_v0` repeat results remain in their source protocol
+documents, but they are not included in this balanced manifest.
 
-Final fair comparison should equalize repeats across Trial 4, Trial 5, and
-Trial 6 before making broader claims.
+For the main four methods, Trial 4/5/6 repeat counts are now equalized. This
+supports a fair 30-repeat aggregate, while still remaining limited-repeat
+simulation evidence rather than a statistical proof.
 
 Paper-facing safety comparison should use strict-valid /
 `label_strict_invalid` interpretation as the primary success metric.
@@ -50,8 +51,8 @@ Paper-facing safety comparison should use strict-valid /
 speed exceeds strict thresholds, as seen in Trial 5 runs that passed
 target/NaN checks but violated safety limits.
 
-Trial 6 still needs repeat expansion to 10 repeats for a balanced Stage 4-H
-comparison.
+Trial 6 10-repeat expansion is recorded in
+`experiments/protocols/stage4j_trial6_10repeat_fair_comparison.md`.
 
 Invalid runs should also include failure-mode labels so success rate is not
 interpreted without failure context.
@@ -61,6 +62,9 @@ success metric, while failure-mode labels explain why invalid runs failed.
 Transient labels such as `command_saturation_without_divergence` should not be
 counted as invalid by themselves unless strict-valid / `label_strict_invalid`
 also marks the run invalid.
+
+Failure-mode labels and manual annotations explain mechanisms, but they do not
+replace strict-valid / `label_strict_invalid` success accounting.
 
 Future result manifests should support manual annotations such as
 `collision_observed` and `path_infeasible` when visual inspection identifies
@@ -139,22 +143,18 @@ The result table is based on manually recorded limited-repeat evaluation
 summaries. It is not a statistical test and does not prove final online
 robustness or safety.
 
-When per-target repeat counts are unequal, the aggregate table is a weighted
-available-repeat aggregate. It should be read as "what the current manifest
-contains", not as a final balanced comparison. Final paper comparison should
-equalize repeat counts across Trial 4, Trial 5, and Trial 6 before making
-broader claims.
+For the main four methods, the current aggregate table is now a balanced
+Trial 4/5/6 30-repeat comparison.
 
 The current aggregate result is:
 
 | Method | Current available valid runs |
 | --- | ---: |
-| `original` | `17/25` |
-| `fixed_s085` | `16/25` |
-| `windlevel_s085` | `12/25` |
-| `risk_adapter_v1` | `20/25` |
+| `original` | `18/30` |
+| `fixed_s085` | `18/30` |
+| `windlevel_s085` | `16/30` |
+| `risk_adapter_v1` | `23/30` |
 
-`risk_adapter_v1` is the current strongest weighted aggregate candidate, but
-`fixed_s085` remains best on Trial 4 with `9/10` valid runs. This aggregate is
-not final because the main Trial 4 and Trial 5 methods have 10 repeats while
-Trial 6 still has 5 repeats.
+`risk_adapter_v1` is the strongest balanced aggregate candidate, but
+`fixed_s085` remains best on Trial 4 with `9/10` valid runs. Do not claim
+`risk_adapter_v1` beats every baseline on every target.
