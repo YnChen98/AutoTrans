@@ -194,6 +194,16 @@ nonfinite values or jumps before failure. However, `ref_acc` remains
 unavailable or NaN in the `nav_msgs/Path` reference source, so acceleration
 reference discontinuity is not fully ruled out.
 
+Stage 4-O3 trajectory publish / replan-proxy diagnostic smoke results are
+recorded in
+`experiments/protocols/stage4o_trajectory_publish_diagnostic_smoke_result.md`.
+All three O3 smokes were valid and did not reproduce NaN or teleport-like
+divergence. smoke2 is now correctly labeled `swing_warning_no_nan`, not
+`strict_safety_no_nan`, because `swing_angle_deg` exceeded `30 deg` but stayed
+below `60 deg`, speed stayed below `4 m/s`, and no NaN occurred. These smokes
+confirm that trajectory publish/update counters are usable, but they do not
+prove path feasibility or replanning root cause.
+
 ## Failure-Mode Label Taxonomy
 
 Use the following proposed labels when annotating invalid runs:
@@ -245,7 +255,7 @@ instability.
 
 ## What Not To Claim
 
-- Do not claim statistical significance from this 184-row diagnostic scan.
+- Do not claim statistical significance from this 191-row diagnostic scan.
 - Do not use this scan as the main evaluation table.
 - Do not hide mixed failure mechanisms.
 - Do not claim root cause is proven without desired/reference trajectory

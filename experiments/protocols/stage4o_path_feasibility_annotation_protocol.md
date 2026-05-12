@@ -82,10 +82,17 @@ Stage 4-O3 adds low-risk trajectory publish / replan-proxy diagnostics in
 `trajectory_update_count` is the same as `trajectory_publish_count` because
 there is no reliable duplicate-vs-new-trajectory discriminator.
 
-These fields are not proof of a replan and do not prove path infeasibility.
-They can indicate trajectory updates near obstacle pauses, state divergence,
-SO3 command NaN, or swing threshold crossings. Path infeasibility still
-requires manual annotation or a later automatic path/ESDF checking pipeline.
+These fields are only a weak replan proxy. They are not proof of a true
+replan and do not prove path infeasibility. They can indicate trajectory
+updates near obstacle pauses, state divergence, SO3 command NaN, or swing
+threshold crossings. Path infeasibility still requires manual annotation or a
+later automatic path/ESDF checking pipeline.
+
+The first O3 trajectory publish diagnostic smoke result is recorded in
+`experiments/protocols/stage4o_trajectory_publish_diagnostic_smoke_result.md`.
+Those three diagnostic smokes confirmed that the trajectory publish/update
+counters are usable, but they did not reproduce the N4 obstacle/path/divergence
+event and must not be used as main success-rate evidence.
 
 ## Manual Annotation Fields
 

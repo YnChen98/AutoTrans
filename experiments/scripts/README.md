@@ -513,6 +513,15 @@ Stage 4-O3 adds lightweight trajectory publish diagnostics to
 prove path infeasibility or collision without manual annotation or later
 path/ESDF checking.
 
+The first Stage 4-O3 diagnostic smoke result is documented in
+`experiments/protocols/stage4o_trajectory_publish_diagnostic_smoke_result.md`.
+All three `original` / strong-wind / Trial 6 / `goal_repeat=10` smokes were
+valid and did not reproduce NaN or teleport-like divergence. The smoke2 run is
+classified as `swing_warning_no_nan`, not `strict_safety_no_nan`, because
+`swing_angle_deg >= 30` is warning-only and the run stayed below strict safety
+thresholds. These smokes are diagnostic-only and should not be used as final
+balanced comparison evidence.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。
