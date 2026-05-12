@@ -109,7 +109,7 @@ command NaN and state divergence.
 For each CSV log, the tool reports timing for:
 
 - evidence flags for nonfinite values, command saturation, high speed,
-  position jump, and swing threshold crossing
+  position jump, `swing_angle_deg >= 30` warning, and strict safety violation
 - first nonfinite value and its column
 - first SO3 thrust/bodyrate NaN
 - first SO3 thrust/bodyrate saturation
@@ -157,15 +157,27 @@ The `failure_mode_guess` field is best-effort. It is intended for triage and
 manifest annotation, not as a definitive physical diagnosis.
 
 `no_divergence_detected` means the CSV did not show nonfinite state/SO3
-commands, UAV/payload high speed, swing threshold crossing, or position jump.
-It should not be treated as an invalid divergence label.
+commands, UAV/payload high speed, strict swing threshold crossing, position
+jump, target-error evidence, or `swing_angle_deg >= 30` warning. It should not
+be treated as an invalid divergence label.
 
 `command_saturation_without_divergence` means SO3 thrust or bodyrate reached
 the configured saturation threshold, but no NaN/nonfinite state, high-speed
-divergence, position jump, or swing threshold crossing was detected. Transient
-command saturation alone is a diagnostic signal, not necessarily a failure.
-Valid runs may still receive this label when saturation is transient and no
-invalid evidence follows.
+divergence, position jump, strict swing threshold crossing, or `swing_angle_deg
+>= 30` warning was detected. Transient command saturation alone is a diagnostic
+signal, not necessarily a failure. Valid runs may still receive this label when
+saturation is transient and no invalid or warning evidence follows.
+
+`swing_warning_no_nan` means the run crossed `swing_angle_deg >= 30` without
+NaN/nonfinite values, without strict safety violation, and without target-error
+failure evidence. This is a diagnostic warning, not a paper-facing strict
+invalid label by itself.
+
+`strict_safety_no_nan` is reserved for stronger no-NaN safety evidence:
+`swing_angle_deg >= 60`, UAV/payload speed `>= 4 m/s`, UAV/payload position
+jump `> 1 m`, or target-error failure evidence tracked separately as
+`target_error_only`. The strict-valid / `label_strict_invalid` fields remain
+the paper-facing metric for success-rate tables.
 
 `command_saturation_before_nan` should be used only when command saturation
 precedes command NaN and command NaN occurs before or near state divergence.
@@ -177,12 +189,19 @@ The inspector now reports aggregate timing fields for root-cause ordering:
 - `first_command_nan_time`
 - `first_state_divergence_time`
 - `first_reference_jump_time`
+- `first_swing_warning_time`
+- `first_strict_safety_violation_time`
 - `first_reference_nonfinite_time`
 - `first_command_saturation_time`
 - `reference_jump_after_divergence`
 
-`first_state_divergence_time` is the earliest detected high-speed, position
-jump, or `swing_angle_deg >= 30` event. `first_command_nan_time` is the
+`first_swing_warning_time` is the first `swing_angle_deg >= 30` event.
+`first_strict_safety_violation_time` is the first high-speed, position jump,
+or `swing_angle_deg >= 60` event. `first_state_divergence_time` follows the
+strict safety timing and does not treat `swing_angle_deg >= 30` alone as state
+divergence for warning-only runs; when a run later has command NaN or strict
+safety violation, the `swing_angle_deg >= 30` time is retained as early
+state-divergence timing for ordering. `first_command_nan_time` is the
 earliest nonfinite SO3 thrust/bodyrate value. `first_reference_jump_time` is
 the earliest reference position jump, reference velocity jump, or finite
 reference acceleration spike when those fields are available.
@@ -193,9 +212,10 @@ and state divergence may also be coincident within one logger sample period,
 especially when the log rate is too low to resolve the exact ordering.
 
 State divergence before command NaN is also possible. In those cases, the
-first detected high-speed, swing, or position-jump event appears before any
-logged SO3 command NaN. Those runs should not be explained solely as command
-NaN propagation.
+first detected high-speed, `swing_angle_deg >= 60`, position-jump, or early
+`swing_angle_deg >= 30` warning that precedes a later strict/NaN failure
+appears before any logged SO3 command NaN. Those runs should not be explained
+solely as command NaN propagation.
 
 Late reference jumps must not be over-interpreted. If a reference jump occurs
 after command NaN or after state divergence, the inspector sets
@@ -218,6 +238,7 @@ Current batch-audit labels include:
 - `no_divergence_detected`
 - `state_divergence_before_command_nan`
 - `strict_safety_no_nan`
+- `swing_warning_no_nan`
 - `target_error_only`
 
 Additional labels may appear for targeted single-log diagnostics when evidence

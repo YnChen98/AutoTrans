@@ -3,9 +3,9 @@
 ## Executive Summary
 
 The Stage 4 divergence audit now separates transient command saturation,
-command NaN timing, state divergence timing, and late reference jumps. With the
-latest corrected classifier, the dominant diagnostic label is
-`command_saturation_without_divergence`, while
+command NaN timing, state divergence timing, `swing_angle_deg >= 30` warnings,
+and late reference jumps. With the latest corrected classifier, the dominant
+diagnostic label is `command_saturation_without_divergence`, while
 `command_saturation_before_nan` remains a major real divergence class.
 
 The audit also now finds a significant `state_divergence_before_command_nan`
@@ -28,7 +28,7 @@ python3 experiments/scripts/inspect_stage4_log_divergence.py \
 ```
 
 The glob includes historical, smoke, debug, resetcheck, and old experiment
-logs. Therefore `rows_inspected=184` should not be treated as the final
+logs. Therefore `rows_inspected=191` should not be treated as the final
 balanced evaluation sample.
 
 Generated output under `experiments/results/` should remain uncommitted.
@@ -37,28 +37,32 @@ Generated output under `experiments/results/` should remain uncommitted.
 
 | Failure-mode guess | Count |
 | --- | ---: |
-| rows inspected | `184` |
+| rows inspected | `191` |
 | `command_nan_before_state_divergence` | `1` |
 | `command_saturation_before_nan` | `35` |
-| `command_saturation_without_divergence` | `94` |
+| `command_saturation_without_divergence` | `99` |
 | `no_divergence_detected` | `7` |
-| `state_divergence_before_command_nan` | `20` |
-| `strict_safety_no_nan` | `21` |
-| `target_error_only` | `6` |
+| `state_divergence_before_command_nan` | `21` |
+| `strict_safety_no_nan` | `7` |
+| `swing_warning_no_nan` | `14` |
+| `target_error_only` | `7` |
 
 This table uses the latest timing-aware classifier. Earlier diagnostic wording
 did not separate transient command saturation from saturation followed by
 NaN/divergence, and it did not separate state divergence before command NaN
-from command NaN before state divergence.
+from command NaN before state divergence. The latest taxonomy also separates
+`swing_warning_no_nan` from `strict_safety_no_nan`; `swing_angle_deg >= 30`
+alone is a warning threshold, not a paper-facing strict invalid threshold.
 
 ## Correction Note
 
 Earlier audits overemphasized `command_saturation_before_nan` because the
 classifier did not fully separate transient command saturation without later
-NaN/nonfinite state, high-speed divergence, position jump, or swing threshold
-crossing. It also did not yet distinguish cases where state divergence appears
-before command NaN. The latest audit shows that command saturation is common
-and should be treated as a diagnostic signal, not automatically as an invalid
+NaN/nonfinite state, high-speed divergence, position jump, or strict swing
+threshold crossing. It also did not yet distinguish cases where state
+divergence appears before command NaN, and it treated `swing_angle_deg >= 30`
+too strongly. The latest audit shows that command saturation and moderate
+swing warnings are common diagnostic signals, not automatically invalid
 divergence.
 
 The inspector has also been updated to scan only numeric state, SO3 command,
@@ -141,17 +145,28 @@ launch flows that publish `quadrotor_msgs/PositionCommand`.
 
 `command_saturation_without_divergence` means SO3 thrust or bodyrate saturation
 appeared, but the CSV did not show NaN/nonfinite state, high-speed divergence,
-position jump, or swing threshold crossing. It is a diagnostic signal, not an
-invalid divergence label by itself.
+position jump, strict swing threshold crossing, or `swing_angle_deg >= 30`
+warning. It is a diagnostic signal, not an invalid divergence label by itself.
+
+`swing_warning_no_nan` means `swing_angle_deg >= 30` appeared without
+NaN/nonfinite values, without strict safety violation, and without target-error
+failure evidence. It is useful diagnostic timing, but it is not the same as
+strict-valid / `label_strict_invalid`.
+
+`strict_safety_no_nan` is reserved for stronger no-NaN safety evidence such as
+`swing_angle_deg >= 60`, UAV/payload speed `>= 4 m/s`, or UAV/payload position
+jump `> 1 m`. Paper-facing success-rate tables should continue to use
+strict-valid / `label_strict_invalid`.
 
 `command_saturation_before_nan` means SO3 thrust or bodyrate saturation appears
 before command NaN and before or near state divergence. It remains a major
 real divergence class.
 
-`state_divergence_before_command_nan` means speed, swing, or position-jump
-divergence appears before any logged SO3 command NaN. These cases need
-separate investigation because an active command NaN guard may not prevent
-them.
+`state_divergence_before_command_nan` means speed, `swing_angle_deg >= 60`,
+position-jump divergence, or an early `swing_angle_deg >= 30` warning that
+precedes later strict/NaN failure appears before any logged SO3 command NaN.
+These cases need separate investigation because an active command NaN guard may
+not prevent them.
 
 These are invalid safety failures, but they should not automatically be
 assigned to `risk_adapter_v1` or any single command-adaptation method.
@@ -185,6 +200,7 @@ Use the following proposed labels when annotating invalid runs:
 
 - `target_error_only`
 - `strict_safety_no_nan`
+- `swing_warning_no_nan`
 - `command_saturation_before_nan`
 - `command_saturation_without_divergence`
 - `command_nan_before_state_divergence`

@@ -394,11 +394,17 @@ python3 experiments/scripts/summarize_stage4h_adapter_results.py \
 ## Stage 4 log divergence inspector
 
 `experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的
-SO3 command saturation、command NaN、speed threshold、swing threshold 和 position jump
+SO3 command saturation、command NaN、speed threshold、swing warning/strict threshold 和 position jump
 timing，帮助区分 sudden fly-away / teleport-like divergence。它不运行 ROS、simulation、RViz
 或 `catkin_make`。`failure_mode_guess` 是 heuristic label；clean valid runs 应显示
 `no_divergence_detected`，transient saturation without NaN/divergence 会显示
 `command_saturation_without_divergence`，不应当作 invalid divergence。
+`swing_angle_deg >= 30` 只是 warning threshold，会报告为
+`swing_warning_no_nan`；`strict_safety_no_nan` 只保留给 no-NaN 条件下的
+paper-facing strict safety violation，例如 `swing_angle_deg >= 60`、
+UAV/payload speed `>= 4 m/s`、UAV/payload position jump `> 1 m` 或
+target-error failure evidence。正式结果仍应使用 strict-valid /
+`label_strict_invalid`。
 
 The inspector sorts rows by timestamp before timing analysis, ignores string
 diagnostic reason fields during nonfinite scans, and reports aggregate timing
@@ -410,7 +416,7 @@ initial planner reference root cause.
 The latest batch audit categories include `command_nan_before_state_divergence`,
 `command_saturation_before_nan`, `command_saturation_without_divergence`,
 `no_divergence_detected`, `state_divergence_before_command_nan`,
-`strict_safety_no_nan`, and `target_error_only`. These are heuristic
+`strict_safety_no_nan`, `swing_warning_no_nan`, and `target_error_only`. These are heuristic
 classification labels, not final physical root-cause proof.
 
 检查单个 CSV，并打印一个相对时间窗口内的关键列：
