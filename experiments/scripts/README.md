@@ -430,6 +430,29 @@ python3 experiments/scripts/generate_stage4_balanced_paper_assets.py \
 Generated CSV/Markdown/PNG outputs should not be committed. Full protocol:
 `experiments/protocols/stage4p_balanced_paper_assets_protocol.md`.
 
+## Stage 4-Q1 main-run audit table
+
+`experiments/scripts/build_stage4_main_run_audit.py` builds one formal
+run-level audit table for the Stage 4-J balanced Trial 4/5/6 main repeats. It
+uses exact formal repeat filenames, excludes diagnostic smoke/root-cause files,
+joins divergence-inspector labels, preserves command/reference/trajectory
+diagnostic fields when available, and joins Stage 4-O manual path/collision
+annotations when a row matches by `run_name` or `csv_path`.
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/build_stage4_main_run_audit.py \
+  --metrics-dir experiments/figures \
+  --manual-annotations experiments/protocols/stage4o_manual_failure_annotations.json \
+  --output-csv experiments/results/stage4_main_run_audit/stage4_main_run_audit.csv \
+  --output-md experiments/results/stage4_main_run_audit/stage4_main_run_audit_summary.md \
+  --print-summary
+```
+
+Generated CSV/Markdown outputs under
+`experiments/results/stage4_main_run_audit/` should not be committed. Full
+protocol: `experiments/protocols/stage4q_main_run_audit_protocol.md`.
+
 ## Stage 4 log divergence inspector
 
 `experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的
