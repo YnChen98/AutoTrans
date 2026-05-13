@@ -453,6 +453,35 @@ Generated CSV/Markdown outputs under
 `experiments/results/stage4_main_run_audit/` should not be committed. Full
 protocol: `experiments/protocols/stage4q_main_run_audit_protocol.md`.
 
+## Stage 4-R fixed-scale frontier runner
+
+`experiments/scripts/run_stage4_fixed_scale_frontier.py` generates a safe
+print-only command plan for fixed-scale frontier screening. The purpose is to
+test scales such as `0.70` or `0.75` before adding more learned adapter tuning.
+Default behavior does not modify planner XML or run simulation; `--execute`
+must be provided explicitly to run the generated commands.
+
+Example dry run for scale `0.75`:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/run_stage4_fixed_scale_frontier.py \
+  --scale 0.75 \
+  --trials 4 5 6 \
+  --repeats 1 2 3 \
+  --duration 75 \
+  --startup-wait 25 \
+  --goal-repeat 10 \
+  --goal-interval 1.0 \
+  --dry-run \
+  --print-commands
+```
+
+Screening scales are `0.60`, `0.65`, `0.70`, `0.75`, `0.80`, and `0.90`;
+existing `fixed_s085` covers scale `0.85`. Generated CSV/PNG/TXT/Markdown
+outputs should not be committed. Full protocol:
+`experiments/protocols/stage4r_fixed_scale_frontier_protocol.md`.
+
 ## Stage 4 log divergence inspector
 
 `experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的
