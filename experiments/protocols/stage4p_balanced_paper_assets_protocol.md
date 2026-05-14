@@ -13,6 +13,10 @@ Stage 4-R later identified `fixed_s080` as a tuned fixed-scale frontier with
 Future paper assets must include this tuned `fixed_s080` frontier or avoid
 claiming that `risk_adapter_v1` is the overall best method.
 
+If `risk_adapter_v2` is evaluated, future paper assets should include
+`risk_adapter_v2` alongside `fixed_s080`, `risk_adapter_v1`, and the original
+four Stage 4-J methods.
+
 ## Inputs
 
 Primary manifest:
@@ -37,6 +41,9 @@ Current Stage 4-P assets cover the four-method Stage 4-J comparison. When
 updating paper-facing outputs after Stage 4-R, add the `fixed_s080` tuned
 frontier result documented in
 `experiments/protocols/stage4r_fixed_s080_frontier_result.md`.
+
+When updating after Stage 4-S evaluation, include `risk_adapter_v2` only if it
+has formal repeat results rather than design notes or diagnostic smokes.
 
 The script looks for exact filenames of the form:
 

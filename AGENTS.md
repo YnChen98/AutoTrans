@@ -363,6 +363,18 @@ Stage 4-R tuned fixed-scale frontier result:
 - The next method target is `risk_adapter_v2` / a calibrated risk governor that
   can match or exceed the tuned fixed frontier while preserving adaptivity.
 
+Stage 4-S risk_adapter_v2 design:
+
+- Stage 4-S is the next algorithmic direction.
+- `risk_adapter_v2` should be a calibrated risk-conditioned execution governor,
+  not simple threshold tuning.
+- `risk_adapter_v2` should use `fixed_s080` as the static frontier reference.
+- Do not claim `risk_adapter_v1` is overall best after Stage 4-R.
+- Do not run more fixed-scale frontier before the Stage 4-S design is
+  documented.
+- The design protocol is
+  `experiments/protocols/stage4s_risk_adapter_v2_design.md`.
+
 Earlier Stage 4-H limited-repeat results:
 
 Trial 4:
@@ -415,15 +427,17 @@ Stage 4-H/4-I/4-J claim limits:
 - Do not claim `risk_adapter_v1` beats `fixed_s085` on every target, because
   `fixed_s085` is 9/10 on Trial 4 while `risk_adapter_v1` is 7/10.
 
-Next recommended Stage 4-J/4-R work:
+Next recommended Stage 4-J/4-R/4-S work:
 
 - Freeze the current Stage 4-J balanced comparison.
 - Freeze `fixed_s080` as the current tuned fixed-scale frontier.
 - Next reporting step should be paper-ready table/figure generation updated to
   include `fixed_s080`, not more simulation or fixed-scale screening.
+- Next algorithmic step should be Stage 4-S `risk_adapter_v2` design before any
+  implementation or additional fixed-scale frontier runs.
 - Consider a failure-mode distribution table.
-- Only after documentation/table generation, consider `risk_adapter_v2` or
-  path-feasibility diagnostics.
+- Only after Stage 4-S documentation and paper table updates, consider
+  `risk_adapter_v2` implementation or path-feasibility diagnostics.
 
 Safety:
 

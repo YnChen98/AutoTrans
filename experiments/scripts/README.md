@@ -493,6 +493,20 @@ Stage 4-R tuned fixed-scale frontier result:
 - Result document:
   `experiments/protocols/stage4r_fixed_s080_frontier_result.md`.
 
+## Stage 4-S risk_adapter_v2 design
+
+Stage 4-S defines the `risk_adapter_v2` calibrated risk-conditioned execution
+governor design. The design uses `fixed_s080` as the static frontier reference
+and aims to match or exceed `24/30` while preserving adaptive behavior.
+
+The design is documentation-only at this stage. The follow-up coding task is
+to add a disabled-by-default `risk_adapter_v2` policy mode in
+`experiments/command_adaptation/scripts/risk_conditioned_command_adapter.py`
+while keeping `risk_adapter_v1` unchanged.
+
+Design protocol:
+`experiments/protocols/stage4s_risk_adapter_v2_design.md`.
+
 ## Stage 4 log divergence inspector
 
 `experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的

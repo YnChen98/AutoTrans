@@ -108,6 +108,9 @@ static frontier reference.
 The next reporting step should update Stage 4-P paper assets to include
 `fixed_s080`.
 
+The Stage 4-S `risk_adapter_v2` design protocol is documented in
+`experiments/protocols/stage4s_risk_adapter_v2_design.md`.
+
 ## What Not To Claim
 
 - Do not claim `risk_adapter_v1` is best overall after including `fixed_s080`.
