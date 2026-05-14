@@ -182,7 +182,12 @@ class LogRegJsonModel:
 class RiskConditionedCommandAdapter:
     POLICY_MODE_WIND_LEVEL = "wind_level"
     POLICY_MODE_RISK_CONDITIONED = "risk_conditioned"
-    VALID_POLICY_MODES = (POLICY_MODE_WIND_LEVEL, POLICY_MODE_RISK_CONDITIONED)
+    POLICY_MODE_RISK_ADAPTER_V2 = "risk_adapter_v2"
+    VALID_POLICY_MODES = (
+        POLICY_MODE_WIND_LEVEL,
+        POLICY_MODE_RISK_CONDITIONED,
+        POLICY_MODE_RISK_ADAPTER_V2,
+    )
 
     def __init__(self):
         self.enable_risk_conditioning = bool(rospy.get_param("~enable_risk_conditioning", False))
@@ -219,6 +224,29 @@ class RiskConditionedCommandAdapter:
         self.soft_scale_3s = float(rospy.get_param("~soft_scale_3s", 0.85))
         self.soft_scale_5s = float(rospy.get_param("~soft_scale_5s", 0.75))
         self.hard_scale_5s = float(rospy.get_param("~hard_scale_5s", 0.65))
+
+        self.base_scale_v2 = float(rospy.get_param("~base_scale_v2", 0.80))
+        self.low_risk_fast_scale_v2 = float(rospy.get_param("~low_risk_fast_scale_v2", 0.85))
+        self.medium_scale_v2 = float(rospy.get_param("~medium_scale_v2", 0.80))
+        self.high_short_horizon_scale_v2 = float(rospy.get_param("~high_short_horizon_scale_v2", 0.75))
+        self.high_long_horizon_scale_v2 = float(rospy.get_param("~high_long_horizon_scale_v2", 0.65))
+        self.severe_scale_v2 = float(rospy.get_param("~severe_scale_v2", 0.60))
+        self.enable_severe_scale_v2 = bool(rospy.get_param("~enable_severe_scale_v2", False))
+        self.low_risk_threshold_3s_v2 = float(rospy.get_param("~low_risk_threshold_3s_v2", 0.30))
+        self.low_risk_threshold_5s_v2 = float(rospy.get_param("~low_risk_threshold_5s_v2", 0.30))
+        self.high_risk_threshold_3s_v2 = float(rospy.get_param("~high_risk_threshold_3s_v2", 0.50))
+        self.high_risk_threshold_5s_v2 = float(rospy.get_param("~high_risk_threshold_5s_v2", 0.50))
+        self.severe_risk_threshold_5s_v2 = float(rospy.get_param("~severe_risk_threshold_5s_v2", 0.70))
+        self.enable_hysteresis_v2 = bool(rospy.get_param("~enable_hysteresis_v2", True))
+        self.upscale_dwell_time_sec_v2 = max(
+            0.0,
+            float(rospy.get_param("~upscale_dwell_time_sec_v2", 2.0)),
+        )
+        self.downscale_dwell_time_sec_v2 = max(
+            0.0,
+            float(rospy.get_param("~downscale_dwell_time_sec_v2", 0.0)),
+        )
+        self.use_execution_diagnostics_v2 = bool(rospy.get_param("~use_execution_diagnostics_v2", False))
         self.scale_rate_limit_per_sec = float(rospy.get_param("~scale_rate_limit_per_sec", 0.5))
         self.publish_same_acceleration_scale = bool(rospy.get_param("~publish_same_acceleration_scale", True))
         self.same_goal_position_tolerance = max(
@@ -268,6 +296,8 @@ class RiskConditionedCommandAdapter:
         self.previous_speed_scale = None
         self.previous_acceleration_scale = None
         self.last_publish_time = None
+        self.previous_v2_target_scale = None
+        self.last_v2_target_scale_change_time = None
 
         self.speed_scale_pub = rospy.Publisher("/command_adaptation/speed_scale", Float64, queue_size=10)
         self.acceleration_scale_pub = rospy.Publisher(
@@ -328,7 +358,9 @@ class RiskConditionedCommandAdapter:
                     model.warning,
                 )
         if self.enable_risk_conditioning and not self.models_ready:
-            rospy.logwarn("risk conditioning enabled but required 3s/5s models are unavailable; using wind_level")
+            rospy.logwarn(
+                "risk conditioning enabled but required 3s/5s models are unavailable; using fallback scale"
+            )
 
     def _uav_odom_callback(self, msg):
         if self._odom_is_finite(msg):
@@ -488,6 +520,7 @@ class RiskConditionedCommandAdapter:
         self.samples = []
         if base_scale is None:
             base_scale = self._base_wind_scale(self._wind_force_norm())
+        base_scale = self._fallback_scale_for_policy(base_scale)
         self._set_unavailable_risk_state(
             base_scale,
             reset_selected_scale=self.reset_scale_on_new_episode,
@@ -510,6 +543,7 @@ class RiskConditionedCommandAdapter:
         if reset_selected_scale:
             self.previous_speed_scale = None
             self.previous_acceleration_scale = None
+            self._reset_v2_hysteresis_state()
 
     def _accepted_goal_age(self, now):
         if self.last_accepted_goal_time is None:
@@ -551,15 +585,16 @@ class RiskConditionedCommandAdapter:
             self._append_episode_sample(now)
             target_scale = self._compute_target_scale(now, base_scale)
         else:
-            self._set_unavailable_risk_state(base_scale)
-            target_scale = self._clamp_scale(base_scale)
+            fallback_scale = self._fallback_scale_for_policy(base_scale)
+            self._set_unavailable_risk_state(fallback_scale)
+            target_scale = self._clamp_scale(fallback_scale)
             rospy.loginfo_throttle(
                 1.0,
                 (
                     "risk_conditioned_command_adapter publishing unavailable risk "
                     "because no active episode base_scale=%.3f"
                 ),
-                base_scale,
+                target_scale,
             )
         target_acceleration_scale = target_scale if self.publish_same_acceleration_scale else target_scale
 
@@ -633,7 +668,7 @@ class RiskConditionedCommandAdapter:
         return True
 
     def _reset_episode(self, now, reason):
-        base_scale = self._base_wind_scale(self._wind_force_norm())
+        base_scale = self._fallback_scale_for_policy(self._base_wind_scale(self._wind_force_norm()))
         self.episode_start_time = now
         self._clear_episode_state(reset_trajectory=True, base_scale=base_scale)
         rospy.loginfo_throttle(
@@ -686,10 +721,20 @@ class RiskConditionedCommandAdapter:
 
     def _compute_target_scale(self, now, base_scale):
         base_scale = self._clamp_scale(base_scale)
+        if self.policy_mode == self.POLICY_MODE_WIND_LEVEL:
+            self._set_unavailable_scores_if_needed(now)
+            return base_scale
+
         if not self.enable_risk_conditioning:
             self._set_unavailable_scores_if_needed(now)
             return base_scale
 
+        if self.policy_mode == self.POLICY_MODE_RISK_ADAPTER_V2:
+            return self._compute_target_scale_v2(now, base_scale)
+
+        return self._compute_target_scale_v1(now, base_scale)
+
+    def _compute_target_scale_v1(self, now, base_scale):
         if not self.models_ready:
             self._set_unavailable_scores_if_needed(now)
             return base_scale
@@ -727,6 +772,142 @@ class RiskConditionedCommandAdapter:
             selected_scale = min(selected_scale, self.hard_scale_5s)
 
         return self._clamp_scale(selected_scale)
+
+    def _compute_target_scale_v2(self, now, base_scale):
+        fallback_scale = self._fallback_scale_for_policy(base_scale)
+        if not self.goal_received or self.episode_start_time is None:
+            self.latest_risk_score_3s = -1.0
+            self.latest_risk_score_5s = -1.0
+            return self._apply_v2_hysteresis(fallback_scale, now)
+
+        elapsed = now - self.episode_start_time
+        if not math.isfinite(elapsed) or elapsed < 3.0:
+            self.latest_risk_score_3s = -1.0
+            self.latest_risk_score_5s = -1.0
+            return self._apply_v2_hysteresis(fallback_scale, now)
+
+        risk_3s = self._infer_window_risk(self.model_3s, 3.0) if self.model_3s.enabled else None
+        if risk_3s is None:
+            self.latest_risk_score_3s = -1.0
+        else:
+            self.latest_risk_score_3s = risk_3s
+
+        risk_5s = None
+        if elapsed >= 5.0 and self.model_5s.enabled:
+            risk_5s = self._infer_window_risk(self.model_5s, 5.0)
+        if risk_5s is None:
+            self.latest_risk_score_5s = -1.0
+        else:
+            self.latest_risk_score_5s = risk_5s
+
+        raw_target = self._select_v2_raw_target_scale(
+            risk_3s,
+            risk_5s,
+            self.enable_severe_scale_v2,
+            self.low_risk_threshold_3s_v2,
+            self.low_risk_threshold_5s_v2,
+            self.high_risk_threshold_3s_v2,
+            self.high_risk_threshold_5s_v2,
+            self.severe_risk_threshold_5s_v2,
+            fallback_scale,
+            self.low_risk_fast_scale_v2,
+            self.medium_scale_v2,
+            self.high_short_horizon_scale_v2,
+            self.high_long_horizon_scale_v2,
+            self.severe_scale_v2,
+        )
+        return self._apply_v2_hysteresis(raw_target, now)
+
+    @staticmethod
+    def _select_v2_raw_target_scale(
+        risk_score_3s,
+        risk_score_5s,
+        enable_severe_scale,
+        low_risk_threshold_3s,
+        low_risk_threshold_5s,
+        high_risk_threshold_3s,
+        high_risk_threshold_5s,
+        severe_risk_threshold_5s,
+        base_scale,
+        low_risk_fast_scale,
+        medium_scale,
+        high_short_horizon_scale,
+        high_long_horizon_scale,
+        severe_scale,
+    ):
+        risk_3s_available = RiskConditionedCommandAdapter._risk_score_available(risk_score_3s)
+        risk_5s_available = RiskConditionedCommandAdapter._risk_score_available(risk_score_5s)
+
+        if (
+            enable_severe_scale
+            and risk_5s_available
+            and risk_score_5s >= severe_risk_threshold_5s
+        ):
+            return severe_scale
+        if risk_5s_available and risk_score_5s >= high_risk_threshold_5s:
+            return high_long_horizon_scale
+        if risk_3s_available and risk_score_3s >= high_risk_threshold_3s:
+            return high_short_horizon_scale
+        if (
+            risk_3s_available
+            and risk_5s_available
+            and risk_score_3s <= low_risk_threshold_3s
+            and risk_score_5s <= low_risk_threshold_5s
+        ):
+            return low_risk_fast_scale
+        if risk_3s_available and risk_5s_available:
+            return medium_scale
+        return base_scale
+
+    @staticmethod
+    def _risk_score_available(value):
+        return value is not None and math.isfinite(value) and value >= 0.0
+
+    def _apply_v2_hysteresis(self, target_scale, now):
+        target_scale = self._clamp_scale(target_scale)
+        if not self.enable_hysteresis_v2:
+            self.previous_v2_target_scale = target_scale
+            self.last_v2_target_scale_change_time = now
+            return target_scale
+
+        if self.previous_v2_target_scale is None or not math.isfinite(self.previous_v2_target_scale):
+            self.previous_v2_target_scale = target_scale
+            self.last_v2_target_scale_change_time = now
+            return target_scale
+
+        previous_scale = self._clamp_scale(self.previous_v2_target_scale)
+        if abs(target_scale - previous_scale) < 1e-9:
+            return previous_scale
+
+        if self.last_v2_target_scale_change_time is None or not math.isfinite(
+            self.last_v2_target_scale_change_time
+        ):
+            elapsed_since_change = float("inf")
+        else:
+            elapsed_since_change = now - self.last_v2_target_scale_change_time
+            if not math.isfinite(elapsed_since_change) or elapsed_since_change < 0.0:
+                elapsed_since_change = 0.0
+
+        dwell_time = (
+            self.downscale_dwell_time_sec_v2
+            if target_scale < previous_scale
+            else self.upscale_dwell_time_sec_v2
+        )
+        if elapsed_since_change >= dwell_time:
+            self.previous_v2_target_scale = target_scale
+            self.last_v2_target_scale_change_time = now
+            return target_scale
+        return previous_scale
+
+    def _reset_v2_hysteresis_state(self):
+        self.previous_v2_target_scale = None
+        self.last_v2_target_scale_change_time = None
+
+    def _fallback_scale_for_policy(self, base_scale):
+        base_scale = self._clamp_scale(base_scale)
+        if self.policy_mode == self.POLICY_MODE_RISK_ADAPTER_V2 and self.enable_risk_conditioning:
+            return self._clamp_scale(min(base_scale, self.base_scale_v2))
+        return base_scale
 
     def _set_unavailable_scores_if_needed(self, now):
         if not self.goal_received or self.episode_start_time is None:

@@ -11,6 +11,11 @@ tuning. The intended method is a calibrated risk-conditioned execution
 governor that selects command scale from calibrated risk, failure-mode
 diagnostics, and runtime execution signals.
 
+Stage 4-S3 implements the first minimal `risk_adapter_v2` policy mode in
+`experiments/command_adaptation/scripts/risk_conditioned_command_adapter.py`.
+This first pass is risk-only plus hysteresis. It reuses the existing command
+adaptation output topics and is disabled by default.
+
 ## Motivation
 
 The current balanced Trial 4/5/6 results are:
@@ -88,6 +93,25 @@ Severe diagnostic trigger:
 This policy uses `fixed_s080` as the center operating point, not as a fallback
 after risk detection fails.
 
+Stage 4-S3 parameter names:
+
+- `base_scale_v2=0.80`
+- `low_risk_fast_scale_v2=0.85`
+- `medium_scale_v2=0.80`
+- `high_short_horizon_scale_v2=0.75`
+- `high_long_horizon_scale_v2=0.65`
+- `severe_scale_v2=0.60`
+- `enable_severe_scale_v2=false`
+- `low_risk_threshold_3s_v2=0.30`
+- `low_risk_threshold_5s_v2=0.30`
+- `high_risk_threshold_3s_v2=0.50`
+- `high_risk_threshold_5s_v2=0.50`
+- `severe_risk_threshold_5s_v2=0.70`
+- `enable_hysteresis_v2=true`
+- `upscale_dwell_time_sec_v2=2.0`
+- `downscale_dwell_time_sec_v2=0.0`
+- `use_execution_diagnostics_v2=false`
+
 ## Hysteresis And Rate Limit
 
 `risk_adapter_v2` should keep `scale_rate_limit_per_sec` and add explicit
@@ -144,6 +168,11 @@ Candidate online features for `risk_adapter_v2`:
 These features should be optional and used only when available. Missing
 diagnostic streams should not break the adapter; the policy should fall back to
 calibrated risk and base-scale behavior.
+
+Stage 4-S3 defers command, reference, and trajectory diagnostic subscriptions.
+The minimal implementation uses only the existing online risk scores and local
+hysteresis state. Later v2 extensions may add these diagnostics without changing
+planner, controller, or simulator code.
 
 ## Failure-Mode-Aware Decision Logic
 
@@ -207,12 +236,18 @@ Do not mix diagnostic smoke runs into the main evaluation.
 
 ## Next Coding Task
 
-Recommended follow-up coding step:
+Stage 4-S3 implementation status:
 
-- Inspect `experiments/command_adaptation/scripts/risk_conditioned_command_adapter.py`.
-- Add a `risk_adapter_v2` policy mode disabled by default.
-- Add parameters for `base_scale`, low-risk fast scale, medium scale,
-  high-risk scale, and severe scale.
-- Add hysteresis and dwell-time logic.
-- Add optional use of trajectory and command diagnostic features if available.
-- Keep `risk_adapter_v1` unchanged.
+- `risk_adapter_v2` policy mode is implemented and disabled by default.
+- The first pass is risk-only plus hysteresis.
+- `risk_adapter_v1` behavior remains available as `policy_mode=risk_conditioned`.
+- Command, reference, and trajectory diagnostics are deferred to later v2
+  extensions.
+
+Recommended follow-up:
+
+- Run static checks first.
+- Screen `risk_adapter_v2` against `fixed_s080` and `risk_adapter_v1`.
+- Do not run the full 10-repeat evaluation until the screening result is
+  competitive.
+- Do not claim `risk_adapter_v2` is better than `fixed_s080` before experiments.

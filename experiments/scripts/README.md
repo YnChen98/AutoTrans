@@ -499,10 +499,23 @@ Stage 4-S defines the `risk_adapter_v2` calibrated risk-conditioned execution
 governor design. The design uses `fixed_s080` as the static frontier reference
 and aims to match or exceed `24/30` while preserving adaptive behavior.
 
-The design is documentation-only at this stage. The follow-up coding task is
-to add a disabled-by-default `risk_adapter_v2` policy mode in
+Stage 4-S3 implements the first disabled-by-default `risk_adapter_v2` policy
+mode in
 `experiments/command_adaptation/scripts/risk_conditioned_command_adapter.py`
-while keeping `risk_adapter_v1` unchanged.
+while keeping `risk_adapter_v1` unchanged. This first pass is risk-only plus
+hysteresis; command/reference/trajectory diagnostics are deferred to later v2
+extensions.
+
+Example launch snippet for a future manual screening run:
+
+```bash
+roslaunch command_adaptation risk_conditioned_command_adapter.launch \
+  policy_mode:=risk_adapter_v2 \
+  enable_risk_conditioning:=true
+```
+
+`risk_adapter_v2` should be screened against `fixed_s080` and
+`risk_adapter_v1` before any full 10-repeat evaluation or paper-facing claim.
 
 Design protocol:
 `experiments/protocols/stage4s_risk_adapter_v2_design.md`.

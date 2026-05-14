@@ -16,6 +16,23 @@
   <arg name="soft_scale_5s" default="0.75"/>
   <arg name="hard_scale_5s" default="0.65"/>
 
+  <arg name="base_scale_v2" default="0.80"/>
+  <arg name="low_risk_fast_scale_v2" default="0.85"/>
+  <arg name="medium_scale_v2" default="0.80"/>
+  <arg name="high_short_horizon_scale_v2" default="0.75"/>
+  <arg name="high_long_horizon_scale_v2" default="0.65"/>
+  <arg name="severe_scale_v2" default="0.60"/>
+  <arg name="enable_severe_scale_v2" default="false"/>
+  <arg name="low_risk_threshold_3s_v2" default="0.30"/>
+  <arg name="low_risk_threshold_5s_v2" default="0.30"/>
+  <arg name="high_risk_threshold_3s_v2" default="0.50"/>
+  <arg name="high_risk_threshold_5s_v2" default="0.50"/>
+  <arg name="severe_risk_threshold_5s_v2" default="0.70"/>
+  <arg name="enable_hysteresis_v2" default="true"/>
+  <arg name="upscale_dwell_time_sec_v2" default="2.0"/>
+  <arg name="downscale_dwell_time_sec_v2" default="0.0"/>
+  <arg name="use_execution_diagnostics_v2" default="false"/>
+
   <arg name="publish_rate" default="5.0"/>
   <arg name="min_scale" default="0.4"/>
   <arg name="max_scale" default="1.0"/>
@@ -50,6 +67,23 @@
     <param name="soft_scale_3s" value="$(arg soft_scale_3s)" type="double"/>
     <param name="soft_scale_5s" value="$(arg soft_scale_5s)" type="double"/>
     <param name="hard_scale_5s" value="$(arg hard_scale_5s)" type="double"/>
+
+    <param name="base_scale_v2" value="$(arg base_scale_v2)" type="double"/>
+    <param name="low_risk_fast_scale_v2" value="$(arg low_risk_fast_scale_v2)" type="double"/>
+    <param name="medium_scale_v2" value="$(arg medium_scale_v2)" type="double"/>
+    <param name="high_short_horizon_scale_v2" value="$(arg high_short_horizon_scale_v2)" type="double"/>
+    <param name="high_long_horizon_scale_v2" value="$(arg high_long_horizon_scale_v2)" type="double"/>
+    <param name="severe_scale_v2" value="$(arg severe_scale_v2)" type="double"/>
+    <param name="enable_severe_scale_v2" value="$(arg enable_severe_scale_v2)" type="bool"/>
+    <param name="low_risk_threshold_3s_v2" value="$(arg low_risk_threshold_3s_v2)" type="double"/>
+    <param name="low_risk_threshold_5s_v2" value="$(arg low_risk_threshold_5s_v2)" type="double"/>
+    <param name="high_risk_threshold_3s_v2" value="$(arg high_risk_threshold_3s_v2)" type="double"/>
+    <param name="high_risk_threshold_5s_v2" value="$(arg high_risk_threshold_5s_v2)" type="double"/>
+    <param name="severe_risk_threshold_5s_v2" value="$(arg severe_risk_threshold_5s_v2)" type="double"/>
+    <param name="enable_hysteresis_v2" value="$(arg enable_hysteresis_v2)" type="bool"/>
+    <param name="upscale_dwell_time_sec_v2" value="$(arg upscale_dwell_time_sec_v2)" type="double"/>
+    <param name="downscale_dwell_time_sec_v2" value="$(arg downscale_dwell_time_sec_v2)" type="double"/>
+    <param name="use_execution_diagnostics_v2" value="$(arg use_execution_diagnostics_v2)" type="bool"/>
 
     <param name="publish_rate" value="$(arg publish_rate)" type="double"/>
     <param name="min_scale" value="$(arg min_scale)" type="double"/>

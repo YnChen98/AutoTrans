@@ -193,6 +193,51 @@ existing `wind_level` behavior, and only then enable risk conditioning for a
 limited trial. The v0 policy is a soft candidate for repeated validation, not a
 hard safety guard and not final evidence of robustness.
 
+## Stage 4-S3 Risk Adapter V2
+
+`risk_adapter_v2` is an experimental policy mode in
+`risk_conditioned_command_adapter.py`. It keeps the same planner-side output
+topics and does not modify planner, controller, or simulator code.
+
+It is disabled by default. To enable the first-pass v2 policy, launch with both
+`policy_mode:=risk_adapter_v2` and `enable_risk_conditioning:=true`:
+
+```bash
+roslaunch command_adaptation risk_conditioned_command_adapter.launch \
+  policy_mode:=risk_adapter_v2 \
+  enable_risk_conditioning:=true
+```
+
+The Stage 4-R `fixed_s080` result is the current tuned static frontier:
+`fixed_s080` achieved `24/30` strict-valid runs, while `risk_adapter_v1`
+achieved `23/30`. Therefore `risk_adapter_v2` uses `fixed_s080` as the static
+frontier reference. Do not describe `risk_adapter_v1` as the overall best method
+after including `fixed_s080`.
+
+The minimal Stage 4-S3 v2 policy is risk-only plus hysteresis:
+
+- low 3s and 5s risk: `low_risk_fast_scale_v2=0.85`
+- medium risk or unavailable low-risk evidence: `medium_scale_v2=0.80`
+- high 3s risk: `high_short_horizon_scale_v2=0.75`
+- high 5s risk: `high_long_horizon_scale_v2=0.65`
+- optional severe 5s risk: `severe_scale_v2=0.60`, disabled by default with
+  `enable_severe_scale_v2=false`
+
+The fallback operating point is `base_scale_v2=0.80`, combined conservatively
+with the wind-level fallback when v2 is enabled. `scale_rate_limit_per_sec`
+still applies after the v2 raw target is selected. `enable_hysteresis_v2=true`
+adds dwell logic: downscales can happen immediately by default
+(`downscale_dwell_time_sec_v2=0.0`), while upscales wait
+`upscale_dwell_time_sec_v2=2.0` seconds.
+
+`use_execution_diagnostics_v2=false` is present for later extensions, but the
+Stage 4-S3 implementation does not subscribe to command saturation, reference,
+or trajectory-count diagnostic streams. Those diagnostics remain deferred to a
+later v2 extension.
+
+`risk_adapter_v2` is not validated yet. Screen it against `fixed_s080` and
+`risk_adapter_v1` before any 10-repeat evaluation or paper-facing claim.
+
 ## Strong Wind Experiment
 
 Set the simulator drag-wind level:
