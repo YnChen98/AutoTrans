@@ -402,11 +402,13 @@ repeat comparison.
 
 The Stage 4-J balanced 30-repeat aggregate result is documented in
 `experiments/protocols/stage4j_balanced_30repeat_aggregate_result.md`.
-`risk_adapter_v1` is the best aggregate method at `23/30`; `original` and
-`fixed_s085` are tied at `18/30`, and `windlevel_s085` is `16/30`. This is the
-current paper-facing Stage 4 aggregate result, using strict-valid /
-`label_strict_invalid`; it remains simulation-only limited-repeat evidence and
-does not support statistical-significance or safety-guarantee claims.
+`risk_adapter_v1` is the best aggregate method among the original four methods
+at `23/30`; `original` and `fixed_s085` are tied at `18/30`, and
+`windlevel_s085` is `16/30`. Stage 4-R now supplements this with the tuned
+`fixed_s080` static frontier at `24/30`, so paper-facing assets must include
+`fixed_s080` or avoid claiming `risk_adapter_v1` is best overall. This remains
+simulation-only limited-repeat evidence and does not support
+statistical-significance or safety-guarantee claims.
 
 ## Stage 4-P balanced paper assets
 
@@ -481,6 +483,15 @@ Screening scales are `0.60`, `0.65`, `0.70`, `0.75`, `0.80`, and `0.90`;
 existing `fixed_s085` covers scale `0.85`. Generated CSV/PNG/TXT/Markdown
 outputs should not be committed. Full protocol:
 `experiments/protocols/stage4r_fixed_scale_frontier_protocol.md`.
+
+Stage 4-R tuned fixed-scale frontier result:
+
+- `fixed_s080` achieved `24/30` strict-valid runs (`80.0%`) across Trial 4/5/6.
+- Per-trial counts were Trial 4 `8/10`, Trial 5 `9/10`, and Trial 6 `7/10`.
+- `fixed_s080` slightly exceeds `risk_adapter_v1` (`23/30`) and should be used
+  as the current tuned static frontier reference for `risk_adapter_v2`.
+- Result document:
+  `experiments/protocols/stage4r_fixed_s080_frontier_result.md`.
 
 ## Stage 4 log divergence inspector
 

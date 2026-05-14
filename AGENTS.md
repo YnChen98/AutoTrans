@@ -323,7 +323,7 @@ Current learning conclusion:
 
 Stage 4-H risk-conditioned adapter status:
 
-- `risk_adapter_v1` is the current strongest candidate.
+- `risk_adapter_v1` is the strongest learned adapter candidate so far.
 - `risk_adapter_v1` policy:
   - `soft_scale_3s=0.75`
   - `soft_scale_5s=0.65`
@@ -342,11 +342,26 @@ Stage 4-J balanced 30-repeat result:
 - `original`: 18/30.
 - `fixed_s085`: 18/30.
 - `windlevel_s085`: 16/30.
-- `risk_adapter_v1` is the strongest aggregate candidate.
+- `risk_adapter_v1` is the strongest aggregate candidate among these four
+  methods.
 - `risk_adapter_v1` is strongest on Trial 5 and Trial 6.
 - `fixed_s085` remains strongest on Trial 4.
 - Do not claim statistical significance, safety guarantee, final online
   robustness, or that `risk_adapter_v1` beats every baseline on every target.
+
+Stage 4-R tuned fixed-scale frontier result:
+
+- `fixed_s080` achieved 24/30 strict-valid in balanced Trial 4/5/6.
+- `fixed_s080` per-trial counts: Trial 4 8/10, Trial 5 9/10, Trial 6 7/10.
+- `risk_adapter_v1` achieved 23/30 on the same balanced Trial 4/5/6 set.
+- `fixed_s080` slightly exceeds `risk_adapter_v1` by 1/30 after tuned
+  fixed-scale frontier screening.
+- Do not claim `risk_adapter_v1` is overall best after including `fixed_s080`.
+- `risk_adapter_v1` still outperforms `original`, `fixed_s085`, and
+  `windlevel_s085`.
+- `fixed_s080` is a strong static operating point, not a safety guarantee.
+- The next method target is `risk_adapter_v2` / a calibrated risk governor that
+  can match or exceed the tuned fixed frontier while preserving adaptivity.
 
 Earlier Stage 4-H limited-repeat results:
 
@@ -394,16 +409,18 @@ Stage 4-H/4-I/4-J claim limits:
 - Do not claim statistical significance.
 - Do not claim a safety guarantee.
 - Do not claim final online robustness.
+- Do not claim `risk_adapter_v1` is overall best after including `fixed_s080`.
 - Do not hide the Trial 4 repeat5 and Trial 6 repeat1 `risk_adapter_v1`
   failures.
 - Do not claim `risk_adapter_v1` beats `fixed_s085` on every target, because
   `fixed_s085` is 9/10 on Trial 4 while `risk_adapter_v1` is 7/10.
 
-Next recommended Stage 4-J work:
+Next recommended Stage 4-J/4-R work:
 
 - Freeze the current Stage 4-J balanced comparison.
-- Next step should be paper-ready table/figure generation from the committed
-  manifest, not more simulation or `risk_adapter_v2` tuning.
+- Freeze `fixed_s080` as the current tuned fixed-scale frontier.
+- Next reporting step should be paper-ready table/figure generation updated to
+  include `fixed_s080`, not more simulation or fixed-scale screening.
 - Consider a failure-mode distribution table.
 - Only after documentation/table generation, consider `risk_adapter_v2` or
   path-feasibility diagnostics.

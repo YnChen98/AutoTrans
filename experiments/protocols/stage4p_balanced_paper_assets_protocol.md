@@ -8,6 +8,11 @@ for the balanced Stage 4-J strong-wind Trial 4/5/6 comparison.
 The generator is offline only. It does not run ROS, simulation, RViz, or
 `catkin_make`.
 
+Stage 4-R later identified `fixed_s080` as a tuned fixed-scale frontier with
+`24/30` strict-valid runs, slightly exceeding `risk_adapter_v1` at `23/30`.
+Future paper assets must include this tuned `fixed_s080` frontier or avoid
+claiming that `risk_adapter_v1` is the overall best method.
+
 ## Inputs
 
 Primary manifest:
@@ -27,6 +32,11 @@ Only formal balanced main repeats are used:
 - methods: `original`, `fixed_s085`, `windlevel_s085`, `risk_adapter_v1`
 - trials: `trial4`, `trial5`, `trial6`
 - repeats: `repeat1` through `repeat10`
+
+Current Stage 4-P assets cover the four-method Stage 4-J comparison. When
+updating paper-facing outputs after Stage 4-R, add the `fixed_s080` tuned
+frontier result documented in
+`experiments/protocols/stage4r_fixed_s080_frontier_result.md`.
 
 The script looks for exact filenames of the form:
 

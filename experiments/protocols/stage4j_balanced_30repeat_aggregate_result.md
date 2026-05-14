@@ -8,8 +8,14 @@ Trial 5, and Trial 6.
 
 Using strict-valid / `label_strict_invalid` as the paper-facing metric,
 `risk_adapter_v1` achieved `23/30` strict-valid runs and is the best aggregate
-method. `original` and `fixed_s085` tied at `18/30`, and `windlevel_s085`
-achieved `16/30`.
+method among these four methods. `original` and `fixed_s085` tied at `18/30`,
+and `windlevel_s085` achieved `16/30`.
+
+This four-method aggregate is now supplemented by the Stage 4-R tuned
+`fixed_s080` static frontier result. `fixed_s080` achieved `24/30` and
+slightly exceeds `risk_adapter_v1` by `1/30`, so paper-facing overall-best
+claims must include that frontier or avoid claiming `risk_adapter_v1` is best
+overall.
 
 This is simulation-only benchmark evidence. Do not claim statistical
 significance, a safety guarantee, or final online robustness from this
@@ -24,7 +30,7 @@ significance, a safety guarantee, or final online robustness from this
 | `windlevel_s085` | `4/10` | `6/10` | `6/10` | `16/30` (`53.3%`) |
 | `risk_adapter_v1` | `7/10` | `9/10` | `7/10` | `23/30` (`76.7%`) |
 
-## Aggregate Ranking
+## Four-Method Aggregate Ranking
 
 | Rank | Method | Strict-valid aggregate |
 | ---: | --- | ---: |
@@ -32,6 +38,20 @@ significance, a safety guarantee, or final online robustness from this
 | 2 | `original` | `18/30` (`60.0%`) |
 | 2 | `fixed_s085` | `18/30` (`60.0%`) |
 | 4 | `windlevel_s085` | `16/30` (`53.3%`) |
+
+## Stage 4-R Tuned Frontier Supplement
+
+Stage 4-R fixed-scale frontier screening found `fixed_s080` to be a strong
+tuned static baseline:
+
+| Method | Trial 4 | Trial 5 | Trial 6 | Aggregate |
+| --- | ---: | ---: | ---: | ---: |
+| `risk_adapter_v1` | `7/10` | `9/10` | `7/10` | `23/30` (`76.7%`) |
+| `fixed_s080` | `8/10` | `9/10` | `7/10` | `24/30` (`80.0%`) |
+
+Therefore `risk_adapter_v1` remains the strongest method in the original
+four-method Stage 4-J comparison, but it is not the overall aggregate best once
+the tuned `fixed_s080` frontier is considered.
 
 ## Per-Target Interpretation
 
@@ -75,8 +95,10 @@ Supporting documents:
 A cautious paper-facing claim is:
 
 The learned risk-conditioned command adaptation improves aggregate
-strict-valid rate in the balanced strong-wind Trial 4/5/6 evaluation. The
-result supports `risk_adapter_v1` as the current strongest candidate.
+strict-valid rate over `original`, `fixed_s085`, and `windlevel_s085` in the
+balanced strong-wind Trial 4/5/6 evaluation. A tuned `fixed_s080` static
+frontier slightly exceeds `risk_adapter_v1` in aggregate and should be included
+in paper-facing comparisons.
 
 Claims remain simulation-only and limited to this benchmark.
 
@@ -85,6 +107,7 @@ Claims remain simulation-only and limited to this benchmark.
 - Do not claim statistical significance.
 - Do not claim a safety guarantee.
 - Do not claim final online robustness.
+- Do not claim `risk_adapter_v1` is best overall after including `fixed_s080`.
 - Do not claim `risk_adapter_v1` beats every baseline on every target.
 - Do not claim all NaN failures are command-adaptation failures.
 - Do not use diagnostic smokes as main evaluation results.
@@ -94,7 +117,9 @@ Claims remain simulation-only and limited to this benchmark.
 Freeze the current Stage 4-J balanced comparison.
 
 Generate a paper-ready table or figure from
-`experiments/protocols/stage4h_adapter_limited_eval_manifest.json`.
+`experiments/protocols/stage4h_adapter_limited_eval_manifest.json`, and update
+the Stage 4-P paper assets to include the Stage 4-R `fixed_s080` tuned
+frontier before making overall-best claims.
 
 Consider a failure-mode distribution table that joins strict-valid metrics,
 divergence `failure_mode_guess`, and manual path/collision annotations.
