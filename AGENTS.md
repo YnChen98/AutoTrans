@@ -409,14 +409,14 @@ Stage 4-U2 single-goal 10-repeat expansion:
 
 - Stage 4-U2 expanded `fixed_s080` and `risk_adapter_v2` under strong wind with
   `goal_repeat=1`, Trial 4/5/6, repeat1-10.
-- Single-goal protocol (`goal_repeat=1`): `fixed_s080` 21/30,
-  `risk_adapter_v2` 21/30 strict-valid.
+- Single-goal protocol (`goal_repeat=1`) now includes Stage 4-V4:
+  `risk_adapter_v21` 25/30, `fixed_s080` 21/30, `risk_adapter_v2` 21/30
+  strict-valid.
 - Per-trial counts: `fixed_s080` Trial 4 7/10, Trial 5 6/10, Trial 6 8/10;
   `risk_adapter_v2` Trial 4 9/10, Trial 5 6/10, Trial 6 6/10.
 - Repeated-goal protocol (`goal_repeat=10`): `fixed_s080` 24/30 and
   `risk_adapter_v1` 23/30 remain the key Stage 4-R/4-J references.
 - Do not claim `risk_adapter_v2` beats `fixed_s080` overall yet.
-- Next step: design `risk_adapter_v2.1` before further tuning or runs.
 - `risk_adapter_v2.1` should reduce long-duration `0.65` use and consider
   `0.70` or `0.75` for high-risk states unless severe risk persists.
 - Future Stage 4 result tables must separate single-goal mission and
@@ -436,9 +436,16 @@ Stage 4-V risk_adapter_v2.1 design:
 - `risk_adapter_v21`: 9/9 strict-valid in the Stage 4-V3 screening.
 - The screening avoided long-duration `0.65` behavior; Trial 5 and Trial 6
   used mean scale around `0.711` with minimum `0.70`.
-- Next step: expand `risk_adapter_v21` to 10 repeats under `goal_repeat=1`,
-  not policy tuning.
-- Do not claim final `risk_adapter_v21` superiority from the 9-run screening.
+- Stage 4-V4 expanded `risk_adapter_v21` to 10 repeats under `goal_repeat=1`.
+- `risk_adapter_v21`: 25/30 strict-valid under the single-goal protocol.
+- Per-trial counts: Trial 4 10/10, Trial 5 9/10, Trial 6 6/10.
+- `risk_adapter_v21` is the current strongest single-goal method, but Trial 6
+  remains a bottleneck because `fixed_s080` achieved 8/10 there.
+- Repeated-goal protocol (`goal_repeat=10`) remains separate:
+  `fixed_s080` 24/30 and `risk_adapter_v1` 23/30.
+- Next step: update paper assets / results narrative before further tuning.
+- Optional later method step: Trial 6-specific diagnosis or v21.1/v22 design.
+- Do not claim statistical significance or a safety guarantee.
 - No planner/controller/simulator changes are needed for the next policy step.
 
 Earlier Stage 4-H limited-repeat results:

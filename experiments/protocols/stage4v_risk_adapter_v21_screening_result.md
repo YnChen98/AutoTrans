@@ -12,6 +12,12 @@ The screening preserved the strong Trial 4 behavior of `risk_adapter_v2` and
 avoided the long-duration `0.65` behavior that motivated Stage 4-V. This is
 not final proof of superiority. It is a 9-run screening result.
 
+Stage 4-V4 supersedes this 9-run screening with a 10-repeat single-goal
+expansion: `risk_adapter_v21` achieved `25/30` strict-valid under
+`goal_repeat=1`, with Trial 4 `10/10`, Trial 5 `9/10`, and Trial 6 `6/10`.
+Use `experiments/protocols/stage4v_risk_adapter_v21_10repeat_result.md` as the
+current `risk_adapter_v21` single-goal result.
+
 ## Protocol
 
 - protocol: single-goal mission protocol
@@ -72,6 +78,8 @@ addresses the Stage 4-U2 concern that `risk_adapter_v2` often stayed near
 - Continue reporting `goal_repeat=1` single-goal mission and `goal_repeat=10`
   repeated-goal stress results separately.
 - Do not claim final superiority before the 10-repeat expansion.
+- Superseded by Stage 4-V4: use the `25/30` 10-repeat result for current
+  `risk_adapter_v21` single-goal comparison.
 
 ## What Not To Claim
 

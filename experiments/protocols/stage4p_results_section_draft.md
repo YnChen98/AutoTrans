@@ -24,10 +24,21 @@ comparison: `fixed_s080` achieved `21/30` and `risk_adapter_v2` achieved
 single-goal mission result from repeated-goal stress results such as
 `fixed_s080` `24/30` and `risk_adapter_v1` `23/30` under `goal_repeat=10`.
 
-Stage 4-V proposes `risk_adapter_v2.1` as the next design target, but it should
-not be included in Results claims until it has been evaluated. Future Results
-should add `risk_adapter_v2.1` only after protocol-labeled single-goal and/or
-repeated-goal stress evidence exists.
+Stage 4-V4 now provides protocol-labeled `risk_adapter_v21` evidence under the
+single-goal mission protocol. Future Results should report:
+
+| Protocol | Method | Strict-valid count |
+| --- | --- | ---: |
+| single-goal mission, `goal_repeat=1` | `fixed_s080` | `21/30` |
+| single-goal mission, `goal_repeat=1` | `risk_adapter_v2` | `21/30` |
+| single-goal mission, `goal_repeat=1` | `risk_adapter_v21` | `25/30` |
+| repeated-goal stress, `goal_repeat=10` | `fixed_s080` | `24/30` |
+| repeated-goal stress, `goal_repeat=10` | `risk_adapter_v1` | `23/30` |
+
+Older wording that treated `risk_adapter_v2.1` as unevaluated is superseded.
+The Results narrative should describe `risk_adapter_v21` as the current
+strongest single-goal method, while keeping repeated-goal stress results
+separate.
 
 ## Chinese logic explanation
 
@@ -44,9 +55,10 @@ repeated-goal stress evidence exists.
 - The benchmark supports a bounded repeated-run comparison under the tested strong-wind simulation setting.
 - Current Stage 4-J/4-R results are repeated-goal protocol results and should be labeled separately from future single-goal mission results.
 - Stage 4-U provides diagnostic single-goal screening evidence: `risk_adapter_v2` `9/9` and `fixed_s080` `6/9` under `goal_repeat=1`.
-- Stage 4-U2 provides the current single-goal 10-repeat result: `risk_adapter_v2` `21/30` and `fixed_s080` `21/30` under `goal_repeat=1`.
-- Future Results should separate single-goal mission results (`fixed_s080` `21/30`, `risk_adapter_v2` `21/30`) from repeated-goal stress results (`fixed_s080` `24/30`, `risk_adapter_v1` `23/30`).
-- Stage 4-V is a design protocol only; include `risk_adapter_v2.1` in Results only after evaluation.
+- Stage 4-U2 provides the `fixed_s080` and `risk_adapter_v2` single-goal 10-repeat baseline comparison: `risk_adapter_v2` `21/30` and `fixed_s080` `21/30` under `goal_repeat=1`.
+- Stage 4-V4 provides the current best single-goal result: `risk_adapter_v21` `25/30` under `goal_repeat=1`.
+- Future Results should separate single-goal mission results (`fixed_s080` `21/30`, `risk_adapter_v2` `21/30`, `risk_adapter_v21` `25/30`) from repeated-goal stress results (`fixed_s080` `24/30`, `risk_adapter_v1` `23/30`).
+- `risk_adapter_v21` can be described as the current strongest single-goal method under the tested protocol.
 
 ## Claims to avoid
 
@@ -59,11 +71,13 @@ repeated-goal stress evidence exists.
 - Do not claim single-goal mission performance from goal_repeat=10 results.
 - Do not claim final risk_adapter_v2 superiority from the Stage 4-U 9-run screening alone.
 - Do not claim risk_adapter_v2 dominates fixed_s080 after Stage 4-U2; they match in aggregate under the single-goal protocol.
-- Do not claim risk_adapter_v2.1 superiority before experiments.
+- Do not claim statistical significance or a safety guarantee for `risk_adapter_v21`.
+- Do not claim `risk_adapter_v21` solves Trial 6; it achieved `6/10` on Trial 6 while `fixed_s080` achieved `8/10`.
 - Do not mix single-goal mission and repeated-goal stress results into one table without protocol labels.
 - Do not claim the results generalise to all wind levels, all trajectories, or real-world UAV deployment without further evidence.
 
 ## Notes
 
 - This draft supersedes earlier wording that described risk_adapter_v1 as the aggregate best method before fixed_s080 was included.
+- Stage 4-V4 supersedes older wording that treated `risk_adapter_v2.1` as a design-only method without evaluation.
 - This is a Results draft for manuscript development, not a final manuscript section.

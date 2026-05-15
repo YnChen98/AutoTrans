@@ -803,8 +803,34 @@ Scale behavior: Trial 4 stayed around mean scale `0.843`; Trial 5 and Trial 6
 stayed around mean scale `0.711` with minimum `0.70`, avoiding the long-duration
 `0.65` behavior that motivated Stage 4-V.
 
-Next step: expand `risk_adapter_v21` to 10 repeats under `goal_repeat=1`. Do
-not tune the policy or claim final superiority before that expansion.
+This screening is superseded by Stage 4-V4 below. It motivated the
+`goal_repeat=1` 10-repeat expansion and should not be used as the current
+`risk_adapter_v21` result.
+
+## Stage 4-V4 risk_adapter_v21 10-repeat result
+
+`experiments/protocols/stage4v_risk_adapter_v21_10repeat_result.md` records
+the 10-repeat `risk_adapter_v21` single-goal expansion under strong wind:
+
+- protocol: `goal_repeat=1`
+- trials: Trial 4, Trial 5, Trial 6
+- repeats: repeat1 through repeat10
+- result: `risk_adapter_v21` achieved `25/30` strict-valid
+- per-trial counts: Trial 4 `10/10`, Trial 5 `9/10`, Trial 6 `6/10`
+
+Current single-goal comparison:
+
+| Method | Strict-valid count |
+| --- | ---: |
+| `fixed_s080` | `21/30` |
+| `risk_adapter_v2` | `21/30` |
+| `risk_adapter_v21` | `25/30` |
+
+Interpretation: `risk_adapter_v21` is currently the strongest method under the
+single-goal mission protocol. It preserves Trial 4 behavior and improves the
+aggregate result, but Trial 6 remains the bottleneck. Before further tuning,
+update paper assets and result narratives to include `risk_adapter_v21`. Do not
+claim statistical significance or a safety guarantee.
 
 ## Stage 4-C risk dataset expansion
 
