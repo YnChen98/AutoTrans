@@ -1,0 +1,157 @@
+# Stage 4-W Protocol-Split Paper Assets Protocol
+
+## Purpose
+
+Stage 4-W generates paper-ready tables, a summary Markdown file, and one
+success-rate figure that separate Stage 4 results by goal protocol.
+
+The generator is offline only. It does not run ROS, simulation, RViz, or
+`catkin_make`.
+
+The protocol split is now required because `goal_repeat=1` and `goal_repeat=10`
+test different system properties:
+
+- `goal_repeat=1`: single-goal mission protocol
+- `goal_repeat=10`: repeated-goal / post-arrival replan stress protocol
+
+These results must not be mixed into one aggregate table without protocol
+labels.
+
+## Inputs
+
+Default metrics directory:
+
+```bash
+experiments/figures
+```
+
+The script reads `*_metrics_summary.txt` files and recomputes strict-valid
+counts from run-level metrics.
+
+Single-goal mission protocol inputs:
+
+- `goal_repeat=1`
+- wind: `strong`
+- trials: Trial 4, Trial 5, Trial 6
+- repeats: repeat1 through repeat10
+- methods: `fixed_s080`, `risk_adapter_v2`, `risk_adapter_v21`
+
+Repeated-goal stress protocol inputs:
+
+- `goal_repeat=10`
+- wind: `strong`
+- trials: Trial 4, Trial 5, Trial 6
+- repeats: repeat1 through repeat10
+- methods: `original`, `fixed_s085`, `windlevel_s085`,
+  `risk_adapter_v1`, `fixed_s080`
+
+## Outputs
+
+Default output directory:
+
+```bash
+experiments/results/stage4_protocol_split_paper_assets
+```
+
+Generated outputs:
+
+- `stage4_single_goal_success_table.csv`
+- `stage4_single_goal_success_table.md`
+- `stage4_repeated_goal_stress_success_table.csv`
+- `stage4_repeated_goal_stress_success_table.md`
+- `stage4_protocol_split_aggregate_table.csv`
+- `stage4_protocol_split_aggregate_table.md`
+- `stage4_protocol_split_summary.md`
+- `stage4_protocol_split_success_rates.png`
+
+Generated outputs under `experiments/results/` should not be committed.
+
+If `matplotlib` is unavailable, the script prints a warning and skips only the
+PNG figure. CSV and Markdown outputs are still generated.
+
+## Strict-Valid Metric
+
+Paper-facing success uses strict-valid / `label_strict_invalid`, not raw
+`valid_run_suggested` alone.
+
+The script computes strict-valid as:
+
+- `valid_run_suggested=true`
+- `has_nan_state=false`
+- `max_swing_angle_deg < 60`
+- `max_uav_speed < 4`
+- `max_payload_speed < 4`
+- `final_uav_xy_error <= 0.5`
+
+Diagnostic labels can inform interpretation, but strict-valid remains the
+paper-facing success metric.
+
+## Filename Assumptions
+
+Repeated-goal stress filenames:
+
+```text
+stage4_<method>_strong_trial<trial>_repeat<repeat>_metrics_summary.txt
+stage4_fixed_s080_strong_trial<trial>_frontier_repeat<repeat>_metrics_summary.txt
+```
+
+Single-goal `fixed_s080` filenames:
+
+```text
+stage4t2_fixed_s080_strong_trial4_goalrepeat1_repeat<repeat>_metrics_summary.txt
+stage4u_fixed_s080_strong_trial<trial>_goalrepeat1_repeat<repeat>_metrics_summary.txt
+```
+
+Single-goal `risk_adapter_v2` filenames:
+
+```text
+stage4t2_risk_adapter_v2_strong_trial4_goalrepeat1_repeat<repeat>_metrics_summary.txt
+stage4u_risk_adapter_v2_strong_trial<trial>_goalrepeat1_repeat<repeat>_metrics_summary.txt
+```
+
+Single-goal `risk_adapter_v21` filenames:
+
+```text
+stage4v_risk_adapter_v21_strong_trial<trial>_goalrepeat1_screening_repeat<repeat>_metrics_summary.txt
+```
+
+The `risk_adapter_v21` filenames include `screening`, but repeat1 through
+repeat10 are the Stage 4-V4 10-repeat expansion.
+
+The generator validates computed strict-valid counts against the frozen Stage
+4-U2 / Stage 4-V4 / Stage 4-J / Stage 4-R results before writing outputs.
+
+## Claim Limits
+
+Safe paper-facing claims:
+
+- Under the single-goal mission protocol, `risk_adapter_v21` achieved the
+  highest strict-valid rate: `25/30`.
+- Under the repeated-goal stress protocol, `fixed_s080` achieved the highest
+  strict-valid rate: `24/30`.
+- `risk_adapter_v21` improves over `fixed_s080` and `risk_adapter_v2` in
+  single-goal aggregate, but Trial 6 remains a bottleneck.
+- The two protocols test different system properties.
+
+Avoid:
+
+- statistical significance
+- safety guarantee
+- mixing `goal_repeat=1` and `goal_repeat=10` into one aggregate
+- claiming diagnostic labels prove exact root cause
+- claiming `risk_adapter_v21` solves all failures
+- describing `risk_adapter_v1` as overall best after including `fixed_s080`
+
+## How To Run
+
+From the repository root:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/generate_stage4_protocol_split_paper_assets.py \
+  --metrics-dir experiments/figures \
+  --output-dir experiments/results/stage4_protocol_split_paper_assets \
+  --print-summary
+```
+
+Generated outputs under `experiments/results/` should not be committed.

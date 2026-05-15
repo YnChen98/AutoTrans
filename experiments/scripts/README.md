@@ -832,6 +832,37 @@ aggregate result, but Trial 6 remains the bottleneck. Before further tuning,
 update paper assets and result narratives to include `risk_adapter_v21`. Do not
 claim statistical significance or a safety guarantee.
 
+## Stage 4-W protocol-split paper assets
+
+`experiments/scripts/generate_stage4_protocol_split_paper_assets.py` generates
+current paper-facing Stage 4 tables and a grouped success-rate plot with
+explicit protocol labels.
+
+It separates:
+
+- single-goal mission protocol: `goal_repeat=1`
+- repeated-goal stress protocol: `goal_repeat=10`
+
+Example:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/generate_stage4_protocol_split_paper_assets.py \
+  --metrics-dir experiments/figures \
+  --output-dir experiments/results/stage4_protocol_split_paper_assets \
+  --print-summary
+```
+
+Generated outputs under `experiments/results/` are ignored and should not be
+committed.
+
+Current paper-facing protocol split:
+
+| Protocol | Best method | Strict-valid count |
+| --- | --- | ---: |
+| single-goal mission, `goal_repeat=1` | `risk_adapter_v21` | `25/30` |
+| repeated-goal stress, `goal_repeat=10` | `fixed_s080` | `24/30` |
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

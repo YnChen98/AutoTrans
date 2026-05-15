@@ -8,14 +8,25 @@ for the balanced Stage 4-J strong-wind Trial 4/5/6 comparison.
 The generator is offline only. It does not run ROS, simulation, RViz, or
 `catkin_make`.
 
+Stage 4-P assets are now legacy / pre-protocol-split assets. They describe the
+older balanced repeated-goal comparison before Stage 4-T separated
+`goal_repeat=1` single-goal mission results from `goal_repeat=10` repeated-goal
+stress results.
+
+For current Results writing, use the Stage 4-W protocol-split assets generated
+by `experiments/scripts/generate_stage4_protocol_split_paper_assets.py` and
+documented in
+`experiments/protocols/stage4w_protocol_split_paper_assets_protocol.md`.
+
 Stage 4-R later identified `fixed_s080` as a tuned fixed-scale frontier with
 `24/30` strict-valid runs, slightly exceeding `risk_adapter_v1` at `23/30`.
 Future paper assets must include this tuned `fixed_s080` frontier or avoid
-claiming that `risk_adapter_v1` is the overall best method.
+claiming that `risk_adapter_v1` is the overall best method. Stage 4-W is the
+current way to do this because it reports `fixed_s080` in the repeated-goal
+stress protocol and `risk_adapter_v21` in the single-goal mission protocol.
 
-If `risk_adapter_v2` is evaluated, future paper assets should include
-`risk_adapter_v2` alongside `fixed_s080`, `risk_adapter_v1`, and the original
-four Stage 4-J methods.
+If `risk_adapter_v2` or `risk_adapter_v21` is discussed in paper-facing
+results, use Stage 4-W protocol labels rather than this legacy Stage 4-P table.
 
 ## Inputs
 
@@ -140,3 +151,13 @@ python3 experiments/scripts/generate_stage4_balanced_paper_assets.py \
 ```
 
 Generated outputs under `experiments/results/` should not be committed.
+
+For current protocol-split assets, run:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/generate_stage4_protocol_split_paper_assets.py \
+  --metrics-dir experiments/figures \
+  --output-dir experiments/results/stage4_protocol_split_paper_assets \
+  --print-summary
+```
