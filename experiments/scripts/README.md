@@ -763,9 +763,29 @@ Design direction:
 - Reduce long-duration `0.65` use that may hurt Trial 6.
 - Use `0.70` or `0.75` for ordinary high-risk states.
 - Reserve `0.65` for sustained or severe risk.
-- Keep `risk_adapter_v2` unchanged and implement a separate
-  `policy_mode=risk_adapter_v21` later.
+- Keep `risk_adapter_v2` unchanged; Stage 4-V2 implements the separate
+  `policy_mode=risk_adapter_v21`.
 - Do not modify planner, controller, or simulator code for this policy.
+
+## Stage 4-V2 risk_adapter_v21 implementation
+
+Stage 4-V2 adds the first disabled-by-default `risk_adapter_v21` policy mode in
+`experiments/command_adaptation/scripts/risk_conditioned_command_adapter.py`.
+It keeps `risk_adapter_v2` unchanged and uses the existing command-adaptation
+topics.
+
+Manual screening launch snippet:
+
+```bash
+roslaunch command_adaptation risk_conditioned_command_adapter.launch \
+  policy_mode:=risk_adapter_v21 \
+  enable_risk_conditioning:=true
+```
+
+`risk_adapter_v21` uses `0.70` for ordinary long-horizon high risk and reserves
+`0.65` for sustained/severe risk after dwell. It must be screened under
+`goal_repeat=1` against `fixed_s080` and `risk_adapter_v2` before any
+10-repeat expansion. Do not claim improvement before those experiments.
 
 ## Stage 4-C risk dataset expansion
 

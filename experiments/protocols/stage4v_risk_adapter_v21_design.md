@@ -14,6 +14,12 @@ This is a design protocol only. It does not claim `risk_adapter_v2.1`
 superiority before experiments, and it does not require planner, controller, or
 simulator changes.
 
+Stage 4-V2 implements the first minimal `risk_adapter_v2.1` policy as
+`policy_mode=risk_adapter_v21` in
+`experiments/command_adaptation/scripts/risk_conditioned_command_adapter.py`.
+This implementation is risk-only plus hysteresis/dwell and remains disabled by
+default.
+
 ## Motivation
 
 Stage 4-U2 expanded the single-goal mission protocol:
@@ -161,13 +167,17 @@ single-goal mission and repeated-goal stress results into one unlabeled table.
 - Do not claim lower scale is always safer.
 - Do not mix `goal_repeat=1` and `goal_repeat=10` results.
 
-## Next Coding Task
+## Implementation Status And Next Evaluation
 
-Recommended next implementation step:
+Stage 4-V2 minimal implementation status:
 
-- Implement `policy_mode=risk_adapter_v21`.
+- `policy_mode=risk_adapter_v21` is implemented.
 - Keep `risk_adapter_v2` unchanged.
-- Add params for `high_long_horizon_scale_v21`, severe dwell, and ordinary
-  downscale dwell.
-- Keep `risk_adapter_v21` disabled by default.
+- Params are added for `high_long_horizon_scale_v21`, severe dwell, ordinary
+  downscale dwell, and upscale dwell.
+- The first implementation is risk-only plus hysteresis/dwell.
+- Execution diagnostics remain deferred with `use_execution_diagnostics_v21=false`.
+- `risk_adapter_v21` remains disabled by default.
 - Do not modify planner, controller, or simulator code.
+- Compare `risk_adapter_v21` against `fixed_s080` and `risk_adapter_v2` under
+  the single-goal protocol before any 10-repeat expansion.

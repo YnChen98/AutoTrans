@@ -238,6 +238,48 @@ later v2 extension.
 `risk_adapter_v2` is not validated yet. Screen it against `fixed_s080` and
 `risk_adapter_v1` before any 10-repeat evaluation or paper-facing claim.
 
+## Stage 4-V2 Risk Adapter V2.1
+
+`risk_adapter_v21` is an experimental policy mode in
+`risk_conditioned_command_adapter.py`. It is disabled by default and keeps the
+same planner-side output and diagnostic topics:
+
+- `/command_adaptation/speed_scale`
+- `/command_adaptation/acceleration_scale`
+- `/command_adaptation/risk_score_3s`
+- `/command_adaptation/risk_score_5s`
+- `/command_adaptation/risk_scale_selected`
+- `/command_adaptation/risk_target_scale_raw`
+
+Enable it explicitly only for a bounded screening run:
+
+```bash
+roslaunch command_adaptation risk_conditioned_command_adapter.launch \
+  policy_mode:=risk_adapter_v21 \
+  enable_risk_conditioning:=true
+```
+
+`risk_adapter_v21` differs from `risk_adapter_v2` by using `0.70` for ordinary
+long-horizon high risk and reserving `0.65` for sustained or severe risk after
+`severe_entry_dwell_time_sec_v21=1.0`. It also adds ordinary downscale dwell
+with `ordinary_downscale_dwell_time_sec_v21=0.5` and keeps upscale dwell with
+`upscale_dwell_time_sec_v21=2.0`.
+
+Default v21 scale bins:
+
+- low 3s and 5s risk: `low_risk_fast_scale_v21=0.85`
+- medium risk: `medium_scale_v21=0.80`
+- high 3s risk: `high_short_horizon_scale_v21=0.75`
+- high 5s risk: `high_long_horizon_scale_v21=0.70`
+- sustained severe 5s risk: `severe_scale_v21=0.65`
+
+If risk scores or model windows are unavailable, v21 falls back to
+`base_scale_v21=0.80` instead of `1.0`. Execution diagnostics are deferred:
+`use_execution_diagnostics_v21=false`.
+
+`risk_adapter_v21` must be screened under `goal_repeat=1` before any 10-repeat
+expansion. Do not claim that it improves results before experiments.
+
 ## Strong Wind Experiment
 
 Set the simulator drag-wind level:
