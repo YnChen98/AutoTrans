@@ -14,7 +14,7 @@ Protocol caveat: this `fixed_s080` result was obtained under the current
 `/move_base_simple/goal` may be received repeatedly after the UAV/payload has
 already reached or nearly reached the target. The result remains the current
 tuned fixed-scale frontier for that protocol, but a single-goal mission
-comparison remains future work.
+comparison is reported separately in Stage 4-U2.
 
 Stage 4-T2 later confirmed that `goal_repeat=10` should be interpreted as a
 repeated-goal / post-arrival replan stress protocol. The `fixed_s080` `24/30`
@@ -26,6 +26,12 @@ Stage 4-U single-goal screening later found `fixed_s080` at `6/9` under
 `fixed_s080` remains the tuned static frontier for the repeated-goal protocol,
 but its single-goal mission performance should be evaluated and reported
 separately.
+
+Stage 4-U2 completed that single-goal 10-repeat expansion. Under
+`goal_repeat=1`, `fixed_s080` achieved `21/30`, while `risk_adapter_v2` also
+achieved `21/30`. Therefore `fixed_s080` should be described as `24/30` under
+the repeated-goal stress protocol and `21/30` under the single-goal mission
+protocol.
 
 This changes the Stage 4 interpretation. `risk_adapter_v1` improves over the
 initial baselines `original`, `fixed_s085`, and `windlevel_s085`, but it should
@@ -126,6 +132,12 @@ evaluation must be run and reported separately.
 Stage 4-U extended that single-goal check to Trial 4/5/6 repeat1-3:
 `fixed_s080` was `6/9` and `risk_adapter_v2` was `9/9`. This is screening
 evidence only; it should be expanded before any final ranking claim.
+
+Stage 4-U2 completed the 10-repeat single-goal expansion: `fixed_s080` was
+`21/30` and `risk_adapter_v2` was also `21/30` under `goal_repeat=1`. This
+means `fixed_s080` remains a strong tuned static frontier, but its repeated-goal
+`24/30` result and single-goal `21/30` result must be reported under separate
+protocol labels.
 
 ## Research Decision
 

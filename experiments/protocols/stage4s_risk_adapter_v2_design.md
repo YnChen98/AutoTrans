@@ -36,6 +36,13 @@ Trial 4/5/6 repeat1-3. `risk_adapter_v2` achieved `9/9` strict-valid, while
 `fixed_s080` achieved `6/9`. This supports expanding the single-goal mission
 screening before any further `risk_adapter_v2` threshold tuning.
 
+Stage 4-U2 completed the 10-repeat single-goal expansion. Under `goal_repeat=1`,
+`risk_adapter_v2` matched `fixed_s080` in aggregate at `21/30` strict-valid:
+`risk_adapter_v2` was stronger on Trial 4, equal on Trial 5, and weaker on
+Trial 6. This supports the learned-governor direction but does not justify an
+overall-best claim. The next algorithmic step should be a `risk_adapter_v2.1`
+design that avoids long-duration `0.65` use on Trial 6.
+
 ## Motivation
 
 The current balanced Trial 4/5/6 results are:
@@ -225,8 +232,8 @@ Stage 4-T1 diagnostic prerequisite:
 
 Stage 4-T2 protocol decision:
 
-- Screen `risk_adapter_v2` under `goal_repeat=1` across Trial 4/5/6 before
-  threshold tuning.
+- Use `goal_repeat=1` across Trial 4/5/6 for single-goal mission evidence
+  before threshold tuning.
 - Treat `goal_repeat=10` as a repeated-goal / post-arrival replan stress
   protocol.
 - Do not infer single-goal mission performance from `goal_repeat=10` results.
@@ -235,22 +242,35 @@ Stage 4-U single-goal screening update:
 
 - `risk_adapter_v2`: `9/9` strict-valid under `goal_repeat=1`.
 - `fixed_s080`: `6/9` strict-valid under `goal_repeat=1`.
-- Do not tune thresholds yet; first expand both methods to 10 repeats under
-  the single-goal mission protocol.
+- Stage 4-U2 supersedes this 9-run screen with 10 repeats per method.
 - Check Trial 6 efficiency because `risk_adapter_v2` used a low mean scale
   around `0.666`.
 
-Initial `risk_adapter_v2` screening:
+Stage 4-U2 single-goal 10-repeat update:
+
+- `risk_adapter_v2`: `21/30` strict-valid under `goal_repeat=1`.
+- `fixed_s080`: `21/30` strict-valid under `goal_repeat=1`.
+- Per-trial pattern: `risk_adapter_v2` `9/10`, `6/10`, `6/10`; `fixed_s080`
+  `7/10`, `6/10`, `8/10`.
+- Do not claim `risk_adapter_v2` beats `fixed_s080` overall yet.
+- Design `risk_adapter_v2.1` before further expansion.
+- `risk_adapter_v2.1` should reduce long-duration `0.65` use and prefer
+  `0.70` or `0.75` for high-risk states unless severe risk persists.
+
+Completed `risk_adapter_v2` screening:
 
 - Trials: Trial 4, Trial 5, Trial 6.
-- Repeats: 3 repeats per trial.
+- Repeats: 3 repeats per trial in Stage 4-U, then 10 repeats per trial in
+  Stage 4-U2.
 - Compare against `fixed_s080` and `risk_adapter_v1`.
 - Use strict-valid / `label_strict_invalid` as the main metric.
 - Also report diagnostic labels and efficiency metrics.
 
-Full `risk_adapter_v2` evaluation:
+Next `risk_adapter_v2.1` evaluation:
 
-- Expand to 10 repeats only if screening is competitive.
+- Design `risk_adapter_v2.1` before further expansion.
+- Retain separate protocol labels for single-goal mission and repeated-goal
+  stress results.
 - Compare:
   - `original`
   - `fixed_s085`
@@ -265,8 +285,12 @@ Do not mix diagnostic smoke runs into the main evaluation.
 
 `risk_adapter_v2` should satisfy these criteria before any overall-best claim:
 
-- It must reach at least `24/30` to match `fixed_s080`.
-- It should exceed `24/30` to justify an overall-best claim.
+- Under the repeated-goal stress protocol, it must reach at least `24/30` to
+  match the Stage 4-R `fixed_s080` result.
+- Under the single-goal mission protocol, it currently matches `fixed_s080` at
+  `21/30`; it should improve Trial 6 before any dominance claim.
+- It should exceed the protocol-matched `fixed_s080` result to justify an
+  overall-best claim.
 - It should not degrade Trial 4 far below `fixed_s080`.
 - It should maintain or improve Trial 5 and Trial 6 performance.
 - It should reduce `command_saturation_before_nan` and
@@ -293,7 +317,8 @@ Stage 4-S3 implementation status:
 Recommended follow-up:
 
 - Run static checks first.
-- Screen `risk_adapter_v2` against `fixed_s080` and `risk_adapter_v1`.
-- Do not run the full 10-repeat evaluation until the screening result is
-  competitive.
-- Do not claim `risk_adapter_v2` is better than `fixed_s080` before experiments.
+- Design `risk_adapter_v2.1` before further tuning or runs.
+- Reduce long-duration `0.65` use and evaluate `0.70` / `0.75` high-risk
+  behavior before another expansion.
+- Keep single-goal mission and repeated-goal stress result tables separate.
+- Do not claim `risk_adapter_v2` is better than `fixed_s080` after the U2 tie.

@@ -26,6 +26,13 @@ strict-valid while `fixed_s080` achieved `6/9`. This supports the Stage 4-T2
 protocol split: `goal_repeat=1` should be analyzed as single-goal mission
 screening, while `goal_repeat=10` remains repeated-goal stress evidence.
 
+Stage 4-U2 then expanded the single-goal mission protocol to repeat1-10 across
+Trial 4/5/6. Under `goal_repeat=1`, `fixed_s080` and `risk_adapter_v2` both
+achieved `21/30` strict-valid. This reinforces the protocol split: U2 is
+single-goal mission evidence, while the Stage 4-R `fixed_s080` `24/30` and
+Stage 4-J `risk_adapter_v1` `23/30` remain repeated-goal stress protocol
+evidence.
+
 ## Test Setup
 
 - wind: `strong`
@@ -128,14 +135,16 @@ Do not conclude that `risk_adapter_v2` is poor from the original `5/9`
 screening alone. That screening used `goal_repeat=10` and was likely affected
 by repeated-goal / post-arrival stress.
 
-The next `risk_adapter_v2` evaluation should use `goal_repeat=1` across Trial
-4/5/6 before threshold tuning. Only after single-goal screening is complete
-should `risk_adapter_v2` be retested under the repeated-goal stress protocol.
+The follow-up `risk_adapter_v2` evaluation should use `goal_repeat=1` across
+Trial 4/5/6 before threshold tuning. Stage 4-U2 has now completed that
+single-goal expansion, so the next step is `risk_adapter_v2.1` design before
+any further tuning or repeated-goal stress retest.
 
 Stage 4-U completed the first such single-goal screening and found
 `risk_adapter_v2` at `9/9` strict-valid versus `fixed_s080` at `6/9`.
-The next step is expansion to 10 repeats under `goal_repeat=1`, not threshold
-tuning.
+Stage 4-U2 completed that 10-repeat expansion and found both methods at
+`21/30` under `goal_repeat=1`. The next step is `risk_adapter_v2.1` design,
+not direct threshold tuning from the earlier `goal_repeat=10` result.
 
 This diagnostic also does not prove that `risk_adapter_v2` is better than
 `fixed_s080` overall. It only shows that the previous `goal_repeat=10`
@@ -155,8 +164,9 @@ than repeated-goal behavior for every method and target.
 
 - Split future evaluation into single-goal mission protocol
   (`goal_repeat=1`) and repeated-goal stress protocol (`goal_repeat=10`).
-- Pause `risk_adapter_v2` threshold tuning until single-goal screening across
-  Trial 4/5/6 is complete.
+- Use Stage 4-U2 as the current single-goal mission evidence before any
+  `risk_adapter_v2` threshold change.
+- Design `risk_adapter_v2.1` before further tuning or runs.
 - Do not modify planner same-goal logic yet. Keep planner same-goal handling
   as a future system-level intervention after diagnostics.
 - Label all future Stage 4 result tables with the goal protocol used.

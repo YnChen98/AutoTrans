@@ -9,14 +9,20 @@ However, the tuned fixed-scale frontier (fixed_s080) achieved 24/30 strict-valid
 Stage 4-T2 indicates that this Results draft should later distinguish the
 single-goal mission protocol (`goal_repeat=1`) from the repeated-goal stress
 protocol (`goal_repeat=10`). The current 30-repeat Stage 4-J/4-R numbers should
-be described as repeated-goal strong-wind protocol results until a separate
-single-goal mission comparison is completed.
+be described as repeated-goal strong-wind protocol results and kept separate
+from the Stage 4-U2 single-goal mission comparison.
 
 Stage 4-U adds the first single-goal mission screening result:
 `risk_adapter_v2` achieved `9/9` strict-valid under `goal_repeat=1`, while
 `fixed_s080` achieved `6/9`. This result is promising but diagnostic-only. A
 future Results section should present single-goal mission and repeated-goal
 stress protocols as separate benchmarks.
+
+Stage 4-U2 supersedes that 9-run screen with a 10-repeat single-goal mission
+comparison: `fixed_s080` achieved `21/30` and `risk_adapter_v2` achieved
+`21/30` under `goal_repeat=1`. Future Results should distinguish this
+single-goal mission result from repeated-goal stress results such as
+`fixed_s080` `24/30` and `risk_adapter_v1` `23/30` under `goal_repeat=10`.
 
 ## Chinese logic explanation
 
@@ -33,6 +39,8 @@ stress protocols as separate benchmarks.
 - The benchmark supports a bounded repeated-run comparison under the tested strong-wind simulation setting.
 - Current Stage 4-J/4-R results are repeated-goal protocol results and should be labeled separately from future single-goal mission results.
 - Stage 4-U provides diagnostic single-goal screening evidence: `risk_adapter_v2` `9/9` and `fixed_s080` `6/9` under `goal_repeat=1`.
+- Stage 4-U2 provides the current single-goal 10-repeat result: `risk_adapter_v2` `21/30` and `fixed_s080` `21/30` under `goal_repeat=1`.
+- Future Results should separate single-goal mission results (`fixed_s080` `21/30`, `risk_adapter_v2` `21/30`) from repeated-goal stress results (`fixed_s080` `24/30`, `risk_adapter_v1` `23/30`).
 
 ## Claims to avoid
 
@@ -44,6 +52,8 @@ stress protocols as separate benchmarks.
 - Do not claim risk_adapter_v1 beats every baseline on every target.
 - Do not claim single-goal mission performance from goal_repeat=10 results.
 - Do not claim final risk_adapter_v2 superiority from the Stage 4-U 9-run screening alone.
+- Do not claim risk_adapter_v2 dominates fixed_s080 after Stage 4-U2; they match in aggregate under the single-goal protocol.
+- Do not mix single-goal mission and repeated-goal stress results into one table without protocol labels.
 - Do not claim the results generalise to all wind levels, all trajectories, or real-world UAV deployment without further evidence.
 
 ## Notes

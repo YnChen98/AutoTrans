@@ -390,8 +390,8 @@ Stage 4-T goal-repeat artifact diagnostics:
   single-goal mission performance must be evaluated separately.
 - Do not claim all prior invalid runs are caused by the goal-repeat artifact;
   `fixed_s080` still had Trial 4 pre-arrival failures under `goal_repeat=1`.
-- Pause `risk_adapter_v2` threshold tuning until `goal_repeat=1` screening
-  across Trial 4/5/6 is complete.
+- Stage 4-U2 now provides the current `goal_repeat=1` single-goal evidence;
+  use it before any `risk_adapter_v2` threshold change.
 - Do not modify planner same-goal handling yet; keep it as a future
   system-level intervention after diagnostics.
 
@@ -402,14 +402,25 @@ Stage 4-U single-goal mission screening:
 - `risk_adapter_v2`: 9/9 strict-valid.
 - `fixed_s080`: 6/9 strict-valid.
 - This is diagnostic screening, not final statistical evidence.
-- Next step: expand `risk_adapter_v2` and `fixed_s080` single-goal mission
-  screening to 10 repeats under `goal_repeat=1`.
-- Do not tune `risk_adapter_v2` before this expansion.
-- If `risk_adapter_v2` remains stronger, promote the single-goal mission
-  protocol as the primary benchmark and keep `goal_repeat=10` as the
-  repeated-goal stress benchmark.
 - Check Trial 6 efficiency because `risk_adapter_v2` used a low mean scale
   around `0.666`.
+
+Stage 4-U2 single-goal 10-repeat expansion:
+
+- Stage 4-U2 expanded `fixed_s080` and `risk_adapter_v2` under strong wind with
+  `goal_repeat=1`, Trial 4/5/6, repeat1-10.
+- Single-goal protocol (`goal_repeat=1`): `fixed_s080` 21/30,
+  `risk_adapter_v2` 21/30 strict-valid.
+- Per-trial counts: `fixed_s080` Trial 4 7/10, Trial 5 6/10, Trial 6 8/10;
+  `risk_adapter_v2` Trial 4 9/10, Trial 5 6/10, Trial 6 6/10.
+- Repeated-goal protocol (`goal_repeat=10`): `fixed_s080` 24/30 and
+  `risk_adapter_v1` 23/30 remain the key Stage 4-R/4-J references.
+- Do not claim `risk_adapter_v2` beats `fixed_s080` overall yet.
+- Next step: design `risk_adapter_v2.1` before further tuning or runs.
+- `risk_adapter_v2.1` should reduce long-duration `0.65` use and consider
+  `0.70` or `0.75` for high-risk states unless severe risk persists.
+- Future Stage 4 result tables must separate single-goal mission and
+  repeated-goal stress protocols.
 
 Earlier Stage 4-H limited-repeat results:
 

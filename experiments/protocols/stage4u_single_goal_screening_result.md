@@ -11,10 +11,15 @@ interpretation from the Stage 4-S4 screening and supports evaluating
 `risk_adapter_v2` under the single-goal mission protocol before further
 threshold tuning.
 
-This is still a diagnostic screening, not a final benchmark. It is strong
-evidence that `risk_adapter_v2` should be expanded under `goal_repeat=1`, but
-it does not establish statistical significance, a safety guarantee, or final
-overall superiority.
+This was a diagnostic screening, not a final benchmark. It provided the basis
+for the Stage 4-U2 10-repeat expansion, but it does not establish statistical
+significance, a safety guarantee, or final overall superiority by itself.
+
+Stage 4-U2 supersedes this 9-run screening with a 10-repeat single-goal
+expansion. In Stage 4-U2, both `fixed_s080` and `risk_adapter_v2` achieved
+`21/30` strict-valid under `goal_repeat=1`; `risk_adapter_v2` was stronger on
+Trial 4, equal on Trial 5, and weaker on Trial 6. The U2 record is
+`experiments/protocols/stage4u_single_goal_10repeat_result.md`.
 
 ## Protocol
 
@@ -108,11 +113,12 @@ single-goal mission evidence.
 
 ## Research Decision
 
-- Do not tune `risk_adapter_v2` yet.
-- Expand `risk_adapter_v2` and `fixed_s080` under `goal_repeat=1` to 10
-  repeats across Trial 4/5/6.
-- If `risk_adapter_v2` remains stronger, promote the single-goal mission
-  protocol as the primary benchmark.
+- Do not use this 9-run screening as the latest single-goal comparison after
+  Stage 4-U2.
+- Use `experiments/protocols/stage4u_single_goal_10repeat_result.md` for the
+  current 10-repeat single-goal result.
+- Do not tune `risk_adapter_v2` directly from the 9-run screening.
+- Design `risk_adapter_v2.1` before further expansion.
 - Keep `goal_repeat=10` as the repeated-goal stress benchmark.
 - Continue to label every Stage 4 result table with the goal protocol.
 

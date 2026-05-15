@@ -497,7 +497,8 @@ Stage 4-R tuned fixed-scale frontier result:
 
 Stage 4-S defines the `risk_adapter_v2` calibrated risk-conditioned execution
 governor design. The design uses `fixed_s080` as the static frontier reference
-and aims to match or exceed `24/30` while preserving adaptive behavior.
+and aims to match or exceed the protocol-matched `fixed_s080` result while
+preserving adaptive behavior.
 
 Stage 4-S3 implements the first disabled-by-default `risk_adapter_v2` policy
 mode in
@@ -514,8 +515,9 @@ roslaunch command_adaptation risk_conditioned_command_adapter.launch \
   enable_risk_conditioning:=true
 ```
 
-`risk_adapter_v2` should be screened against `fixed_s080` and
-`risk_adapter_v1` before any full 10-repeat evaluation or paper-facing claim.
+Stage 4-U2 later found `risk_adapter_v2` and `fixed_s080` tied at `21/30`
+under the single-goal mission protocol. The next step is `risk_adapter_v2.1`
+design before further tuning or paper-facing dominance claims.
 
 Design protocol:
 `experiments/protocols/stage4s_risk_adapter_v2_design.md`.
@@ -681,10 +683,10 @@ post-arrival goal reception and trajectory-update counts. Old CSV files without
 goal columns remain analyzable; goal metrics are emitted only when the new goal
 columns are available, and arrival metrics require target args.
 
-Current Stage 4-S `risk_adapter_v2` screening should be checked with these
+Stage 4-S `risk_adapter_v2` results should be interpreted with these
 diagnostics before further tuning. Results collected with `goal_repeat=10`
-should be labeled as repeated-goal protocol evidence until a separate
-`goal_repeat=1` single-goal mission comparison is run.
+should be labeled as repeated-goal protocol evidence. Stage 4-U2 now provides
+the current 10-repeat `goal_repeat=1` single-goal comparison.
 
 ## Stage 4-T2 goal-repeat artifact diagnostic
 
@@ -722,11 +724,30 @@ Main result:
 | `fixed_s080` | `1/3` | `3/3` | `2/3` | `6/9` |
 | `risk_adapter_v2` | `3/3` | `3/3` | `3/3` | `9/9` |
 
-Interpretation: `risk_adapter_v2` is promising under the single-goal mission
-protocol, but this is still diagnostic screening. Do not tune `risk_adapter_v2`
-thresholds yet; expand `risk_adapter_v2` and `fixed_s080` to 10 repeats under
-`goal_repeat=1` first. Keep `goal_repeat=10` as the repeated-goal stress
-benchmark.
+Interpretation: this was diagnostic screening and is superseded by Stage 4-U2.
+Use `experiments/protocols/stage4u_single_goal_10repeat_result.md` for the
+current single-goal comparison. Keep `goal_repeat=10` as the repeated-goal
+stress benchmark.
+
+## Stage 4-U2 single-goal 10-repeat expansion
+
+`experiments/protocols/stage4u_single_goal_10repeat_result.md` records the
+10-repeat strong-wind single-goal mission expansion under `goal_repeat=1`
+across Trial 4, Trial 5, and Trial 6.
+
+Main result:
+
+| Method | Trial 4 | Trial 5 | Trial 6 | Aggregate |
+| --- | ---: | ---: | ---: | ---: |
+| `fixed_s080` | `7/10` | `6/10` | `8/10` | `21/30` |
+| `risk_adapter_v2` | `9/10` | `6/10` | `6/10` | `21/30` |
+
+Interpretation: `risk_adapter_v2` matches `fixed_s080` in aggregate under the
+single-goal mission protocol, improves Trial 4, matches Trial 5, and
+underperforms on Trial 6. Do not claim `risk_adapter_v2` dominates
+`fixed_s080`. Design `risk_adapter_v2.1` before further expansion, with
+attention to reducing long-duration `0.65` use on Trial 6. Keep
+`goal_repeat=10` as the separate repeated-goal stress benchmark.
 
 ## Stage 4-C risk dataset expansion
 
