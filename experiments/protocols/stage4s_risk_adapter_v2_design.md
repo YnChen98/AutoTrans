@@ -43,6 +43,12 @@ Trial 6. This supports the learned-governor direction but does not justify an
 overall-best claim. The next algorithmic step should be a `risk_adapter_v2.1`
 design that avoids long-duration `0.65` use on Trial 6.
 
+Stage 4-V now supersedes `risk_adapter_v2` as the latest design target. The
+`risk_adapter_v2` policy and results remain recorded as the baseline, but the
+next implementation should target `policy_mode=risk_adapter_v21` after the
+Stage 4-V design protocol:
+`experiments/protocols/stage4v_risk_adapter_v21_design.md`.
+
 ## Motivation
 
 The current balanced Trial 4/5/6 results are:
@@ -256,6 +262,8 @@ Stage 4-U2 single-goal 10-repeat update:
 - Design `risk_adapter_v2.1` before further expansion.
 - `risk_adapter_v2.1` should reduce long-duration `0.65` use and prefer
   `0.70` or `0.75` for high-risk states unless severe risk persists.
+- Stage 4-V records `risk_adapter_v2.1` as the latest design target; keep
+  `risk_adapter_v2` unchanged for comparison.
 
 Completed `risk_adapter_v2` screening:
 
@@ -317,7 +325,8 @@ Stage 4-S3 implementation status:
 Recommended follow-up:
 
 - Run static checks first.
-- Design `risk_adapter_v2.1` before further tuning or runs.
+- Use `experiments/protocols/stage4v_risk_adapter_v21_design.md` as the
+  current design protocol.
 - Reduce long-duration `0.65` use and evaluate `0.70` / `0.75` high-risk
   behavior before another expansion.
 - Keep single-goal mission and repeated-goal stress result tables separate.

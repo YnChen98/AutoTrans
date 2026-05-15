@@ -422,6 +422,18 @@ Stage 4-U2 single-goal 10-repeat expansion:
 - Future Stage 4 result tables must separate single-goal mission and
   repeated-goal stress protocols.
 
+Stage 4-V risk_adapter_v2.1 design:
+
+- Stage 4-V is the next algorithmic step after Stage 4-U2.
+- The design protocol is
+  `experiments/protocols/stage4v_risk_adapter_v21_design.md`.
+- Do not run additional simulation before the Stage 4-V design is recorded.
+- Do not claim `risk_adapter_v2` beats `fixed_s080` overall; they tied at
+  `21/30` under the single-goal protocol.
+- `risk_adapter_v2.1` should keep `risk_adapter_v2` unchanged and later add a
+  separate `policy_mode=risk_adapter_v21`.
+- No planner/controller/simulator changes are needed for the next policy step.
+
 Earlier Stage 4-H limited-repeat results:
 
 Trial 4:

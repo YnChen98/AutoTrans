@@ -522,6 +522,9 @@ design before further tuning or paper-facing dominance claims.
 Design protocol:
 `experiments/protocols/stage4s_risk_adapter_v2_design.md`.
 
+Current v2.1 design protocol:
+`experiments/protocols/stage4v_risk_adapter_v21_design.md`.
+
 ## Stage 4 log divergence inspector
 
 `experiments/scripts/inspect_stage4_log_divergence.py` 用于离线检查 Stage 4 CSV log 中的
@@ -748,6 +751,21 @@ underperforms on Trial 6. Do not claim `risk_adapter_v2` dominates
 `fixed_s080`. Design `risk_adapter_v2.1` before further expansion, with
 attention to reducing long-duration `0.65` use on Trial 6. Keep
 `goal_repeat=10` as the separate repeated-goal stress benchmark.
+
+## Stage 4-V risk_adapter_v2.1 design
+
+`experiments/protocols/stage4v_risk_adapter_v21_design.md` records the next
+algorithmic design step after the Stage 4-U2 tie.
+
+Design direction:
+
+- Keep the strong `risk_adapter_v2` Trial 4 behavior.
+- Reduce long-duration `0.65` use that may hurt Trial 6.
+- Use `0.70` or `0.75` for ordinary high-risk states.
+- Reserve `0.65` for sustained or severe risk.
+- Keep `risk_adapter_v2` unchanged and implement a separate
+  `policy_mode=risk_adapter_v21` later.
+- Do not modify planner, controller, or simulator code for this policy.
 
 ## Stage 4-C risk dataset expansion
 

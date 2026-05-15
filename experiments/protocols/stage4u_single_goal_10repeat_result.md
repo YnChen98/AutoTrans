@@ -87,6 +87,12 @@ conservative. `fixed_s080` achieved `8/10` on Trial 6, while
 long-duration `0.65` use and consider `0.70` or `0.75` for high-risk states
 unless severe risk persists.
 
+Stage 4-V records this follow-up design direction in
+`experiments/protocols/stage4v_risk_adapter_v21_design.md`. The main
+motivation is Trial 6 underperformance: `risk_adapter_v2` matched
+`fixed_s080` in aggregate, but lost `6/10` vs `8/10` on Trial 6, where mean
+scale often stayed near `0.666`.
+
 ## Relationship To Stage 4-T
 
 Stage 4-T2 showed that `goal_repeat=10` can introduce repeated-goal /
@@ -107,6 +113,8 @@ must be reported separately from Stage 4-U2 single-goal results.
 - `risk_adapter_v2.1` should reduce long-duration use of `0.65`.
 - `risk_adapter_v2.1` should use `0.70` or `0.75` for high-risk states unless
   severe risk persists.
+- Keep `risk_adapter_v2` results recorded as the baseline for the Stage 4-V
+  design comparison.
 - Future paper results must separate single-goal mission and repeated-goal
   stress protocols.
 

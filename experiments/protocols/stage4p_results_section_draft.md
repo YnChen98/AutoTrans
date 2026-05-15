@@ -24,6 +24,11 @@ comparison: `fixed_s080` achieved `21/30` and `risk_adapter_v2` achieved
 single-goal mission result from repeated-goal stress results such as
 `fixed_s080` `24/30` and `risk_adapter_v1` `23/30` under `goal_repeat=10`.
 
+Stage 4-V proposes `risk_adapter_v2.1` as the next design target, but it should
+not be included in Results claims until it has been evaluated. Future Results
+should add `risk_adapter_v2.1` only after protocol-labeled single-goal and/or
+repeated-goal stress evidence exists.
+
 ## Chinese logic explanation
 
 这段 Results 的核心逻辑是先固定评价协议和主指标：balanced strong-wind simulation benchmark、Trials 4–6、每个方法 30 次重复运行，以及 strict-valid rate。随后按 baseline 到 adapter 的顺序报告结果，说明 risk_adapter_v1 相比 original、fixed_s085 和 windlevel_s085 有更高的 strict-valid rate。最后加入 Stage 4-R 的更新解释：fixed_s080 作为 tuned fixed-scale frontier 达到 24/30，略高于 risk_adapter_v1 的 23/30，因此 risk_adapter_v1 不能再被写成 overall best。更稳妥的论文表述是：fixed_s080 提供了一个强静态参考点，并推动下一步 risk_adapter_v2 设计成为 calibrated risk-conditioned governor。
@@ -41,6 +46,7 @@ single-goal mission result from repeated-goal stress results such as
 - Stage 4-U provides diagnostic single-goal screening evidence: `risk_adapter_v2` `9/9` and `fixed_s080` `6/9` under `goal_repeat=1`.
 - Stage 4-U2 provides the current single-goal 10-repeat result: `risk_adapter_v2` `21/30` and `fixed_s080` `21/30` under `goal_repeat=1`.
 - Future Results should separate single-goal mission results (`fixed_s080` `21/30`, `risk_adapter_v2` `21/30`) from repeated-goal stress results (`fixed_s080` `24/30`, `risk_adapter_v1` `23/30`).
+- Stage 4-V is a design protocol only; include `risk_adapter_v2.1` in Results only after evaluation.
 
 ## Claims to avoid
 
@@ -53,6 +59,7 @@ single-goal mission result from repeated-goal stress results such as
 - Do not claim single-goal mission performance from goal_repeat=10 results.
 - Do not claim final risk_adapter_v2 superiority from the Stage 4-U 9-run screening alone.
 - Do not claim risk_adapter_v2 dominates fixed_s080 after Stage 4-U2; they match in aggregate under the single-goal protocol.
+- Do not claim risk_adapter_v2.1 superiority before experiments.
 - Do not mix single-goal mission and repeated-goal stress results into one table without protocol labels.
 - Do not claim the results generalise to all wind levels, all trajectories, or real-world UAV deployment without further evidence.
 
