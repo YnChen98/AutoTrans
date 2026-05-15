@@ -16,6 +16,11 @@ already reached or nearly reached the target. The result remains the current
 tuned fixed-scale frontier for that protocol, but a single-goal mission
 comparison remains future work.
 
+Stage 4-T2 later confirmed that `goal_repeat=10` should be interpreted as a
+repeated-goal / post-arrival replan stress protocol. The `fixed_s080` `24/30`
+frontier remains valid for that protocol, but it should not be reported as
+single-goal mission performance.
+
 This changes the Stage 4 interpretation. `risk_adapter_v1` improves over the
 initial baselines `original`, `fixed_s085`, and `windlevel_s085`, but it should
 no longer be described as the best overall method once the tuned `fixed_s080`
@@ -103,9 +108,14 @@ in this benchmark.
 This motivates a calibrated risk-conditioned governor `risk_adapter_v2`.
 
 The `fixed_s080` `24/30` result should be reported as a repeated-goal protocol
-result until Stage 4-T1 goal reception, arrival, and post-arrival
-trajectory-update diagnostics are reviewed. It should not be used alone to
-claim single-goal mission robustness.
+result after the Stage 4-T1/T2 goal reception, arrival, and post-arrival
+trajectory-update diagnostics. It should not be used alone to claim
+single-goal mission robustness.
+
+Stage 4-T2 found that `fixed_s080` Trial 4 was `1/3` under `goal_repeat=1` and
+`2/3` under `goal_repeat=10`. This diagnostic does not weaken `fixed_s080` as
+the tuned repeated-goal frontier, but it shows that single-goal mission
+evaluation must be run and reported separately.
 
 ## Research Decision
 

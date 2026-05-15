@@ -21,8 +21,15 @@ screening protocol used repeated `/move_base_simple/goal` publication through
 `goal_repeat=10`. This may introduce a repeated-goal / post-arrival replan
 stress artifact that is distinct from normal single-goal transport success or
 failure. Stage 4-T1 goal reception, arrival, and post-arrival trajectory-update
-diagnostics must be added and inspected before further `risk_adapter_v2`
-tuning.
+diagnostics were added to inspect this timing before further
+`risk_adapter_v2` tuning.
+
+Stage 4-T2 confirmed that this protocol distinction matters on strong-wind
+Trial 4: `risk_adapter_v2` was `3/3` strict-valid under `goal_repeat=1` but
+`0/3` under `goal_repeat=10`, with all `goal_repeat=10` failures occurring
+after arrival and after post-arrival goal publishes. The prior `risk_adapter_v2`
+`5/9` screening was therefore a repeated-goal stress result, not a generic
+single-goal mission result.
 
 ## Motivation
 
@@ -210,6 +217,14 @@ Stage 4-T1 diagnostic prerequisite:
 - Separate single-goal mission evidence from repeated-goal stress evidence.
 - Do not tune `risk_adapter_v2` further until the current Stage 4-S4 failures
   are checked against these diagnostics.
+
+Stage 4-T2 protocol decision:
+
+- Screen `risk_adapter_v2` under `goal_repeat=1` across Trial 4/5/6 before
+  threshold tuning.
+- Treat `goal_repeat=10` as a repeated-goal / post-arrival replan stress
+  protocol.
+- Do not infer single-goal mission performance from `goal_repeat=10` results.
 
 Initial `risk_adapter_v2` screening:
 

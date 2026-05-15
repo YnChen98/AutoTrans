@@ -375,6 +375,26 @@ Stage 4-S risk_adapter_v2 design:
 - The design protocol is
   `experiments/protocols/stage4s_risk_adapter_v2_design.md`.
 
+Stage 4-T goal-repeat artifact diagnostics:
+
+- Future Stage 4 evaluations must label the goal protocol explicitly:
+  `goal_repeat=1` is the single-goal mission protocol, and `goal_repeat=10` is
+  the repeated-goal / post-arrival replan stress protocol.
+- Do not interpret `goal_repeat=10` results as generic single-goal mission
+  results.
+- Stage 4-T2 strong-wind Trial 4 diagnostic showed `risk_adapter_v2` was `3/3`
+  strict-valid under `goal_repeat=1` but `0/3` under `goal_repeat=10`; all
+  `risk_adapter_v2` `goal_repeat=10` failures occurred after arrival and after
+  post-arrival goal publishes.
+- `fixed_s080` remains the tuned frontier for the repeated-goal protocol, but
+  single-goal mission performance must be evaluated separately.
+- Do not claim all prior invalid runs are caused by the goal-repeat artifact;
+  `fixed_s080` still had Trial 4 pre-arrival failures under `goal_repeat=1`.
+- Pause `risk_adapter_v2` threshold tuning until `goal_repeat=1` screening
+  across Trial 4/5/6 is complete.
+- Do not modify planner same-goal handling yet; keep it as a future
+  system-level intervention after diagnostics.
+
 Earlier Stage 4-H limited-repeat results:
 
 Trial 4:

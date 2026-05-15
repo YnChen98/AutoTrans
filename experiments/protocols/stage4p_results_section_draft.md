@@ -6,6 +6,12 @@ We evaluated command-adaptation strategies in the balanced strong-wind simulatio
 
 However, the tuned fixed-scale frontier (fixed_s080) achieved 24/30 strict-valid runs (80.0%), slightly exceeding risk_adapter_v1 by one successful run. Thus, risk_adapter_v1 should not be interpreted as the overall best method once the tuned static frontier is included. Instead, fixed_s080 defines a strong static operating point for this benchmark and provides a concrete reference target for a calibrated risk-conditioned governor, risk_adapter_v2. These results support a bounded repeated-run comparison under the tested strong-wind simulation setting; they do not establish statistical significance, provide a safety guarantee, or imply that all NaN/divergence failures are caused by command adaptation.
 
+Stage 4-T2 indicates that this Results draft should later distinguish the
+single-goal mission protocol (`goal_repeat=1`) from the repeated-goal stress
+protocol (`goal_repeat=10`). The current 30-repeat Stage 4-J/4-R numbers should
+be described as repeated-goal strong-wind protocol results until a separate
+single-goal mission comparison is completed.
+
 ## Chinese logic explanation
 
 这段 Results 的核心逻辑是先固定评价协议和主指标：balanced strong-wind simulation benchmark、Trials 4–6、每个方法 30 次重复运行，以及 strict-valid rate。随后按 baseline 到 adapter 的顺序报告结果，说明 risk_adapter_v1 相比 original、fixed_s085 和 windlevel_s085 有更高的 strict-valid rate。最后加入 Stage 4-R 的更新解释：fixed_s080 作为 tuned fixed-scale frontier 达到 24/30，略高于 risk_adapter_v1 的 23/30，因此 risk_adapter_v1 不能再被写成 overall best。更稳妥的论文表述是：fixed_s080 提供了一个强静态参考点，并推动下一步 risk_adapter_v2 设计成为 calibrated risk-conditioned governor。
@@ -19,6 +25,7 @@ However, the tuned fixed-scale frontier (fixed_s080) achieved 24/30 strict-valid
 - fixed_s080 can be described as a strong static operating point or tuned fixed-scale frontier for this benchmark.
 - fixed_s080 provides a concrete reference target for risk_adapter_v2.
 - The benchmark supports a bounded repeated-run comparison under the tested strong-wind simulation setting.
+- Current Stage 4-J/4-R results are repeated-goal protocol results and should be labeled separately from future single-goal mission results.
 
 ## Claims to avoid
 
@@ -28,6 +35,7 @@ However, the tuned fixed-scale frontier (fixed_s080) achieved 24/30 strict-valid
 - Do not claim final online robustness.
 - Do not claim all NaN/divergence failures are caused by command adaptation.
 - Do not claim risk_adapter_v1 beats every baseline on every target.
+- Do not claim single-goal mission performance from goal_repeat=10 results.
 - Do not claim the results generalise to all wind levels, all trajectories, or real-world UAV deployment without further evidence.
 
 ## Notes

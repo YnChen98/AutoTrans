@@ -680,6 +680,29 @@ diagnostics before further tuning. Results collected with `goal_repeat=10`
 should be labeled as repeated-goal protocol evidence until a separate
 `goal_repeat=1` single-goal mission comparison is run.
 
+## Stage 4-T2 goal-repeat artifact diagnostic
+
+`experiments/protocols/stage4t_goal_repeat_artifact_diagnostic_result.md`
+records the minimal strong-wind Trial 4 diagnostic comparing `fixed_s080` and
+`risk_adapter_v2` under `goal_repeat=1` and `goal_repeat=10`.
+
+Main result:
+
+- `risk_adapter_v2`, `goal_repeat=1`: `3/3` strict-valid.
+- `risk_adapter_v2`, `goal_repeat=10`: `0/3` strict-valid.
+- All `risk_adapter_v2` `goal_repeat=10` failures occurred after arrival and
+  after post-arrival goal publishes.
+- `fixed_s080`, `goal_repeat=10`: `2/3` strict-valid with one post-arrival
+  failure.
+- `fixed_s080`, `goal_repeat=1`: `1/3` strict-valid with two pre-arrival
+  failures.
+
+Interpretation: `goal_repeat=10` is a useful repeated-goal / post-arrival
+replan stress protocol, not a generic single-goal mission protocol. Future
+Stage 4 tables should label the goal protocol explicitly. `risk_adapter_v2`
+should be screened under `goal_repeat=1` across Trial 4/5/6 before further
+threshold tuning.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。
