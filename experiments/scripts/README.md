@@ -787,6 +787,25 @@ roslaunch command_adaptation risk_conditioned_command_adapter.launch \
 `goal_repeat=1` against `fixed_s080` and `risk_adapter_v2` before any
 10-repeat expansion. Do not claim improvement before those experiments.
 
+## Stage 4-V3 risk_adapter_v21 screening result
+
+`experiments/protocols/stage4v_risk_adapter_v21_screening_result.md` records
+the first `risk_adapter_v21` single-goal screening under strong wind:
+
+- protocol: `goal_repeat=1`
+- trials: Trial 4, Trial 5, Trial 6
+- repeats: repeat1 through repeat3
+- result: `risk_adapter_v21` achieved `9/9` strict-valid
+- diagnostic labels: `command_saturation_without_divergence` (`6`),
+  `no_divergence_detected` (`2`), `swing_warning_no_nan` (`1`)
+
+Scale behavior: Trial 4 stayed around mean scale `0.843`; Trial 5 and Trial 6
+stayed around mean scale `0.711` with minimum `0.70`, avoiding the long-duration
+`0.65` behavior that motivated Stage 4-V.
+
+Next step: expand `risk_adapter_v21` to 10 repeats under `goal_repeat=1`. Do
+not tune the policy or claim final superiority before that expansion.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

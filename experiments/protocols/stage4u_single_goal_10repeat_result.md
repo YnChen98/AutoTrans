@@ -15,6 +15,11 @@ does not show that `risk_adapter_v2` is overall better than `fixed_s080` yet.
 It also shows target-dependent trade-offs that should guide a `risk_adapter_v2.1`
 design before further expansion.
 
+Stage 4-V3 later screened `risk_adapter_v21` and achieved `9/9` strict-valid
+under the same single-goal protocol across Trial 4/5/6 repeat1-3. That result
+is promising, but it should be expanded to 10 repeats before revising the main
+single-goal comparison recorded here.
+
 ## Protocol
 
 - protocol: single-goal mission protocol
@@ -115,6 +120,8 @@ must be reported separately from Stage 4-U2 single-goal results.
   severe risk persists.
 - Keep `risk_adapter_v2` results recorded as the baseline for the Stage 4-V
   design comparison.
+- Treat the Stage 4-V3 `risk_adapter_v21` `9/9` screening as a motivation for
+  10-repeat expansion, not as a replacement for this Stage 4-U2 result.
 - Future paper results must separate single-goal mission and repeated-goal
   stress protocols.
 

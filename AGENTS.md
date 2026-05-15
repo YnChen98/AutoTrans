@@ -424,14 +424,21 @@ Stage 4-U2 single-goal 10-repeat expansion:
 
 Stage 4-V risk_adapter_v2.1 design:
 
-- Stage 4-V is the next algorithmic step after Stage 4-U2.
+- Stage 4-V is the current algorithmic step after Stage 4-U2.
 - The design protocol is
   `experiments/protocols/stage4v_risk_adapter_v21_design.md`.
-- Do not run additional simulation before the Stage 4-V design is recorded.
 - Do not claim `risk_adapter_v2` beats `fixed_s080` overall; they tied at
   `21/30` under the single-goal protocol.
-- `risk_adapter_v2.1` should keep `risk_adapter_v2` unchanged and later add a
-  separate `policy_mode=risk_adapter_v21`.
+- Stage 4-V2 implemented `policy_mode=risk_adapter_v21` as a separate mode
+  while keeping `risk_adapter_v2` unchanged.
+- Stage 4-V3 screened `risk_adapter_v21` under strong wind with
+  `goal_repeat=1`, Trial 4/5/6, repeat1-3.
+- `risk_adapter_v21`: 9/9 strict-valid in the Stage 4-V3 screening.
+- The screening avoided long-duration `0.65` behavior; Trial 5 and Trial 6
+  used mean scale around `0.711` with minimum `0.70`.
+- Next step: expand `risk_adapter_v21` to 10 repeats under `goal_repeat=1`,
+  not policy tuning.
+- Do not claim final `risk_adapter_v21` superiority from the 9-run screening.
 - No planner/controller/simulator changes are needed for the next policy step.
 
 Earlier Stage 4-H limited-repeat results:

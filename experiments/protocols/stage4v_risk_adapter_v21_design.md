@@ -20,6 +20,11 @@ Stage 4-V2 implements the first minimal `risk_adapter_v2.1` policy as
 This implementation is risk-only plus hysteresis/dwell and remains disabled by
 default.
 
+Stage 4-V3 screened `risk_adapter_v21` under the single-goal mission protocol
+and achieved `9/9` strict-valid runs across strong-wind Trial 4/5/6 repeat1-3.
+This motivates a 10-repeat expansion under `goal_repeat=1`, but it is not yet
+final evidence of superiority.
+
 ## Motivation
 
 Stage 4-U2 expanded the single-goal mission protocol:
@@ -179,5 +184,14 @@ Stage 4-V2 minimal implementation status:
 - Execution diagnostics remain deferred with `use_execution_diagnostics_v21=false`.
 - `risk_adapter_v21` remains disabled by default.
 - Do not modify planner, controller, or simulator code.
-- Compare `risk_adapter_v21` against `fixed_s080` and `risk_adapter_v2` under
-  the single-goal protocol before any 10-repeat expansion.
+
+Stage 4-V3 screening status:
+
+- `risk_adapter_v21` achieved `9/9` strict-valid under strong wind with
+  `goal_repeat=1`, Trial 4/5/6, repeat1-3.
+- Diagnostic labels were `command_saturation_without_divergence` (`6`),
+  `no_divergence_detected` (`2`), and `swing_warning_no_nan` (`1`).
+- The screening avoided long-duration `0.65` behavior; Trial 5 and Trial 6
+  used mean scale around `0.711` with minimum `0.70`.
+- Next step: expand `risk_adapter_v21` to 10 repeats under the single-goal
+  protocol before any policy tuning or stronger claim.
