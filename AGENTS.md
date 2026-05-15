@@ -395,6 +395,22 @@ Stage 4-T goal-repeat artifact diagnostics:
 - Do not modify planner same-goal handling yet; keep it as a future
   system-level intervention after diagnostics.
 
+Stage 4-U single-goal mission screening:
+
+- Stage 4-U screened `fixed_s080` and `risk_adapter_v2` under strong wind with
+  `goal_repeat=1`, Trial 4/5/6, repeat1-3.
+- `risk_adapter_v2`: 9/9 strict-valid.
+- `fixed_s080`: 6/9 strict-valid.
+- This is diagnostic screening, not final statistical evidence.
+- Next step: expand `risk_adapter_v2` and `fixed_s080` single-goal mission
+  screening to 10 repeats under `goal_repeat=1`.
+- Do not tune `risk_adapter_v2` before this expansion.
+- If `risk_adapter_v2` remains stronger, promote the single-goal mission
+  protocol as the primary benchmark and keep `goal_repeat=10` as the
+  repeated-goal stress benchmark.
+- Check Trial 6 efficiency because `risk_adapter_v2` used a low mean scale
+  around `0.666`.
+
 Earlier Stage 4-H limited-repeat results:
 
 Trial 4:

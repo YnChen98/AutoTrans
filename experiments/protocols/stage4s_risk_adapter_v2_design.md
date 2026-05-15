@@ -31,6 +31,11 @@ after arrival and after post-arrival goal publishes. The prior `risk_adapter_v2`
 `5/9` screening was therefore a repeated-goal stress result, not a generic
 single-goal mission result.
 
+Stage 4-U then screened the single-goal mission protocol across strong-wind
+Trial 4/5/6 repeat1-3. `risk_adapter_v2` achieved `9/9` strict-valid, while
+`fixed_s080` achieved `6/9`. This supports expanding the single-goal mission
+screening before any further `risk_adapter_v2` threshold tuning.
+
 ## Motivation
 
 The current balanced Trial 4/5/6 results are:
@@ -225,6 +230,15 @@ Stage 4-T2 protocol decision:
 - Treat `goal_repeat=10` as a repeated-goal / post-arrival replan stress
   protocol.
 - Do not infer single-goal mission performance from `goal_repeat=10` results.
+
+Stage 4-U single-goal screening update:
+
+- `risk_adapter_v2`: `9/9` strict-valid under `goal_repeat=1`.
+- `fixed_s080`: `6/9` strict-valid under `goal_repeat=1`.
+- Do not tune thresholds yet; first expand both methods to 10 repeats under
+  the single-goal mission protocol.
+- Check Trial 6 efficiency because `risk_adapter_v2` used a low mean scale
+  around `0.666`.
 
 Initial `risk_adapter_v2` screening:
 

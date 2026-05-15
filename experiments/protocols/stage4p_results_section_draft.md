@@ -12,6 +12,12 @@ protocol (`goal_repeat=10`). The current 30-repeat Stage 4-J/4-R numbers should
 be described as repeated-goal strong-wind protocol results until a separate
 single-goal mission comparison is completed.
 
+Stage 4-U adds the first single-goal mission screening result:
+`risk_adapter_v2` achieved `9/9` strict-valid under `goal_repeat=1`, while
+`fixed_s080` achieved `6/9`. This result is promising but diagnostic-only. A
+future Results section should present single-goal mission and repeated-goal
+stress protocols as separate benchmarks.
+
 ## Chinese logic explanation
 
 这段 Results 的核心逻辑是先固定评价协议和主指标：balanced strong-wind simulation benchmark、Trials 4–6、每个方法 30 次重复运行，以及 strict-valid rate。随后按 baseline 到 adapter 的顺序报告结果，说明 risk_adapter_v1 相比 original、fixed_s085 和 windlevel_s085 有更高的 strict-valid rate。最后加入 Stage 4-R 的更新解释：fixed_s080 作为 tuned fixed-scale frontier 达到 24/30，略高于 risk_adapter_v1 的 23/30，因此 risk_adapter_v1 不能再被写成 overall best。更稳妥的论文表述是：fixed_s080 提供了一个强静态参考点，并推动下一步 risk_adapter_v2 设计成为 calibrated risk-conditioned governor。
@@ -26,6 +32,7 @@ single-goal mission comparison is completed.
 - fixed_s080 provides a concrete reference target for risk_adapter_v2.
 - The benchmark supports a bounded repeated-run comparison under the tested strong-wind simulation setting.
 - Current Stage 4-J/4-R results are repeated-goal protocol results and should be labeled separately from future single-goal mission results.
+- Stage 4-U provides diagnostic single-goal screening evidence: `risk_adapter_v2` `9/9` and `fixed_s080` `6/9` under `goal_repeat=1`.
 
 ## Claims to avoid
 
@@ -36,6 +43,7 @@ single-goal mission comparison is completed.
 - Do not claim all NaN/divergence failures are caused by command adaptation.
 - Do not claim risk_adapter_v1 beats every baseline on every target.
 - Do not claim single-goal mission performance from goal_repeat=10 results.
+- Do not claim final risk_adapter_v2 superiority from the Stage 4-U 9-run screening alone.
 - Do not claim the results generalise to all wind levels, all trajectories, or real-world UAV deployment without further evidence.
 
 ## Notes

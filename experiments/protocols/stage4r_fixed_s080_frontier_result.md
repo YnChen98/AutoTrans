@@ -21,6 +21,12 @@ repeated-goal / post-arrival replan stress protocol. The `fixed_s080` `24/30`
 frontier remains valid for that protocol, but it should not be reported as
 single-goal mission performance.
 
+Stage 4-U single-goal screening later found `fixed_s080` at `6/9` under
+`goal_repeat=1`, while `risk_adapter_v2` reached `9/9`. Therefore
+`fixed_s080` remains the tuned static frontier for the repeated-goal protocol,
+but its single-goal mission performance should be evaluated and reported
+separately.
+
 This changes the Stage 4 interpretation. `risk_adapter_v1` improves over the
 initial baselines `original`, `fixed_s085`, and `windlevel_s085`, but it should
 no longer be described as the best overall method once the tuned `fixed_s080`
@@ -116,6 +122,10 @@ Stage 4-T2 found that `fixed_s080` Trial 4 was `1/3` under `goal_repeat=1` and
 `2/3` under `goal_repeat=10`. This diagnostic does not weaken `fixed_s080` as
 the tuned repeated-goal frontier, but it shows that single-goal mission
 evaluation must be run and reported separately.
+
+Stage 4-U extended that single-goal check to Trial 4/5/6 repeat1-3:
+`fixed_s080` was `6/9` and `risk_adapter_v2` was `9/9`. This is screening
+evidence only; it should be expanded before any final ranking claim.
 
 ## Research Decision
 

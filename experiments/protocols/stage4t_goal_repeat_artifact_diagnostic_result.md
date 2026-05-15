@@ -20,6 +20,12 @@ This diagnostic should not be treated as a final benchmark. It is a protocol
 diagnostic that separates single-goal mission behavior from repeated-goal /
 post-arrival replan stress behavior.
 
+Stage 4-U later expanded the single-goal screening across Trial 4/5/6
+repeat1-3. Under `goal_repeat=1`, `risk_adapter_v2` achieved `9/9`
+strict-valid while `fixed_s080` achieved `6/9`. This supports the Stage 4-T2
+protocol split: `goal_repeat=1` should be analyzed as single-goal mission
+screening, while `goal_repeat=10` remains repeated-goal stress evidence.
+
 ## Test Setup
 
 - wind: `strong`
@@ -125,6 +131,11 @@ by repeated-goal / post-arrival stress.
 The next `risk_adapter_v2` evaluation should use `goal_repeat=1` across Trial
 4/5/6 before threshold tuning. Only after single-goal screening is complete
 should `risk_adapter_v2` be retested under the repeated-goal stress protocol.
+
+Stage 4-U completed the first such single-goal screening and found
+`risk_adapter_v2` at `9/9` strict-valid versus `fixed_s080` at `6/9`.
+The next step is expansion to 10 repeats under `goal_repeat=1`, not threshold
+tuning.
 
 This diagnostic also does not prove that `risk_adapter_v2` is better than
 `fixed_s080` overall. It only shows that the previous `goal_repeat=10`

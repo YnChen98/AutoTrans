@@ -703,6 +703,25 @@ Stage 4 tables should label the goal protocol explicitly. `risk_adapter_v2`
 should be screened under `goal_repeat=1` across Trial 4/5/6 before further
 threshold tuning.
 
+## Stage 4-U single-goal mission screening
+
+`experiments/protocols/stage4u_single_goal_screening_result.md` records the
+first strong-wind single-goal mission screening under `goal_repeat=1` across
+Trial 4, Trial 5, and Trial 6 repeat1-3.
+
+Main result:
+
+| Method | Trial 4 | Trial 5 | Trial 6 | Aggregate |
+| --- | ---: | ---: | ---: | ---: |
+| `fixed_s080` | `1/3` | `3/3` | `2/3` | `6/9` |
+| `risk_adapter_v2` | `3/3` | `3/3` | `3/3` | `9/9` |
+
+Interpretation: `risk_adapter_v2` is promising under the single-goal mission
+protocol, but this is still diagnostic screening. Do not tune `risk_adapter_v2`
+thresholds yet; expand `risk_adapter_v2` and `fixed_s080` to 10 repeats under
+`goal_repeat=1` first. Keep `goal_repeat=10` as the repeated-goal stress
+benchmark.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。
