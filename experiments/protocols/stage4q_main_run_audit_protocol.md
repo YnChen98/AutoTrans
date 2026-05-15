@@ -67,6 +67,9 @@ CSV log referenced by each metrics summary. The joined inspector fields are:
 
 These are heuristic run-level diagnostic labels. They help organize evidence
 around timing, but they do not prove a final physical root cause by themselves.
+Warning-only labels such as `position_or_reference_jump_warning_no_nan` must
+not replace the paper-facing strict-valid metric when the run is otherwise
+strict-valid by analyzer metrics.
 
 ## Manual Annotation Join
 
@@ -109,6 +112,10 @@ collision-free.
 
 This grouping is intentionally conservative. It should be used as an audit
 summary, not as definitive causal attribution.
+
+Warning-only raw position/reference jump diagnostics should remain in the
+diagnostic columns. They should not move a strict-valid run into a failure
+group or override `label_strict_invalid=false`.
 
 ## Outputs
 

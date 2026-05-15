@@ -531,9 +531,13 @@ timing，帮助区分 sudden fly-away / teleport-like divergence。它不运行 
 `swing_angle_deg >= 30` 只是 warning threshold，会报告为
 `swing_warning_no_nan`；`strict_safety_no_nan` 只保留给 no-NaN 条件下的
 paper-facing strict safety violation，例如 `swing_angle_deg >= 60`、
-UAV/payload speed `>= 4 m/s`、UAV/payload position jump `> 1 m` 或
-target-error failure evidence。正式结果仍应使用 strict-valid /
-`label_strict_invalid`。
+UAV/payload speed `>= 4 m/s`、target-error failure evidence，或伴随 high
+speed / large final error / NaN / other instability evidence 的 clear
+teleport-like position jump。raw UAV/payload position jump 或 reference jump
+alone 现在是 warning-only taxonomy，会报告为
+`position_or_reference_jump_warning_no_nan` 或通过
+`position_jump_warning_only` / `reference_jump_warning_only` 字段暴露；它不应覆盖
+strict-valid / `label_strict_invalid`。
 
 The inspector sorts rows by timestamp before timing analysis, ignores string
 diagnostic reason fields during nonfinite scans, and reports aggregate timing
@@ -545,8 +549,10 @@ initial planner reference root cause.
 The latest batch audit categories include `command_nan_before_state_divergence`,
 `command_saturation_before_nan`, `command_saturation_without_divergence`,
 `no_divergence_detected`, `state_divergence_before_command_nan`,
-`strict_safety_no_nan`, `swing_warning_no_nan`, and `target_error_only`. These are heuristic
-classification labels, not final physical root-cause proof.
+`position_or_reference_jump_warning_no_nan`, `strict_safety_no_nan`,
+`swing_warning_no_nan`, and `target_error_only`. These are heuristic
+classification labels, not final physical root-cause proof; paper-facing
+success-rate tables should still use strict-valid / `label_strict_invalid`.
 
 检查单个 CSV，并打印一个相对时间窗口内的关键列：
 

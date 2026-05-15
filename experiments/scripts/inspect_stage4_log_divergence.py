@@ -44,6 +44,10 @@ OUTPUT_FIELDS = [
     "has_command_saturation",
     "has_high_speed",
     "has_position_jump",
+    "has_reference_jump",
+    "position_jump_warning_only",
+    "reference_jump_warning_only",
+    "position_jump_strict_violation",
     "has_swing_threshold_crossing",
     "has_swing_warning_ge30",
     "has_strict_safety_violation",
@@ -286,6 +290,10 @@ def inspect_csv(path, args, metrics=None):
         "has_command_saturation": "",
         "has_high_speed": "",
         "has_position_jump": "",
+        "has_reference_jump": "",
+        "position_jump_warning_only": "",
+        "reference_jump_warning_only": "",
+        "position_jump_strict_violation": "",
         "has_swing_threshold_crossing": "",
         "has_swing_warning_ge30": "",
         "has_strict_safety_violation": "",
@@ -514,15 +522,50 @@ def inspect_csv(path, args, metrics=None):
     first_swing_warning = time_value(result, "first_swing_ge30_time")
     if math.isfinite(first_swing_warning):
         result["first_swing_warning_time"] = format_float(first_swing_warning)
-    first_strict_safety_violation = min_finite(
+    first_reference_jump = min_finite(
         [
-            time_value(result, "first_uav_speed_gt4_time"),
-            time_value(result, "first_payload_speed_gt4_time"),
-            time_value(result, "first_uav_position_jump_gt1m_time"),
-            time_value(result, "first_payload_position_jump_gt1m_time"),
-            time_value(result, "first_swing_ge60_time"),
+            time_value(result, "first_ref_pos_jump_gt1m_time"),
+            time_value(result, "first_ref_vel_jump_gt2mps_time"),
+            time_value(result, "first_ref_acc_gt5_time"),
+            time_value(result, "first_ref_acc_gt10_time"),
         ]
     )
+    if math.isfinite(first_reference_jump):
+        result["first_reference_jump_time"] = format_float(first_reference_jump)
+    has_high_speed_raw = (
+        is_time_set(result, "first_uav_speed_gt4_time")
+        or is_time_set(result, "first_payload_speed_gt4_time")
+    )
+    has_position_jump_raw = (
+        is_time_set(result, "first_uav_position_jump_gt1m_time")
+        or is_time_set(result, "first_payload_position_jump_gt1m_time")
+    )
+    position_jump_time = min_finite(
+        [
+            time_value(result, "first_uav_position_jump_gt1m_time"),
+            time_value(result, "first_payload_position_jump_gt1m_time"),
+        ]
+    )
+    has_reference_jump_raw = math.isfinite(first_reference_jump)
+    has_strict_swing_raw = is_time_set(result, "first_swing_ge60_time")
+    target_error_failure = has_target_error_failure(result)
+    metrics_invalid = metrics_indicate_invalid(result)
+    position_jump_strict_violation = has_position_jump_raw and (
+        has_high_speed_raw
+        or has_strict_swing_raw
+        or has_state_nonfinite
+        or has_command_nonfinite
+        or target_error_failure
+        or metrics_invalid
+    )
+    strict_safety_candidates = [
+        time_value(result, "first_uav_speed_gt4_time"),
+        time_value(result, "first_payload_speed_gt4_time"),
+        time_value(result, "first_swing_ge60_time"),
+    ]
+    if position_jump_strict_violation:
+        strict_safety_candidates.append(position_jump_time)
+    first_strict_safety_violation = min_finite(strict_safety_candidates)
     if math.isfinite(first_strict_safety_violation):
         result["first_strict_safety_violation_time"] = format_float(first_strict_safety_violation)
     state_divergence_candidates = [first_strict_safety_violation]
@@ -536,16 +579,6 @@ def inspect_csv(path, args, metrics=None):
     first_state_divergence = min_finite(state_divergence_candidates)
     if math.isfinite(first_state_divergence):
         result["first_state_divergence_time"] = format_float(first_state_divergence)
-    first_reference_jump = min_finite(
-        [
-            time_value(result, "first_ref_pos_jump_gt1m_time"),
-            time_value(result, "first_ref_vel_jump_gt2mps_time"),
-            time_value(result, "first_ref_acc_gt5_time"),
-            time_value(result, "first_ref_acc_gt10_time"),
-        ]
-    )
-    if math.isfinite(first_reference_jump):
-        result["first_reference_jump_time"] = format_float(first_reference_jump)
     result["reference_jump_after_divergence"] = bool_text(
         math.isfinite(first_reference_jump)
         and (
@@ -560,13 +593,19 @@ def inspect_csv(path, args, metrics=None):
         is_time_set(result, "first_so3_thrust_saturation_time")
         or is_time_set(result, "first_so3_bodyrate_saturation_time")
     )
-    result["has_high_speed"] = bool_text(
-        is_time_set(result, "first_uav_speed_gt4_time")
-        or is_time_set(result, "first_payload_speed_gt4_time")
+    result["has_high_speed"] = bool_text(has_high_speed_raw)
+    result["has_position_jump"] = bool_text(has_position_jump_raw)
+    result["has_reference_jump"] = bool_text(has_reference_jump_raw)
+    result["position_jump_strict_violation"] = bool_text(position_jump_strict_violation)
+    result["position_jump_warning_only"] = bool_text(
+        has_position_jump_raw and not position_jump_strict_violation
     )
-    result["has_position_jump"] = bool_text(
-        is_time_set(result, "first_uav_position_jump_gt1m_time")
-        or is_time_set(result, "first_payload_position_jump_gt1m_time")
+    result["reference_jump_warning_only"] = bool_text(
+        has_reference_jump_raw
+        and not (has_state_nonfinite or has_command_nonfinite or has_reference_nonfinite)
+        and not has_high_speed_raw
+        and not has_strict_swing_raw
+        and not target_error_failure
     )
     result["has_swing_threshold_crossing"] = bool_text(is_time_set(result, "first_swing_ge30_time"))
     result["has_swing_warning_ge30"] = bool_text(is_time_set(result, "first_swing_ge30_time"))
@@ -599,6 +638,16 @@ def max_metric(result, key):
     return value if math.isfinite(value) else math.nan
 
 
+def metrics_indicate_invalid(result):
+    valid_run_text = str(result.get("valid_run_suggested", "")).strip().lower()
+    return valid_run_text in ("false", "0", "no") or bool_metric(result, "has_nan_state")
+
+
+def has_target_error_failure(result):
+    final_xy_error = max_metric(result, "metrics_final_uav_xy_error")
+    return math.isfinite(final_xy_error) and final_xy_error > 0.5
+
+
 def is_before_or_near(lhs, rhs, tolerance):
     return math.isfinite(lhs) and math.isfinite(rhs) and lhs <= rhs + tolerance
 
@@ -623,6 +672,10 @@ def guess_failure_mode(result, sample_period=0.05):
     has_command_saturation = bool_metric(result, "has_command_saturation")
     has_high_speed = bool_metric(result, "has_high_speed")
     has_position_jump = bool_metric(result, "has_position_jump")
+    has_reference_jump = bool_metric(result, "has_reference_jump")
+    position_jump_warning_only = bool_metric(result, "position_jump_warning_only")
+    reference_jump_warning_only = bool_metric(result, "reference_jump_warning_only")
+    position_jump_strict_violation = bool_metric(result, "position_jump_strict_violation")
     has_swing_warning = bool_metric(result, "has_swing_warning_ge30") or bool_metric(
         result, "has_swing_threshold_crossing"
     )
@@ -631,9 +684,7 @@ def guess_failure_mode(result, sample_period=0.05):
     max_uav_speed = max_metric(result, "metrics_max_uav_speed")
     max_payload_speed = max_metric(result, "metrics_max_payload_speed")
     max_swing = max_metric(result, "metrics_max_swing_angle_deg")
-    final_xy_error = max_metric(result, "metrics_final_uav_xy_error")
-    valid_run_text = str(result.get("valid_run_suggested", "")).strip().lower()
-    metrics_says_invalid = valid_run_text in ("false", "0", "no") or bool_metric(result, "has_nan_state")
+    metrics_says_invalid = metrics_indicate_invalid(result)
     strict_safety_from_metrics = (
         (math.isfinite(max_uav_speed) and max_uav_speed >= 4.0)
         or (math.isfinite(max_payload_speed) and max_payload_speed >= 4.0)
@@ -644,7 +695,7 @@ def guess_failure_mode(result, sample_period=0.05):
         and (
             has_strict_safety_violation
             or has_high_speed
-            or has_position_jump
+            or position_jump_strict_violation
             or strict_safety_from_metrics
         )
     )
@@ -655,19 +706,25 @@ def guess_failure_mode(result, sample_period=0.05):
     )
     target_error_only = (
         not has_nan
-        and math.isfinite(final_xy_error)
-        and final_xy_error > 0.5
+        and has_target_error_failure(result)
         and not safety_no_nan
+    )
+    jump_warning_no_nan = (
+        not has_nan
+        and not safety_no_nan
+        and not target_error_only
+        and not swing_warning_no_nan
+        and (position_jump_warning_only or reference_jump_warning_only)
     )
     reference_jump_after_divergence = bool_metric(result, "reference_jump_after_divergence")
 
     no_invalid_evidence = not (
         has_any_nonfinite
         or has_high_speed
-        or has_position_jump
         or target_error_only
         or safety_no_nan
         or swing_warning_no_nan
+        or jump_warning_no_nan
     )
     if no_invalid_evidence:
         if metrics_says_invalid:
@@ -675,6 +732,14 @@ def guess_failure_mode(result, sample_period=0.05):
         if has_command_saturation:
             return "command_saturation_without_divergence"
         return "no_divergence_detected"
+
+    if jump_warning_no_nan:
+        if metrics_says_invalid:
+            return "unknown_invalid"
+        if has_command_saturation:
+            return "command_saturation_without_divergence"
+        if has_position_jump or has_reference_jump:
+            return "position_or_reference_jump_warning_no_nan"
 
     if (
         math.isfinite(first_reference_jump)
@@ -721,7 +786,7 @@ def guess_failure_mode(result, sample_period=0.05):
         return "swing_warning_no_nan"
     if has_command_saturation:
         return "command_saturation_without_divergence"
-    if has_nan or has_command_nonfinite or has_position_jump:
+    if has_nan or has_command_nonfinite or position_jump_strict_violation:
         return "unknown_invalid"
     if metrics_says_invalid:
         return "unknown_invalid"
