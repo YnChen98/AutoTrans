@@ -107,11 +107,23 @@ TRAJECTORY_DIAGNOSTIC_FIELDS = [
     "trajectory_time_since_last_update",
     "first_trajectory_time",
 ]
+GOAL_DIAGNOSTIC_FIELDS = [
+    "goal_received_count",
+    "goal_last_received_time",
+    "goal_time_since_last_received",
+    "first_goal_time",
+    "goal_pos_x",
+    "goal_pos_y",
+    "goal_pos_z",
+    "goal_available",
+]
 
 MAX_REASONABLE_SPEED_MPS = 10.0
 MAX_REASONABLE_SWING_DEG = 90.0
 MIN_REASONABLE_UAV_Z = 0.2
 MIN_REASONABLE_PAYLOAD_Z = -0.2
+ARRIVAL_SUSTAINED_SEC = 0.5
+ARRIVAL_SPEED_THRESHOLD_MPS = 0.5
 
 
 def repo_paths():
@@ -346,6 +358,121 @@ def cumulative_count_at_or_before(count_values, time_values, event_relative_time
     if not math.isfinite(latest_count):
         return math.nan
     return int(round(latest_count))
+
+
+def cumulative_event_count_after_time(count_values, event_time_values, reference_time):
+    if not math.isfinite(reference_time):
+        return math.nan
+    previous_count = None
+    total = 0
+    for count_value, event_time in zip(count_values, event_time_values):
+        if not math.isfinite(count_value):
+            continue
+        current_count = int(round(count_value))
+        if previous_count is None:
+            delta = max(0, current_count)
+        else:
+            delta = max(0, current_count - previous_count)
+        previous_count = current_count
+        if delta <= 0:
+            continue
+        if math.isfinite(event_time) and event_time > reference_time:
+            total += delta
+    return total
+
+
+def first_event_time_after(count_values, event_time_values, reference_time):
+    if not math.isfinite(reference_time):
+        return math.nan
+    previous_count = None
+    for count_value, event_time in zip(count_values, event_time_values):
+        if not math.isfinite(count_value):
+            continue
+        current_count = int(round(count_value))
+        if previous_count is None:
+            delta = max(0, current_count)
+        else:
+            delta = max(0, current_count - previous_count)
+        previous_count = current_count
+        if delta > 0 and math.isfinite(event_time) and event_time > reference_time:
+            return event_time
+    return math.nan
+
+
+def any_event_after(reference_time, event_times):
+    if not math.isfinite(reference_time):
+        return False
+    return any(math.isfinite(event_time) and event_time > reference_time for event_time in event_times)
+
+
+def first_sustained_arrival_time(
+    time_values,
+    uav_pos_x,
+    uav_pos_y,
+    payload_pos_x,
+    payload_pos_y,
+    uav_speed,
+    payload_speed,
+    target_x,
+    target_y,
+    tolerance,
+    sustained_sec=ARRIVAL_SUSTAINED_SEC,
+    speed_threshold=ARRIVAL_SPEED_THRESHOLD_MPS,
+):
+    if target_x is None or target_y is None:
+        return math.nan
+    start_times = valid_values(time_values)
+    if not start_times:
+        return math.nan
+    start_time = start_times[0]
+    require_payload_xy = bool(valid_values(payload_pos_x) and valid_values(payload_pos_y))
+    require_uav_speed = bool(valid_values(uav_speed))
+    require_payload_speed = bool(valid_values(payload_speed))
+    candidate_time = None
+
+    for index, time_value in enumerate(time_values):
+        if not math.isfinite(time_value):
+            continue
+        relative = time_value - start_time
+
+        uav_xy_ok = False
+        if math.isfinite(uav_pos_x[index]) and math.isfinite(uav_pos_y[index]):
+            uav_xy_ok = (
+                math.sqrt((uav_pos_x[index] - target_x) ** 2 + (uav_pos_y[index] - target_y) ** 2)
+                <= tolerance
+            )
+
+        payload_xy_ok = True
+        if require_payload_xy:
+            payload_xy_ok = (
+                math.isfinite(payload_pos_x[index])
+                and math.isfinite(payload_pos_y[index])
+                and math.sqrt(
+                    (payload_pos_x[index] - target_x) ** 2
+                    + (payload_pos_y[index] - target_y) ** 2
+                )
+                <= tolerance
+            )
+
+        uav_speed_ok = True
+        if require_uav_speed:
+            uav_speed_ok = math.isfinite(uav_speed[index]) and uav_speed[index] < speed_threshold
+
+        payload_speed_ok = True
+        if require_payload_speed:
+            payload_speed_ok = (
+                math.isfinite(payload_speed[index]) and payload_speed[index] < speed_threshold
+            )
+
+        if uav_xy_ok and payload_xy_ok and uav_speed_ok and payload_speed_ok:
+            if candidate_time is None:
+                candidate_time = relative
+            if relative - candidate_time >= sustained_sec:
+                return candidate_time
+        else:
+            candidate_time = None
+
+    return math.nan
 
 
 def first_event_reason(rows, index, reason_field):
@@ -616,9 +743,32 @@ def compute_metrics(csv_path, rows, args):
         if has_trajectory_diagnostic_columns
         else []
     )
+    trajectory_last_update_time = (
+        column(rows, "trajectory_last_update_time")
+        if has_trajectory_diagnostic_columns
+        else []
+    )
     trajectory_first_times = (
         column(rows, "first_trajectory_time")
         if has_trajectory_diagnostic_columns
+        else []
+    )
+    has_goal_diagnostic_columns = all(
+        has_column(rows, field) for field in GOAL_DIAGNOSTIC_FIELDS
+    )
+    goal_received_count = (
+        column(rows, "goal_received_count")
+        if has_goal_diagnostic_columns
+        else []
+    )
+    goal_last_received_time = (
+        column(rows, "goal_last_received_time")
+        if has_goal_diagnostic_columns
+        else []
+    )
+    goal_first_times = (
+        column(rows, "first_goal_time")
+        if has_goal_diagnostic_columns
         else []
     )
 
@@ -658,6 +808,16 @@ def compute_metrics(csv_path, rows, args):
         if has_column(rows, "swing_angle_deg")
         else math.nan
     )
+    first_uav_speed_ge_4_time = (
+        first_ge_time(uav_speed, ros_times, 4.0)
+        if all(has_column(rows, field) for field in ("uav_vel_x", "uav_vel_y", "uav_vel_z"))
+        else math.nan
+    )
+    first_payload_speed_ge_4_time = (
+        first_ge_time(payload_speed, ros_times, 4.0)
+        if all(has_column(rows, field) for field in ("payload_vel_x", "payload_vel_y", "payload_vel_z"))
+        else math.nan
+    )
     has_target_xy = args.target_x is not None and args.target_y is not None
     final_uav_xy_error = xy_error(final_valid_uav_position, args.target_x, args.target_y)
     final_payload_xy_error = xy_error(final_valid_payload_position, args.target_x, args.target_y)
@@ -680,6 +840,22 @@ def compute_metrics(csv_path, rows, args):
         and math.isfinite(final_uav_xy_error)
         and final_uav_xy_error > args.target_xy_tolerance
     )
+    first_arrival_time = math.nan
+    arrival_detected = False
+    if has_target_xy:
+        first_arrival_time = first_sustained_arrival_time(
+            ros_times,
+            uav_pos_x,
+            uav_pos_y,
+            payload_pos_x,
+            payload_pos_y,
+            uav_speed,
+            payload_speed,
+            args.target_x,
+            args.target_y,
+            args.target_xy_tolerance,
+        )
+        arrival_detected = math.isfinite(first_arrival_time)
 
     unreasonable_final_altitude = (
         final_valid_uav_position is not None
@@ -740,6 +916,16 @@ def compute_metrics(csv_path, rows, args):
         metrics["first_swing_angle_ge_30_time"] = first_swing_angle_ge_30_time
         metrics["first_swing_angle_ge_60_time"] = first_swing_angle_ge_60_time
 
+    if has_goal_diagnostic_columns:
+        first_goal_time = first_or_nan(goal_first_times)
+        last_goal_time = final_or_nan(goal_last_received_time)
+        metrics["goal_received_count_final"] = final_count_or_nan(goal_received_count)
+        metrics["first_goal_time"] = first_goal_time
+        metrics["last_goal_time"] = last_goal_time
+    else:
+        first_goal_time = math.nan
+        last_goal_time = math.nan
+
     if has_trajectory_diagnostic_columns:
         first_trajectory_time = first_or_nan(trajectory_first_times)
         metrics["trajectory_publish_count_final"] = final_count_or_nan(trajectory_publish_count)
@@ -767,11 +953,65 @@ def compute_metrics(csv_path, rows, args):
                 )
             )
 
+    if has_target_xy:
+        metrics["arrival_detected"] = arrival_detected
+        metrics["first_arrival_time"] = first_arrival_time
+        metrics["arrival_sustained_sec"] = ARRIVAL_SUSTAINED_SEC
+        metrics["arrival_speed_threshold_mps"] = ARRIVAL_SPEED_THRESHOLD_MPS
+        if has_goal_diagnostic_columns:
+            first_post_arrival_goal_time = first_event_time_after(
+                goal_received_count,
+                goal_last_received_time,
+                first_arrival_time,
+            )
+            metrics["post_arrival_goal_received_count"] = (
+                cumulative_event_count_after_time(
+                    goal_received_count,
+                    goal_last_received_time,
+                    first_arrival_time,
+                )
+            )
+            metrics["first_post_arrival_goal_time"] = first_post_arrival_goal_time
+            metrics["time_from_arrival_to_next_goal"] = (
+                first_post_arrival_goal_time - first_arrival_time
+                if math.isfinite(first_post_arrival_goal_time) and math.isfinite(first_arrival_time)
+                else math.nan
+            )
+        if has_trajectory_diagnostic_columns:
+            metrics["trajectory_updates_after_arrival_count"] = (
+                cumulative_event_count_after_time(
+                    trajectory_update_count,
+                    trajectory_last_update_time,
+                    first_arrival_time,
+                )
+            )
+            metrics["first_trajectory_update_after_arrival_time"] = first_event_time_after(
+                trajectory_update_count,
+                trajectory_last_update_time,
+                first_arrival_time,
+            )
+        metrics["first_failure_after_arrival_flag"] = any_event_after(
+            first_arrival_time,
+            [
+                first_nan_relative_time,
+                first_swing_angle_ge_60_time,
+                first_uav_speed_ge_4_time,
+                first_payload_speed_ge_4_time,
+            ],
+        )
+
+    if has_trajectory_diagnostic_columns and has_goal_diagnostic_columns:
+        metrics["trajectory_updates_after_last_goal_count"] = cumulative_event_count_after_time(
+            trajectory_update_count,
+            trajectory_last_update_time,
+            last_goal_time,
+        )
+
     if all(has_column(rows, field) for field in ("uav_vel_x", "uav_vel_y", "uav_vel_z")):
-        metrics["first_uav_speed_ge_4_time"] = first_ge_time(uav_speed, ros_times, 4.0)
+        metrics["first_uav_speed_ge_4_time"] = first_uav_speed_ge_4_time
 
     if all(has_column(rows, field) for field in ("payload_vel_x", "payload_vel_y", "payload_vel_z")):
-        metrics["first_payload_speed_ge_4_time"] = first_ge_time(payload_speed, ros_times, 4.0)
+        metrics["first_payload_speed_ge_4_time"] = first_payload_speed_ge_4_time
 
     for field in KEY_STATE_FIELDS:
         metrics["nan_count_%s" % field] = nan_counts[field]

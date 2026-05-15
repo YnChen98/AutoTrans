@@ -8,6 +8,7 @@ from datetime import datetime
 
 import rospy
 import rospkg
+from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Vector3Stamped
 from mavros_msgs.msg import AttitudeTarget
 from nav_msgs.msg import Odometry
@@ -60,6 +61,14 @@ class StateLogger:
         "trajectory_last_update_time",
         "trajectory_time_since_last_update",
         "first_trajectory_time",
+        "goal_received_count",
+        "goal_last_received_time",
+        "goal_time_since_last_received",
+        "first_goal_time",
+        "goal_pos_x",
+        "goal_pos_y",
+        "goal_pos_z",
+        "goal_available",
         "ref_pos_x",
         "ref_pos_y",
         "ref_pos_z",
@@ -103,6 +112,10 @@ class StateLogger:
         self.trajectory_update_count = 0
         self.trajectory_last_update_time = None
         self.first_trajectory_time = None
+        self.goal_received_count = 0
+        self.goal_last_received_time = None
+        self.first_goal_time = None
+        self.goal_position = None
         self.reference_cmd = None
 
         self.start_ros_time = rospy.Time.now().to_sec()
@@ -110,6 +123,8 @@ class StateLogger:
             rospy.get_param("~enable_trajectory_publish_logging", True)
         )
         self.trajectory_topic = rospy.get_param("~trajectory_topic", "/planning/trajectory")
+        self.enable_goal_logging = bool(rospy.get_param("~enable_goal_logging", True))
+        self.goal_topic = rospy.get_param("~goal_topic", "/move_base_simple/goal")
         self.enable_reference_logging = bool(rospy.get_param("~enable_reference_logging", True))
         self.reference_topic = rospy.get_param("~reference_topic", "/mpc_controller_node/mpc/all_ref_data")
         self.reference_message_type = rospy.get_param("~reference_message_type", "mpc_all_ref_data")
@@ -133,6 +148,7 @@ class StateLogger:
         rospy.Subscriber("/cable_info", Imu, self._cable_info_callback, queue_size=50)
         rospy.Subscriber("/so3cmd", AttitudeTarget, self._so3cmd_callback, queue_size=50)
         self._subscribe_trajectory()
+        self._subscribe_goal()
         self._subscribe_reference_command()
         rospy.Subscriber("/wind_force", Vector3Stamped, self._wind_force_callback, queue_size=50)
         rospy.Subscriber("/command_adaptation/speed_scale", Float64, self._command_speed_scale_callback, queue_size=50)
@@ -175,6 +191,18 @@ class StateLogger:
             queue_size=10,
         )
         rospy.loginfo("trajectory publish logging enabled on topic: %s", self.trajectory_topic)
+
+    def _subscribe_goal(self):
+        if not self.enable_goal_logging:
+            rospy.loginfo("goal reception logging disabled")
+            return
+        rospy.Subscriber(
+            self.goal_topic,
+            PoseStamped,
+            self._goal_callback,
+            queue_size=10,
+        )
+        rospy.loginfo("goal reception logging enabled on topic: %s", self.goal_topic)
 
     def _subscribe_reference_command(self):
         if not self.enable_reference_logging:
@@ -242,6 +270,14 @@ class StateLogger:
         if self.first_trajectory_time is None:
             self.first_trajectory_time = now_relative
 
+    def _goal_callback(self, msg):
+        now_relative = rospy.Time.now().to_sec() - self.start_ros_time
+        self.goal_received_count += 1
+        self.goal_last_received_time = now_relative
+        if self.first_goal_time is None:
+            self.first_goal_time = now_relative
+        self.goal_position = msg.pose.position
+
     def _reference_cmd_callback(self, msg):
         self.reference_cmd = msg
 
@@ -299,6 +335,20 @@ class StateLogger:
             )
         if self.first_trajectory_time is not None:
             row["first_trajectory_time"] = self._fmt(self.first_trajectory_time)
+        row["goal_received_count"] = self.goal_received_count
+        row["goal_available"] = 1 if self.goal_received_count > 0 else 0
+        if self.goal_last_received_time is not None:
+            now_relative = now_ros_time - self.start_ros_time
+            row["goal_last_received_time"] = self._fmt(self.goal_last_received_time)
+            row["goal_time_since_last_received"] = self._fmt(
+                now_relative - self.goal_last_received_time
+            )
+        if self.first_goal_time is not None:
+            row["first_goal_time"] = self._fmt(self.first_goal_time)
+        if self.goal_position is not None:
+            row["goal_pos_x"] = self._fmt(self.goal_position.x)
+            row["goal_pos_y"] = self._fmt(self.goal_position.y)
+            row["goal_pos_z"] = self._fmt(self.goal_position.z)
         row["ref_available"] = 1 if self.reference_cmd is not None else 0
         row["command_invalid_event"] = 0
         row["command_saturation_event"] = 0

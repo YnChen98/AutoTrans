@@ -651,6 +651,35 @@ classified as `swing_warning_no_nan`, not `strict_safety_no_nan`, because
 thresholds. These smokes are diagnostic-only and should not be used as final
 balanced comparison evidence.
 
+## Stage 4-T1 goal/arrival diagnostics
+
+Stage 4-T1 adds goal reception and post-arrival diagnostics to separate normal
+single-goal transport from repeated-goal / post-arrival replan stress under
+`goal_repeat=10`.
+
+`experiments/autotrans_logger/scripts/state_logger.py` now subscribes to
+`/move_base_simple/goal` by default and records `goal_received_count`,
+`goal_last_received_time`, `goal_time_since_last_received`,
+`first_goal_time`, `goal_pos_x`, `goal_pos_y`, `goal_pos_z`, and
+`goal_available`. The logger params are:
+
+- `enable_goal_logging`, default `true`
+- `goal_topic`, default `/move_base_simple/goal`
+
+`experiments/autotrans_logger/scripts/analyze_log.py` uses target args to
+estimate `first_arrival_time` with a `0.5 s` sustained window. The first-pass
+criterion is UAV XY error within `target_xy_tolerance`, payload XY error within
+the same tolerance when payload position is available, and UAV/payload speed
+below `0.5 m/s` when velocity fields are available. It then reports
+post-arrival goal reception and trajectory-update counts. Old CSV files without
+goal columns remain analyzable; goal metrics are emitted only when the new goal
+columns are available, and arrival metrics require target args.
+
+Current Stage 4-S `risk_adapter_v2` screening should be checked with these
+diagnostics before further tuning. Results collected with `goal_repeat=10`
+should be labeled as repeated-goal protocol evidence until a separate
+`goal_repeat=1` single-goal mission comparison is run.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

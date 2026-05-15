@@ -16,6 +16,14 @@ Stage 4-S3 implements the first minimal `risk_adapter_v2` policy mode in
 This first pass is risk-only plus hysteresis. It reuses the existing command
 adaptation output topics and is disabled by default.
 
+Stage 4-S4 screening should be interpreted cautiously because the current
+screening protocol used repeated `/move_base_simple/goal` publication through
+`goal_repeat=10`. This may introduce a repeated-goal / post-arrival replan
+stress artifact that is distinct from normal single-goal transport success or
+failure. Stage 4-T1 goal reception, arrival, and post-arrival trajectory-update
+diagnostics must be added and inspected before further `risk_adapter_v2`
+tuning.
+
 ## Motivation
 
 The current balanced Trial 4/5/6 results are:
@@ -193,6 +201,15 @@ warning signal whose effect depends on persistence, co-occurring risk, and
 whether NaN/divergence or strict safety evidence follows.
 
 ## Evaluation Plan
+
+Stage 4-T1 diagnostic prerequisite:
+
+- Log `/move_base_simple/goal` reception count and timing.
+- Estimate first arrival time from target-error and low-speed criteria.
+- Report post-arrival goal reception and trajectory-update counts.
+- Separate single-goal mission evidence from repeated-goal stress evidence.
+- Do not tune `risk_adapter_v2` further until the current Stage 4-S4 failures
+  are checked against these diagnostics.
 
 Initial `risk_adapter_v2` screening:
 
