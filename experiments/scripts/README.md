@@ -826,11 +826,11 @@ Current single-goal comparison:
 | `risk_adapter_v2` | `21/30` |
 | `risk_adapter_v21` | `25/30` |
 
-Interpretation: `risk_adapter_v21` is currently the strongest method under the
-single-goal mission protocol. It preserves Trial 4 behavior and improves the
-aggregate result, but Trial 6 remains the bottleneck. Before further tuning,
-update paper assets and result narratives to include `risk_adapter_v21`. Do not
-claim statistical significance or a safety guarantee.
+Interpretation: `risk_adapter_v21` is currently the strongest method among the
+evaluated single-goal methods. It preserves Trial 4 behavior and improves the
+aggregate result, but Trial 6 remains the bottleneck. Before further tuning or
+new variants, complete the Stage 4-X0 final evaluation matrix. Do not claim
+statistical significance or a safety guarantee.
 
 ## Stage 4-W protocol-split paper assets
 
@@ -841,7 +841,7 @@ explicit protocol labels.
 It separates:
 
 - single-goal mission protocol: `goal_repeat=1`
-- repeated-goal stress protocol: `goal_repeat=10`
+- goal-reissue stress protocol: `goal_repeat=10`
 
 The generated summary uses "among evaluated methods" wording because the
 method set differs between the two protocols.
@@ -864,7 +864,29 @@ Current paper-facing protocol split among evaluated methods:
 | Protocol | Best method in evaluated set | Strict-valid count |
 | --- | --- | ---: |
 | single-goal mission, `goal_repeat=1` | `risk_adapter_v21` | `25/30` |
-| repeated-goal stress, `goal_repeat=10` | `fixed_s080` | `24/30` |
+| goal-reissue stress, `goal_repeat=10` | `fixed_s080` | `24/30` |
+
+## Stage 4-X0 final evaluation specification
+
+`experiments/protocols/stage4x_final_evaluation_spec.md` freezes the final
+protocol-split evaluation plan before more experiments or variants.
+
+Current gaps:
+
+- single-goal mission protocol lacks `original`, `fixed_s085`,
+  `windlevel_s085`, and `risk_adapter_v1`
+- goal-reissue stress protocol lacks `risk_adapter_v21`
+
+Next order:
+
+1. Run `risk_adapter_v21` under the goal-reissue stress protocol
+   (`goal_repeat=10`).
+2. Run the missing single-goal baselines under `goal_repeat=1`.
+3. Update the protocol-split paper assets.
+4. Decide the final method.
+
+Do not create `risk_adapter_v21.1`, `risk_adapter_v22`, or another new variant
+until this completion matrix is done.
 
 ## Stage 4-C risk dataset expansion
 

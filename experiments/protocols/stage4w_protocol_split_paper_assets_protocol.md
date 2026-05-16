@@ -12,10 +12,13 @@ The protocol split is now required because `goal_repeat=1` and `goal_repeat=10`
 test different system properties:
 
 - `goal_repeat=1`: single-goal mission protocol
-- `goal_repeat=10`: repeated-goal / post-arrival replan stress protocol
+- `goal_repeat=10`: goal-reissue stress protocol
 
 These results must not be mixed into one aggregate table without protocol
 labels.
+
+Stage 4-X0 freezes the final evaluation completion plan in
+`experiments/protocols/stage4x_final_evaluation_spec.md`.
 
 ## Inputs
 
@@ -36,7 +39,7 @@ Single-goal mission protocol inputs:
 - repeats: repeat1 through repeat10
 - methods: `fixed_s080`, `risk_adapter_v2`, `risk_adapter_v21`
 
-Repeated-goal stress protocol inputs:
+Goal-reissue stress protocol inputs:
 
 - `goal_repeat=10`
 - wind: `strong`
@@ -52,13 +55,19 @@ The current single-goal comparison set includes `fixed_s080`,
 historical baselines unless additional `goal_repeat=1` runs are added for
 `original`, `fixed_s085`, `windlevel_s085`, and `risk_adapter_v1`.
 
-The current repeated-goal stress comparison set includes `original`,
+The current goal-reissue stress comparison set includes `original`,
 `fixed_s085`, `windlevel_s085`, `risk_adapter_v1`, and `fixed_s080`; it does
 not include `risk_adapter_v21` under `goal_repeat=10`.
 
 Paper-facing wording should therefore use scoped phrases such as "among the
 currently evaluated methods" and must not compare methods across protocols
 without explicit protocol labels.
+
+Before claiming a final method, complete the Stage 4-X0 matrix:
+
+- single-goal mission protocol: add `original`, `fixed_s085`,
+  `windlevel_s085`, and `risk_adapter_v1`
+- goal-reissue stress protocol: add `risk_adapter_v21`
 
 ## Outputs
 
@@ -103,7 +112,7 @@ paper-facing success metric.
 
 ## Filename Assumptions
 
-Repeated-goal stress filenames:
+Goal-reissue stress filenames:
 
 ```text
 stage4_<method>_strong_trial<trial>_repeat<repeat>_metrics_summary.txt
@@ -142,7 +151,7 @@ Safe paper-facing claims:
 
 - Among the currently evaluated single-goal methods, `risk_adapter_v21`
   achieved `25/30` strict-valid.
-- Among the currently evaluated repeated-goal stress methods, `fixed_s080`
+- Among the currently evaluated goal-reissue stress methods, `fixed_s080`
   achieved `24/30` strict-valid.
 - In the current single-goal comparison set, `risk_adapter_v21` improves over
   `fixed_s080` and `risk_adapter_v2` in aggregate, but Trial 6 remains a

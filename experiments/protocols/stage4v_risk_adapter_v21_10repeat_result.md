@@ -5,8 +5,8 @@
 Stage 4-V4 expanded `risk_adapter_v21` under the single-goal mission protocol.
 
 `risk_adapter_v21` achieved `25/30` strict-valid runs across strong-wind Trial
-4, Trial 5, and Trial 6 repeat1-10. It is currently the strongest method under
-the single-goal mission protocol, exceeding both `fixed_s080` and
+4, Trial 5, and Trial 6 repeat1-10. It is currently the strongest method among
+the evaluated single-goal methods, exceeding both `fixed_s080` and
 `risk_adapter_v2`, which each achieved `21/30` in Stage 4-U2.
 
 This is a meaningful improvement in the current 30-run single-goal benchmark,
@@ -26,7 +26,7 @@ there, while `fixed_s080` achieved `8/10`.
 
 ## Method Comparison Table
 
-Single-goal mission protocol comparison:
+Current single-goal mission protocol comparison:
 
 | Method | Strict-valid count | Repeat count |
 | --- | ---: | ---: |
@@ -36,6 +36,8 @@ Single-goal mission protocol comparison:
 
 `risk_adapter_v21` exceeds `fixed_s080` by 4 strict-valid runs and exceeds
 `risk_adapter_v2` by 4 strict-valid runs in this 30-run single-goal benchmark.
+This comparison does not yet include `original`, `fixed_s085`,
+`windlevel_s085`, or `risk_adapter_v1` under `goal_repeat=1`.
 
 ## Per-Trial Table
 
@@ -144,17 +146,18 @@ The invalid Trial 6 runs are not one uniform failure type:
 - One run was target-error / no-arrival without inspector divergence.
 - Some failures were NaN/divergence cases.
 
-Future `risk_adapter_v21.1` or `risk_adapter_v22` work should focus on Trial 6
-failure families. The next policy change should not simply lower scale
-globally, because `risk_adapter_v21` already improves the aggregate result and
-because lower scale is not automatically safer.
+After Stage 4-X0 completion, any future `risk_adapter_v21.1` or
+`risk_adapter_v22` work should focus on Trial 6 failure families. The next
+policy change should not simply lower scale globally, because
+`risk_adapter_v21` already improves the aggregate result and because lower
+scale is not automatically safer.
 
 ## Relationship To Stage 4-T / U
 
 Stage 4-T established that the goal protocol must be labeled explicitly:
 
 - `goal_repeat=1` is the single-goal mission protocol.
-- `goal_repeat=10` is the repeated-goal / post-arrival replan stress protocol.
+- `goal_repeat=10` is the goal-reissue stress protocol.
 
 Do not mix these protocols into one aggregate table without protocol labels.
 
@@ -167,23 +170,34 @@ Stage 4-V4 adds:
 
 - `risk_adapter_v21`: `25/30`
 
-Repeated-goal stress results remain separate, including `fixed_s080` `24/30`
-and `risk_adapter_v1` `23/30` under `goal_repeat=10`.
+Goal-reissue stress results remain separate, including `fixed_s080` `24/30`
+and `risk_adapter_v1` `23/30` under `goal_repeat=10`. They do not yet include
+`risk_adapter_v21`.
+
+Stage 4-X0 in
+`experiments/protocols/stage4x_final_evaluation_spec.md` defines the final
+completion matrix before any new `risk_adapter_v21.1` or `risk_adapter_v22`
+variant is created.
 
 ## Research Decision
 
-- Promote `risk_adapter_v21` as the current best single-goal method.
+- Treat `risk_adapter_v21` as the current strongest evaluated single-goal
+  method.
 - Update future paper assets to include `risk_adapter_v21`.
-- Before further tuning, update result tables and paper narrative.
-- Optional next method step: Trial 6-specific diagnosis and a
-  `risk_adapter_v21.1` or `risk_adapter_v22` design.
-- Keep the repeated-goal stress protocol as a separate benchmark.
+- Before further tuning, complete the Stage 4-X0 final evaluation matrix.
+- Run `risk_adapter_v21` under the goal-reissue stress protocol before any new
+  variant.
+- Keep the goal-reissue stress protocol as a separate benchmark.
 
 ## What Not To Claim
 
 - Do not claim statistical significance from the current counts.
 - Do not claim a safety guarantee.
 - Do not claim `risk_adapter_v21` solves Trial 6.
+- Do not claim `risk_adapter_v21` beats all baselines under the single-goal
+  protocol until the missing single-goal baselines are evaluated.
 - Do not mix `goal_repeat=1` and `goal_repeat=10` results without protocol
   labels.
 - Do not claim diagnostic labels are perfect root-cause proof.
+- Do not create a new `risk_adapter_v21.1` or `risk_adapter_v22` variant until
+  the Stage 4-X0 completion matrix is done.

@@ -439,14 +439,47 @@ Stage 4-V risk_adapter_v2.1 design:
 - Stage 4-V4 expanded `risk_adapter_v21` to 10 repeats under `goal_repeat=1`.
 - `risk_adapter_v21`: 25/30 strict-valid under the single-goal protocol.
 - Per-trial counts: Trial 4 10/10, Trial 5 9/10, Trial 6 6/10.
-- `risk_adapter_v21` is the current strongest single-goal method, but Trial 6
-  remains a bottleneck because `fixed_s080` achieved 8/10 there.
-- Repeated-goal protocol (`goal_repeat=10`) remains separate:
+- `risk_adapter_v21` is the current strongest evaluated single-goal method,
+  but Trial 6 remains a bottleneck because `fixed_s080` achieved 8/10 there.
+- Goal-reissue stress protocol (`goal_repeat=10`) remains separate:
   `fixed_s080` 24/30 and `risk_adapter_v1` 23/30.
-- Next step: update paper assets / results narrative before further tuning.
-- Optional later method step: Trial 6-specific diagnosis or v21.1/v22 design.
+- Next step: follow Stage 4-X0 final evaluation completion before further
+  tuning.
 - Do not claim statistical significance or a safety guarantee.
 - No planner/controller/simulator changes are needed for the next policy step.
+
+Stage 4-X0 final evaluation specification:
+
+- The protocol is
+  `experiments/protocols/stage4x_final_evaluation_spec.md`.
+- Use paper-facing protocol names:
+  - single-goal mission protocol: `goal_repeat=1`
+  - goal-reissue stress protocol: `goal_repeat=10`
+- Current single-goal included methods are `fixed_s080` 21/30,
+  `risk_adapter_v2` 21/30, and `risk_adapter_v21` 25/30 strict-valid.
+- Current goal-reissue stress included methods are `original` 18/30,
+  `fixed_s085` 18/30, `windlevel_s085` 16/30, `risk_adapter_v1` 23/30, and
+  `fixed_s080` 24/30 strict-valid.
+- Completion matrix before final claims:
+  - single-goal: add `original`, `fixed_s085`, `windlevel_s085`, and
+    `risk_adapter_v1`
+  - goal-reissue stress: add `risk_adapter_v21`
+- Next experiment order:
+  1. run `risk_adapter_v21` under goal-reissue stress (`goal_repeat=10`)
+  2. run missing single-goal baselines (`goal_repeat=1`)
+  3. update protocol-split paper assets
+  4. decide final method
+- Final-method decision rule:
+  - if `risk_adapter_v21` is strongest or near strongest in both protocols,
+    freeze `risk_adapter_v21` as the final method
+  - if `risk_adapter_v21` is strong in single-goal but weak in stress, do
+    failure analysis before a new variant
+- Do not create `risk_adapter_v21.1`, `risk_adapter_v22`, or another new
+  variant until the completion matrix is done.
+- Do not claim `risk_adapter_v21` beats all baselines until missing
+  single-goal baselines are evaluated.
+- Do not claim statistical significance, safety guarantee, or mixed-protocol
+  aggregate results.
 
 Earlier Stage 4-H limited-repeat results:
 
