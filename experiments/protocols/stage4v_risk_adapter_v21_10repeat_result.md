@@ -14,6 +14,11 @@ but it should not be presented as statistical significance or as a safety
 guarantee. Trial 6 remains the bottleneck: `risk_adapter_v21` achieved `6/10`
 there, while `fixed_s080` achieved `8/10`.
 
+Stage 4-X1 later evaluated `risk_adapter_v21` under the goal-reissue stress
+protocol and recorded a corrected `20/30` result. That is below `fixed_s080`
+(`24/30`) and `risk_adapter_v1` (`23/30`) under stress, so this single-goal
+result should not be read as a cross-protocol final win.
+
 ## Protocol
 
 - protocol: single-goal mission protocol
@@ -170,23 +175,24 @@ Stage 4-V4 adds:
 
 - `risk_adapter_v21`: `25/30`
 
-Goal-reissue stress results remain separate, including `fixed_s080` `24/30`
-and `risk_adapter_v1` `23/30` under `goal_repeat=10`. They do not yet include
-`risk_adapter_v21`.
+Goal-reissue stress results remain separate. Stage 4-X1 records the corrected
+stress comparison: `fixed_s080` `24/30`, `risk_adapter_v1` `23/30`, and
+`risk_adapter_v21` `20/30` under `goal_repeat=10`.
 
 Stage 4-X0 in
 `experiments/protocols/stage4x_final_evaluation_spec.md` defines the final
 completion matrix before any new `risk_adapter_v21.1` or `risk_adapter_v22`
-variant is created.
+variant is created. Stage 4-X1 completes the goal-reissue stress cell; the
+remaining completion work is the missing single-goal baselines.
 
 ## Research Decision
 
 - Treat `risk_adapter_v21` as the current strongest evaluated single-goal
   method.
-- Update future paper assets to include `risk_adapter_v21`.
-- Before further tuning, complete the Stage 4-X0 final evaluation matrix.
-- Run `risk_adapter_v21` under the goal-reissue stress protocol before any new
-  variant.
+- Treat Stage 4-X1 as evidence that `risk_adapter_v21` is not the strongest
+  goal-reissue stress method.
+- Before further tuning, complete the remaining Stage 4-X0 single-goal
+  baseline matrix.
 - Keep the goal-reissue stress protocol as a separate benchmark.
 
 ## What Not To Claim
@@ -196,6 +202,8 @@ variant is created.
 - Do not claim `risk_adapter_v21` solves Trial 6.
 - Do not claim `risk_adapter_v21` beats all baselines under the single-goal
   protocol until the missing single-goal baselines are evaluated.
+- Do not claim `risk_adapter_v21` is best under goal-reissue stress.
+- Do not claim `risk_adapter_v21` is a cross-protocol final winner.
 - Do not mix `goal_repeat=1` and `goal_repeat=10` results without protocol
   labels.
 - Do not claim diagnostic labels are perfect root-cause proof.

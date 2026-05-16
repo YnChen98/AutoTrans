@@ -48,6 +48,9 @@ Goal-reissue stress protocol inputs:
 - methods: `original`, `fixed_s085`, `windlevel_s085`,
   `risk_adapter_v1`, `fixed_s080`
 
+Future generated goal-reissue stress tables should add the corrected Stage
+4-X1 `risk_adapter_v21` result: `20/30`.
+
 ## Claim Scope Warning
 
 The current single-goal comparison set includes `fixed_s080`,
@@ -56,18 +59,20 @@ historical baselines unless additional `goal_repeat=1` runs are added for
 `original`, `fixed_s085`, `windlevel_s085`, and `risk_adapter_v1`.
 
 The current goal-reissue stress comparison set includes `original`,
-`fixed_s085`, `windlevel_s085`, `risk_adapter_v1`, and `fixed_s080`; it does
-not include `risk_adapter_v21` under `goal_repeat=10`.
+`fixed_s085`, `windlevel_s085`, `risk_adapter_v1`, `fixed_s080`, and
+`risk_adapter_v21`. Stage 4-X1 records the corrected `risk_adapter_v21`
+stress result as `20/30`.
 
 Paper-facing wording should therefore use scoped phrases such as "among the
 currently evaluated methods" and must not compare methods across protocols
 without explicit protocol labels.
 
-Before claiming a final method, complete the Stage 4-X0 matrix:
+Before claiming a final method, complete the remaining Stage 4-X0 matrix:
 
 - single-goal mission protocol: add `original`, `fixed_s085`,
   `windlevel_s085`, and `risk_adapter_v1`
-- goal-reissue stress protocol: add `risk_adapter_v21`
+
+The goal-reissue stress protocol cell for `risk_adapter_v21` is complete.
 
 ## Outputs
 
@@ -144,6 +149,8 @@ repeat10 are the Stage 4-V4 10-repeat expansion.
 
 The generator validates computed strict-valid counts against the frozen Stage
 4-U2 / Stage 4-V4 / Stage 4-J / Stage 4-R results before writing outputs.
+Future generated goal-reissue stress tables should also include the corrected
+Stage 4-X1 result: `risk_adapter_v21` `20/30`.
 
 ## Claim Limits
 
@@ -153,6 +160,8 @@ Safe paper-facing claims:
   achieved `25/30` strict-valid.
 - Among the currently evaluated goal-reissue stress methods, `fixed_s080`
   achieved `24/30` strict-valid.
+- Under goal-reissue stress, `risk_adapter_v21` achieved `20/30`, below
+  `fixed_s080` `24/30` and `risk_adapter_v1` `23/30`.
 - In the current single-goal comparison set, `risk_adapter_v21` improves over
   `fixed_s080` and `risk_adapter_v2` in aggregate, but Trial 6 remains a
   bottleneck.
@@ -167,6 +176,8 @@ Avoid:
   protocol unless `original`, `fixed_s085`, `windlevel_s085`, and
   `risk_adapter_v1` are evaluated under `goal_repeat=1`
 - describing `fixed_s080` as the overall best method across protocols
+- claiming `risk_adapter_v21` is the best goal-reissue stress method
+- claiming `risk_adapter_v21` is a cross-protocol final winner
 - mixed-protocol aggregate claims
 - claiming diagnostic labels prove exact root cause
 - claiming `risk_adapter_v21` solves all failures

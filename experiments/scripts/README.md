@@ -875,18 +875,45 @@ Current gaps:
 
 - single-goal mission protocol lacks `original`, `fixed_s085`,
   `windlevel_s085`, and `risk_adapter_v1`
-- goal-reissue stress protocol lacks `risk_adapter_v21`
+- goal-reissue stress protocol cell for `risk_adapter_v21` is complete in
+  Stage 4-X1
 
 Next order:
 
-1. Run `risk_adapter_v21` under the goal-reissue stress protocol
-   (`goal_repeat=10`).
-2. Run the missing single-goal baselines under `goal_repeat=1`.
+1. Completed in Stage 4-X1: run `risk_adapter_v21` under the goal-reissue
+   stress protocol (`goal_repeat=10`).
+2. Next: run the missing single-goal baselines under `goal_repeat=1`.
 3. Update the protocol-split paper assets.
 4. Decide the final method.
 
 Do not create `risk_adapter_v21.1`, `risk_adapter_v22`, or another new variant
 until this completion matrix is done.
+
+## Stage 4-X1 corrected risk_adapter_v21 goal-reissue result
+
+`experiments/protocols/stage4x_risk_adapter_v21_goalreissue_result.md`
+records the corrected `risk_adapter_v21` goal-reissue stress result.
+
+A duplicate CSV issue was found in Trial 4 repeat2-5. Trial 4 repeat3-5 were
+rerun, and the corrected set was recorded after confirming `No duplicate
+csv_path detected`.
+
+Corrected goal-reissue stress result:
+
+| Method | Strict-valid count |
+| --- | ---: |
+| `fixed_s080` | `24/30` |
+| `risk_adapter_v1` | `23/30` |
+| `risk_adapter_v21` | `20/30` |
+| `original` | `18/30` |
+| `fixed_s085` | `18/30` |
+| `windlevel_s085` | `16/30` |
+
+`risk_adapter_v21` per-trial counts are Trial 4 `4/10`, Trial 5 `9/10`, and
+Trial 6 `7/10`. It remains the strongest method among the currently evaluated
+single-goal methods, but it is not the strongest goal-reissue stress method
+and should not be described as a cross-protocol final winner. The next step is
+to complete the missing single-goal baselines.
 
 ## Stage 4-C risk dataset expansion
 

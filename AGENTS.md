@@ -442,9 +442,11 @@ Stage 4-V risk_adapter_v2.1 design:
 - `risk_adapter_v21` is the current strongest evaluated single-goal method,
   but Trial 6 remains a bottleneck because `fixed_s080` achieved 8/10 there.
 - Goal-reissue stress protocol (`goal_repeat=10`) remains separate:
-  `fixed_s080` 24/30 and `risk_adapter_v1` 23/30.
-- Next step: follow Stage 4-X0 final evaluation completion before further
-  tuning.
+  `fixed_s080` 24/30, `risk_adapter_v1` 23/30, and corrected
+  `risk_adapter_v21` 20/30.
+- `risk_adapter_v21` is not the strongest goal-reissue stress method and
+  should not be described as a cross-protocol final winner.
+- Next step: complete the missing single-goal baselines before further tuning.
 - Do not claim statistical significance or a safety guarantee.
 - No planner/controller/simulator changes are needed for the next policy step.
 
@@ -459,13 +461,14 @@ Stage 4-X0 final evaluation specification:
   `risk_adapter_v2` 21/30, and `risk_adapter_v21` 25/30 strict-valid.
 - Current goal-reissue stress included methods are `original` 18/30,
   `fixed_s085` 18/30, `windlevel_s085` 16/30, `risk_adapter_v1` 23/30, and
-  `fixed_s080` 24/30 strict-valid.
-- Completion matrix before final claims:
+  `fixed_s080` 24/30 strict-valid; Stage 4-X1 adds corrected
+  `risk_adapter_v21` 20/30 strict-valid.
+- Remaining completion matrix before final claims:
   - single-goal: add `original`, `fixed_s085`, `windlevel_s085`, and
     `risk_adapter_v1`
-  - goal-reissue stress: add `risk_adapter_v21`
 - Next experiment order:
-  1. run `risk_adapter_v21` under goal-reissue stress (`goal_repeat=10`)
+  1. completed in Stage 4-X1: run `risk_adapter_v21` under goal-reissue
+     stress (`goal_repeat=10`)
   2. run missing single-goal baselines (`goal_repeat=1`)
   3. update protocol-split paper assets
   4. decide final method
@@ -480,6 +483,28 @@ Stage 4-X0 final evaluation specification:
   single-goal baselines are evaluated.
 - Do not claim statistical significance, safety guarantee, or mixed-protocol
   aggregate results.
+
+Stage 4-X1 corrected risk_adapter_v21 goal-reissue stress result:
+
+- The result document is
+  `experiments/protocols/stage4x_risk_adapter_v21_goalreissue_result.md`.
+- Duplicate CSV issue was found in Trial 4 repeat2-5; Trial 4 repeat3-5 were
+  rerun and the corrected set was recorded after confirming `No duplicate
+  csv_path detected`.
+- Protocol: strong wind, `goal_repeat=10`, goal-reissue / post-arrival replan
+  stress protocol, Trial 4/5/6, repeat1-10.
+- Corrected `risk_adapter_v21` result: Trial 4 4/10, Trial 5 9/10, Trial 6
+  7/10, aggregate 20/30 strict-valid.
+- Goal-reissue stress aggregate order is now `fixed_s080` 24/30,
+  `risk_adapter_v1` 23/30, `risk_adapter_v21` 20/30, `original` 18/30,
+  `fixed_s085` 18/30, and `windlevel_s085` 16/30.
+- Trial 4 is the main stress weakness for `risk_adapter_v21`.
+- Stress failures are not exclusively post-arrival; many Trial 4 stress
+  failures occur before arrival.
+- Do not freeze `risk_adapter_v21` as a cross-protocol final method.
+- Do not create `risk_adapter_v22` yet.
+- Next step: complete missing single-goal baselines so the single-goal
+  protocol has full baseline coverage.
 
 Earlier Stage 4-H limited-repeat results:
 
