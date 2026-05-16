@@ -915,6 +915,71 @@ single-goal methods, but it is not the strongest goal-reissue stress method
 and should not be described as a cross-protocol final winner. The next step is
 to complete the missing single-goal baselines.
 
+## Stage 4-X2 single-goal baseline completion helper
+
+`experiments/scripts/run_stage4_single_goal_baseline_completion.py` generates
+the command plan for completing the missing single-goal mission baselines:
+
+- `original`
+- `fixed_s085`
+- `windlevel_s085`
+- `risk_adapter_v1`
+
+Protocol:
+
+- strong wind
+- `goal_repeat=1`
+- Trial 4, Trial 5, Trial 6
+- repeat1 through repeat10
+- strict-valid / `label_strict_invalid` as the paper-facing metric
+
+Default behavior is dry-run / print-only. The script does not execute ROS
+simulation unless `--execute` is explicitly provided.
+
+Dry-run examples:
+
+```bash
+python3 experiments/scripts/run_stage4_single_goal_baseline_completion.py \
+  --method original \
+  --trials 4 5 6 \
+  --repeats 1 2 3 \
+  --dry-run \
+  --print-commands
+
+python3 experiments/scripts/run_stage4_single_goal_baseline_completion.py \
+  --method risk_adapter_v1 \
+  --trials 4 \
+  --repeats 1 \
+  --dry-run \
+  --print-commands
+```
+
+For `windlevel_s085`, start:
+
+```bash
+roslaunch command_adaptation heuristic_command_adapter.launch policy_mode:=wind_level
+```
+
+For `risk_adapter_v1`, start:
+
+```bash
+roslaunch command_adaptation risk_conditioned_command_adapter.launch \
+  enable_risk_conditioning:=true \
+  policy_mode:=risk_conditioned \
+  risk_threshold_3s:=0.5 \
+  risk_threshold_5s:=0.5 \
+  hard_threshold_5s:=0.7 \
+  soft_scale_3s:=0.75 \
+  soft_scale_5s:=0.65 \
+  hard_scale_5s:=0.60 \
+  scale_rate_limit_per_sec:=0.5
+```
+
+The protocol is
+`experiments/protocols/stage4x_single_goal_baseline_completion_protocol.md`.
+Do not create a new method variant or claim `risk_adapter_v21` beats all
+single-goal baselines until this completion matrix is done.
+
 ## Stage 4-C risk dataset expansion
 
 Stage 4-C 的下一步是把当前 15-row strong Trial 2 dataset 扩展到至少 45 rows，优先增加 Trial 1 和 Trial 3 的 `original`、`fixed_s085`、`windlevel_s085` repeats。执行前先看计划文档：`experiments/protocols/stage4_risk_dataset_expansion_plan.md`。

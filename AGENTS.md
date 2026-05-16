@@ -506,6 +506,37 @@ Stage 4-X1 corrected risk_adapter_v21 goal-reissue stress result:
 - Next step: complete missing single-goal baselines so the single-goal
   protocol has full baseline coverage.
 
+Stage 4-X2 missing single-goal baseline completion:
+
+- The helper script is
+  `experiments/scripts/run_stage4_single_goal_baseline_completion.py`.
+- The protocol is
+  `experiments/protocols/stage4x_single_goal_baseline_completion_protocol.md`.
+- Missing single-goal methods are `original`, `fixed_s085`,
+  `windlevel_s085`, and `risk_adapter_v1`.
+- Protocol: strong wind, `goal_repeat=1`, single-goal mission protocol,
+  Trial 4/5/6, repeat1-10.
+- Naming convention:
+  `stage4x_singlegoal_<method>_strong_trial<trial>_goalrepeat1_repeat<repeat>`.
+- Default helper behavior is dry-run / print-only. Do not run simulation from
+  Codex unless explicitly requested.
+- `wind_signal_publisher` must be running for Stage 4-X2 runs.
+- `windlevel_s085` requires
+  `roslaunch command_adaptation heuristic_command_adapter.launch policy_mode:=wind_level`.
+- `risk_adapter_v1` requires
+  `roslaunch command_adaptation risk_conditioned_command_adapter.launch`
+  with `enable_risk_conditioning:=true`, `policy_mode:=risk_conditioned`,
+  `risk_threshold_3s:=0.5`, `risk_threshold_5s:=0.5`,
+  `hard_threshold_5s:=0.7`, `soft_scale_3s:=0.75`,
+  `soft_scale_5s:=0.65`, `hard_scale_5s:=0.60`, and
+  `scale_rate_limit_per_sec:=0.5`.
+- Do not create `risk_adapter_v22` or another new method variant before
+  Stage 4-X2 is complete.
+- Do not claim `risk_adapter_v21` beats all single-goal baselines until
+  Stage 4-X2 is complete.
+- After Stage 4-X2, regenerate protocol-split paper assets and decide whether
+  `risk_adapter_v21` remains strongest in the completed single-goal protocol.
+
 Earlier Stage 4-H limited-repeat results:
 
 Trial 4:
