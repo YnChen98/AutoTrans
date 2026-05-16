@@ -843,6 +843,9 @@ It separates:
 - single-goal mission protocol: `goal_repeat=1`
 - repeated-goal stress protocol: `goal_repeat=10`
 
+The generated summary uses "among evaluated methods" wording because the
+method set differs between the two protocols.
+
 Example:
 
 ```bash
@@ -856,9 +859,9 @@ python3 experiments/scripts/generate_stage4_protocol_split_paper_assets.py \
 Generated outputs under `experiments/results/` are ignored and should not be
 committed.
 
-Current paper-facing protocol split:
+Current paper-facing protocol split among evaluated methods:
 
-| Protocol | Best method | Strict-valid count |
+| Protocol | Best method in evaluated set | Strict-valid count |
 | --- | --- | ---: |
 | single-goal mission, `goal_repeat=1` | `risk_adapter_v21` | `25/30` |
 | repeated-goal stress, `goal_repeat=10` | `fixed_s080` | `24/30` |

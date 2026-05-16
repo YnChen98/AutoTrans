@@ -45,6 +45,21 @@ Repeated-goal stress protocol inputs:
 - methods: `original`, `fixed_s085`, `windlevel_s085`,
   `risk_adapter_v1`, `fixed_s080`
 
+## Claim Scope Warning
+
+The current single-goal comparison set includes `fixed_s080`,
+`risk_adapter_v2`, and `risk_adapter_v21`. It is incomplete relative to all
+historical baselines unless additional `goal_repeat=1` runs are added for
+`original`, `fixed_s085`, `windlevel_s085`, and `risk_adapter_v1`.
+
+The current repeated-goal stress comparison set includes `original`,
+`fixed_s085`, `windlevel_s085`, `risk_adapter_v1`, and `fixed_s080`; it does
+not include `risk_adapter_v21` under `goal_repeat=10`.
+
+Paper-facing wording should therefore use scoped phrases such as "among the
+currently evaluated methods" and must not compare methods across protocols
+without explicit protocol labels.
+
 ## Outputs
 
 Default output directory:
@@ -125,12 +140,13 @@ The generator validates computed strict-valid counts against the frozen Stage
 
 Safe paper-facing claims:
 
-- Under the single-goal mission protocol, `risk_adapter_v21` achieved the
-  highest strict-valid rate: `25/30`.
-- Under the repeated-goal stress protocol, `fixed_s080` achieved the highest
-  strict-valid rate: `24/30`.
-- `risk_adapter_v21` improves over `fixed_s080` and `risk_adapter_v2` in
-  single-goal aggregate, but Trial 6 remains a bottleneck.
+- Among the currently evaluated single-goal methods, `risk_adapter_v21`
+  achieved `25/30` strict-valid.
+- Among the currently evaluated repeated-goal stress methods, `fixed_s080`
+  achieved `24/30` strict-valid.
+- In the current single-goal comparison set, `risk_adapter_v21` improves over
+  `fixed_s080` and `risk_adapter_v2` in aggregate, but Trial 6 remains a
+  bottleneck.
 - The two protocols test different system properties.
 
 Avoid:
@@ -138,6 +154,11 @@ Avoid:
 - statistical significance
 - safety guarantee
 - mixing `goal_repeat=1` and `goal_repeat=10` into one aggregate
+- claiming `risk_adapter_v21` beats all baselines under the single-goal
+  protocol unless `original`, `fixed_s085`, `windlevel_s085`, and
+  `risk_adapter_v1` are evaluated under `goal_repeat=1`
+- describing `fixed_s080` as the overall best method across protocols
+- mixed-protocol aggregate claims
 - claiming diagnostic labels prove exact root cause
 - claiming `risk_adapter_v21` solves all failures
 - describing `risk_adapter_v1` as overall best after including `fixed_s080`
