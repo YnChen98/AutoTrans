@@ -887,6 +887,31 @@ Stage 4-W3 generated-summary claim scope:
 - Do not claim `risk_adapter_v21` beats all baselines, is overall best, or
   that learned methods uniformly dominate heuristics.
 
+## Stage 4-Y results narrative draft
+
+`experiments/protocols/stage4y_results_narrative_draft.md` is the current
+paper-facing Results narrative draft after Stage 4-W3.
+
+It frames Stage 4 as:
+
+- learned risk-conditioned execution governor
+- dual-protocol evaluation
+- strong heuristic/static frontier comparison
+- failure-mode-aware analysis
+
+Current paper-facing interpretation:
+
+- Single-goal mission protocol (`goal_repeat=1`): `windlevel_s085` is highest
+  at `26/30`; `risk_adapter_v1` and `risk_adapter_v21` tie at `25/30`.
+- Goal-reissue stress protocol (`goal_repeat=10`): `fixed_s080` is highest at
+  `24/30`; `risk_adapter_v1` is second at `23/30`;
+  `risk_adapter_v21` is `20/30`.
+- No current learned variant dominates both protocols.
+
+Do not claim `risk_adapter_v21` is the overall best method, do not create a
+mixed-protocol aggregate, and do not claim statistical significance or a safety
+guarantee.
+
 ## Stage 4-X0 final evaluation specification
 
 `experiments/protocols/stage4x_final_evaluation_spec.md` freezes the final

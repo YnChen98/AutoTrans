@@ -1,5 +1,23 @@
 # Stage 4-P Results Section Draft
 
+## Superseded By Stage 4-Y
+
+This older Results draft is superseded by
+`experiments/protocols/stage4y_results_narrative_draft.md` for current
+paper-facing wording.
+
+Use Stage 4-Y for the completed protocol-split narrative after Stage 4-W3:
+
+- single-goal mission protocol (`goal_repeat=1`): `windlevel_s085` is highest
+  at `26/30`, with `risk_adapter_v1` and `risk_adapter_v21` tied at `25/30`.
+- goal-reissue stress protocol (`goal_repeat=10`): `fixed_s080` is highest at
+  `24/30`, with `risk_adapter_v1` second at `23/30` and
+  `risk_adapter_v21` at `20/30`.
+- No current learned variant dominates both protocols.
+- Do not claim `risk_adapter_v21` is overall best, do not mix protocols into
+  one aggregate, and do not claim statistical significance or a safety
+  guarantee.
+
 ## Balanced strong-wind simulation benchmark
 
 We evaluated command-adaptation strategies in the balanced strong-wind simulation benchmark using 30 repeated runs per method across Trials 4–6, with strict-valid rate as the primary paper-facing metric. The original AutoTrans system and the fixed 0.85 command-scaling baseline (fixed_s085) each achieved 18/30 strict-valid runs (60.0%), while the wind-level heuristic adapter (windlevel_s085) achieved 16/30 (53.3%). The learned risk-conditioned adapter (risk_adapter_v1) improved the strict-valid rate to 23/30 (76.7%), outperforming the original system and the two pre-specified non-learned baselines under the same repeated-run protocol.

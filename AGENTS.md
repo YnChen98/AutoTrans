@@ -450,7 +450,8 @@ Stage 4-V risk_adapter_v2.1 design:
   `risk_adapter_v21` 20/30.
 - `risk_adapter_v21` is not the strongest goal-reissue stress method and
   should not be described as a cross-protocol final winner.
-- Next step: update protocol-split paper assets before further tuning.
+- Stage 4-W3 updated protocol-split paper assets, and Stage 4-Y is the current
+  paper narrative state before further tuning.
 - Do not claim statistical significance or a safety guarantee.
 - No planner/controller/simulator changes are needed for the next policy step.
 
@@ -508,8 +509,9 @@ Stage 4-X1 corrected risk_adapter_v21 goal-reissue stress result:
   failures occur before arrival.
 - Do not freeze `risk_adapter_v21` as a cross-protocol final method.
 - Do not create `risk_adapter_v22` yet.
-- Stage 4-X2 completed the missing single-goal baselines; next step is to
-  update protocol-split paper assets.
+- Stage 4-X2 completed the missing single-goal baselines, Stage 4-W3 updated
+  protocol-split paper assets, and Stage 4-Y is the current paper narrative
+  state.
 
 Stage 4-X2 missing single-goal baseline completion:
 
@@ -561,8 +563,29 @@ Stage 4-X2 missing single-goal baseline completion:
 - Do not create `risk_adapter_v22` or another new method variant before
   updating protocol-split paper assets and failure analysis.
 - Do not claim `risk_adapter_v21` beats all single-goal baselines.
-- Next step: regenerate protocol-split paper assets with completed
+- Stage 4-W3 regenerated protocol-split paper assets with completed
   single-goal and corrected goal-reissue stress tables.
+
+Stage 4-Y paper results narrative:
+
+- The current paper-facing narrative draft is
+  `experiments/protocols/stage4y_results_narrative_draft.md`.
+- Stage 4-W3 protocol-split paper assets are complete.
+- Current framing should be learned risk-conditioned execution governor,
+  dual-protocol evaluation, strong heuristic/static frontier comparison, and
+  failure-mode-aware analysis.
+- Single-goal mission protocol (`goal_repeat=1`): `windlevel_s085` is highest
+  at 26/30; `risk_adapter_v1` and `risk_adapter_v21` tie at 25/30.
+- Goal-reissue stress protocol (`goal_repeat=10`): `fixed_s080` is highest at
+  24/30; `risk_adapter_v1` is second at 23/30; `risk_adapter_v21` is 20/30.
+- No current learned variant dominates both protocols.
+- Do not claim `risk_adapter_v21` is overall best.
+- Do not create mixed-protocol aggregate claims.
+- Do not claim statistical significance.
+- Do not claim a safety guarantee.
+- Next recommended work: build a failure-mode summary table/figure, inspect
+  Trial 4 stress and Trial 6 bottlenecks, and do not create
+  `risk_adapter_v22` immediately.
 
 Earlier Stage 4-H limited-repeat results:
 
