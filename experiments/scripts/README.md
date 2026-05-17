@@ -931,6 +931,12 @@ Stage 4-Z2 refines the output for paper use:
 - `stage4_failure_group_invalid_only_stacked_bar.png` is the preferred
   failure-analysis figure
 
+Stage 4-Z3 records the Stage 4-Z2 result in
+`experiments/protocols/stage4z_failure_mode_paper_assets_result.md`: the
+generated assets cover `390` run rows and `110` strict-invalid runs. The
+invalid-only figure should support failure-aware analysis, while strict-valid
+remains the main paper-facing metric.
+
 Example:
 
 ```bash

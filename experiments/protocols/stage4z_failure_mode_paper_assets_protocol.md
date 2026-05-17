@@ -97,6 +97,10 @@ The invalid-only view excludes strict-valid runs and is the recommended view
 for paper failure analysis. It prevents successful runs with warning-style
 diagnostics from visually dominating or confusing the failure distribution.
 
+Stage 4-Z2 has generated the invalid-only paper-facing failure groups. The
+recorded result is
+`experiments/protocols/stage4z_failure_mode_paper_assets_result.md`.
+
 The grouping is deliberately conservative. It should support paper discussion
 and ablation planning, not replace manual failure analysis.
 

@@ -607,8 +607,15 @@ Stage 4-Z failure-mode paper assets:
   - invalid-only failure-group tables and
     `stage4_failure_group_invalid_only_stacked_bar.png` exclude strict-valid
     runs and should be used for paper failure-analysis figures.
-- Do not create `risk_adapter_v22` or another new variant before inspecting
-  the Stage 4-Z invalid-only failure-mode outputs.
+- The Stage 4-Z2 result is recorded in
+  `experiments/protocols/stage4z_failure_mode_paper_assets_result.md`.
+- Stage 4-Z2 generated `390` run rows and `110` strict-invalid runs.
+- Invalid-only failure groups support failure-aware analysis but do not change
+  the protocol-split success ranking.
+- Next step: diagnose Trial 4 goal-reissue stress failures for
+  `risk_adapter_v21` and the Trial 6 bottleneck across single-goal and stress.
+- Do not create `risk_adapter_v22` or another new variant before this
+  diagnosis is complete.
 
 Earlier Stage 4-H limited-repeat results:
 

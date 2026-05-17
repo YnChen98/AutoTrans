@@ -101,6 +101,9 @@ Do not frame the paper as:
 - Use the Stage 4-Z2 invalid-only failure groups for paper failure-analysis
   figures, because the all-run table intentionally groups strict-valid runs as
   `valid_or_warning`.
+- Stage 4-Z2 supports failure-aware analysis and figure drafting, but it does
+  not change the protocol-split success ranking: `windlevel_s085` remains the
+  single-goal leader and `fixed_s080` remains the goal-reissue stress leader.
 - Build a failure-mode summary table or figure.
 - Inspect Trial 4 stress failures and Trial 6 bottlenecks.
 - Design a dynamic heuristic or ablation only after the failure-mode table is
