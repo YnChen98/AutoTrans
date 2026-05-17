@@ -600,8 +600,15 @@ Stage 4-Z failure-mode paper assets:
   committed.
 - `failure_group` is diagnostic, not perfect root-cause proof; strict-valid
   remains the paper-facing metric.
+- Stage 4-Z2 distinguishes all-run accounting from paper-facing failure
+  analysis:
+  - all-run failure groups use `valid_or_warning` for strict-valid runs,
+    including warning-style diagnostic labels.
+  - invalid-only failure-group tables and
+    `stage4_failure_group_invalid_only_stacked_bar.png` exclude strict-valid
+    runs and should be used for paper failure-analysis figures.
 - Do not create `risk_adapter_v22` or another new variant before inspecting
-  the Stage 4-Z failure-mode outputs.
+  the Stage 4-Z invalid-only failure-mode outputs.
 
 Earlier Stage 4-H limited-repeat results:
 

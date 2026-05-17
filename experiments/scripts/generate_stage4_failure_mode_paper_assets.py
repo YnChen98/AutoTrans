@@ -49,7 +49,12 @@ METHOD_ORDER = [
 ]
 FAILURE_GROUP_ORDER = [
     "valid_or_warning",
-    "warning_only",
+    "command_control_upstream",
+    "planner_reference_upstream",
+    "state_task_upstream",
+    "unknown",
+]
+INVALID_FAILURE_GROUP_ORDER = [
     "command_control_upstream",
     "planner_reference_upstream",
     "state_task_upstream",
@@ -180,6 +185,12 @@ def failure_group_sort_key(group):
     if group in FAILURE_GROUP_ORDER:
         return (FAILURE_GROUP_ORDER.index(group), group)
     return (len(FAILURE_GROUP_ORDER), group)
+
+
+def invalid_failure_group_sort_key(group):
+    if group in INVALID_FAILURE_GROUP_ORDER:
+        return (INVALID_FAILURE_GROUP_ORDER.index(group), group)
+    return (len(INVALID_FAILURE_GROUP_ORDER), group)
 
 
 def single_goal_candidates(method, trial, repeat):
@@ -368,12 +379,6 @@ def target_or_no_arrival_failure(metrics, strict_valid):
 
 def failure_group(protocol, strict_valid, metrics, inspector_row):
     mode = str(inspector_row.get("failure_mode_guess") or "").strip()
-    warning_modes = {
-        "command_saturation_without_divergence",
-        "no_divergence_detected",
-        "swing_warning_no_nan",
-        "position_or_reference_jump_warning_no_nan",
-    }
     command_modes = {
         "command_saturation_before_nan",
         "command_nan_before_state_divergence",
@@ -381,7 +386,6 @@ def failure_group(protocol, strict_valid, metrics, inspector_row):
     }
     planner_modes = {
         "reference_jump_before_command_nan",
-        "reference_jump_after_divergence",
     }
     state_modes = {
         "state_divergence_before_command_nan",
@@ -390,8 +394,6 @@ def failure_group(protocol, strict_valid, metrics, inspector_row):
     }
 
     if strict_valid:
-        if mode in warning_modes:
-            return "warning_only"
         return "valid_or_warning"
     if (
         protocol == PROTOCOL_STRESS
@@ -403,8 +405,6 @@ def failure_group(protocol, strict_valid, metrics, inspector_row):
     if mode in planner_modes:
         return "planner_reference_upstream"
     if mode in state_modes or target_or_no_arrival_failure(metrics, strict_valid):
-        return "state_task_upstream"
-    if mode in warning_modes:
         return "state_task_upstream"
     return "unknown"
 
@@ -530,9 +530,11 @@ def build_count_rows(run_rows):
     return rows
 
 
-def build_group_rows(run_rows):
+def build_group_rows(run_rows, invalid_only=False):
     grouped = defaultdict(lambda: {"count": 0, "invalid": 0, "valid": 0})
     for row in run_rows:
+        if invalid_only and row["strict_valid"] == "true":
+            continue
         key = (row["protocol"], row["method"], row["failure_group"])
         grouped[key]["count"] += 1
         if row["strict_valid"] == "true":
@@ -555,7 +557,9 @@ def build_group_rows(run_rows):
         key=lambda row: (
             protocol_sort_key(row["protocol"]),
             method_sort_key(row["method"]),
-            failure_group_sort_key(row["failure_group"]),
+            invalid_failure_group_sort_key(row["failure_group"])
+            if invalid_only
+            else failure_group_sort_key(row["failure_group"]),
         )
     )
     return rows
@@ -584,20 +588,11 @@ def write_markdown_table(path, title, fields, rows):
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def compact_group_rows(group_rows):
-    return [
-        row
-        for row in group_rows
-        if int(row["count"]) > 0 and row["failure_group"] != "valid_or_warning"
-    ]
-
-
 def compact_count_rows(count_rows):
     return [row for row in count_rows if int(row["count"]) > 0]
 
 
-def build_summary(run_rows, count_rows, group_rows):
-    group_summary = compact_group_rows(group_rows)
+def build_summary(run_rows, count_rows, group_rows, invalid_group_rows):
     mode_summary = compact_count_rows(count_rows)
     total_runs = len(run_rows)
     invalid_runs = sum(1 for row in run_rows if row["strict_valid"] == "false")
@@ -620,9 +615,17 @@ def build_summary(run_rows, count_rows, group_rows):
             "- single-goal mission protocol: `goal_repeat=1`; methods `original`, `fixed_s085`, `windlevel_s085`, `fixed_s080`, `risk_adapter_v1`, `risk_adapter_v2`, `risk_adapter_v21`",
             "- goal-reissue stress protocol: `goal_repeat=10`; methods `original`, `fixed_s085`, `windlevel_s085`, `risk_adapter_v1`, `fixed_s080`, `risk_adapter_v21`",
             "",
-            "## Failure-Group Table By Protocol And Method",
+            "## All-Run Failure Groups",
             "",
-            markdown_table(GROUP_FIELDS, group_summary),
+            "The full all-run table contains `valid_or_warning` rows for strict-valid runs. This is useful for accounting, but paper failure-analysis figures should use the invalid-only view below.",
+            "",
+            markdown_table(GROUP_FIELDS, group_rows),
+            "",
+            "## Invalid-Only Failure Groups",
+            "",
+            "Strict-valid runs are excluded from this table. Use `stage4_failure_group_invalid_only_stacked_bar.png` as the preferred paper-facing failure-analysis figure because it does not mix successful runs with diagnostic failure categories.",
+            "",
+            markdown_table(GROUP_FIELDS, invalid_group_rows),
             "",
             "## Failure-Mode Count Table By Protocol And Method",
             "",
@@ -653,14 +656,14 @@ def build_summary(run_rows, count_rows, group_rows):
             "## Next Recommended Work",
             "",
             "- Inspect Trial 4 stress failures and Trial 6 bottlenecks using the run-level table.",
-            "- Use the failure-group figure to decide whether a phase-aware or failure-aware ablation is justified.",
+            "- Use the invalid-only failure-group figure to decide whether a phase-aware or failure-aware ablation is justified.",
             "- Do not create `risk_adapter_v22` until the failure-mode outputs are reviewed.",
             "",
         ]
     )
 
 
-def write_plot(path, group_rows):
+def write_group_plot(path, group_rows, group_order, title, y_limit=None):
     try:
         import matplotlib
 
@@ -672,7 +675,6 @@ def write_plot(path, group_rows):
 
     colors = {
         "valid_or_warning": "#8a8d91",
-        "warning_only": "#b8a05a",
         "command_control_upstream": "#b45f4d",
         "planner_reference_upstream": "#7f5fa8",
         "state_task_upstream": "#5b6c8f",
@@ -683,14 +685,14 @@ def write_plot(path, group_rows):
         lookup[(row["protocol"], row["method"])][row["failure_group"]] = int(row["count"])
 
     fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.2), sharey=True)
-    for ax, protocol, title in [
+    for ax, protocol, panel_title in [
         (axes[0], PROTOCOL_SINGLE, "single-goal mission"),
         (axes[1], PROTOCOL_STRESS, "goal-reissue stress"),
     ]:
         methods = protocol_methods(protocol)
         x_positions = list(range(len(methods)))
         bottoms = [0] * len(methods)
-        for group in FAILURE_GROUP_ORDER:
+        for group in group_order:
             heights = [
                 lookup[(protocol, method)].get(group, 0)
                 for method in methods
@@ -703,21 +705,49 @@ def write_plot(path, group_rows):
                 color=colors.get(group, "#777777"),
             )
             bottoms = [bottom + height for bottom, height in zip(bottoms, heights)]
-        ax.set_title(title)
+        ax.set_title(panel_title)
         ax.set_xticks(x_positions)
         ax.set_xticklabels(methods, rotation=45, ha="right")
-        ax.set_ylim(0, 32)
+        if y_limit is not None:
+            ax.set_ylim(0, y_limit)
         ax.grid(axis="y", alpha=0.25)
         ax.set_axisbelow(True)
     axes[0].set_ylabel("Run count")
     handles, labels = axes[1].get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 0.02), ncol=3, frameon=False)
-    fig.suptitle("Stage 4 failure-group distribution by protocol and method")
+    fig.suptitle(title)
     fig.tight_layout(rect=(0, 0.08, 1, 0.95))
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(str(path), dpi=200)
     plt.close(fig)
     return True
+
+
+def write_plot(path, group_rows):
+    return write_group_plot(
+        path,
+        group_rows,
+        FAILURE_GROUP_ORDER,
+        "Stage 4 all-run failure-group distribution by protocol and method",
+        y_limit=32,
+    )
+
+
+def write_invalid_only_plot(path, group_rows):
+    max_total = 0
+    totals = defaultdict(int)
+    for row in group_rows:
+        totals[(row["protocol"], row["method"])] += int(row["count"])
+    if totals:
+        max_total = max(totals.values())
+    y_limit = max(10, max_total + 2)
+    return write_group_plot(
+        path,
+        group_rows,
+        INVALID_FAILURE_GROUP_ORDER,
+        "Stage 4 invalid-only failure-group distribution by protocol and method",
+        y_limit=y_limit,
+    )
 
 
 def main():
@@ -728,6 +758,7 @@ def main():
     run_rows = build_run_rows(metrics_dir)
     count_rows = build_count_rows(run_rows)
     group_rows = build_group_rows(run_rows)
+    invalid_group_rows = build_group_rows(run_rows, invalid_only=True)
 
     write_csv(output_dir / "stage4_failure_mode_run_table.csv", RUN_FIELDS, run_rows)
     write_markdown_table(
@@ -750,13 +781,28 @@ def main():
         GROUP_FIELDS,
         group_rows,
     )
+    write_csv(
+        output_dir / "stage4_failure_group_invalid_only_table.csv",
+        GROUP_FIELDS,
+        invalid_group_rows,
+    )
+    write_markdown_table(
+        output_dir / "stage4_failure_group_invalid_only_table.md",
+        "Stage 4 Invalid-Only Failure Group Table",
+        GROUP_FIELDS,
+        invalid_group_rows,
+    )
     (output_dir / "stage4_failure_mode_summary.md").write_text(
-        build_summary(run_rows, count_rows, group_rows),
+        build_summary(run_rows, count_rows, group_rows, invalid_group_rows),
         encoding="utf-8",
     )
     plot_written = write_plot(
         output_dir / "stage4_failure_group_stacked_bar.png",
         group_rows,
+    )
+    invalid_plot_written = write_invalid_only_plot(
+        output_dir / "stage4_failure_group_invalid_only_stacked_bar.png",
+        invalid_group_rows,
     )
 
     if args.print_summary:
@@ -764,7 +810,12 @@ def main():
         print("run_rows: %d" % len(run_rows))
         print("failure_mode_rows: %d" % len(count_rows))
         print("failure_group_rows: %d" % len(group_rows))
+        print("invalid_failure_group_rows: %d" % len(invalid_group_rows))
         print("plot_written: %s" % ("true" if plot_written else "false"))
+        print(
+            "invalid_plot_written: %s"
+            % ("true" if invalid_plot_written else "false")
+        )
         print("output_dir: %s" % output_dir)
     return 0
 

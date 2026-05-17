@@ -923,6 +923,14 @@ It uses strict-valid as the paper-facing success metric and calls
 `failure_mode_guess` fields. The derived `failure_group` is diagnostic, not
 perfect root-cause proof.
 
+Stage 4-Z2 refines the output for paper use:
+
+- all-run failure groups use `valid_or_warning` for strict-valid runs,
+  including warning-style diagnostic labels
+- invalid-only failure-group CSV/Markdown tables are generated
+- `stage4_failure_group_invalid_only_stacked_bar.png` is the preferred
+  failure-analysis figure
+
 Example:
 
 ```bash

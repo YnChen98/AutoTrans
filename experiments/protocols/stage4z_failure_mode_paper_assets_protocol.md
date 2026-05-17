@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Stage 4-Z generates paper-ready failure-mode tables and a stacked-bar figure
+Stage 4-Z generates paper-ready failure-mode tables and stacked-bar figures
 for the completed protocol-split Stage 4 results.
 
 The goal is to support the Stage 4-Y Results narrative with diagnostic
@@ -81,12 +81,21 @@ The generator maps `failure_mode_guess` plus run-level metrics into:
 
 | failure_group | Mapping logic |
 | --- | --- |
-| `valid_or_warning` | Strict-valid run without a warning-only diagnostic label. |
-| `warning_only` | Strict-valid run with `command_saturation_without_divergence`, `no_divergence_detected`, `swing_warning_no_nan`, or `position_or_reference_jump_warning_no_nan`. |
+| `valid_or_warning` | Any strict-valid run, including runs with warning-style diagnostic labels such as `command_saturation_without_divergence`, `no_divergence_detected`, `swing_warning_no_nan`, or `position_or_reference_jump_warning_no_nan`. |
 | `command_control_upstream` | `command_saturation_before_nan`, `command_nan_before_state_divergence`, or `command_nan_coincident_with_state_divergence`. |
-| `planner_reference_upstream` | `reference_jump_before_command_nan`, `reference_jump_after_divergence`, or goal-reissue stress failure after arrival with `first_failure_after_arrival_flag=true`. |
+| `planner_reference_upstream` | `reference_jump_before_command_nan`, or goal-reissue stress failure after arrival with `first_failure_after_arrival_flag=true`. |
 | `state_task_upstream` | `state_divergence_before_command_nan`, `strict_safety_no_nan`, `target_error_only`, target/no-arrival failure, or strict-invalid no-NaN final XY error above `0.5`. |
 | `unknown` | Anything not mapped above. |
+
+Stage 4-Z2 replaces the earlier `warning_only` group with
+`valid_or_warning` because strict-valid runs should not be presented as
+failures in paper-facing figures. Warning-style labels can still be reviewed in
+the run table and failure-mode count table, but strict-valid remains the
+paper-facing success metric.
+
+The invalid-only view excludes strict-valid runs and is the recommended view
+for paper failure analysis. It prevents successful runs with warning-style
+diagnostics from visually dominating or confusing the failure distribution.
 
 The grouping is deliberately conservative. It should support paper discussion
 and ablation planning, not replace manual failure analysis.
@@ -101,11 +110,16 @@ The generator writes:
 - `stage4_failure_mode_count_table.md`
 - `stage4_failure_group_table.csv`
 - `stage4_failure_group_table.md`
+- `stage4_failure_group_invalid_only_table.csv`
+- `stage4_failure_group_invalid_only_table.md`
 - `stage4_failure_mode_summary.md`
 - `stage4_failure_group_stacked_bar.png`
+- `stage4_failure_group_invalid_only_stacked_bar.png`
 
 If `matplotlib` is unavailable, the script skips only
-`stage4_failure_group_stacked_bar.png` and still writes the tables and summary.
+`stage4_failure_group_stacked_bar.png` and
+`stage4_failure_group_invalid_only_stacked_bar.png`; it still writes the tables
+and summary.
 
 ## How To Run
 
@@ -121,8 +135,8 @@ python3 experiments/scripts/generate_stage4_failure_mode_paper_assets.py \
 
 ## How To Use In The Paper
 
-Use the generated failure-group table and stacked-bar figure to support the
-Stage 4-Y Results narrative:
+Use the generated invalid-only failure-group table and invalid-only stacked-bar
+figure to support the Stage 4-Y Results narrative:
 
 - single-goal: `windlevel_s085` is strongest overall, while
   `risk_adapter_v1` and `risk_adapter_v21` remain competitive learned /
@@ -131,6 +145,10 @@ Stage 4-Y Results narrative:
   second, and `risk_adapter_v21` underperforms both.
 - `risk_adapter_v21` Trial 4 stress weakness and Trial 6 bottleneck require
   diagnosis before any new variant.
+
+The all-run failure-group table remains useful for accounting because it shows
+where strict-valid runs are grouped as `valid_or_warning`, but it should not be
+the primary paper failure-analysis figure.
 
 Do not claim:
 

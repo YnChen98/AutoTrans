@@ -98,6 +98,9 @@ Do not frame the paper as:
 - Use the Stage 4-Z failure-mode paper assets as the next support for this
   Results narrative:
   `experiments/protocols/stage4z_failure_mode_paper_assets_protocol.md`.
+- Use the Stage 4-Z2 invalid-only failure groups for paper failure-analysis
+  figures, because the all-run table intentionally groups strict-valid runs as
+  `valid_or_warning`.
 - Build a failure-mode summary table or figure.
 - Inspect Trial 4 stress failures and Trial 6 bottlenecks.
 - Design a dynamic heuristic or ablation only after the failure-mode table is
