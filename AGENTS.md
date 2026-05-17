@@ -617,6 +617,23 @@ Stage 4-Z failure-mode paper assets:
 - Do not create `risk_adapter_v22` or another new variant before this
   diagnosis is complete.
 
+Stage 4-AA targeted diagnosis assets:
+
+- The generator is
+  `experiments/scripts/generate_stage4_targeted_diagnosis_assets.py`.
+- The protocol is
+  `experiments/protocols/stage4aa_targeted_diagnosis_protocol.md`.
+- Stage 4-AA targets:
+  - Trial 4 goal-reissue stress failures for `risk_adapter_v21`.
+  - Trial 6 bottleneck behavior across single-goal and goal-reissue stress
+    protocols.
+- Generated outputs go under
+  `experiments/results/stage4_targeted_diagnosis/` and should not be
+  committed.
+- Use Stage 4-AA outputs to inspect timing, arrival behavior, command-scale
+  behavior, and diagnostic failure groups before any new variant design.
+- Do not create `risk_adapter_v22` before reviewing Stage 4-AA outputs.
+
 Earlier Stage 4-H limited-repeat results:
 
 Trial 4:

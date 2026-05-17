@@ -100,6 +100,11 @@ The next step should be targeted diagnosis:
 - Trial 4 goal-reissue stress failures for `risk_adapter_v21`.
 - Trial 6 bottleneck across single-goal and stress.
 
+Stage 4-AA is the targeted follow-up for this diagnosis. Its protocol is
+`experiments/protocols/stage4aa_targeted_diagnosis_protocol.md`, and its
+generator is
+`experiments/scripts/generate_stage4_targeted_diagnosis_assets.py`.
+
 Decide whether a phase-aware or failure-aware ablation is justified only after
 this diagnosis is stable.
 

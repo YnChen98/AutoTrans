@@ -954,6 +954,32 @@ committed. The protocol is
 Use Stage 4-Z outputs to inspect Trial 4 goal-reissue stress weakness and
 Trial 6 bottlenecks before any `risk_adapter_v22` design.
 
+## Stage 4-AA targeted diagnosis assets
+
+`experiments/scripts/generate_stage4_targeted_diagnosis_assets.py` generates
+targeted diagnosis tables and optional plots for Trial 4 goal-reissue stress
+`risk_adapter_v21` failures and the Trial 6 bottleneck.
+
+It reuses the Stage 4-Z2 strict-valid and `failure_group` mapping, then writes
+run-level tables, a Trial 6 method summary, and a cautious diagnosis summary.
+Generated outputs under `experiments/results/` are ignored and should not be
+committed.
+
+Example:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/generate_stage4_targeted_diagnosis_assets.py \
+  --metrics-dir experiments/figures \
+  --output-dir experiments/results/stage4_targeted_diagnosis \
+  --print-summary
+```
+
+The protocol is
+`experiments/protocols/stage4aa_targeted_diagnosis_protocol.md`. Review the
+Stage 4-AA outputs before designing `risk_adapter_v22`; any future method
+should be phase-aware / failure-aware rather than Trial-4-specific.
+
 ## Stage 4-X0 final evaluation specification
 
 `experiments/protocols/stage4x_final_evaluation_spec.md` freezes the final
