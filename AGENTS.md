@@ -587,6 +587,22 @@ Stage 4-Y paper results narrative:
   Trial 4 stress and Trial 6 bottlenecks, and do not create
   `risk_adapter_v22` immediately.
 
+Stage 4-Z failure-mode paper assets:
+
+- The generator is
+  `experiments/scripts/generate_stage4_failure_mode_paper_assets.py`.
+- The protocol is
+  `experiments/protocols/stage4z_failure_mode_paper_assets_protocol.md`.
+- Stage 4-Z outputs support the Stage 4-Y protocol-split Results narrative
+  with failure-mode tables and a failure-group stacked-bar figure.
+- Generated outputs go under
+  `experiments/results/stage4_failure_mode_paper_assets/` and should not be
+  committed.
+- `failure_group` is diagnostic, not perfect root-cause proof; strict-valid
+  remains the paper-facing metric.
+- Do not create `risk_adapter_v22` or another new variant before inspecting
+  the Stage 4-Z failure-mode outputs.
+
 Earlier Stage 4-H limited-repeat results:
 
 Trial 4:

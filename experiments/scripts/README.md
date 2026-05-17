@@ -912,6 +912,34 @@ Do not claim `risk_adapter_v21` is the overall best method, do not create a
 mixed-protocol aggregate, and do not claim statistical significance or a safety
 guarantee.
 
+## Stage 4-Z failure-mode paper assets
+
+`experiments/scripts/generate_stage4_failure_mode_paper_assets.py` generates
+paper-ready failure-mode tables and a stacked-bar figure for the completed
+protocol-split Stage 4 results.
+
+It uses strict-valid as the paper-facing success metric and calls
+`experiments/scripts/inspect_stage4_log_divergence.py` for diagnostic
+`failure_mode_guess` fields. The derived `failure_group` is diagnostic, not
+perfect root-cause proof.
+
+Example:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/generate_stage4_failure_mode_paper_assets.py \
+  --metrics-dir experiments/figures \
+  --output-dir experiments/results/stage4_failure_mode_paper_assets \
+  --print-summary
+```
+
+Generated outputs under `experiments/results/` are ignored and should not be
+committed. The protocol is
+`experiments/protocols/stage4z_failure_mode_paper_assets_protocol.md`.
+
+Use Stage 4-Z outputs to inspect Trial 4 goal-reissue stress weakness and
+Trial 6 bottlenecks before any `risk_adapter_v22` design.
+
 ## Stage 4-X0 final evaluation specification
 
 `experiments/protocols/stage4x_final_evaluation_spec.md` freezes the final
