@@ -845,8 +845,9 @@ It separates:
 - single-goal mission protocol: `goal_repeat=1`
 - goal-reissue stress protocol: `goal_repeat=10`
 
-The generated summary uses "among evaluated methods" wording because the
-method set differs between the two protocols.
+Stage 4-W3 updates this generator after Stage 4-X2 and corrected Stage 4-X1 so
+the generated summary reports the completed single-goal method set and the
+corrected `risk_adapter_v21` goal-reissue stress result.
 
 Example:
 
@@ -871,6 +872,20 @@ Current paper-facing protocol split:
 The single-goal mission table must include all seven methods: `original`,
 `fixed_s085`, `windlevel_s085`, `fixed_s080`, `risk_adapter_v1`,
 `risk_adapter_v2`, and `risk_adapter_v21`.
+
+The goal-reissue stress table must include all six methods: `original`,
+`fixed_s085`, `windlevel_s085`, `risk_adapter_v1`, `fixed_s080`, and
+`risk_adapter_v21`.
+
+Stage 4-W3 generated-summary claim scope:
+
+- Under completed single-goal protocol, `windlevel_s085` achieved `26/30`.
+- `risk_adapter_v1` and `risk_adapter_v21` each achieved `25/30` in
+  single-goal and tie as the strongest learned/risk-conditioned variants.
+- Under goal-reissue stress, `fixed_s080` achieved `24/30`.
+- No current learned variant dominates both protocols.
+- Do not claim `risk_adapter_v21` beats all baselines, is overall best, or
+  that learned methods uniformly dominate heuristics.
 
 ## Stage 4-X0 final evaluation specification
 

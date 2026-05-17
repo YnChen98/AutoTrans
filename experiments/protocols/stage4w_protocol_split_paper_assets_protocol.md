@@ -21,6 +21,8 @@ Stage 4-X0 freezes the final evaluation completion plan in
 `experiments/protocols/stage4x_final_evaluation_spec.md`. Stage 4-X2 completes
 the missing single-goal baselines in
 `experiments/protocols/stage4x_single_goal_baseline_completion_result.md`.
+Stage 4-W3 updates the generator to include the completed X2 single-goal table
+and the corrected X1 `risk_adapter_v21` goal-reissue stress result.
 
 ## Inputs
 
@@ -59,10 +61,10 @@ The completed single-goal comparison set includes all seven current methods:
 `windlevel_s085` is the completed single-goal aggregate leader at `26/30`;
 `risk_adapter_v1` and `risk_adapter_v21` are tied at `25/30`.
 
-The current goal-reissue stress comparison set includes `original`,
+The completed/current goal-reissue stress comparison set includes `original`,
 `fixed_s085`, `windlevel_s085`, `risk_adapter_v1`, `fixed_s080`, and
 `risk_adapter_v21`. Stage 4-X1 records the corrected `risk_adapter_v21`
-stress result as `20/30`.
+stress result as `20/30`, and Stage 4-W3 includes it in generated assets.
 
 Paper-facing wording must still keep protocol labels explicit. The
 single-goal mission and goal-reissue stress results should not be combined into
@@ -121,6 +123,20 @@ Goal-reissue stress filenames:
 ```text
 stage4_<method>_strong_trial<trial>_repeat<repeat>_metrics_summary.txt
 stage4_fixed_s080_strong_trial<trial>_frontier_repeat<repeat>_metrics_summary.txt
+stage4x_risk_adapter_v21_goalreissue_strong_trial<trial>_goalrepeat10_repeat<repeat>_metrics_summary.txt
+```
+
+The generic `stage4_<method>...` pattern covers `original`, `fixed_s085`,
+`windlevel_s085`, and `risk_adapter_v1`. `fixed_s080` and
+`risk_adapter_v21` use the dedicated patterns shown above.
+
+Stage 4-X2 single-goal baseline filenames:
+
+```text
+stage4x_singlegoal_original_strong_trial<trial>_goalrepeat1_repeat<repeat>_metrics_summary.txt
+stage4x_singlegoal_fixed_s085_strong_trial<trial>_goalrepeat1_repeat<repeat>_metrics_summary.txt
+stage4x_singlegoal_windlevel_s085_strong_trial<trial>_goalrepeat1_repeat<repeat>_metrics_summary.txt
+stage4x_singlegoal_risk_adapter_v1_strong_trial<trial>_goalrepeat1_repeat<repeat>_metrics_summary.txt
 ```
 
 Single-goal `fixed_s080` filenames:
@@ -146,14 +162,33 @@ stage4v_risk_adapter_v21_strong_trial<trial>_goalrepeat1_screening_repeat<repeat
 The `risk_adapter_v21` filenames include `screening`, but repeat1 through
 repeat10 are the Stage 4-V4 10-repeat expansion.
 
-Stage 4-X2 single-goal baseline filenames:
+The exact Stage 4-X2 patterns above cover `original`, `fixed_s085`,
+`windlevel_s085`, and `risk_adapter_v1` under the completed single-goal
+mission protocol.
 
-```text
-stage4x_singlegoal_<method>_strong_trial<trial>_goalrepeat1_repeat<repeat>_metrics_summary.txt
-```
+Stage 4-W3 validates the generated counts against these completed single-goal
+results:
 
-These cover `original`, `fixed_s085`, `windlevel_s085`, and
-`risk_adapter_v1` under the completed single-goal mission protocol.
+| Method | Trial 4 | Trial 5 | Trial 6 | Aggregate |
+| --- | ---: | ---: | ---: | ---: |
+| `original` | `6/10` | `8/10` | `7/10` | `21/30` |
+| `fixed_s085` | `5/10` | `9/10` | `8/10` | `22/30` |
+| `windlevel_s085` | `8/10` | `9/10` | `9/10` | `26/30` |
+| `fixed_s080` | `7/10` | `6/10` | `8/10` | `21/30` |
+| `risk_adapter_v1` | `9/10` | `9/10` | `7/10` | `25/30` |
+| `risk_adapter_v2` | `9/10` | `6/10` | `6/10` | `21/30` |
+| `risk_adapter_v21` | `10/10` | `9/10` | `6/10` | `25/30` |
+
+It also validates these goal-reissue stress results:
+
+| Method | Trial 4 | Trial 5 | Trial 6 | Aggregate |
+| --- | ---: | ---: | ---: | ---: |
+| `original` | `8/10` | `7/10` | `3/10` | `18/30` |
+| `fixed_s085` | `9/10` | `5/10` | `4/10` | `18/30` |
+| `windlevel_s085` | `4/10` | `6/10` | `6/10` | `16/30` |
+| `risk_adapter_v1` | `7/10` | `9/10` | `7/10` | `23/30` |
+| `fixed_s080` | `8/10` | `9/10` | `7/10` | `24/30` |
+| `risk_adapter_v21` | `4/10` | `9/10` | `7/10` | `20/30` |
 
 The generator validates computed strict-valid counts against the frozen Stage
 4-U2 / Stage 4-V4 / Stage 4-X2 / Stage 4-J / Stage 4-R results before writing
@@ -172,6 +207,8 @@ Safe paper-facing claims:
   achieved `24/30` strict-valid.
 - Under goal-reissue stress, `risk_adapter_v21` achieved `20/30`, below
   `fixed_s080` `24/30` and `risk_adapter_v1` `23/30`.
+- No current learned variant dominates both protocols.
+- The protocol split exposes target/protocol-dependent trade-offs.
 - In the completed single-goal comparison set, `risk_adapter_v21` improves
   over `original`, `fixed_s080`, `fixed_s085`, and `risk_adapter_v2` in
   aggregate, but Trial 6 remains a bottleneck.
@@ -187,7 +224,7 @@ Avoid:
 - mixing `goal_repeat=1` and `goal_repeat=10` into one aggregate
 - claiming `risk_adapter_v21` is the best single-goal method
 - claiming `risk_adapter_v21` beats all single-goal baselines
-- claiming a learned method uniformly dominates heuristic or fixed baselines
+- claiming a learned method uniformly dominates heuristics
 - describing `fixed_s080` as the overall best method across protocols
 - describing `windlevel_s085` as the overall best method across protocols
 - claiming `risk_adapter_v21` is the best goal-reissue stress method

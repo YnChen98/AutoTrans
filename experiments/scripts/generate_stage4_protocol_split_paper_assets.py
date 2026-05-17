@@ -18,13 +18,22 @@ PROTOCOL_SINGLE = "single_goal_mission"
 PROTOCOL_REPEATED = "repeated_goal_stress"
 PROTOCOL_ORDER = [PROTOCOL_SINGLE, PROTOCOL_REPEATED]
 
-SINGLE_GOAL_METHODS = ["fixed_s080", "risk_adapter_v2", "risk_adapter_v21"]
+SINGLE_GOAL_METHODS = [
+    "original",
+    "fixed_s085",
+    "windlevel_s085",
+    "fixed_s080",
+    "risk_adapter_v1",
+    "risk_adapter_v2",
+    "risk_adapter_v21",
+]
 REPEATED_GOAL_METHODS = [
     "original",
     "fixed_s085",
     "windlevel_s085",
     "risk_adapter_v1",
     "fixed_s080",
+    "risk_adapter_v21",
 ]
 PLOT_METHOD_ORDER = [
     "original",
@@ -37,9 +46,21 @@ PLOT_METHOD_ORDER = [
 ]
 
 EXPECTED_TRIAL_COUNTS = {
+    (PROTOCOL_SINGLE, "original", "trial4"): 6,
+    (PROTOCOL_SINGLE, "original", "trial5"): 8,
+    (PROTOCOL_SINGLE, "original", "trial6"): 7,
+    (PROTOCOL_SINGLE, "fixed_s085", "trial4"): 5,
+    (PROTOCOL_SINGLE, "fixed_s085", "trial5"): 9,
+    (PROTOCOL_SINGLE, "fixed_s085", "trial6"): 8,
+    (PROTOCOL_SINGLE, "windlevel_s085", "trial4"): 8,
+    (PROTOCOL_SINGLE, "windlevel_s085", "trial5"): 9,
+    (PROTOCOL_SINGLE, "windlevel_s085", "trial6"): 9,
     (PROTOCOL_SINGLE, "fixed_s080", "trial4"): 7,
     (PROTOCOL_SINGLE, "fixed_s080", "trial5"): 6,
     (PROTOCOL_SINGLE, "fixed_s080", "trial6"): 8,
+    (PROTOCOL_SINGLE, "risk_adapter_v1", "trial4"): 9,
+    (PROTOCOL_SINGLE, "risk_adapter_v1", "trial5"): 9,
+    (PROTOCOL_SINGLE, "risk_adapter_v1", "trial6"): 7,
     (PROTOCOL_SINGLE, "risk_adapter_v2", "trial4"): 9,
     (PROTOCOL_SINGLE, "risk_adapter_v2", "trial5"): 6,
     (PROTOCOL_SINGLE, "risk_adapter_v2", "trial6"): 6,
@@ -61,6 +82,9 @@ EXPECTED_TRIAL_COUNTS = {
     (PROTOCOL_REPEATED, "fixed_s080", "trial4"): 8,
     (PROTOCOL_REPEATED, "fixed_s080", "trial5"): 9,
     (PROTOCOL_REPEATED, "fixed_s080", "trial6"): 7,
+    (PROTOCOL_REPEATED, "risk_adapter_v21", "trial4"): 4,
+    (PROTOCOL_REPEATED, "risk_adapter_v21", "trial5"): 9,
+    (PROTOCOL_REPEATED, "risk_adapter_v21", "trial6"): 7,
 }
 
 SUCCESS_FIELDS = [
@@ -188,6 +212,11 @@ def strict_valid_from_metrics(metrics):
 
 
 def single_goal_candidates(method, trial, repeat):
+    if method in ("original", "fixed_s085", "windlevel_s085", "risk_adapter_v1"):
+        return [
+            "stage4x_singlegoal_%s_strong_%s_goalrepeat1_repeat%d_metrics_summary.txt"
+            % (method, trial, repeat)
+        ]
     if method == "fixed_s080":
         names = []
         if trial == "trial4" and repeat <= 3:
@@ -224,6 +253,11 @@ def repeated_goal_candidates(method, trial, repeat):
     if method == "fixed_s080":
         return [
             "stage4_fixed_s080_strong_%s_frontier_repeat%d_metrics_summary.txt"
+            % (trial, repeat)
+        ]
+    if method == "risk_adapter_v21":
+        return [
+            "stage4x_risk_adapter_v21_goalreissue_strong_%s_goalrepeat10_repeat%d_metrics_summary.txt"
             % (trial, repeat)
         ]
     return [
@@ -368,17 +402,21 @@ def build_summary(single_rows, repeated_rows, aggregate_rows):
             "",
             "## Executive Summary",
             "",
-            "Stage 4 results are split by goal protocol. `goal_repeat=1` is the single-goal mission protocol, and `goal_repeat=10` is the repeated-goal / post-arrival replan stress protocol.",
+            "Stage 4 results are split by goal protocol. `goal_repeat=1` is the single-goal mission protocol, and `goal_repeat=10` is the goal-reissue stress protocol.",
             "",
-            "Under the single-goal mission protocol, among the currently evaluated methods, `risk_adapter_v21` achieved the highest strict-valid rate: `25/30`.",
+            "Under the completed single-goal mission protocol, `windlevel_s085` achieved the highest strict-valid rate: `26/30`.",
             "",
-            "Under the repeated-goal stress protocol, among the evaluated methods, `fixed_s080` achieved the highest strict-valid rate: `24/30`.",
+            "`risk_adapter_v1` and `risk_adapter_v21` tied as the strongest learned/risk-conditioned variants under the single-goal mission protocol at `25/30`.",
+            "",
+            "Under the goal-reissue stress protocol, `fixed_s080` achieved the highest strict-valid rate: `24/30`.",
+            "",
+            "No current learned variant dominates both protocols.",
             "",
             "## Comparison Scope",
             "",
-            "Single-goal results currently compare `fixed_s080`, `risk_adapter_v2`, and `risk_adapter_v21`.",
+            "Single-goal results now include seven methods: `original`, `fixed_s085`, `windlevel_s085`, `fixed_s080`, `risk_adapter_v1`, `risk_adapter_v2`, and `risk_adapter_v21`.",
             "",
-            "Repeated-goal stress results currently compare `original`, `fixed_s085`, `windlevel_s085`, `risk_adapter_v1`, and `fixed_s080`.",
+            "Goal-reissue stress results now include six methods: `original`, `fixed_s085`, `windlevel_s085`, `risk_adapter_v1`, `fixed_s080`, and `risk_adapter_v21`.",
             "",
             "Do not compare methods across protocols without explicit protocol labels.",
             "",
@@ -390,7 +428,9 @@ def build_summary(single_rows, repeated_rows, aggregate_rows):
             "",
             markdown_table(AGGREGATE_FIELDS, single_aggregate),
             "",
-            "## Repeated-Goal Stress Results",
+            "## Goal-Reissue Stress Results",
+            "",
+            "The output file names retain `repeated_goal_stress` for compatibility; this section is the goal-reissue stress protocol with `goal_repeat=10`.",
             "",
             markdown_table(SUCCESS_FIELDS, repeated_rows),
             "",
@@ -400,34 +440,39 @@ def build_summary(single_rows, repeated_rows, aggregate_rows):
             "",
             "## Protocol Split Interpretation",
             "",
-            "The two protocols test different system properties. The single-goal mission protocol evaluates ordinary one-command transport behavior. The repeated-goal stress protocol keeps publishing the same goal and can exercise post-arrival replan behavior.",
+            "The two protocols test different system properties. The single-goal mission protocol evaluates ordinary one-command transport behavior. The goal-reissue stress protocol keeps publishing the same goal and can exercise post-arrival replan behavior.",
             "",
-            "`risk_adapter_v21` improves over `fixed_s080` and `risk_adapter_v2` in single-goal aggregate, but Trial 6 remains a bottleneck. `fixed_s080` remains the strongest evaluated repeated-goal stress method.",
+            "In the completed single-goal protocol, `windlevel_s085` is strongest overall, while `risk_adapter_v1` and `risk_adapter_v21` are competitive learned/risk-conditioned variants.",
+            "",
+            "In the goal-reissue stress protocol, `fixed_s080` remains strongest, `risk_adapter_v1` is second, and `risk_adapter_v21` underperforms both `fixed_s080` and `risk_adapter_v1`.",
+            "",
+            "This suggests learned governors need further failure-aware or phase-aware refinement before a cross-protocol winner claim.",
             "",
             "## Paper-Facing Claims",
             "",
-            "- Among the currently evaluated single-goal methods, `risk_adapter_v21` achieved `25/30` strict-valid.",
-            "- Among the currently evaluated repeated-goal stress methods, `fixed_s080` achieved `24/30` strict-valid.",
-            "- In the current single-goal comparison set, `risk_adapter_v21` improves over `fixed_s080` and `risk_adapter_v2` in aggregate, but Trial 6 remains a bottleneck.",
-            "- The two protocols test different system properties.",
+            "- Under the completed single-goal protocol, `windlevel_s085` achieved `26/30` strict-valid.",
+            "- Under the completed single-goal protocol, `risk_adapter_v1` and `risk_adapter_v21` each achieved `25/30` strict-valid.",
+            "- Under goal-reissue stress, `fixed_s080` achieved `24/30` strict-valid.",
+            "- No current learned variant dominates both protocols.",
+            "- The protocol split exposes target/protocol-dependent trade-offs.",
             "",
             "## What Not To Claim",
             "",
             "- Do not claim statistical significance.",
             "- Do not claim a safety guarantee.",
             "- Do not mix `goal_repeat=1` and `goal_repeat=10` into one aggregate without protocol labels.",
-            "- Do not claim `risk_adapter_v21` beats all baselines under the single-goal protocol unless `original`, `fixed_s085`, `windlevel_s085`, and `risk_adapter_v1` are evaluated under `goal_repeat=1`.",
-            "- Do not describe `fixed_s080` as the overall best method across protocols.",
+            "- Do not claim `risk_adapter_v21` beats all baselines.",
+            "- Do not claim `risk_adapter_v21` is overall best.",
+            "- Do not claim a learned method uniformly dominates heuristics.",
             "- Do not make mixed-protocol aggregate claims.",
             "- Do not claim diagnostic labels prove exact root cause.",
             "- Do not claim `risk_adapter_v21` solves all failures.",
-            "- Do not describe `risk_adapter_v1` as overall best after including `fixed_s080`.",
             "",
             "## Next Recommended Work",
             "",
             "- Update paper tables and figures to use this protocol split.",
-            "- Keep repeated-goal stress results separate from single-goal mission results.",
-            "- Inspect Trial 6 failure families before any `risk_adapter_v21.1` or `risk_adapter_v22` tuning.",
+            "- Keep goal-reissue stress results separate from single-goal mission results.",
+            "- Inspect protocol-dependent failure families before any `risk_adapter_v21.1` or `risk_adapter_v22` tuning.",
             "",
         ]
     )
