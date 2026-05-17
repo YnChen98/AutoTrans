@@ -409,9 +409,10 @@ Stage 4-U2 single-goal 10-repeat expansion:
 
 - Stage 4-U2 expanded `fixed_s080` and `risk_adapter_v2` under strong wind with
   `goal_repeat=1`, Trial 4/5/6, repeat1-10.
-- Single-goal protocol (`goal_repeat=1`) now includes Stage 4-V4:
-  `risk_adapter_v21` 25/30, `fixed_s080` 21/30, `risk_adapter_v2` 21/30
-  strict-valid.
+- Single-goal protocol (`goal_repeat=1`) now includes the completed Stage
+  4-X2 matrix: `windlevel_s085` 26/30, `risk_adapter_v1` 25/30,
+  `risk_adapter_v21` 25/30, `fixed_s085` 22/30, and `original`,
+  `fixed_s080`, and `risk_adapter_v2` 21/30 strict-valid.
 - Per-trial counts: `fixed_s080` Trial 4 7/10, Trial 5 6/10, Trial 6 8/10;
   `risk_adapter_v2` Trial 4 9/10, Trial 5 6/10, Trial 6 6/10.
 - Repeated-goal protocol (`goal_repeat=10`): `fixed_s080` 24/30 and
@@ -439,14 +440,17 @@ Stage 4-V risk_adapter_v2.1 design:
 - Stage 4-V4 expanded `risk_adapter_v21` to 10 repeats under `goal_repeat=1`.
 - `risk_adapter_v21`: 25/30 strict-valid under the single-goal protocol.
 - Per-trial counts: Trial 4 10/10, Trial 5 9/10, Trial 6 6/10.
-- `risk_adapter_v21` is the current strongest evaluated single-goal method,
-  but Trial 6 remains a bottleneck because `fixed_s080` achieved 8/10 there.
+- After Stage 4-X2, `risk_adapter_v21` is no longer the highest completed
+  single-goal aggregate method; `windlevel_s085` achieved 26/30, while
+  `risk_adapter_v1` and `risk_adapter_v21` tied at 25/30.
+- Trial 6 remains a bottleneck for `risk_adapter_v21` because it achieved
+  6/10 there while `fixed_s080` achieved 8/10.
 - Goal-reissue stress protocol (`goal_repeat=10`) remains separate:
   `fixed_s080` 24/30, `risk_adapter_v1` 23/30, and corrected
   `risk_adapter_v21` 20/30.
 - `risk_adapter_v21` is not the strongest goal-reissue stress method and
   should not be described as a cross-protocol final winner.
-- Next step: complete the missing single-goal baselines before further tuning.
+- Next step: update protocol-split paper assets before further tuning.
 - Do not claim statistical significance or a safety guarantee.
 - No planner/controller/simulator changes are needed for the next policy step.
 
@@ -457,19 +461,20 @@ Stage 4-X0 final evaluation specification:
 - Use paper-facing protocol names:
   - single-goal mission protocol: `goal_repeat=1`
   - goal-reissue stress protocol: `goal_repeat=10`
-- Current single-goal included methods are `fixed_s080` 21/30,
-  `risk_adapter_v2` 21/30, and `risk_adapter_v21` 25/30 strict-valid.
+- Current single-goal included methods are complete: `windlevel_s085` 26/30,
+  `risk_adapter_v1` 25/30, `risk_adapter_v21` 25/30, `fixed_s085` 22/30,
+  and `original`, `fixed_s080`, and `risk_adapter_v2` 21/30 strict-valid.
 - Current goal-reissue stress included methods are `original` 18/30,
   `fixed_s085` 18/30, `windlevel_s085` 16/30, `risk_adapter_v1` 23/30, and
   `fixed_s080` 24/30 strict-valid; Stage 4-X1 adds corrected
   `risk_adapter_v21` 20/30 strict-valid.
 - Remaining completion matrix before final claims:
-  - single-goal: add `original`, `fixed_s085`, `windlevel_s085`, and
-    `risk_adapter_v1`
+  - none; Stage 4-X2 completed the missing single-goal baselines.
 - Next experiment order:
   1. completed in Stage 4-X1: run `risk_adapter_v21` under goal-reissue
      stress (`goal_repeat=10`)
-  2. run missing single-goal baselines (`goal_repeat=1`)
+  2. completed in Stage 4-X2: run missing single-goal baselines
+     (`goal_repeat=1`)
   3. update protocol-split paper assets
   4. decide final method
 - Final-method decision rule:
@@ -478,9 +483,9 @@ Stage 4-X0 final evaluation specification:
   - if `risk_adapter_v21` is strong in single-goal but weak in stress, do
     failure analysis before a new variant
 - Do not create `risk_adapter_v21.1`, `risk_adapter_v22`, or another new
-  variant until the completion matrix is done.
-- Do not claim `risk_adapter_v21` beats all baselines until missing
-  single-goal baselines are evaluated.
+  variant before protocol-split paper assets and failure analysis are updated.
+- Do not claim `risk_adapter_v21` beats all single-goal baselines; Stage 4-X2
+  shows `windlevel_s085` is higher in the completed single-goal aggregate.
 - Do not claim statistical significance, safety guarantee, or mixed-protocol
   aggregate results.
 
@@ -503,8 +508,8 @@ Stage 4-X1 corrected risk_adapter_v21 goal-reissue stress result:
   failures occur before arrival.
 - Do not freeze `risk_adapter_v21` as a cross-protocol final method.
 - Do not create `risk_adapter_v22` yet.
-- Next step: complete missing single-goal baselines so the single-goal
-  protocol has full baseline coverage.
+- Stage 4-X2 completed the missing single-goal baselines; next step is to
+  update protocol-split paper assets.
 
 Stage 4-X2 missing single-goal baseline completion:
 
@@ -512,12 +517,14 @@ Stage 4-X2 missing single-goal baseline completion:
   `experiments/scripts/run_stage4_single_goal_baseline_completion.py`.
 - The protocol is
   `experiments/protocols/stage4x_single_goal_baseline_completion_protocol.md`.
-- Missing single-goal methods are `original`, `fixed_s085`,
-  `windlevel_s085`, and `risk_adapter_v1`.
+- Stage 4-X2 completed the previously missing single-goal methods:
+  `original`, `fixed_s085`, `windlevel_s085`, and `risk_adapter_v1`.
 - Protocol: strong wind, `goal_repeat=1`, single-goal mission protocol,
   Trial 4/5/6, repeat1-10.
 - Naming convention:
   `stage4x_singlegoal_<method>_strong_trial<trial>_goalrepeat1_repeat<repeat>`.
+- The completed result document is
+  `experiments/protocols/stage4x_single_goal_baseline_completion_result.md`.
 - Default helper behavior is dry-run / print-only. Do not run simulation from
   Codex unless explicitly requested.
 - `wind_signal_publisher` must be running for Stage 4-X2 runs.
@@ -530,12 +537,32 @@ Stage 4-X2 missing single-goal baseline completion:
   `hard_threshold_5s:=0.7`, `soft_scale_3s:=0.75`,
   `soft_scale_5s:=0.65`, `hard_scale_5s:=0.60`, and
   `scale_rate_limit_per_sec:=0.5`.
+- Completed single-goal results:
+  - `windlevel_s085`: 26/30 strict-valid.
+  - `risk_adapter_v1`: 25/30 strict-valid.
+  - `risk_adapter_v21`: 25/30 strict-valid.
+  - `fixed_s085`: 22/30 strict-valid.
+  - `original`: 21/30 strict-valid.
+  - `fixed_s080`: 21/30 strict-valid.
+  - `risk_adapter_v2`: 21/30 strict-valid.
+- `windlevel_s085` is currently the strongest completed single-goal method.
+- `risk_adapter_v1` and `risk_adapter_v21` tie as the strongest
+  learned/adaptive risk-conditioned variants in the completed single-goal
+  aggregate.
+- `risk_adapter_v21` is no longer the highest single-goal aggregate method
+  after adding `windlevel_s085`.
+- `risk_adapter_v21` still improves over `original`, `fixed_s080`,
+  `fixed_s085`, and `risk_adapter_v2`.
+- `fixed_s085` and `windlevel_s085` both use 0.85-like scaling but through
+  different execution paths; `windlevel_s085` is topic-based and must be
+  treated separately.
+- Trial 6 remains a bottleneck for `risk_adapter_v1` and
+  `risk_adapter_v21`.
 - Do not create `risk_adapter_v22` or another new method variant before
-  Stage 4-X2 is complete.
-- Do not claim `risk_adapter_v21` beats all single-goal baselines until
-  Stage 4-X2 is complete.
-- After Stage 4-X2, regenerate protocol-split paper assets and decide whether
-  `risk_adapter_v21` remains strongest in the completed single-goal protocol.
+  updating protocol-split paper assets and failure analysis.
+- Do not claim `risk_adapter_v21` beats all single-goal baselines.
+- Next step: regenerate protocol-split paper assets with completed
+  single-goal and corrected goal-reissue stress tables.
 
 Earlier Stage 4-H limited-repeat results:
 

@@ -5,8 +5,8 @@
 Stage 4-V4 expanded `risk_adapter_v21` under the single-goal mission protocol.
 
 `risk_adapter_v21` achieved `25/30` strict-valid runs across strong-wind Trial
-4, Trial 5, and Trial 6 repeat1-10. It is currently the strongest method among
-the evaluated single-goal methods, exceeding both `fixed_s080` and
+4, Trial 5, and Trial 6 repeat1-10. At Stage 4-V4 it was the strongest method
+among the then-evaluated single-goal methods, exceeding both `fixed_s080` and
 `risk_adapter_v2`, which each achieved `21/30` in Stage 4-U2.
 
 This is a meaningful improvement in the current 30-run single-goal benchmark,
@@ -18,6 +18,12 @@ Stage 4-X1 later evaluated `risk_adapter_v21` under the goal-reissue stress
 protocol and recorded a corrected `20/30` result. That is below `fixed_s080`
 (`24/30`) and `risk_adapter_v1` (`23/30`) under stress, so this single-goal
 result should not be read as a cross-protocol final win.
+
+Stage 4-X2 later completed the missing single-goal baselines. In the completed
+single-goal comparison, `windlevel_s085` achieved `26/30`, while
+`risk_adapter_v1` and `risk_adapter_v21` each achieved `25/30`. Therefore this
+Stage 4-V4 result remains competitive but should no longer be described as the
+best completed single-goal aggregate.
 
 ## Protocol
 
@@ -31,7 +37,7 @@ result should not be read as a cross-protocol final win.
 
 ## Method Comparison Table
 
-Current single-goal mission protocol comparison:
+Stage 4-V4 single-goal mission protocol comparison at the time:
 
 | Method | Strict-valid count | Repeat count |
 | --- | ---: | ---: |
@@ -43,6 +49,22 @@ Current single-goal mission protocol comparison:
 `risk_adapter_v2` by 4 strict-valid runs in this 30-run single-goal benchmark.
 This comparison does not yet include `original`, `fixed_s085`,
 `windlevel_s085`, or `risk_adapter_v1` under `goal_repeat=1`.
+
+Stage 4-X2 completed those missing baselines and supersedes the "current"
+comparison scope:
+
+| Method | Strict-valid count | Repeat count |
+| --- | ---: | ---: |
+| `original` | `21` | `30` |
+| `fixed_s085` | `22` | `30` |
+| `windlevel_s085` | `26` | `30` |
+| `fixed_s080` | `21` | `30` |
+| `risk_adapter_v1` | `25` | `30` |
+| `risk_adapter_v2` | `21` | `30` |
+| `risk_adapter_v21` | `25` | `30` |
+
+After Stage 4-X2, `risk_adapter_v21` is tied with `risk_adapter_v1` and is one
+strict-valid run below `windlevel_s085` in the completed single-goal aggregate.
 
 ## Per-Trial Table
 
@@ -182,17 +204,19 @@ stress comparison: `fixed_s080` `24/30`, `risk_adapter_v1` `23/30`, and
 Stage 4-X0 in
 `experiments/protocols/stage4x_final_evaluation_spec.md` defines the final
 completion matrix before any new `risk_adapter_v21.1` or `risk_adapter_v22`
-variant is created. Stage 4-X1 completes the goal-reissue stress cell; the
-remaining completion work is the missing single-goal baselines.
+variant is created. Stage 4-X1 completed the goal-reissue stress cell, and
+Stage 4-X2 completed the missing single-goal baselines.
 
 ## Research Decision
 
-- Treat `risk_adapter_v21` as the current strongest evaluated single-goal
-  method.
+- Treat `risk_adapter_v21` as a competitive single-goal method tied with
+  `risk_adapter_v1`, not as the completed single-goal winner.
+- Treat `windlevel_s085` as the strongest completed single-goal aggregate
+  method at `26/30`.
 - Treat Stage 4-X1 as evidence that `risk_adapter_v21` is not the strongest
   goal-reissue stress method.
-- Before further tuning, complete the remaining Stage 4-X0 single-goal
-  baseline matrix.
+- Before further tuning, update the protocol-split paper assets and perform
+  failure analysis.
 - Keep the goal-reissue stress protocol as a separate benchmark.
 
 ## What Not To Claim
@@ -200,12 +224,14 @@ remaining completion work is the missing single-goal baselines.
 - Do not claim statistical significance from the current counts.
 - Do not claim a safety guarantee.
 - Do not claim `risk_adapter_v21` solves Trial 6.
+- Do not claim `risk_adapter_v21` is the best single-goal method.
 - Do not claim `risk_adapter_v21` beats all baselines under the single-goal
-  protocol until the missing single-goal baselines are evaluated.
+  protocol.
 - Do not claim `risk_adapter_v21` is best under goal-reissue stress.
 - Do not claim `risk_adapter_v21` is a cross-protocol final winner.
+- Do not claim learned methods uniformly dominate heuristic or fixed baselines.
 - Do not mix `goal_repeat=1` and `goal_repeat=10` results without protocol
   labels.
 - Do not claim diagnostic labels are perfect root-cause proof.
-- Do not create a new `risk_adapter_v21.1` or `risk_adapter_v22` variant until
-  the Stage 4-X0 completion matrix is done.
+- Do not create a new `risk_adapter_v21.1` or `risk_adapter_v22` variant before
+  updating paper assets and completing failure analysis.

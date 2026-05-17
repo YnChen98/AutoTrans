@@ -27,13 +27,18 @@ single-goal mission result from repeated-goal stress results such as
 Stage 4-V4 provides protocol-labeled `risk_adapter_v21` evidence under the
 single-goal mission protocol. Stage 4-X1 adds the corrected
 `risk_adapter_v21` goal-reissue stress result after fixing the duplicate CSV
-issue in Trial 4 repeat2-5. Future Results should report:
+issue in Trial 4 repeat2-5. Stage 4-X2 completes the missing single-goal
+baselines. Future Results should report:
 
 | Protocol | Method | Strict-valid count |
 | --- | --- | ---: |
+| single-goal mission, `goal_repeat=1` | `windlevel_s085` | `26/30` |
+| single-goal mission, `goal_repeat=1` | `risk_adapter_v1` | `25/30` |
+| single-goal mission, `goal_repeat=1` | `risk_adapter_v21` | `25/30` |
+| single-goal mission, `goal_repeat=1` | `fixed_s085` | `22/30` |
+| single-goal mission, `goal_repeat=1` | `original` | `21/30` |
 | single-goal mission, `goal_repeat=1` | `fixed_s080` | `21/30` |
 | single-goal mission, `goal_repeat=1` | `risk_adapter_v2` | `21/30` |
-| single-goal mission, `goal_repeat=1` | `risk_adapter_v21` | `25/30` |
 | goal-reissue stress, `goal_repeat=10` | `fixed_s080` | `24/30` |
 | goal-reissue stress, `goal_repeat=10` | `risk_adapter_v1` | `23/30` |
 | goal-reissue stress, `goal_repeat=10` | `risk_adapter_v21` | `20/30` |
@@ -42,11 +47,12 @@ issue in Trial 4 repeat2-5. Future Results should report:
 | goal-reissue stress, `goal_repeat=10` | `windlevel_s085` | `16/30` |
 
 Older wording that treated `risk_adapter_v2.1` as unevaluated is superseded.
-The Results narrative should describe `risk_adapter_v21` as the current
-strongest method among the currently evaluated single-goal methods, while
-stating that `fixed_s080` remains the strongest evaluated goal-reissue stress
-method. `risk_adapter_v21` should not be described as a cross-protocol final
-winner.
+The Results narrative should describe `windlevel_s085` as the strongest
+completed single-goal method at `26/30`, with `risk_adapter_v1` and
+`risk_adapter_v21` tied at `25/30`. It should state that `fixed_s080` remains
+the strongest evaluated goal-reissue stress method. `risk_adapter_v21` should
+not be described as the best single-goal method, as beating all baselines, or
+as a cross-protocol final winner.
 
 ## Chinese logic explanation
 
@@ -64,17 +70,24 @@ winner.
 - Current Stage 4-J/4-R results are repeated-goal protocol results and should be labeled separately from future single-goal mission results.
 - Stage 4-U provides diagnostic single-goal screening evidence: `risk_adapter_v2` `9/9` and `fixed_s080` `6/9` under `goal_repeat=1`.
 - Stage 4-U2 provides the `fixed_s080` and `risk_adapter_v2` single-goal 10-repeat baseline comparison: `risk_adapter_v2` `21/30` and `fixed_s080` `21/30` under `goal_repeat=1`.
-- Stage 4-V4 provides the current strongest evaluated single-goal result:
+- Stage 4-V4 provides the `risk_adapter_v21` single-goal result:
   `risk_adapter_v21` `25/30` under `goal_repeat=1`.
+- Stage 4-X2 provides the completed single-goal baseline comparison:
+  `windlevel_s085` `26/30`, `risk_adapter_v1` `25/30`,
+  `risk_adapter_v21` `25/30`, `fixed_s085` `22/30`, and `original`,
+  `fixed_s080`, and `risk_adapter_v2` each `21/30`.
 - Stage 4-X1 provides the corrected `risk_adapter_v21` goal-reissue stress
   result: `20/30` under `goal_repeat=10`.
-- Future Results should separate single-goal mission results (`fixed_s080`
-  `21/30`, `risk_adapter_v2` `21/30`, `risk_adapter_v21` `25/30`) from
-  goal-reissue stress results (`fixed_s080` `24/30`, `risk_adapter_v1`
-  `23/30`, `risk_adapter_v21` `20/30`, `original` `18/30`, `fixed_s085`
-  `18/30`, `windlevel_s085` `16/30`).
-- `risk_adapter_v21` can be described as the current strongest method among
-  the evaluated single-goal methods.
+- Future Results should separate completed single-goal mission results
+  (`windlevel_s085` `26/30`, `risk_adapter_v1` `25/30`,
+  `risk_adapter_v21` `25/30`) from goal-reissue stress results
+  (`fixed_s080` `24/30`, `risk_adapter_v1` `23/30`,
+  `risk_adapter_v21` `20/30`).
+- `risk_adapter_v21` can be described as competitive with `risk_adapter_v1`
+  and improved over `original`, `fixed_s080`, `fixed_s085`, and
+  `risk_adapter_v2` in the completed single-goal aggregate.
+- `windlevel_s085` is the strongest completed single-goal aggregate method and
+  should be treated as a strong heuristic baseline.
 - `fixed_s080` remains the strongest evaluated goal-reissue stress method.
 
 ## Claims to avoid
@@ -90,6 +103,9 @@ winner.
 - Do not claim risk_adapter_v2 dominates fixed_s080 after Stage 4-U2; they match in aggregate under the single-goal protocol.
 - Do not claim statistical significance or a safety guarantee for `risk_adapter_v21`.
 - Do not claim `risk_adapter_v21` solves Trial 6; it achieved `6/10` on Trial 6 while `fixed_s080` achieved `8/10`.
+- Do not claim `risk_adapter_v21` is the best single-goal method.
+- Do not claim `risk_adapter_v21` beats all baselines.
+- Do not claim learned governors dominate simple heuristic baselines.
 - Do not claim `risk_adapter_v21` is best under goal-reissue stress; it
   achieved `20/30`, below `fixed_s080` `24/30` and `risk_adapter_v1` `23/30`.
 - Do not claim `risk_adapter_v21` is a cross-protocol final winner.
@@ -103,4 +119,7 @@ winner.
 - Stage 4-V4 supersedes older wording that treated `risk_adapter_v2.1` as a design-only method without evaluation.
 - Stage 4-X1 supersedes any uncorrected `risk_adapter_v21` goal-reissue stress
   result affected by the duplicate CSV issue.
+- Stage 4-X2 supersedes wording that described `risk_adapter_v21` as the
+  strongest single-goal method before `original`, `fixed_s085`,
+  `windlevel_s085`, and `risk_adapter_v1` were added under `goal_repeat=1`.
 - This is a Results draft for manuscript development, not a final manuscript section.
