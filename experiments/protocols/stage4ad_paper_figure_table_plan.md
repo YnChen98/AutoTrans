@@ -5,6 +5,10 @@
 Stage 4-AD freezes the paper figure and table plan for the reframed Stage 4
 paper before drafting the main Results section.
 
+Stage 4-AE builds on this plan by creating the paper outline and section
+skeleton:
+`experiments/protocols/stage4ae_paper_outline_section_skeleton.md`.
+
 The paper should use four evidence layers:
 
 - protocol-split strict-valid success counts
@@ -286,3 +290,8 @@ The outline should center `risk_adapter_v1` as the balanced learned /
 risk-conditioned governor, present `windlevel_s085` and `fixed_s080` as strong
 protocol specialists, and keep `risk_adapter_v21` as a strong nominal variant
 / ablation.
+
+Stage 4-AE is now recorded in
+`experiments/protocols/stage4ae_paper_outline_section_skeleton.md`, and the
+next writing step after AE is Stage 4-AF: paper Abstract and Introduction
+draft.

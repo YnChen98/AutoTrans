@@ -17,6 +17,8 @@ risk-conditioned protagonist: it has the best mean valid count (`24.0/30`),
 best worst-protocol valid count (`23/30`), and lowest total regret (`2`).
 Stage 4-AD follows this balanced-governor framing and freezes the main paper
 figure/table placement before Stage 4-AE paper outline drafting.
+Stage 4-AE formalizes the reframed paper skeleton for an IROS/ICRA/RA-L style
+system-method paper.
 
 The tentative paper protagonist should be `risk_adapter_v1` as the most
 balanced learned / risk-conditioned execution governor among the current
@@ -115,8 +117,8 @@ protocol-specialist baselines are strong.
   completed paper assets for mean performance, worst-protocol performance, and
   total regret relative to the protocol oracle.
 - Next step:
-  Stage 4-AE paper outline / section skeleton, using the Stage 4-AD
-  figure/table plan.
+  Stage 4-AF paper Abstract and Introduction draft, using the Stage 4-AE
+  outline skeleton.
 - Do not create `risk_adapter_v22` yet.
 
 ## Decision Rule For v22
@@ -151,3 +153,6 @@ The Stage 4-AC2 result is recorded in
 
 Stage 4-AD paper figure/table planning is recorded in
 `experiments/protocols/stage4ad_paper_figure_table_plan.md`.
+
+Stage 4-AE paper outline and section skeleton is recorded in
+`experiments/protocols/stage4ae_paper_outline_section_skeleton.md`.

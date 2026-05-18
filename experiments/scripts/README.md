@@ -1077,8 +1077,22 @@ presents `windlevel_s085` and `fixed_s080` as protocol specialists, and keeps
 `risk_adapter_v21` as a strong nominal / single-goal variant rather than the
 final method.
 
-The next writing step is Stage 4-AE paper outline / section skeleton. Do not
-create `risk_adapter_v22` yet.
+Stage 4-AE now records the paper outline / section skeleton. The next writing
+step is Stage 4-AF paper Abstract and Introduction draft. Do not create
+`risk_adapter_v22` yet.
+
+## Stage 4-AE paper outline section skeleton
+
+`experiments/protocols/stage4ae_paper_outline_section_skeleton.md` records the
+paper-level outline for the reframed IROS/ICRA/RA-L style paper.
+
+It defines candidate titles, the core thesis, a draft abstract skeleton,
+Introduction and Related Work structure, Method and Experimental Setup
+sections, Results paragraphs aligned to the Stage 4-AD figure plan, Discussion
+and Limitations sections, an Appendix plan, and a claim audit table.
+
+The next writing step is Stage 4-AF paper Abstract and Introduction draft. Do
+not create `risk_adapter_v22` yet.
 
 ## Stage 4-AB paper reframing decision
 
@@ -1097,7 +1111,7 @@ worst-protocol count, and total regret relative to the protocol oracle. The
 Stage 4-AA3 representative trace review did not justify immediate
 `risk_adapter_v22`; Stage 4-AC2 now records the balanced robustness / protocol
 regret result. Stage 4-AD now freezes the figure/table plan, and the next step
-is Stage 4-AE paper outline / section skeleton.
+after Stage 4-AE is Stage 4-AF paper Abstract and Introduction draft.
 
 ## Stage 4-X0 final evaluation specification
 

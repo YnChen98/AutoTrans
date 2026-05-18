@@ -699,7 +699,8 @@ Stage 4-AC balanced robustness assets:
 - Stage 4-AD freezes the paper figure/table plan using protocol-split
   success, balanced robustness / protocol regret, invalid-only failure groups,
   and representative trace case studies.
-- Next step: Stage 4-AE paper outline / section skeleton.
+- Stage 4-AE paper outline / section skeleton is complete.
+- Next step: Stage 4-AF paper Abstract and Introduction draft.
 
 Stage 4-AD paper figure/table plan:
 
@@ -717,7 +718,24 @@ Stage 4-AD paper figure/table plan:
   figure, protocol split diagram, Pareto plot, protocol regret bar chart,
   invalid-only failure group stacked bar, and representative trace case study.
 - Do not create `risk_adapter_v22` yet.
-- Next step: Stage 4-AE paper outline / section skeleton.
+- Stage 4-AE paper outline / section skeleton is complete.
+- Next step: Stage 4-AF paper Abstract and Introduction draft.
+
+Stage 4-AE paper outline / section skeleton:
+
+- The outline document is
+  `experiments/protocols/stage4ae_paper_outline_section_skeleton.md`.
+- Target style: IROS/ICRA/RA-L system-method paper.
+- The skeleton defines candidate titles, core thesis, draft abstract,
+  Introduction structure, contribution bullets, Related Work, Method,
+  Experimental Setup, Results, Discussion, Limitations, Appendix plan, and a
+  claim audit table.
+- Paper protagonist remains `risk_adapter_v1` as the tentative balanced
+  learned / risk-conditioned governor.
+- `risk_adapter_v21` remains an ablation / strong nominal variant, not the
+  final method.
+- Do not create `risk_adapter_v22` yet.
+- Next step after AE: Stage 4-AF paper Abstract and Introduction draft.
 
 Stage 4-AB paper reframing decision:
 
@@ -735,7 +753,8 @@ Stage 4-AB paper reframing decision:
   the protocol oracle: `(26 - 25) + (24 - 23) = 2`.
 - Stage 4-AD now freezes the paper figure/table plan that follows this
   balanced-governor framing.
-- Next step: Stage 4-AE paper outline / section skeleton.
+- Stage 4-AE now formalizes the paper outline and section skeleton.
+- Next step: Stage 4-AF paper Abstract and Introduction draft.
 - Do not create `risk_adapter_v22` yet.
 - Only consider `risk_adapter_v22` if later evidence shows a generic
   phase-aware, failure-aware, risk-health-aware, reference /

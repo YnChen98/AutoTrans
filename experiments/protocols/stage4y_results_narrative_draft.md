@@ -29,6 +29,10 @@ Stage 4-AD supersedes earlier informal figure thinking with a frozen main
 paper figure/table plan:
 `experiments/protocols/stage4ad_paper_figure_table_plan.md`.
 
+Stage 4-AE supersedes the earlier narrative fragments as the paper-level
+outline and section skeleton:
+`experiments/protocols/stage4ae_paper_outline_section_skeleton.md`.
+
 ## Paper-Ready Results Subsection
 
 We evaluated command-adaptation strategies under two protocol-labeled
@@ -119,6 +123,8 @@ Do not frame the paper as:
 - Use the Stage 4-AD paper figure/table plan as the placement guide for the
   main Results and Failure Analysis figures:
   `experiments/protocols/stage4ad_paper_figure_table_plan.md`.
+- Use the Stage 4-AE paper outline as the current section-level writing guide:
+  `experiments/protocols/stage4ae_paper_outline_section_skeleton.md`.
 - Update the Results narrative around balanced robustness, protocol regret,
   Pareto frontier, and failure-mode-aware diagnosis using the Stage 4-AD
   figure/table placement.
