@@ -8,6 +8,9 @@ paper before drafting the main Results section.
 Stage 4-AE builds on this plan by creating the paper outline and section
 skeleton:
 `experiments/protocols/stage4ae_paper_outline_section_skeleton.md`.
+Stage 4-AF now drafts the Abstract and Introduction, and the figures/tables in
+this plan should support those AF claims:
+`experiments/protocols/stage4af_abstract_introduction_draft.md`.
 
 The paper should use four evidence layers:
 
@@ -276,9 +279,9 @@ Short captions to carry forward:
 
 ## Next Writing Step
 
-Recommended Stage 4-AE: paper outline / section skeleton.
+Stage 4-AE recorded the paper outline / section skeleton.
 
-Stage 4-AE should draft:
+Stage 4-AE drafted:
 
 - abstract claim
 - intro contribution bullets
@@ -291,7 +294,9 @@ risk-conditioned governor, present `windlevel_s085` and `fixed_s080` as strong
 protocol specialists, and keep `risk_adapter_v21` as a strong nominal variant
 / ablation.
 
-Stage 4-AE is now recorded in
-`experiments/protocols/stage4ae_paper_outline_section_skeleton.md`, and the
-next writing step after AE is Stage 4-AF: paper Abstract and Introduction
-draft.
+Stage 4-AE is recorded in
+`experiments/protocols/stage4ae_paper_outline_section_skeleton.md`, and Stage
+4-AF is recorded in
+`experiments/protocols/stage4af_abstract_introduction_draft.md`. The next
+writing step after AF is Stage 4-AG Method section draft or Stage 4-AH Results
+section draft.

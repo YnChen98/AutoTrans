@@ -5,6 +5,9 @@
 This document is the current paper-level outline after Stage 4-AD froze the
 main figure/table plan.
 
+Stage 4-AF now provides the current Abstract and Introduction draft:
+`experiments/protocols/stage4af_abstract_introduction_draft.md`.
+
 Target style: IROS/ICRA/RA-L system-method paper. The paper should read as a
 robotics system and method contribution, not as a raw experiment log or a
 single-variant tuning story.
@@ -16,6 +19,9 @@ an ablation or strong nominal / single-goal variant, not as the final method.
 No `risk_adapter_v22` should be created before the paper skeleton, abstract,
 Introduction, and claim audit are written and reviewed. The current evidence
 supports a balanced-governor paper, not another trial-specific policy patch.
+Replace broad "deployment robustness" wording with "balanced robustness",
+"protocol-level robustness", or "evaluated robustness under the tested
+protocols" where appropriate.
 
 ## Candidate Titles
 
@@ -36,14 +42,15 @@ supports a balanced-governor paper, not another trial-specific policy patch.
 
 Suspended-payload UAV transport under strong wind is sensitive to execution
 aggressiveness and to the mission protocol used during evaluation. This paper
-shows that a drop-in execution governor can improve deployment robustness by
-adapting speed and acceleration commands without rewriting the planner, MPC, or
-low-level controller. Strong heuristic/static baselines specialize to different
-protocols: `windlevel_s085` is strongest in the single-goal mission protocol,
-whereas `fixed_s080` is strongest in the goal-reissue stress protocol. Among
-the currently evaluated learned / risk-conditioned methods, `risk_adapter_v1`
-provides the best balanced robustness, while failure-mode analysis explains why
-no single method uniformly dominates all protocols.
+shows that a drop-in execution governor can improve balanced protocol-level
+robustness by adapting speed and acceleration commands without rewriting the
+planner, MPC, or low-level controller. Strong heuristic/static baselines
+specialize to different protocols: `windlevel_s085` is strongest in the
+single-goal mission protocol, whereas `fixed_s080` is strongest in the
+goal-reissue stress protocol. Among the currently evaluated learned /
+risk-conditioned methods, `risk_adapter_v1` provides the best balanced
+robustness, while failure-mode analysis explains why no single method
+uniformly dominates all protocols.
 
 ## Abstract Skeleton
 
@@ -83,9 +90,9 @@ behavior.
 
 Paragraph 2: limitation of only improving planner/controller. Payload-aware
 planning and MPC can produce feasible references and stabilize the vehicle-load
-system, but deployment robustness also depends on how aggressively the planned
-motion is executed at runtime. A fixed execution policy can be too aggressive
-in some wind/task phases and too conservative in others.
+system, but protocol-level robustness also depends on how aggressively the
+planned motion is executed at runtime. A fixed execution policy can be too
+aggressive in some wind/task phases and too conservative in others.
 
 Paragraph 3: execution aggressiveness as runtime governance. This paper treats
 speed and acceleration scaling as an execution-governance problem. A governor
@@ -406,8 +413,8 @@ Suggested appendix grouping:
 
 ## Next Writing Step
 
-Recommended Stage 4-AF: paper Abstract and Introduction draft.
+Stage 4-AF now records the current paper Abstract and Introduction draft.
 
-Stage 4-AF should turn this skeleton into a concise abstract and a full
-Introduction draft with contribution bullets. It should not recommend new
-simulation or `risk_adapter_v22` yet.
+Next recommended writing step: Stage 4-AG Method section draft or Stage 4-AH
+Results section draft. Do not recommend new simulation or `risk_adapter_v22`
+yet.

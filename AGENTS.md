@@ -700,7 +700,9 @@ Stage 4-AC balanced robustness assets:
   success, balanced robustness / protocol regret, invalid-only failure groups,
   and representative trace case studies.
 - Stage 4-AE paper outline / section skeleton is complete.
-- Next step: Stage 4-AF paper Abstract and Introduction draft.
+- Stage 4-AF paper Abstract and Introduction draft is complete.
+- Next step: Stage 4-AG Method section draft or Stage 4-AH Results section
+  draft.
 
 Stage 4-AD paper figure/table plan:
 
@@ -719,7 +721,9 @@ Stage 4-AD paper figure/table plan:
   invalid-only failure group stacked bar, and representative trace case study.
 - Do not create `risk_adapter_v22` yet.
 - Stage 4-AE paper outline / section skeleton is complete.
-- Next step: Stage 4-AF paper Abstract and Introduction draft.
+- Stage 4-AF paper Abstract and Introduction draft is complete.
+- Next step: Stage 4-AG Method section draft or Stage 4-AH Results section
+  draft.
 
 Stage 4-AE paper outline / section skeleton:
 
@@ -735,7 +739,28 @@ Stage 4-AE paper outline / section skeleton:
 - `risk_adapter_v21` remains an ablation / strong nominal variant, not the
   final method.
 - Do not create `risk_adapter_v22` yet.
-- Next step after AE: Stage 4-AF paper Abstract and Introduction draft.
+- Stage 4-AF paper Abstract and Introduction draft is complete.
+- Next step after AF: Stage 4-AG Method section draft or Stage 4-AH Results
+  section draft.
+
+Stage 4-AF paper Abstract and Introduction draft:
+
+- The draft document is
+  `experiments/protocols/stage4af_abstract_introduction_draft.md`.
+- It follows the Stage 4-AE skeleton and writes the current paper Abstract,
+  six-paragraph Introduction, contribution bullets, and claim audit for
+  Abstract/Introduction wording.
+- Use bounded wording: balanced robustness, protocol-level robustness, or
+  evaluated robustness under the tested protocols.
+- Avoid broad "deployment robustness", statistical significance, safety
+  guarantee, learned uniform domination, and `risk_adapter_v21` final-method
+  claims.
+- Paper protagonist remains `risk_adapter_v1` as the tentative balanced
+  learned / risk-conditioned governor.
+- `risk_adapter_v21` remains a nominal / single-goal variant or ablation.
+- Do not create `risk_adapter_v22` yet.
+- Next step after AF: Stage 4-AG Method section draft or Stage 4-AH Results
+  section draft.
 
 Stage 4-AB paper reframing decision:
 
@@ -754,7 +779,9 @@ Stage 4-AB paper reframing decision:
 - Stage 4-AD now freezes the paper figure/table plan that follows this
   balanced-governor framing.
 - Stage 4-AE now formalizes the paper outline and section skeleton.
-- Next step: Stage 4-AF paper Abstract and Introduction draft.
+- Stage 4-AF now records the paper Abstract and Introduction draft.
+- Next step: Stage 4-AG Method section draft or Stage 4-AH Results section
+  draft.
 - Do not create `risk_adapter_v22` yet.
 - Only consider `risk_adapter_v22` if later evidence shows a generic
   phase-aware, failure-aware, risk-health-aware, reference /

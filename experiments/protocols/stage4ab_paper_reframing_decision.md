@@ -19,6 +19,8 @@ Stage 4-AD follows this balanced-governor framing and freezes the main paper
 figure/table placement before Stage 4-AE paper outline drafting.
 Stage 4-AE formalizes the reframed paper skeleton for an IROS/ICRA/RA-L style
 system-method paper.
+Stage 4-AF operationalizes the balanced-governor narrative in the current
+Abstract and Introduction draft.
 
 The tentative paper protagonist should be `risk_adapter_v1` as the most
 balanced learned / risk-conditioned execution governor among the current
@@ -117,8 +119,8 @@ protocol-specialist baselines are strong.
   completed paper assets for mean performance, worst-protocol performance, and
   total regret relative to the protocol oracle.
 - Next step:
-  Stage 4-AF paper Abstract and Introduction draft, using the Stage 4-AE
-  outline skeleton.
+  Stage 4-AG Method section draft or Stage 4-AH Results section draft, using
+  the Stage 4-AF Abstract and Introduction draft.
 - Do not create `risk_adapter_v22` yet.
 
 ## Decision Rule For v22
@@ -156,3 +158,6 @@ Stage 4-AD paper figure/table planning is recorded in
 
 Stage 4-AE paper outline and section skeleton is recorded in
 `experiments/protocols/stage4ae_paper_outline_section_skeleton.md`.
+
+Stage 4-AF paper Abstract and Introduction draft is recorded in
+`experiments/protocols/stage4af_abstract_introduction_draft.md`.
