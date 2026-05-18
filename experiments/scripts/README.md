@@ -1270,6 +1270,16 @@ formatting fixes were made. The next step is Stage 4-AR manuscript polish /
 layout pass after a LaTeX toolchain is available, or Stage 4-AM5 conditional
 citation verification. Do not create `risk_adapter_v22` yet.
 
+## Stage 4-AQ2 LaTeX compile retry
+
+`experiments/protocols/stage4aq2_latex_compile_retry_result.md` records the
+compile retry after `latexmk`, `pdflatex`, and `bibtex` became available.
+
+The retry still did not produce a PDF because `ieeeconf.cls` is missing from
+the local TeX installation. The manuscript `\documentclass` was not changed;
+the next compile step should add the official target venue class/template or
+run in a matching LaTeX environment. Do not create `risk_adapter_v22` yet.
+
 ## Stage 4-AL final figure generation plan
 
 `experiments/protocols/stage4al_final_figure_generation_plan.md` records the

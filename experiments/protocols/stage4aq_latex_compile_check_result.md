@@ -11,6 +11,12 @@ this environment. Both the preferred `latexmk` command and the fallback
 commands are not installed. No PDF was produced, no auxiliary LaTeX files were
 generated, and no manuscript-formatting fixes were required in this pass.
 
+Stage 4-AQ2 retried the compile after LaTeX executable availability improved.
+The retry found `latexmk`, `pdflatex`, and `bibtex`, but compilation still
+failed because `ieeeconf.cls` is missing. Per the retry instructions, the
+document class was not changed:
+`experiments/protocols/stage4aq2_latex_compile_retry_result.md`.
+
 This is the first compile/check pass, not final manuscript formatting.
 
 ## Commands Run

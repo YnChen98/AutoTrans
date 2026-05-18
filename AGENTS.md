@@ -1077,6 +1077,24 @@ Stage 4-AQ LaTeX compile/check pass:
   LaTeX toolchain is available, or Stage 4-AM5 conditional citation
   verification.
 
+Stage 4-AQ2 LaTeX compile retry:
+
+- The retry result document is
+  `experiments/protocols/stage4aq2_latex_compile_retry_result.md`.
+- `latexmk`, `pdflatex`, and `bibtex` are now available.
+- `kpsewhich IEEEtran.cls` finds `IEEEtran.cls`, but `kpsewhich ieeeconf.cls`
+  does not find `ieeeconf.cls`.
+- The preferred compile command
+  `latexmk -pdf -interaction=nonstopmode main.tex` fails because
+  `ieeeconf.cls` is missing.
+- Per task instruction, the manuscript `\documentclass` was not changed.
+- No PDF is produced, and transient LaTeX aux/log files were removed before
+  commit.
+- Continue: do not create `risk_adapter_v22`.
+- Next step after AQ2: Stage 4-AR manuscript polish / layout pass after adding
+  the official venue class/template, or Stage 4-AM5 conditional citation
+  verification.
+
 Stage 4-AL final figure generation plan:
 
 - The plan document is
