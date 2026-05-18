@@ -11,6 +11,9 @@ skeleton:
 Stage 4-AF now drafts the Abstract and Introduction, and the figures/tables in
 this plan should support those AF claims:
 `experiments/protocols/stage4af_abstract_introduction_draft.md`.
+Stage 4-AG now drafts the Method section; Figure 1 should follow the AG method
+description and caption:
+`experiments/protocols/stage4ag_method_section_draft.md`.
 
 The paper should use four evidence layers:
 
@@ -295,8 +298,9 @@ protocol specialists, and keep `risk_adapter_v21` as a strong nominal variant
 / ablation.
 
 Stage 4-AE is recorded in
-`experiments/protocols/stage4ae_paper_outline_section_skeleton.md`, and Stage
-4-AF is recorded in
-`experiments/protocols/stage4af_abstract_introduction_draft.md`. The next
-writing step after AF is Stage 4-AG Method section draft or Stage 4-AH Results
-section draft.
+`experiments/protocols/stage4ae_paper_outline_section_skeleton.md`, Stage 4-AF
+is recorded in
+`experiments/protocols/stage4af_abstract_introduction_draft.md`, and Stage
+4-AG is recorded in
+`experiments/protocols/stage4ag_method_section_draft.md`. The next writing
+step after AG is Stage 4-AH Results section draft.

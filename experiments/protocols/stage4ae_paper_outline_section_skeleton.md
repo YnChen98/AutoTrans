@@ -7,6 +7,9 @@ main figure/table plan.
 
 Stage 4-AF now provides the current Abstract and Introduction draft:
 `experiments/protocols/stage4af_abstract_introduction_draft.md`.
+Stage 4-AG now expands the Method skeleton into the current Method section
+draft:
+`experiments/protocols/stage4ag_method_section_draft.md`.
 
 Target style: IROS/ICRA/RA-L system-method paper. The paper should read as a
 robotics system and method contribution, not as a raw experiment log or a
@@ -413,8 +416,8 @@ Suggested appendix grouping:
 
 ## Next Writing Step
 
-Stage 4-AF now records the current paper Abstract and Introduction draft.
+Stage 4-AF records the current paper Abstract and Introduction draft. Stage
+4-AG records the current Method section draft.
 
-Next recommended writing step: Stage 4-AG Method section draft or Stage 4-AH
-Results section draft. Do not recommend new simulation or `risk_adapter_v22`
-yet.
+Next recommended writing step: Stage 4-AH Results section draft. Do not
+recommend new simulation or `risk_adapter_v22` yet.

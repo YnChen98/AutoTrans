@@ -7,6 +7,8 @@ Stage 4 paper.
 
 It follows the Stage 4-AE paper outline / section skeleton:
 `experiments/protocols/stage4ae_paper_outline_section_skeleton.md`.
+Stage 4-AG now provides the current Method section draft:
+`experiments/protocols/stage4ag_method_section_draft.md`.
 
 `risk_adapter_v1` remains the current tentative balanced learned /
 risk-conditioned protagonist. `risk_adapter_v21` remains a nominal /
@@ -15,6 +17,9 @@ single-goal variant or ablation, not the final method.
 The wording is intentionally bounded: the paper should claim balanced or
 protocol-level robustness under the tested protocols, not broad real-world
 robustness, statistical significance, or a formal safety guarantee.
+
+Title and framing language should continue to prefer "balanced robustness" or
+"protocol-level robustness" over broader robustness wording.
 
 ## Candidate Final Title
 

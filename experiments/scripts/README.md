@@ -1077,10 +1077,10 @@ presents `windlevel_s085` and `fixed_s080` as protocol specialists, and keeps
 `risk_adapter_v21` as a strong nominal / single-goal variant rather than the
 final method.
 
-Stage 4-AE records the paper outline / section skeleton, and Stage 4-AF now
-records the paper Abstract and Introduction draft. The next writing step is
-Stage 4-AG Method section draft or Stage 4-AH Results section draft. Do not
-create `risk_adapter_v22` yet.
+Stage 4-AE records the paper outline / section skeleton, Stage 4-AF records
+the paper Abstract and Introduction draft, and Stage 4-AG records the Method
+section draft. The next writing step is Stage 4-AH Results section draft. Do
+not create `risk_adapter_v22` yet.
 
 ## Stage 4-AE paper outline section skeleton
 
@@ -1092,9 +1092,9 @@ Introduction and Related Work structure, Method and Experimental Setup
 sections, Results paragraphs aligned to the Stage 4-AD figure plan, Discussion
 and Limitations sections, an Appendix plan, and a claim audit table.
 
-Stage 4-AF now records the paper Abstract and Introduction draft. The next
-writing step is Stage 4-AG Method section draft or Stage 4-AH Results section
-draft. Do not create `risk_adapter_v22` yet.
+Stage 4-AF records the paper Abstract and Introduction draft, and Stage 4-AG
+records the Method section draft. The next writing step is Stage 4-AH Results
+section draft. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AF abstract introduction draft
 
@@ -1106,8 +1106,23 @@ risk-conditioned protagonist, keeps `risk_adapter_v21` as a nominal /
 single-goal variant or ablation, and uses bounded wording around
 balanced/protocol-level robustness under the tested protocols.
 
-The next writing step after AF is Stage 4-AG Method section draft or Stage
-4-AH Results section draft. Do not create `risk_adapter_v22` yet.
+Stage 4-AG now records the Method section draft. The next writing step is
+Stage 4-AH Results section draft. Do not create `risk_adapter_v22` yet.
+
+## Stage 4-AG method section draft
+
+`experiments/protocols/stage4ag_method_section_draft.md` records the current
+paper Method section draft.
+
+The draft presents a stack-compatible execution governor that publishes
+`speed_scale` and `acceleration_scale` through the command-adaptation
+interface while keeping the planner, payload MPC, and SO3 controller
+unchanged. It centers `risk_adapter_v1` as the balanced learned /
+risk-conditioned protagonist and treats `risk_adapter_v21` as a strong
+nominal / single-goal variant or ablation.
+
+The next writing step after AG is Stage 4-AH Results section draft. Do not
+create `risk_adapter_v22` yet.
 
 ## Stage 4-AB paper reframing decision
 
@@ -1126,8 +1141,7 @@ worst-protocol count, and total regret relative to the protocol oracle. The
 Stage 4-AA3 representative trace review did not justify immediate
 `risk_adapter_v22`; Stage 4-AC2 now records the balanced robustness / protocol
 regret result. Stage 4-AD now freezes the figure/table plan, and the next step
-after Stage 4-AF is Stage 4-AG Method section draft or Stage 4-AH Results
-section draft.
+after Stage 4-AG is Stage 4-AH Results section draft.
 
 ## Stage 4-X0 final evaluation specification
 

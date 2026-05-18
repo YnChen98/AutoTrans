@@ -701,8 +701,8 @@ Stage 4-AC balanced robustness assets:
   and representative trace case studies.
 - Stage 4-AE paper outline / section skeleton is complete.
 - Stage 4-AF paper Abstract and Introduction draft is complete.
-- Next step: Stage 4-AG Method section draft or Stage 4-AH Results section
-  draft.
+- Stage 4-AG Method section draft is complete.
+- Next step: Stage 4-AH Results section draft.
 
 Stage 4-AD paper figure/table plan:
 
@@ -722,8 +722,8 @@ Stage 4-AD paper figure/table plan:
 - Do not create `risk_adapter_v22` yet.
 - Stage 4-AE paper outline / section skeleton is complete.
 - Stage 4-AF paper Abstract and Introduction draft is complete.
-- Next step: Stage 4-AG Method section draft or Stage 4-AH Results section
-  draft.
+- Stage 4-AG Method section draft is complete.
+- Next step: Stage 4-AH Results section draft.
 
 Stage 4-AE paper outline / section skeleton:
 
@@ -740,8 +740,8 @@ Stage 4-AE paper outline / section skeleton:
   final method.
 - Do not create `risk_adapter_v22` yet.
 - Stage 4-AF paper Abstract and Introduction draft is complete.
-- Next step after AF: Stage 4-AG Method section draft or Stage 4-AH Results
-  section draft.
+- Stage 4-AG Method section draft is complete.
+- Next step after AG: Stage 4-AH Results section draft.
 
 Stage 4-AF paper Abstract and Introduction draft:
 
@@ -759,8 +759,27 @@ Stage 4-AF paper Abstract and Introduction draft:
   learned / risk-conditioned governor.
 - `risk_adapter_v21` remains a nominal / single-goal variant or ablation.
 - Do not create `risk_adapter_v22` yet.
-- Next step after AF: Stage 4-AG Method section draft or Stage 4-AH Results
-  section draft.
+- Stage 4-AG Method section draft is complete.
+- Next step after AG: Stage 4-AH Results section draft.
+
+Stage 4-AG Method section draft:
+
+- The draft document is
+  `experiments/protocols/stage4ag_method_section_draft.md`.
+- It presents the method as a stack-compatible execution governor that uses
+  `speed_scale` and `acceleration_scale` through the command-adaptation
+  interface.
+- It explicitly states that the method does not replace the planner, payload
+  MPC, or SO3 controller.
+- It records `risk_adapter_v1` as the current balanced learned /
+  risk-conditioned protagonist.
+- It treats `risk_adapter_v21` as a strong nominal / single-goal variant or
+  ablation, not the final method.
+- It keeps the claim boundary: empirical governor, no formal safety filter, no
+  safety guarantee, no low-level controller replacement, no learned uniform
+  domination, and no statistical significance claim.
+- Do not create `risk_adapter_v22` yet.
+- Next step after AG: Stage 4-AH Results section draft.
 
 Stage 4-AB paper reframing decision:
 
@@ -780,8 +799,8 @@ Stage 4-AB paper reframing decision:
   balanced-governor framing.
 - Stage 4-AE now formalizes the paper outline and section skeleton.
 - Stage 4-AF now records the paper Abstract and Introduction draft.
-- Next step: Stage 4-AG Method section draft or Stage 4-AH Results section
-  draft.
+- Stage 4-AG now records the Method section draft.
+- Next step: Stage 4-AH Results section draft.
 - Do not create `risk_adapter_v22` yet.
 - Only consider `risk_adapter_v22` if later evidence shows a generic
   phase-aware, failure-aware, risk-health-aware, reference /
