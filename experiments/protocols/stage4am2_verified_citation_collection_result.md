@@ -13,6 +13,9 @@ marked as `TODO` / needs verification before final bibliography insertion.
 Stage 4-AM3 now drafts section-level citation insertion guidance based on these
 keys:
 `experiments/protocols/stage4am3_citation_insertion_draft.md`.
+Stage 4-AM4 now converts verified ready-to-use metadata into a draft BibTeX
+package while keeping conditional entries as verification TODOs:
+`experiments/protocols/stage4am4_bibtex_draft.md`.
 
 The current paper framing remains:
 

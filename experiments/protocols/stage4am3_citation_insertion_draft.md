@@ -12,6 +12,10 @@ Final BibTeX is still pending. Entries with incomplete metadata remain
 conditional and should be used only after the stated metadata checks are
 completed.
 
+Stage 4-AM4 now creates draft BibTeX blocks for ready-to-use AM2 / AM3
+entries while leaving conditional entries as TODOs:
+`experiments/protocols/stage4am4_bibtex_draft.md`.
+
 This stage does not generate BibTeX entries, does not fabricate references,
 and does not insert final citations into the manuscript body. It is a section-
 level guide for later citation insertion and claim audit.

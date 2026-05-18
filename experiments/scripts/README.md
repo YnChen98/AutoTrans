@@ -1225,6 +1225,16 @@ verification" until their AM2 metadata gaps are closed. The next step is Stage
 4-AM4 BibTeX drafting after metadata verification, or Stage 4-AO manuscript
 formatting plan. Do not create `risk_adapter_v22` yet.
 
+## Stage 4-AM4 BibTeX draft
+
+`experiments/protocols/stage4am4_bibtex_draft.md` records the draft BibTeX
+blocks for ready-to-use citation metadata from Stage 4-AM2 / AM3.
+
+This stage does not create or edit manuscript `.tex` or `.bib` files. It keeps
+conditional references as TODO entries until their missing metadata is
+verified. The next step is Stage 4-AO manuscript formatting plan or Stage
+4-AP manuscript source scaffold. Do not create `risk_adapter_v22` yet.
+
 ## Stage 4-AL final figure generation plan
 
 `experiments/protocols/stage4al_final_figure_generation_plan.md` records the

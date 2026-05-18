@@ -14,6 +14,8 @@ slots:
 Stage 4-AM3 now maps the verified and conditional keys into draft manuscript
 sections:
 `experiments/protocols/stage4am3_citation_insertion_draft.md`.
+Stage 4-AM4 is the current draft bibliography package for ready-to-use keys:
+`experiments/protocols/stage4am4_bibtex_draft.md`.
 Stage 4-AL now defines the final figure/table generation plan; final
 citations, figure captions, and paper claims should be checked together:
 `experiments/protocols/stage4al_final_figure_generation_plan.md`.

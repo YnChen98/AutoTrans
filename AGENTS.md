@@ -972,6 +972,7 @@ Stage 4-AM2 verified citation collection result:
 - It does not finalize the bibliography, does not generate BibTeX, and does
   not insert citation keys into manuscript prose.
 - Stage 4-AM3 citation insertion draft is complete.
+- Stage 4-AM4 BibTeX draft / citation key package is complete.
 - Citation groups now covered:
   - suspended-payload UAV transport and control;
   - runtime governors / reference governors / safety filters;
@@ -984,8 +985,8 @@ Stage 4-AM2 verified citation collection result:
   `Monteleone2023BalanceResilienceBenchmark` full author list, and
   `Dogga2023AutoARTS` official URL.
 - Continue: do not create `risk_adapter_v22`.
-- Next step after AM3: Stage 4-AM4 BibTeX drafting after metadata
-  verification or Stage 4-AO manuscript formatting plan.
+- Next step after AM4: Stage 4-AO manuscript formatting plan or Stage 4-AP
+  manuscript source scaffold.
 
 Stage 4-AM3 citation insertion draft:
 
@@ -996,6 +997,8 @@ Stage 4-AM3 citation insertion draft:
 - It separates ready-to-use citation keys, conditional keys requiring metadata
   verification, and internal-result references such as Table 1 and Figures
   1-6.
+- Stage 4-AM4 now converts ready-to-use AM2 / AM3 metadata into draft BibTeX
+  blocks.
 - Conditional keys remain:
   - `Barikbin2019WindPayloadTracking` pending venue/year verification;
   - `Wabersich2021PredictiveSafetyFilter` pending DOI / Automatica metadata;
@@ -1003,8 +1006,23 @@ Stage 4-AM3 citation insertion draft:
   - `Monteleone2023BalanceResilienceBenchmark` pending complete author list;
   - `Dogga2023AutoARTS` pending official USENIX URL.
 - Continue: do not create `risk_adapter_v22`.
-- Next step after AM3: Stage 4-AM4 BibTeX drafting after metadata
-  verification or Stage 4-AO manuscript formatting plan.
+- Next step after AM4: Stage 4-AO manuscript formatting plan or Stage 4-AP
+  manuscript source scaffold.
+
+Stage 4-AM4 BibTeX draft / citation key package:
+
+- The draft document is
+  `experiments/protocols/stage4am4_bibtex_draft.md`.
+- It creates draft BibTeX blocks only for ready-to-use citation metadata from
+  Stage 4-AM2 / AM3.
+- It does not create or edit manuscript `.tex` or `.bib` files.
+- Conditional entries remain TODO-only until metadata verification is complete:
+  `Barikbin2019WindPayloadTracking`, `Wabersich2021PredictiveSafetyFilter`,
+  `Jin2025NeuralPredictorPayload`,
+  `Monteleone2023BalanceResilienceBenchmark`, and `Dogga2023AutoARTS`.
+- Continue: do not create `risk_adapter_v22`.
+- Next step after AM4: Stage 4-AO manuscript formatting plan or Stage 4-AP
+  manuscript source scaffold.
 
 Stage 4-AL final figure generation plan:
 
