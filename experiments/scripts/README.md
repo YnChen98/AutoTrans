@@ -1240,9 +1240,36 @@ the `speed_scale` / `acceleration_scale` command-adaptation interface. Figure
 2 should show the protocol split between the single-goal mission protocol
 (`goal_repeat=1`) and the goal-reissue stress protocol (`goal_repeat=10`).
 
-No schematic image files are created by Stage 4-AN. The next writing step after
-AN is Stage 4-AM2 verified citation collection or Stage 4-AN2 manual schematic
-creation. Do not create `risk_adapter_v22` yet.
+No schematic image files are created by Stage 4-AN. Stage 4-AN2 now implements
+the deterministic schematic generator. The next writing step after AN2 is Stage
+4-AL3 refresh paper figure package or Stage 4-AM2 verified citation collection.
+Do not create `risk_adapter_v22` yet.
+
+## Stage 4-AN2 manual schematic generator
+
+`experiments/scripts/generate_stage4_manual_schematics.py` generates
+paper-ready Figure 1 and Figure 2 schematic PNG/SVG files from the Stage 4-AN
+manual schematic specification.
+
+The script is deterministic and offline. It uses `matplotlib` only, does not
+use ROS, does not run simulation, and does not create new experimental
+evidence. Figure 1 shows the stack-compatible execution-governor architecture
+with `speed_scale` and `acceleration_scale`; Figure 2 shows the protocol split
+between `goal_repeat=1` and `goal_repeat=10`.
+
+Example command:
+
+```bash
+python3 experiments/scripts/generate_stage4_manual_schematics.py \
+  --output-dir experiments/results/stage4_paper_figure_package/main \
+  --print-summary
+```
+
+Generated PNG/SVG/Markdown outputs under
+`experiments/results/stage4_paper_figure_package/main/` must not be committed.
+The next paper-asset step is Stage 4-AL3 refresh paper figure package, or Stage
+4-AM2 verified citation collection in parallel. Do not create
+`risk_adapter_v22` yet.
 
 ## Stage 4-AJ full paper assembly draft
 

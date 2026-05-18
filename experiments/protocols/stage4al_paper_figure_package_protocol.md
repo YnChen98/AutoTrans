@@ -95,6 +95,13 @@ Figure 1 and Figure 2 remain manual / future generated schematics:
 The manual schematic details are specified by Stage 4-AN:
 `experiments/protocols/stage4an_manual_schematic_spec.md`.
 
+Stage 4-AN2 can generate Figure 1 and Figure 2 PNG/SVG schematics before a
+future package refresh:
+`experiments/scripts/generate_stage4_manual_schematics.py`. The generated
+schematics remain ignored outputs under `experiments/results/` and should not
+be committed. If AL2 is rerun before an AL3 refresh, its TODO files may still
+exist alongside the generated Figure 1 / Figure 2 assets.
+
 The TODO files in the package record the required content and caveats.
 
 ## Claim / Caveat Alignment

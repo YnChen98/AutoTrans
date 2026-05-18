@@ -11,6 +11,12 @@ No image files are created in this task. This document is a drawing
 specification for a later schematic pass in PowerPoint, draw.io, Figma, TikZ,
 or another chosen tool.
 
+Stage 4-AN2 now implements a deterministic offline schematic generator:
+`experiments/scripts/generate_stage4_manual_schematics.py`. The generator writes
+paper-ready PNG/SVG files under
+`experiments/results/stage4_paper_figure_package/main/`; these files remain
+ignored generated outputs and must not be committed.
+
 The schematics must preserve the current paper framing:
 
 - `risk_adapter_v1` is the balanced learned / risk-conditioned protagonist.
@@ -199,6 +205,10 @@ Keep these TODO markdown files until final images exist:
 
 - `experiments/results/stage4_paper_figure_package/TODO/fig1_architecture_TODO.md`
 - `experiments/results/stage4_paper_figure_package/TODO/fig2_protocol_split_TODO.md`
+
+Stage 4-AN2 generated schematic files should be treated as output assets, not
+source documentation. The generation protocol is
+`experiments/protocols/stage4an_manual_schematic_generation_protocol.md`.
 
 ## Checklist Before Drawing
 

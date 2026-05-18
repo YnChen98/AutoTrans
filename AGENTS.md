@@ -1009,9 +1009,34 @@ Stage 4-AN manual schematic specification:
   protocol (`goal_repeat=1`) and the goal-reissue stress protocol
   (`goal_repeat=10`) using two side-by-side time-axis panels.
 - No schematic image files are created by Stage 4-AN.
+- Stage 4-AN2 manual schematic generation is now the current paper-asset
+  stage.
 - Continue: do not create `risk_adapter_v22` yet.
-- Next step after AN: Stage 4-AM2 verified citation collection or Stage 4-AN2
-  manual schematic creation.
+- Next step after AN2: Stage 4-AL3 refresh paper figure package or Stage
+  4-AM2 verified citation collection.
+
+Stage 4-AN2 manual schematic generation:
+
+- The generator is
+  `experiments/scripts/generate_stage4_manual_schematics.py`.
+- The protocol is
+  `experiments/protocols/stage4an_manual_schematic_generation_protocol.md`.
+- It generates deterministic offline Figure 1 and Figure 2 schematic PNG/SVG
+  files under
+  `experiments/results/stage4_paper_figure_package/main/`.
+- Figure 1 shows the stack-compatible risk-conditioned execution governor,
+  unchanged AutoTrans-like planner / payload MPC / SO3 controller stack, risk
+  input, diagnostics, command-adaptation interface, and exact `speed_scale` /
+  `acceleration_scale` labels.
+- Figure 2 shows the protocol split between the single-goal mission protocol
+  (`goal_repeat=1`) and the goal-reissue stress protocol (`goal_repeat=10`).
+- The schematics are explanatory manuscript assets, not result plots and not
+  new experimental evidence.
+- Generated PNG/SVG/Markdown outputs under `experiments/results/` should not
+  be committed.
+- Continue: do not create `risk_adapter_v22`.
+- Next step after AN2: Stage 4-AL3 refresh paper figure package or Stage
+  4-AM2 verified citation collection.
 
 Stage 4-AB paper reframing decision:
 

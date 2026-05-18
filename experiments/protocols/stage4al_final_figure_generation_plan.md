@@ -14,6 +14,9 @@ The protocol for that package generator is
 Stage 4-AN now specifies the manual schematic requirements for Figure 1 and
 Figure 2:
 `experiments/protocols/stage4an_manual_schematic_spec.md`.
+Stage 4-AN2 now provides a deterministic offline matplotlib generator for those
+schematics:
+`experiments/scripts/generate_stage4_manual_schematics.py`.
 
 No figures are generated in this task. No figure-generation scripts should be
 run here, and no generated PNG/PDF/SVG/CSV/TXT/MD outputs should be created or
@@ -72,7 +75,12 @@ Main-paper content:
 
 Type:
 
-- Manually drawn / future generated schematic.
+- Deterministically generated schematic from Stage 4-AN2, with optional manual
+  polishing if needed.
+
+Source generator:
+
+- `experiments/scripts/generate_stage4_manual_schematics.py`
 
 Content:
 
@@ -102,7 +110,12 @@ Preferred paper-ready name:
 
 Type:
 
-- Manually drawn / future generated schematic.
+- Deterministically generated schematic from Stage 4-AN2, with optional manual
+  polishing if needed.
+
+Source generator:
+
+- `experiments/scripts/generate_stage4_manual_schematics.py`
 
 Content:
 
@@ -339,7 +352,8 @@ Alternative parallel step:
 
 - Stage 4-AM2: verified citation collection.
 - Stage 4-AN2: manual schematic creation from
-  `experiments/protocols/stage4an_manual_schematic_spec.md`.
+  `experiments/protocols/stage4an_manual_schematic_spec.md`. This is now
+  implemented by `experiments/scripts/generate_stage4_manual_schematics.py`.
 
 Do not recommend new simulation, new experimental runs, or `risk_adapter_v22`
 before the paper figure package and citation slots are reviewed.
