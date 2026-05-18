@@ -6,6 +6,12 @@ The Stage 4 paper should be reframed away from a `risk_adapter_v21`-as-winner
 story. The completed protocol-split comparison and failure-mode analysis do
 not support a final cross-protocol winner claim for `risk_adapter_v21`.
 
+Stage 4-AA3 human review of representative traces supports this balanced
+governor framing and does not justify an immediate `risk_adapter_v22`. The
+review found mixed mechanisms, including early pre-arrival Trial 4 stress
+failures and a Trial 6 single-goal post-arrival delayed divergence, so the next
+step should be Stage 4-AC balanced robustness / protocol regret assets.
+
 The tentative paper protagonist should be `risk_adapter_v1` as the most
 balanced learned / risk-conditioned execution governor among the current
 evaluated variants. It does not dominate every protocol, but it has the best
@@ -91,21 +97,22 @@ protocol-specialist baselines are strong.
 
 ## Immediate Next Steps
 
-- Stage 4-AA2 representative trace inspection:
-  inspect representative Trial 4 stress failures and Trial 6 bottlenecks before
-  any new method design. This is the next evidence gate before deciding
-  whether `risk_adapter_v22` is justified.
+- Stage 4-AA3 human review:
+  completed the representative trace inspection and did not justify an
+  immediate `risk_adapter_v22`.
 - Stage 4-AC balanced robustness asset generator:
   generate paper assets for mean performance, worst-protocol performance, and
   total regret relative to the protocol oracle.
-- Do not create `risk_adapter_v22` before Stage 4-AA2 and balanced robustness
-  metrics are complete.
+- Do not create `risk_adapter_v22` before Stage 4-AC balanced robustness /
+  protocol regret metrics are complete.
 
 ## Decision Rule For v22
 
-Create `risk_adapter_v22` only if Stage 4-AA2 reveals a generic phase-aware or
-failure-aware mechanism that can plausibly improve both protocol balance and
-failure behavior.
+Stage 4-AA3 did not satisfy the evidence gate for creating
+`risk_adapter_v22`. Create a future variant only if later evidence reveals a
+generic phase-aware, failure-aware, risk-health-aware, reference /
+trajectory-health-aware, or command / state-health-aware mechanism that can
+plausibly improve both protocol balance and failure behavior.
 
 Do not create a Trial-4-specific or target-specific patch. A new variant must
 address a reusable mechanism, not one observed cell in the evaluation table.
@@ -118,3 +125,6 @@ Stage 4-AA2 is documented in
 `experiments/protocols/stage4aa_representative_trace_protocol.md`, and its
 plotter is
 `experiments/scripts/plot_stage4_representative_failure_traces.py`.
+
+Stage 4-AA3 review result is recorded in
+`experiments/protocols/stage4aa_representative_trace_review_result.md`.

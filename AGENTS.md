@@ -643,14 +643,33 @@ Stage 4-AA2 representative trace plots:
 - Generated outputs go under
   `experiments/results/stage4_representative_traces/` and should not be
   committed.
-- Stage 4-AA2 is the current next diagnostic step before any
-  `risk_adapter_v22` decision.
+- Stage 4-AA2 generated representative traces for the `risk_adapter_v22`
+  decision gate; Stage 4-AA3 recorded the human review.
 - The trace set should inspect Trial 4 goal-reissue stress
   `risk_adapter_v21` failures, Trial 4 stress comparison against
   `fixed_s080` / `risk_adapter_v1`, and the Trial 6 single-goal bottleneck.
-- Do not create `risk_adapter_v22` before reviewing AA2 trace outputs.
-- Only create `risk_adapter_v22` if AA2 reveals a generic phase-aware or
-  failure-aware mechanism; do not create a Trial-4-specific patch.
+- AA3 review is complete and did not justify immediate `risk_adapter_v22`.
+- Do not create `risk_adapter_v22` yet; do not create a Trial-4-specific
+  patch.
+
+Stage 4-AA3 representative trace review:
+
+- The review result is
+  `experiments/protocols/stage4aa_representative_trace_review_result.md`.
+- Human review inspected the AA2 representative plots for single-goal Trial 6
+  and goal-reissue stress Trial 4.
+- AA3 supports the Stage 4-AB balanced-governor framing:
+  `risk_adapter_v1` remains the tentative balanced learned /
+  risk-conditioned protagonist.
+- `risk_adapter_v21` remains a strong nominal variant / ablation, not the
+  cross-protocol final method.
+- Do not create `risk_adapter_v22` yet.
+- If a future variant is attempted, it should use a generic risk-health-aware,
+  phase-aware, reference / trajectory-health-aware, or command /
+  state-health-aware mechanism, not simple threshold tuning or a
+  Trial-4-specific patch.
+- Next recommended step: Stage 4-AC balanced robustness / protocol regret
+  assets.
 
 Stage 4-AB paper reframing decision:
 
@@ -666,11 +685,12 @@ Stage 4-AB paper reframing decision:
 - `fixed_s080` is the goal-reissue stress specialist at `24/30`.
 - `risk_adapter_v1` has the lowest current dual-protocol regret relative to
   the protocol oracle: `(26 - 25) + (24 - 23) = 2`.
-- Next steps: review Stage 4-AA2 representative trace outputs, then build
-  Stage 4-AC balanced robustness assets.
-- Do not create `risk_adapter_v22` before AA2 and balanced metrics.
-- Only create `risk_adapter_v22` if AA2 shows a generic phase-aware or
-  failure-aware mechanism; do not make a Trial-4-specific patch.
+- Next step: build Stage 4-AC balanced robustness / protocol regret assets.
+- Do not create `risk_adapter_v22` before Stage 4-AC balanced metrics.
+- Only consider `risk_adapter_v22` if later evidence shows a generic
+  phase-aware, failure-aware, risk-health-aware, reference /
+  trajectory-health-aware, or command / state-health-aware mechanism; do not
+  make a Trial-4-specific patch.
 
 Earlier Stage 4-H limited-repeat results:
 

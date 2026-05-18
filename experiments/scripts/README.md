@@ -1006,6 +1006,23 @@ committed. The protocol is
 `experiments/protocols/stage4aa_representative_trace_protocol.md`. Do not
 create `risk_adapter_v22` until these representative trace plots are reviewed.
 
+## Stage 4-AA3 representative trace review
+
+`experiments/protocols/stage4aa_representative_trace_review_result.md` records
+the human review of the Stage 4-AA2 representative trace plots.
+
+The review supports the Stage 4-AB balanced-governor framing: keep
+`risk_adapter_v1` as the tentative balanced learned / risk-conditioned
+protagonist, treat `risk_adapter_v21` as a strong nominal variant / ablation,
+and present `windlevel_s085` and `fixed_s080` as protocol-specialist
+baselines.
+
+The AA3 decision is to not create `risk_adapter_v22` yet. If a future variant
+is attempted, it should use a generic risk-health-aware, phase-aware,
+reference / trajectory-health-aware, or command / state-health-aware mechanism
+rather than simple threshold tuning. The next recommended step is Stage 4-AC
+balanced robustness / protocol regret assets.
+
 ## Stage 4-AB paper reframing decision
 
 `experiments/protocols/stage4ab_paper_reframing_decision.md` records the paper
@@ -1020,9 +1037,9 @@ should be presented as strong protocol-specialist baselines.
 
 The Stage 4-AB table tracks single-goal count, stress count, mean count,
 worst-protocol count, and total regret relative to the protocol oracle. The
-next steps are Stage 4-AA2 representative trace inspection and a Stage 4-AC
-balanced robustness asset generator. Do not create `risk_adapter_v22` unless
-Stage 4-AA2 reveals a generic phase-aware or failure-aware mechanism.
+Stage 4-AA3 representative trace review did not justify immediate
+`risk_adapter_v22`; the next step is a Stage 4-AC balanced robustness /
+protocol regret asset generator.
 
 ## Stage 4-X0 final evaluation specification
 

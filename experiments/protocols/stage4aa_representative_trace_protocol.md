@@ -9,6 +9,11 @@ The goal is to inspect whether the next policy step should be phase-aware,
 failure-aware, reference-jump-aware, or unnecessary. This step does not run
 ROS, simulation, RViz, or `catkin_make`.
 
+Stage 4-AA3 records the human review of these representative traces in
+`experiments/protocols/stage4aa_representative_trace_review_result.md`. The
+review does not justify an immediate `risk_adapter_v22`; the next recommended
+step is Stage 4-AC balanced robustness / protocol regret assets.
+
 ## Why Representative Traces Are Needed
 
 Stage 4-AB reframed the paper away from a `risk_adapter_v21` universal-winner
