@@ -92,6 +92,9 @@ Figure 1 and Figure 2 remain manual / future generated schematics:
   goal-reissue stress protocol (`goal_repeat=10`) as separate evaluation
   regimes.
 
+The manual schematic details are specified by Stage 4-AN:
+`experiments/protocols/stage4an_manual_schematic_spec.md`.
+
 The TODO files in the package record the required content and caveats.
 
 ## Claim / Caveat Alignment

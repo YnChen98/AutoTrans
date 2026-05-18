@@ -11,6 +11,9 @@ Stage 4-AL2 now implements the copy/check paper figure package generator:
 `experiments/scripts/create_stage4_paper_figure_package.py`.
 The protocol for that package generator is
 `experiments/protocols/stage4al_paper_figure_package_protocol.md`.
+Stage 4-AN now specifies the manual schematic requirements for Figure 1 and
+Figure 2:
+`experiments/protocols/stage4an_manual_schematic_spec.md`.
 
 No figures are generated in this task. No figure-generation scripts should be
 run here, and no generated PNG/PDF/SVG/CSV/TXT/MD outputs should be created or
@@ -304,8 +307,8 @@ manual figure package pass.
 
 | missing asset or risk | impact | planned handling |
 | --- | --- | --- |
-| Figure 1 architecture schematic not yet generated | Method interface may remain abstract. | Create schematic in Stage 4-AL2 or manual figure package pass. |
-| Figure 2 protocol schematic not yet generated | Protocol split may be harder to understand quickly. | Create schematic before final paper assembly. |
+| Figure 1 architecture schematic not yet generated | Method interface may remain abstract. | Create schematic from the Stage 4-AN manual schematic specification. |
+| Figure 2 protocol schematic not yet generated | Protocol split may be harder to understand quickly. | Create schematic from the Stage 4-AN manual schematic specification. |
 | Figure 6 needs manual multi-panel selection / layout | Trace figure could become too large or unfocused. | Select one Trial 4 stress contrast and one Trial 6 single-goal contrast. |
 | Final captions need polishing | Captions may overclaim or repeat text. | Audit captions against the claim mapping table. |
 | Citation placeholders still unresolved by Stage 4-AM | Figure-supported claims may lack external framing citations. | Run Stage 4-AM2 verified citation collection in parallel. |
@@ -335,6 +338,8 @@ Recommended next step:
 Alternative parallel step:
 
 - Stage 4-AM2: verified citation collection.
+- Stage 4-AN2: manual schematic creation from
+  `experiments/protocols/stage4an_manual_schematic_spec.md`.
 
 Do not recommend new simulation, new experimental runs, or `risk_adapter_v22`
 before the paper figure package and citation slots are reviewed.
