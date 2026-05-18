@@ -765,8 +765,11 @@ Stage 4-AE paper outline / section skeleton:
 - Stage 4-AL final figure generation plan is complete.
 - Stage 4-AL2 paper figure package generator is complete.
 - Stage 4-AN manual schematic specification is complete.
-- Next step after AN: Stage 4-AM2 verified citation collection or Stage 4-AN2
-  manual schematic creation.
+- Stage 4-AN2 manual schematic generation is complete.
+- Stage 4-AL3 paper figure package refresh is complete.
+- Stage 4-AM2 verified citation collection result is complete.
+- Next step after AM2: Stage 4-AM3 BibTeX drafting / citation insertion plan
+  or Stage 4-AO manuscript formatting plan.
 
 Stage 4-AF paper Abstract and Introduction draft:
 
@@ -793,8 +796,9 @@ Stage 4-AF paper Abstract and Introduction draft:
 - Stage 4-AL final figure generation plan is complete.
 - Stage 4-AL2 paper figure package generator is complete.
 - Stage 4-AN manual schematic specification is complete.
-- Next step after AN: Stage 4-AM2 verified citation collection or Stage 4-AN2
-  manual schematic creation.
+- Stage 4-AM2 verified citation collection result is complete.
+- Next step after AM2: Stage 4-AM3 BibTeX drafting / citation insertion plan
+  or Stage 4-AO manuscript formatting plan.
 
 Stage 4-AG Method section draft:
 
@@ -951,11 +955,36 @@ Stage 4-AM citation collection workflow:
 - Do not fabricate citations, paper titles, venues, authors, years, DOIs, URLs,
   or BibTeX entries.
 - Continue: do not create `risk_adapter_v22` yet.
+- Stage 4-AM2 verified citation collection result is complete.
 - Stage 4-AL final figure generation plan is complete.
 - Stage 4-AL2 paper figure package generator is complete.
 - Stage 4-AN manual schematic specification is complete.
-- Next step after AN: Stage 4-AM2 verified citation collection or Stage 4-AN2
-  manual schematic creation.
+- Next step after AM2: Stage 4-AM3 BibTeX drafting / citation insertion plan
+  or Stage 4-AO manuscript formatting plan.
+
+Stage 4-AM2 verified citation collection result:
+
+- The result document is
+  `experiments/protocols/stage4am2_verified_citation_collection_result.md`.
+- It records only the user-provided verified citation metadata for the Stage 4
+  paper; it does not fabricate titles, authors, venues, years, DOIs, URLs, or
+  BibTeX entries.
+- It does not finalize the bibliography, does not generate BibTeX, and does
+  not insert citation keys into manuscript prose.
+- Citation groups now covered:
+  - suspended-payload UAV transport and control;
+  - runtime governors / reference governors / safety filters;
+  - learning-enhanced aerial robustness;
+  - benchmarking / stress testing / failure analysis.
+- Remaining metadata gaps are marked for verification, including
+  `Barikbin2019WindPayloadTracking` venue/year,
+  `Wabersich2021PredictiveSafetyFilter` DOI / Automatica metadata,
+  `Jin2025NeuralPredictorPayload` final metadata,
+  `Monteleone2023BalanceResilienceBenchmark` full author list, and
+  `Dogga2023AutoARTS` official URL.
+- Continue: do not create `risk_adapter_v22`.
+- Next step after AM2: Stage 4-AM3 BibTeX drafting / citation insertion plan
+  or Stage 4-AO manuscript formatting plan.
 
 Stage 4-AL final figure generation plan:
 
@@ -997,8 +1026,9 @@ Stage 4-AL2 paper figure package generator:
 - Stage 4-AN2 manual schematic generation is complete.
 - Stage 4-AL3 paper figure package refresh after schematic generation is the
   current paper-asset stage.
-- Next step after AL3: Stage 4-AM2 verified citation collection or Stage 4-AO
-  manuscript formatting plan.
+- Stage 4-AM2 verified citation collection result is complete.
+- Next step after AM2: Stage 4-AM3 BibTeX drafting / citation insertion plan
+  or Stage 4-AO manuscript formatting plan.
 
 Stage 4-AN manual schematic specification:
 
@@ -1016,8 +1046,10 @@ Stage 4-AN manual schematic specification:
 - Stage 4-AN2 manual schematic generation is now the current paper-asset
   stage.
 - Continue: do not create `risk_adapter_v22` yet.
-- Next step after AN2: Stage 4-AL3 refresh paper figure package or Stage
-  4-AM2 verified citation collection.
+- Stage 4-AL3 paper figure package refresh is complete.
+- Stage 4-AM2 verified citation collection result is complete.
+- Next step after AM2: Stage 4-AM3 BibTeX drafting / citation insertion plan
+  or Stage 4-AO manuscript formatting plan.
 
 Stage 4-AN2 manual schematic generation:
 
@@ -1041,8 +1073,9 @@ Stage 4-AN2 manual schematic generation:
 - Continue: do not create `risk_adapter_v22`.
 - Stage 4-AL3 now consumes these schematic files in the paper figure package
   manifest when they are present.
-- Next step after AL3: Stage 4-AM2 verified citation collection or Stage 4-AO
-  manuscript formatting plan.
+- Stage 4-AM2 verified citation collection result is complete.
+- Next step after AM2: Stage 4-AM3 BibTeX drafting / citation insertion plan
+  or Stage 4-AO manuscript formatting plan.
 
 Stage 4-AL3 paper figure package refresh after schematic generation:
 
@@ -1064,8 +1097,9 @@ Stage 4-AL3 paper figure package refresh after schematic generation:
   `experiments/scripts/generate_stage4_manual_schematics.py` automatically.
 - Generated outputs under `experiments/results/` should not be committed.
 - Continue: do not create `risk_adapter_v22`.
-- Next step after AL3: Stage 4-AM2 verified citation collection or Stage 4-AO
-  manuscript formatting plan.
+- Stage 4-AM2 verified citation collection result is complete.
+- Next step after AM2: Stage 4-AM3 BibTeX drafting / citation insertion plan
+  or Stage 4-AO manuscript formatting plan.
 
 Stage 4-AB paper reframing decision:
 

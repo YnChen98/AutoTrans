@@ -7,6 +7,8 @@ paper draft. It follows the citation slot map in
 `experiments/protocols/stage4ak_citation_references_plan.md`.
 Stage 4-AL now tracks the parallel final figure/table generation plan:
 `experiments/protocols/stage4al_final_figure_generation_plan.md`.
+Stage 4-AM2 now records the user-provided verified citation collection result:
+`experiments/protocols/stage4am2_verified_citation_collection_result.md`.
 
 This document does not finalize the bibliography, does not generate BibTeX,
 and does not insert unverified references. It defines what sources must be
@@ -249,9 +251,12 @@ need external citations.
 
 ## Next Action After AM
 
-- Stage 4-AM2: collect verified citations manually or via deep research. Each
-  collected reference must pass the metadata verification checklist before it
-  receives a citation key.
+- Stage 4-AM2: collect verified citations manually or via deep research. This
+  is now recorded in
+  `experiments/protocols/stage4am2_verified_citation_collection_result.md`
+  using only the user-provided verified metadata.
+- Stage 4-AM3: draft BibTeX entries and citation insertion only after the AM2
+  remaining metadata gaps are verified.
 - Stage 4-AL: final figure generation plan can proceed in parallel after the
   citation slots are stable.
 - Stage 4-AL2: final figure package generation can proceed in parallel with
