@@ -19,6 +19,12 @@ governor, describe `windlevel_s085` and `fixed_s080` as strong
 protocol-specialist baselines, and keep `risk_adapter_v21` as a strong nominal
 variant / ablation rather than the final cross-protocol method.
 
+Stage 4-AC2 completes the balanced robustness / protocol regret table that
+future Results text should use. The key paper-facing result is that
+`risk_adapter_v1` has the best mean valid count (`24.0/30`), best
+worst-protocol valid count (`23/30`), and lowest total regret (`2`), while
+`windlevel_s085` and `fixed_s080` remain protocol-specialist baselines.
+
 ## Paper-Ready Results Subsection
 
 We evaluated command-adaptation strategies under two protocol-labeled
@@ -103,6 +109,12 @@ Do not frame the paper as:
 
 ## Next Recommended Work
 
+- Use the Stage 4-AC2 balanced robustness table as the main paper-facing
+  cross-protocol comparison:
+  `experiments/protocols/stage4ac_balanced_robustness_assets_result.md`.
+- Plan paper figures/tables and update the Results narrative around balanced
+  robustness, protocol regret, Pareto frontier, and failure-mode-aware
+  diagnosis.
 - Use the Stage 4-Z failure-mode paper assets as the next support for this
   Results narrative:
   `experiments/protocols/stage4z_failure_mode_paper_assets_protocol.md`.
@@ -112,8 +124,6 @@ Do not frame the paper as:
 - Stage 4-Z2 supports failure-aware analysis and figure drafting, but it does
   not change the protocol-split success ranking: `windlevel_s085` remains the
   single-goal leader and `fixed_s080` remains the goal-reissue stress leader.
-- Build a failure-mode summary table or figure.
-- Inspect Trial 4 stress failures and Trial 6 bottlenecks.
-- Design a dynamic heuristic or ablation only after the failure-mode table is
-  stable.
+- Keep `risk_adapter_v1` as the tentative balanced protagonist unless future
+  evidence changes the balance/regret picture.
 - Do not create `risk_adapter_v22` immediately.

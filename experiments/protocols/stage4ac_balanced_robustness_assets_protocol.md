@@ -6,6 +6,9 @@ Stage 4-AC generates paper assets for balanced robustness and protocol regret
 after the completed protocol-split Stage 4 comparison and Stage 4-AA3
 representative trace review.
 
+The completed Stage 4-AC2 result is recorded in
+`experiments/protocols/stage4ac_balanced_robustness_assets_result.md`.
+
 This is an offline paper-support step. It does not run ROS, simulation, RViz,
 or `catkin_make`.
 
@@ -104,6 +107,9 @@ The generator writes:
 
 Generated CSV, Markdown, and PNG outputs under `experiments/results/` are
 ignored and should not be committed.
+
+The committed result interpretation is recorded separately in
+`experiments/protocols/stage4ac_balanced_robustness_assets_result.md`.
 
 ## How To Run
 

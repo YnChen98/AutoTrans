@@ -677,22 +677,27 @@ Stage 4-AC balanced robustness assets:
   `experiments/scripts/generate_stage4_balanced_robustness_assets.py`.
 - The protocol is
   `experiments/protocols/stage4ac_balanced_robustness_assets_protocol.md`.
+- The result document is
+  `experiments/protocols/stage4ac_balanced_robustness_assets_result.md`.
 - Generated outputs go under
   `experiments/results/stage4_balanced_robustness_assets/` and should not be
   committed.
-- Stage 4-AC is the current balanced robustness / protocol regret paper asset
-  stage.
+- Stage 4-AC2 balanced robustness / protocol regret result is complete.
 - Protocol oracles: `windlevel_s085` is the single-goal oracle at `26/30`;
   `fixed_s080` is the goal-reissue stress oracle at `24/30`.
 - Complete cross-protocol balanced ranking excludes `risk_adapter_v2` because
   its goal-reissue stress result is missing.
-- `risk_adapter_v1` is expected to have the best mean valid count (`24.0/30`),
-  best worst-protocol valid count (`23/30`), and lowest total regret (`2`).
-- Expected Pareto-frontier methods: `windlevel_s085`, `fixed_s080`, and
+- `risk_adapter_v1` has the best mean valid count (`24.0/30`), best
+  worst-protocol valid count (`23/30`), and lowest total regret (`2`).
+- Pareto-frontier methods: `windlevel_s085`, `fixed_s080`, and
   `risk_adapter_v1`.
 - `risk_adapter_v21` should not be Pareto-frontier because `risk_adapter_v1`
   has the same single-goal count and higher stress count.
-- Do not create `risk_adapter_v22` before Stage 4-AC outputs are reviewed.
+- `risk_adapter_v1` is the tentative balanced learned / risk-conditioned
+  protagonist.
+- Do not create `risk_adapter_v22` yet.
+- Next step: paper figure/table planning and Results writing using the Stage
+  4-AC assets.
 
 Stage 4-AB paper reframing decision:
 
@@ -708,8 +713,9 @@ Stage 4-AB paper reframing decision:
 - `fixed_s080` is the goal-reissue stress specialist at `24/30`.
 - `risk_adapter_v1` has the lowest current dual-protocol regret relative to
   the protocol oracle: `(26 - 25) + (24 - 23) = 2`.
-- Next step: build Stage 4-AC balanced robustness / protocol regret assets.
-- Do not create `risk_adapter_v22` before Stage 4-AC balanced metrics.
+- Next step: paper figure/table planning and Results writing using Stage 4-AC
+  balanced robustness / protocol regret assets.
+- Do not create `risk_adapter_v22` yet.
 - Only consider `risk_adapter_v22` if later evidence shows a generic
   phase-aware, failure-aware, risk-health-aware, reference /
   trajectory-health-aware, or command / state-health-aware mechanism; do not

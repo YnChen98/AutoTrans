@@ -1047,7 +1047,23 @@ python3 experiments/scripts/generate_stage4_balanced_robustness_assets.py \
 Generated outputs under `experiments/results/` are ignored and should not be
 committed. The protocol is
 `experiments/protocols/stage4ac_balanced_robustness_assets_protocol.md`.
-Review Stage 4-AC outputs before any `risk_adapter_v22` design.
+The completed result interpretation is recorded in
+`experiments/protocols/stage4ac_balanced_robustness_assets_result.md`.
+
+## Stage 4-AC2 balanced robustness result
+
+`experiments/protocols/stage4ac_balanced_robustness_assets_result.md` records
+the completed Stage 4-AC balanced robustness / protocol regret result.
+
+The result confirms `risk_adapter_v1` as the tentative balanced learned /
+risk-conditioned protagonist: it has the best mean valid count (`24.0/30`),
+the best worst-protocol valid count (`23/30`), and the lowest total regret
+(`2`). `windlevel_s085` remains the single-goal specialist, `fixed_s080`
+remains the goal-reissue stress specialist, and `risk_adapter_v21` should not
+be framed as the final protagonist.
+
+Do not create `risk_adapter_v22` yet. Proceed to paper figure/table planning
+and Results writing using the Stage 4-AC assets.
 
 ## Stage 4-AB paper reframing decision
 
@@ -1064,8 +1080,8 @@ should be presented as strong protocol-specialist baselines.
 The Stage 4-AB table tracks single-goal count, stress count, mean count,
 worst-protocol count, and total regret relative to the protocol oracle. The
 Stage 4-AA3 representative trace review did not justify immediate
-`risk_adapter_v22`; the next step is a Stage 4-AC balanced robustness /
-protocol regret asset generator.
+`risk_adapter_v22`; Stage 4-AC2 now records the balanced robustness / protocol
+regret result, and the next step is paper figure/table planning.
 
 ## Stage 4-X0 final evaluation specification
 
