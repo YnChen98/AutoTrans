@@ -307,6 +307,10 @@ is recorded in
 4-AG is recorded in
 `experiments/protocols/stage4ag_method_section_draft.md`. Stage 4-AH is
 recorded in `experiments/protocols/stage4ah_results_section_draft.md` and
-drafts how the Results text should reference the main table and figures. The
-next writing step after AH is Stage 4-AI Discussion and Limitations draft or
-Stage 4-AJ full paper assembly.
+drafts how the Results text should reference the main table and figures. Stage
+4-AI is recorded in
+`experiments/protocols/stage4ai_discussion_limitations_draft.md`, and Stage
+4-AJ is recorded in
+`experiments/protocols/stage4aj_full_paper_assembly_draft.md`. The next
+writing step after AJ is Stage 4-AK citation / references plan or Stage 4-AL
+final figure generation plan.

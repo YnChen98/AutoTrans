@@ -16,6 +16,9 @@ The current evidence does not justify introducing `risk_adapter_v22`. Stage
 risk availability, reference health, and command/state health, rather than a
 simple threshold patch.
 
+Stage 4-AJ now assembles the current full paper draft:
+`experiments/protocols/stage4aj_full_paper_assembly_draft.md`.
+
 ## Discussion Draft
 
 ### 5.1 Why Protocol Split Matters

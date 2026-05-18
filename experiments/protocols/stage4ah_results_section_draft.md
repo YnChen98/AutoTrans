@@ -21,6 +21,8 @@ should explicitly respect `windlevel_s085` as the single-goal specialist and
 
 Stage 4-AI now provides the current Discussion and Limitations draft:
 `experiments/protocols/stage4ai_discussion_limitations_draft.md`.
+Stage 4-AJ now assembles these Results into the current full paper draft:
+`experiments/protocols/stage4aj_full_paper_assembly_draft.md`.
 
 ## Results Section Draft
 

@@ -1080,8 +1080,10 @@ final method.
 Stage 4-AE records the paper outline / section skeleton, Stage 4-AF records
 the paper Abstract and Introduction draft, Stage 4-AG records the Method
 section draft, Stage 4-AH records the Results section draft, and Stage 4-AI
-records the Discussion and Limitations draft. The next writing step is Stage
-4-AJ full paper assembly. Do not create `risk_adapter_v22` yet.
+records the Discussion and Limitations draft. Stage 4-AJ records the current
+full paper assembly draft. The next writing step is Stage 4-AK citation /
+references plan or Stage 4-AL final figure generation plan. Do not create
+`risk_adapter_v22` yet.
 
 ## Stage 4-AE paper outline section skeleton
 
@@ -1096,8 +1098,8 @@ and Limitations sections, an Appendix plan, and a claim audit table.
 Stage 4-AF records the paper Abstract and Introduction draft, Stage 4-AG
 records the Method section draft, Stage 4-AH records the Results section
 draft, and Stage 4-AI records the Discussion and Limitations draft. The next
-writing step is Stage 4-AJ full paper assembly. Do not create
-`risk_adapter_v22` yet.
+writing step is Stage 4-AK citation / references plan or Stage 4-AL final
+figure generation plan. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AF abstract introduction draft
 
@@ -1111,8 +1113,9 @@ balanced/protocol-level robustness under the tested protocols.
 
 Stage 4-AG now records the Method section draft, Stage 4-AH records the
 Results section draft, and Stage 4-AI records the Discussion and Limitations
-draft. The next writing step is Stage 4-AJ full paper assembly. Do not create
-`risk_adapter_v22` yet.
+draft. Stage 4-AJ now records the full paper assembly draft. The next writing
+step is Stage 4-AK citation / references plan or Stage 4-AL final figure
+generation plan. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AG method section draft
 
@@ -1149,8 +1152,25 @@ failure-mode interpretation, and states that `risk_adapter_v22` is not
 justified without a reusable phase-aware, reference-aware, risk-health-aware,
 or failure-aware mechanism.
 
-The next writing step after AI is Stage 4-AJ full paper assembly. Do not
-create `risk_adapter_v22` yet.
+Stage 4-AJ now records the full paper assembly draft. The next writing step is
+Stage 4-AK citation / references plan or Stage 4-AL final figure generation
+plan. Do not create `risk_adapter_v22` yet.
+
+## Stage 4-AJ full paper assembly draft
+
+`experiments/protocols/stage4aj_full_paper_assembly_draft.md` records the
+current full paper assembly draft for the reframed IROS/ICRA/RA-L style paper.
+
+The draft assembles the current Abstract / Introduction, Related Work
+skeleton, Method, Experimental Setup, Results, Discussion / Limitations,
+Conclusion, main figure/table checklist, appendix plan, master claim audit,
+and paper readiness checklist. It keeps `risk_adapter_v1` as the balanced
+learned / risk-conditioned protagonist, presents `windlevel_s085` and
+`fixed_s080` as protocol specialists, and keeps `risk_adapter_v21` as a strong
+nominal / single-goal variant or ablation.
+
+The next writing step after AJ is Stage 4-AK citation / references plan or
+Stage 4-AL final figure generation plan. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AB paper reframing decision
 
@@ -1171,7 +1191,8 @@ Stage 4-AA3 representative trace review did not justify immediate
 regret result. Stage 4-AD now freezes the figure/table plan, Stage 4-AG
 records the Method draft, and Stage 4-AH records the Results section draft.
 Stage 4-AI records the Discussion and Limitations draft. The next writing step
-is Stage 4-AJ full paper assembly.
+is Stage 4-AK citation / references plan or Stage 4-AL final figure generation
+plan.
 
 ## Stage 4-X0 final evaluation specification
 

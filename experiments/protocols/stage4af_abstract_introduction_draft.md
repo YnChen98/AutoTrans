@@ -17,6 +17,9 @@ trace interpretation:
 Stage 4-AI now records the Discussion and Limitations draft that bounds these
 claims:
 `experiments/protocols/stage4ai_discussion_limitations_draft.md`.
+Stage 4-AJ now supersedes this standalone AF draft as the assembled paper
+draft:
+`experiments/protocols/stage4aj_full_paper_assembly_draft.md`.
 
 `risk_adapter_v1` remains the current tentative balanced learned /
 risk-conditioned protagonist. `risk_adapter_v21` remains a nominal /

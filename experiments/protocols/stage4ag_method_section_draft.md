@@ -23,6 +23,8 @@ centered balanced robustness framing:
 Stage 4-AI expands the Method claim boundaries in the Discussion and
 Limitations draft:
 `experiments/protocols/stage4ai_discussion_limitations_draft.md`.
+Stage 4-AJ now assembles this Method into the current full paper draft:
+`experiments/protocols/stage4aj_full_paper_assembly_draft.md`.
 
 ## Method Section Draft
 
