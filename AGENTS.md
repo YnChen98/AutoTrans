@@ -1016,13 +1016,30 @@ Stage 4-AM4 BibTeX draft / citation key package:
 - It creates draft BibTeX blocks only for ready-to-use citation metadata from
   Stage 4-AM2 / AM3.
 - It does not create or edit manuscript `.tex` or `.bib` files.
+- Stage 4-AO manuscript formatting plan is complete.
 - Conditional entries remain TODO-only until metadata verification is complete:
   `Barikbin2019WindPayloadTracking`, `Wabersich2021PredictiveSafetyFilter`,
   `Jin2025NeuralPredictorPayload`,
   `Monteleone2023BalanceResilienceBenchmark`, and `Dogga2023AutoARTS`.
 - Continue: do not create `risk_adapter_v22`.
-- Next step after AM4: Stage 4-AO manuscript formatting plan or Stage 4-AP
-  manuscript source scaffold.
+- Next step after AO: Stage 4-AP manuscript source scaffold or Stage 4-AM5
+  conditional citation verification.
+
+Stage 4-AO manuscript formatting plan:
+
+- The plan document is
+  `experiments/protocols/stage4ao_manuscript_formatting_plan.md`.
+- It defines how to convert the assembled Stage 4 paper draft into a future
+  manuscript source scaffold without creating `paper/`, `manuscript/`, `.tex`,
+  or `.bib` files in this stage.
+- Proposed future scaffold defaults to an IROS / ICRA-like draft under
+  `paper/stage4_governor/`, while keeping RA-L extension possible.
+- It maps source inputs from Stage 4-AF/AJ, Stage 4-AG/AJ, Stage 4-AH/AJ,
+  Stage 4-AI/AJ, the Stage 4-AL figure package, and the Stage 4-AM4 draft
+  BibTeX package.
+- Continue: do not create `risk_adapter_v22`.
+- Next step after AO: Stage 4-AP manuscript source scaffold or Stage 4-AM5
+  conditional citation verification.
 
 Stage 4-AL final figure generation plan:
 

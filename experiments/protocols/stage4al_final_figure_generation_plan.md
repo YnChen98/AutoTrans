@@ -20,6 +20,9 @@ schematics:
 Stage 4-AL3 refreshes the paper figure package manifest after AN2 schematic
 generation so Figure 1 and Figure 2 are represented as generated schematic
 assets when their PNG/SVG files are present.
+Stage 4-AO maps the final figure/table plan into the future manuscript source
+layout:
+`experiments/protocols/stage4ao_manuscript_formatting_plan.md`.
 
 No figures are generated in this task. No figure-generation scripts should be
 run here, and no generated PNG/PDF/SVG/CSV/TXT/MD outputs should be created or

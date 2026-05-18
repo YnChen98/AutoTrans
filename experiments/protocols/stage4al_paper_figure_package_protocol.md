@@ -8,6 +8,10 @@ representative traces, supplementary summaries, and Figure 1 / Figure 2
 schematic assets or fallback TODOs in one package directory before manuscript
 formatting.
 
+Stage 4-AO consumes this figure package as the planned figure/table source for
+the future manuscript scaffold:
+`experiments/protocols/stage4ao_manuscript_formatting_plan.md`.
+
 This stage does not run simulation, does not create new experimental evidence,
 and does not introduce `risk_adapter_v22`.
 

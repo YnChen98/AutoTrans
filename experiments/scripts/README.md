@@ -1235,6 +1235,18 @@ conditional references as TODO entries until their missing metadata is
 verified. The next step is Stage 4-AO manuscript formatting plan or Stage
 4-AP manuscript source scaffold. Do not create `risk_adapter_v22` yet.
 
+## Stage 4-AO manuscript formatting plan
+
+`experiments/protocols/stage4ao_manuscript_formatting_plan.md` defines how to
+convert the assembled Stage 4 paper draft into a future manuscript source
+scaffold.
+
+This stage does not create `paper/`, `manuscript/`, `.tex`, or `.bib` files.
+It maps the assembled draft, figure package, and AM4 citation key package into
+a proposed manuscript layout. The next step is Stage 4-AP manuscript source
+scaffold or Stage 4-AM5 conditional citation verification. Do not create
+`risk_adapter_v22` yet.
+
 ## Stage 4-AL final figure generation plan
 
 `experiments/protocols/stage4al_final_figure_generation_plan.md` records the

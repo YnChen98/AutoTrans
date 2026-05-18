@@ -11,6 +11,10 @@ any manuscript `.tex` or `.bib` file. The blocks below are a manuscript
 preparation aid that should be checked against the final venue template before
 use.
 
+Stage 4-AO consumes this document as the provisional BibTeX source for the
+future manuscript scaffold plan:
+`experiments/protocols/stage4ao_manuscript_formatting_plan.md`.
+
 Only entries that Stage 4-AM3 marked ready-to-use are converted into draft
 BibTeX blocks. Conditional entries remain TODO items and require metadata
 verification before final BibTeX is written.
