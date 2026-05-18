@@ -95,6 +95,12 @@ Goal-reissue stress:
 
 Do not create `risk_adapter_v22` yet.
 
+Stage 4-Z2 motivates paper reframing and targeted trace inspection, not an
+immediate new method variant. The failure-mode view supports the Stage 4-AB
+decision to move away from a `risk_adapter_v21`-as-winner story and toward a
+balanced-governor narrative centered on `risk_adapter_v1`, with
+`windlevel_s085` and `fixed_s080` treated as protocol-specialist baselines.
+
 The next step should be targeted diagnosis:
 
 - Trial 4 goal-reissue stress failures for `risk_adapter_v21`.

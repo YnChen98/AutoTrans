@@ -634,6 +634,26 @@ Stage 4-AA targeted diagnosis assets:
   behavior, and diagnostic failure groups before any new variant design.
 - Do not create `risk_adapter_v22` before reviewing Stage 4-AA outputs.
 
+Stage 4-AB paper reframing decision:
+
+- The decision document is
+  `experiments/protocols/stage4ab_paper_reframing_decision.md`.
+- Protocol-split comparison and failure-mode analysis are complete enough to
+  reset the paper framing away from a `risk_adapter_v21`-as-winner story.
+- Tentative paper protagonist: `risk_adapter_v1` as the most balanced learned
+  / risk-conditioned execution governor.
+- `risk_adapter_v21` should be treated as a strong nominal variant / ablation,
+  not the final cross-protocol method.
+- `windlevel_s085` is the single-goal mission specialist at `26/30`.
+- `fixed_s080` is the goal-reissue stress specialist at `24/30`.
+- `risk_adapter_v1` has the lowest current dual-protocol regret relative to
+  the protocol oracle: `(26 - 25) + (24 - 23) = 2`.
+- Next steps: Stage 4-AA2 representative trace inspection and Stage 4-AC
+  balanced robustness asset generation.
+- Do not create `risk_adapter_v22` before AA2 and balanced metrics.
+- Only create `risk_adapter_v22` if AA2 shows a generic phase-aware or
+  failure-aware mechanism; do not make a Trial-4-specific patch.
+
 Earlier Stage 4-H limited-repeat results:
 
 Trial 4:

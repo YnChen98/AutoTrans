@@ -13,6 +13,12 @@ raised by Stage 4-Z2:
 This is an offline paper-support step. It does not run ROS, simulation, RViz,
 or `catkin_make`.
 
+Stage 4-AA2 should use representative trace inspection to support the
+`risk_adapter_v22` decision. A new variant is justified only if the inspected
+traces reveal a generic phase-aware or failure-aware mechanism; otherwise the
+paper should proceed with the Stage 4-AB reframing around `risk_adapter_v1` as
+the balanced learned / risk-conditioned governor.
+
 ## Why These Slices
 
 Trial 4 goal-reissue stress is selected because corrected Stage 4-X1 results
@@ -152,3 +158,4 @@ Do not use Stage 4-AA to claim:
 - all stress failures are post-arrival
 - `risk_adapter_v21` is globally flawed
 - `risk_adapter_v22` is required before inspecting the targeted outputs
+- a Trial-4-specific patch is a valid next method without a generic mechanism

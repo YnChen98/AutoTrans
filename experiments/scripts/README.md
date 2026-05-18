@@ -980,6 +980,24 @@ The protocol is
 Stage 4-AA outputs before designing `risk_adapter_v22`; any future method
 should be phase-aware / failure-aware rather than Trial-4-specific.
 
+## Stage 4-AB paper reframing decision
+
+`experiments/protocols/stage4ab_paper_reframing_decision.md` records the paper
+reframing after the completed protocol-split comparison and failure-mode
+analysis.
+
+Stage 4-AB moves the paper away from a `risk_adapter_v21`-as-winner narrative.
+The tentative protagonist is `risk_adapter_v1` as the most balanced learned /
+risk-conditioned execution governor. `risk_adapter_v21` should be treated as a
+strong nominal variant / ablation, while `windlevel_s085` and `fixed_s080`
+should be presented as strong protocol-specialist baselines.
+
+The Stage 4-AB table tracks single-goal count, stress count, mean count,
+worst-protocol count, and total regret relative to the protocol oracle. The
+next steps are Stage 4-AA2 representative trace inspection and a Stage 4-AC
+balanced robustness asset generator. Do not create `risk_adapter_v22` unless
+Stage 4-AA2 reveals a generic phase-aware or failure-aware mechanism.
+
 ## Stage 4-X0 final evaluation specification
 
 `experiments/protocols/stage4x_final_evaluation_spec.md` freezes the final

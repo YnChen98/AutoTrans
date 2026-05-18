@@ -12,6 +12,13 @@ claim. `windlevel_s085` is strongest in the single-goal mission protocol,
 `fixed_s080` is strongest in the goal-reissue stress protocol, and no current
 learned variant dominates both protocols.
 
+Stage 4-AB reframes the next paper draft around balanced governor behavior and
+protocol-specialist baselines. Future Results text should emphasize
+`risk_adapter_v1` as the tentative balanced learned / risk-conditioned
+governor, describe `windlevel_s085` and `fixed_s080` as strong
+protocol-specialist baselines, and keep `risk_adapter_v21` as a strong nominal
+variant / ablation rather than the final cross-protocol method.
+
 ## Paper-Ready Results Subsection
 
 We evaluated command-adaptation strategies under two protocol-labeled
@@ -88,6 +95,7 @@ Frame the paper as:
 - dual-protocol evaluation
 - strong heuristic/static frontier comparison
 - failure-mode-aware analysis
+- balanced governor / regret analysis against protocol-specialist baselines
 
 Do not frame the paper as:
 
