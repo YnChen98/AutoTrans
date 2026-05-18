@@ -18,6 +18,10 @@ threshold-tuning variant would not address the observed failure diversity.
 Next recommended stage: Stage 4-AC balanced robustness / protocol regret
 assets.
 
+Stage 4-AA3 motivates Stage 4-AC balanced robustness assets rather than an
+immediate `risk_adapter_v22`: the reviewed traces show mixed mechanisms and do
+not support simple threshold tuning as the next algorithmic step.
+
 ## Reviewed Trace Set
 
 Single-goal mission protocol (`goal_repeat=1`), Trial 6:
@@ -135,6 +139,9 @@ trial-specific. Plausible directions are:
 
 The next recommended work is Stage 4-AC balanced robustness / protocol regret
 assets.
+
+Do not create `risk_adapter_v22` before reviewing the Stage 4-AC balanced
+robustness / protocol regret outputs.
 
 ## Paper-Framing Implications
 

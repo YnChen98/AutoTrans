@@ -671,6 +671,29 @@ Stage 4-AA3 representative trace review:
 - Next recommended step: Stage 4-AC balanced robustness / protocol regret
   assets.
 
+Stage 4-AC balanced robustness assets:
+
+- The generator is
+  `experiments/scripts/generate_stage4_balanced_robustness_assets.py`.
+- The protocol is
+  `experiments/protocols/stage4ac_balanced_robustness_assets_protocol.md`.
+- Generated outputs go under
+  `experiments/results/stage4_balanced_robustness_assets/` and should not be
+  committed.
+- Stage 4-AC is the current balanced robustness / protocol regret paper asset
+  stage.
+- Protocol oracles: `windlevel_s085` is the single-goal oracle at `26/30`;
+  `fixed_s080` is the goal-reissue stress oracle at `24/30`.
+- Complete cross-protocol balanced ranking excludes `risk_adapter_v2` because
+  its goal-reissue stress result is missing.
+- `risk_adapter_v1` is expected to have the best mean valid count (`24.0/30`),
+  best worst-protocol valid count (`23/30`), and lowest total regret (`2`).
+- Expected Pareto-frontier methods: `windlevel_s085`, `fixed_s080`, and
+  `risk_adapter_v1`.
+- `risk_adapter_v21` should not be Pareto-frontier because `risk_adapter_v1`
+  has the same single-goal count and higher stress count.
+- Do not create `risk_adapter_v22` before Stage 4-AC outputs are reviewed.
+
 Stage 4-AB paper reframing decision:
 
 - The decision document is

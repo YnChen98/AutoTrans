@@ -1023,6 +1023,32 @@ reference / trajectory-health-aware, or command / state-health-aware mechanism
 rather than simple threshold tuning. The next recommended step is Stage 4-AC
 balanced robustness / protocol regret assets.
 
+## Stage 4-AC balanced robustness assets
+
+`experiments/scripts/generate_stage4_balanced_robustness_assets.py` generates
+paper-facing balanced robustness, protocol regret, and Pareto-frontier assets
+from the completed protocol-split Stage 4 counts.
+
+It writes complete cross-protocol tables for `original`, `fixed_s085`,
+`windlevel_s085`, `fixed_s080`, `risk_adapter_v1`, and `risk_adapter_v21`.
+`risk_adapter_v2` is included only in the single-protocol-only table because
+its goal-reissue stress result is missing in the current protocol-split
+matrix.
+
+Example:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/generate_stage4_balanced_robustness_assets.py \
+  --output-dir experiments/results/stage4_balanced_robustness_assets \
+  --print-summary
+```
+
+Generated outputs under `experiments/results/` are ignored and should not be
+committed. The protocol is
+`experiments/protocols/stage4ac_balanced_robustness_assets_protocol.md`.
+Review Stage 4-AC outputs before any `risk_adapter_v22` design.
+
 ## Stage 4-AB paper reframing decision
 
 `experiments/protocols/stage4ab_paper_reframing_decision.md` records the paper
