@@ -1258,6 +1258,18 @@ claim boundaries. No LaTeX compile was run. The next step is Stage 4-AQ
 LaTeX compile/check pass or Stage 4-AM5 conditional citation verification. Do
 not create `risk_adapter_v22` yet.
 
+## Stage 4-AQ LaTeX compile/check pass
+
+`experiments/protocols/stage4aq_latex_compile_check_result.md` records the
+first compile/check attempt for `paper/stage4_governor/`.
+
+The scaffold inspection completed, but compilation could not start because
+`latexmk`, `pdflatex`, and `bibtex` were not available in the local
+environment. No PDF or auxiliary LaTeX files were produced, and no manuscript
+formatting fixes were made. The next step is Stage 4-AR manuscript polish /
+layout pass after a LaTeX toolchain is available, or Stage 4-AM5 conditional
+citation verification. Do not create `risk_adapter_v22` yet.
+
 ## Stage 4-AL final figure generation plan
 
 `experiments/protocols/stage4al_final_figure_generation_plan.md` records the

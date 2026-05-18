@@ -1060,6 +1060,23 @@ Stage 4-AP manuscript source scaffold:
 - Next step after AP: Stage 4-AQ LaTeX compile/check pass or Stage 4-AM5
   conditional citation verification.
 
+Stage 4-AQ LaTeX compile/check pass:
+
+- The result document is
+  `experiments/protocols/stage4aq_latex_compile_check_result.md`.
+- The scaffold inspection commands were run for `paper/stage4_governor/`.
+- The preferred compile command
+  `latexmk -pdf -interaction=nonstopmode main.tex` could not start because
+  `latexmk` is not installed.
+- The fallback commands could not start because `pdflatex` and `bibtex` are
+  not installed.
+- No PDF, auxiliary LaTeX files, or manuscript-formatting fixes were produced
+  in Stage 4-AQ.
+- Continue: do not create `risk_adapter_v22`.
+- Next step after AQ: Stage 4-AR manuscript polish / layout pass after a
+  LaTeX toolchain is available, or Stage 4-AM5 conditional citation
+  verification.
+
 Stage 4-AL final figure generation plan:
 
 - The plan document is

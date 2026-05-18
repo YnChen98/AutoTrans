@@ -102,11 +102,17 @@ Stage 4-AP does not run LaTeX compilation. The scaffold is expected to need a
 later compile/check pass after the template, packages, figure sizing, and table
 formatting are confirmed.
 
+Stage 4-AQ attempted the first LaTeX compile/check pass, but the local
+environment did not provide `latexmk`, `pdflatex`, or `bibtex`, so compilation
+could not start:
+`experiments/protocols/stage4aq_latex_compile_check_result.md`.
+
 ## Next Steps
 
 Recommended next step:
 
-- Stage 4-AQ: LaTeX compile/check pass.
+- Stage 4-AQ2 or Stage 4-AR: rerun LaTeX compile/check in an environment with
+  the required LaTeX tools installed, then fix manuscript-formatting issues.
 
 Alternative next step:
 
