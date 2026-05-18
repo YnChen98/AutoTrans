@@ -5,6 +5,9 @@
 This document is the citation / reference planning document for the assembled
 Stage 4 paper draft:
 `experiments/protocols/stage4aj_full_paper_assembly_draft.md`.
+Stage 4-AM now defines the practical citation collection and bibliography
+insertion workflow:
+`experiments/protocols/stage4am_citation_collection_plan.md`.
 
 It does not finalize the bibliography, does not provide BibTeX entries, and
 does not replace TODO citation placeholders with unverified references. Its

@@ -25,6 +25,9 @@ Stage 4-AK now defines citation slots and reference needs for this assembled
 draft:
 `experiments/protocols/stage4ak_citation_references_plan.md`. Do not replace
 TODO citation placeholders with unverified or fabricated references.
+Stage 4-AM now defines the collection workflow that should be used to resolve
+citation placeholders before final manuscript assembly:
+`experiments/protocols/stage4am_citation_collection_plan.md`.
 
 ## Paper Title
 

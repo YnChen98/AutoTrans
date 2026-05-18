@@ -1081,10 +1081,10 @@ Stage 4-AE records the paper outline / section skeleton, Stage 4-AF records
 the paper Abstract and Introduction draft, Stage 4-AG records the Method
 section draft, Stage 4-AH records the Results section draft, Stage 4-AI
 records the Discussion and Limitations draft, Stage 4-AJ records the current
-full paper assembly draft, and Stage 4-AK records the citation / references
-plan. The next writing step is Stage 4-AL final figure generation plan or
-Stage 4-AM citation collection / bibliography insertion. Do not create
-`risk_adapter_v22` yet.
+full paper assembly draft, Stage 4-AK records the citation / references plan,
+and Stage 4-AM records the citation collection workflow. The next writing step
+is Stage 4-AM2 verified citation collection or Stage 4-AL final figure
+generation plan. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AE paper outline section skeleton
 
@@ -1099,10 +1099,10 @@ and Limitations sections, an Appendix plan, and a claim audit table.
 Stage 4-AF records the paper Abstract and Introduction draft, Stage 4-AG
 records the Method section draft, Stage 4-AH records the Results section
 draft, Stage 4-AI records the Discussion and Limitations draft, Stage 4-AJ
-records the full paper assembly draft, and Stage 4-AK records the citation /
-references plan. The next writing step is Stage 4-AL final figure generation
-plan or Stage 4-AM citation collection / bibliography insertion. Do not create
-`risk_adapter_v22` yet.
+records the full paper assembly draft, Stage 4-AK records the citation /
+references plan, and Stage 4-AM records the citation collection workflow. The
+next writing step is Stage 4-AM2 verified citation collection or Stage 4-AL
+final figure generation plan. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AF abstract introduction draft
 
@@ -1116,10 +1116,11 @@ balanced/protocol-level robustness under the tested protocols.
 
 Stage 4-AG now records the Method section draft, Stage 4-AH records the
 Results section draft, and Stage 4-AI records the Discussion and Limitations
-draft. Stage 4-AJ now records the full paper assembly draft, and Stage 4-AK
-records the citation / references plan. The next writing step is Stage 4-AL
-final figure generation plan or Stage 4-AM citation collection / bibliography
-insertion. Do not create `risk_adapter_v22` yet.
+draft. Stage 4-AJ now records the full paper assembly draft, Stage 4-AK
+records the citation / references plan, and Stage 4-AM records the citation
+collection workflow. The next writing step is Stage 4-AM2 verified citation
+collection or Stage 4-AL final figure generation plan. Do not create
+`risk_adapter_v22` yet.
 
 ## Stage 4-AG method section draft
 
@@ -1156,10 +1157,24 @@ failure-mode interpretation, and states that `risk_adapter_v22` is not
 justified without a reusable phase-aware, reference-aware, risk-health-aware,
 or failure-aware mechanism.
 
-Stage 4-AJ now records the full paper assembly draft, and Stage 4-AK records
-the citation / references plan. The next writing step is Stage 4-AL final
-figure generation plan or Stage 4-AM citation collection / bibliography
-insertion. Do not create `risk_adapter_v22` yet.
+Stage 4-AJ now records the full paper assembly draft, Stage 4-AK records the
+citation / references plan, and Stage 4-AM records the citation collection
+workflow. The next writing step is Stage 4-AM2 verified citation collection or
+Stage 4-AL final figure generation plan. Do not create `risk_adapter_v22` yet.
+
+## Stage 4-AM citation collection plan
+
+`experiments/protocols/stage4am_citation_collection_plan.md` records the
+practical citation collection and bibliography insertion workflow.
+
+The plan converts the Stage 4-AK citation slots into priority tiers, a
+collection table, a BibTeX / metadata verification checklist, paper insertion
+locations, citation-risk wording fallbacks, and an internal-vs-external
+evidence boundary. It does not finalize the bibliography and does not insert
+unverified citations.
+
+The next writing step after AM is Stage 4-AM2 verified citation collection or
+Stage 4-AL final figure generation plan. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AJ full paper assembly draft
 
@@ -1184,9 +1199,9 @@ technical gaps to explicit TODO citation slots. It does not finalize the
 bibliography, does not generate BibTeX, and should not be used to replace TODO
 placeholders with unverified references.
 
-The next writing step after AK is Stage 4-AL final figure generation plan or
-Stage 4-AM citation collection / bibliography insertion. Do not create
-`risk_adapter_v22` yet.
+Stage 4-AM now records the citation collection workflow. The next writing step
+after AM is Stage 4-AM2 verified citation collection or Stage 4-AL final figure
+generation plan. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AB paper reframing decision
 
@@ -1207,9 +1222,10 @@ Stage 4-AA3 representative trace review did not justify immediate
 regret result. Stage 4-AD now freezes the figure/table plan, Stage 4-AG
 records the Method draft, and Stage 4-AH records the Results section draft.
 Stage 4-AI records the Discussion and Limitations draft, Stage 4-AJ records the
-full paper assembly draft, and Stage 4-AK records the citation / references
-plan. The next writing step is Stage 4-AL final figure generation plan or
-Stage 4-AM citation collection / bibliography insertion.
+full paper assembly draft, Stage 4-AK records the citation / references plan,
+and Stage 4-AM records the citation collection workflow. The next writing step
+is Stage 4-AM2 verified citation collection or Stage 4-AL final figure
+generation plan.
 
 ## Stage 4-X0 final evaluation specification
 
