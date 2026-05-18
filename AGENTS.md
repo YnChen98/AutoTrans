@@ -705,8 +705,9 @@ Stage 4-AC balanced robustness assets:
 - Stage 4-AH Results section draft is complete.
 - Stage 4-AI Discussion and Limitations draft is complete.
 - Stage 4-AJ full paper assembly draft is complete.
-- Next step: Stage 4-AK citation / references plan or Stage 4-AL final figure
-  generation plan.
+- Stage 4-AK citation / references plan is complete.
+- Next step: Stage 4-AL final figure generation plan or Stage 4-AM citation
+  collection / bibliography insertion.
 
 Stage 4-AD paper figure/table plan:
 
@@ -730,8 +731,9 @@ Stage 4-AD paper figure/table plan:
 - Stage 4-AH Results section draft is complete.
 - Stage 4-AI Discussion and Limitations draft is complete.
 - Stage 4-AJ full paper assembly draft is complete.
-- Next step: Stage 4-AK citation / references plan or Stage 4-AL final figure
-  generation plan.
+- Stage 4-AK citation / references plan is complete.
+- Next step: Stage 4-AL final figure generation plan or Stage 4-AM citation
+  collection / bibliography insertion.
 
 Stage 4-AE paper outline / section skeleton:
 
@@ -752,8 +754,9 @@ Stage 4-AE paper outline / section skeleton:
 - Stage 4-AH Results section draft is complete.
 - Stage 4-AI Discussion and Limitations draft is complete.
 - Stage 4-AJ full paper assembly draft is complete.
-- Next step after AJ: Stage 4-AK citation / references plan or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AK citation / references plan is complete.
+- Next step after AK: Stage 4-AL final figure generation plan or Stage 4-AM
+  citation collection / bibliography insertion.
 
 Stage 4-AF paper Abstract and Introduction draft:
 
@@ -775,8 +778,9 @@ Stage 4-AF paper Abstract and Introduction draft:
 - Stage 4-AH Results section draft is complete.
 - Stage 4-AI Discussion and Limitations draft is complete.
 - Stage 4-AJ full paper assembly draft is complete.
-- Next step after AJ: Stage 4-AK citation / references plan or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AK citation / references plan is complete.
+- Next step after AK: Stage 4-AL final figure generation plan or Stage 4-AM
+  citation collection / bibliography insertion.
 
 Stage 4-AG Method section draft:
 
@@ -798,8 +802,9 @@ Stage 4-AG Method section draft:
 - Stage 4-AH Results section draft is complete.
 - Stage 4-AI Discussion and Limitations draft is complete.
 - Stage 4-AJ full paper assembly draft is complete.
-- Next step after AJ: Stage 4-AK citation / references plan or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AK citation / references plan is complete.
+- Next step after AK: Stage 4-AL final figure generation plan or Stage 4-AM
+  citation collection / bibliography insertion.
 
 Stage 4-AH Results section draft:
 
@@ -823,8 +828,9 @@ Stage 4-AH Results section draft:
 - Do not create `risk_adapter_v22` yet.
 - Stage 4-AI Discussion and Limitations draft is complete.
 - Stage 4-AJ full paper assembly draft is complete.
-- Next step after AJ: Stage 4-AK citation / references plan or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AK citation / references plan is complete.
+- Next step after AK: Stage 4-AL final figure generation plan or Stage 4-AM
+  citation collection / bibliography insertion.
 
 Stage 4-AI Discussion and Limitations draft:
 
@@ -850,8 +856,9 @@ Stage 4-AI Discussion and Limitations draft:
   reusable phase-aware, reference-aware, risk-health-aware, or failure-aware
   mechanism is established.
 - Stage 4-AJ full paper assembly draft is complete.
-- Next step after AJ: Stage 4-AK citation / references plan or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AK citation / references plan is complete.
+- Next step after AK: Stage 4-AL final figure generation plan or Stage 4-AM
+  citation collection / bibliography insertion.
 
 Stage 4-AJ full paper assembly draft:
 
@@ -870,8 +877,32 @@ Stage 4-AJ full paper assembly draft:
   statistical significance claim, no safety guarantee, diagnostic-only
   failure labels, and simulation-only evidence.
 - Do not create `risk_adapter_v22` yet; review the full-paper draft first.
-- Next step after AJ: Stage 4-AK citation / references plan or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AK citation / references plan is complete.
+- Next step after AK: Stage 4-AL final figure generation plan or Stage 4-AM
+  citation collection / bibliography insertion.
+
+Stage 4-AK citation / references plan:
+
+- The plan document is
+  `experiments/protocols/stage4ak_citation_references_plan.md`.
+- It maps Abstract / Introduction, Related Work, Method, Experimental Setup,
+  Results, and Discussion / Limitations claims to required citation
+  categories.
+- It does not finalize the bibliography, does not generate BibTeX, and does
+  not replace TODO citation placeholders with unverified references.
+- Citation slots include AutoTrans-like suspended-payload transport,
+  payload-aware planning, payload MPC, SO3 / geometric control, reference /
+  runtime governors, safety filters, learned risk prediction, learning-enhanced
+  aerial robustness, robotics benchmarking, stress testing, repeated-run
+  evaluation, and failure analysis / taxonomy.
+- It also records missing technical details needed before manuscript
+  submission, including risk score source, risk model training data, feature
+  horizons, inference rate, calibration / confidence, exact strong-wind setup,
+  simulator version / stack commit / branch, strict-valid metric definition,
+  repeat convention, and generated figure paths.
+- Continue: do not create `risk_adapter_v22` yet.
+- Next step after AK: Stage 4-AL final figure generation plan or Stage 4-AM
+  citation collection / bibliography insertion.
 
 Stage 4-AB paper reframing decision:
 
@@ -895,8 +926,9 @@ Stage 4-AB paper reframing decision:
 - Stage 4-AH now records the Results section draft.
 - Stage 4-AI now records the Discussion and Limitations draft.
 - Stage 4-AJ now records the full paper assembly draft.
-- Next step: Stage 4-AK citation / references plan or Stage 4-AL final figure
-  generation plan.
+- Stage 4-AK now records the citation / references plan.
+- Next step: Stage 4-AL final figure generation plan or Stage 4-AM citation
+  collection / bibliography insertion.
 - Do not create `risk_adapter_v22` yet.
 - Only consider `risk_adapter_v22` if later evidence shows a generic
   phase-aware, failure-aware, risk-health-aware, reference /

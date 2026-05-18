@@ -21,6 +21,11 @@ reviewed. A future variant should only be attempted if later evidence supports
 a reusable phase-aware, reference-aware, risk-health-aware, or failure-aware
 mechanism.
 
+Stage 4-AK now defines citation slots and reference needs for this assembled
+draft:
+`experiments/protocols/stage4ak_citation_references_plan.md`. Do not replace
+TODO citation placeholders with unverified or fabricated references.
+
 ## Paper Title
 
 Recommended title:

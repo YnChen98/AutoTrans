@@ -10,6 +10,9 @@ Stage 4-AF now provides the current Abstract and Introduction draft:
 Stage 4-AG now expands the Method skeleton into the current Method section
 draft:
 `experiments/protocols/stage4ag_method_section_draft.md`.
+Stage 4-AK now tracks citation slots and reference planning for the assembled
+paper:
+`experiments/protocols/stage4ak_citation_references_plan.md`.
 
 Target style: IROS/ICRA/RA-L system-method paper. The paper should read as a
 robotics system and method contribution, not as a raw experiment log or a
