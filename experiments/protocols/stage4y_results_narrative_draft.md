@@ -25,6 +25,10 @@ future Results text should use. The key paper-facing result is that
 worst-protocol valid count (`23/30`), and lowest total regret (`2`), while
 `windlevel_s085` and `fixed_s080` remain protocol-specialist baselines.
 
+Stage 4-AD supersedes earlier informal figure thinking with a frozen main
+paper figure/table plan:
+`experiments/protocols/stage4ad_paper_figure_table_plan.md`.
+
 ## Paper-Ready Results Subsection
 
 We evaluated command-adaptation strategies under two protocol-labeled
@@ -112,9 +116,12 @@ Do not frame the paper as:
 - Use the Stage 4-AC2 balanced robustness table as the main paper-facing
   cross-protocol comparison:
   `experiments/protocols/stage4ac_balanced_robustness_assets_result.md`.
-- Plan paper figures/tables and update the Results narrative around balanced
-  robustness, protocol regret, Pareto frontier, and failure-mode-aware
-  diagnosis.
+- Use the Stage 4-AD paper figure/table plan as the placement guide for the
+  main Results and Failure Analysis figures:
+  `experiments/protocols/stage4ad_paper_figure_table_plan.md`.
+- Update the Results narrative around balanced robustness, protocol regret,
+  Pareto frontier, and failure-mode-aware diagnosis using the Stage 4-AD
+  figure/table placement.
 - Use the Stage 4-Z failure-mode paper assets as the next support for this
   Results narrative:
   `experiments/protocols/stage4z_failure_mode_paper_assets_protocol.md`.

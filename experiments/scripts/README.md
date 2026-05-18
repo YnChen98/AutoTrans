@@ -1062,8 +1062,23 @@ the best worst-protocol valid count (`23/30`), and the lowest total regret
 remains the goal-reissue stress specialist, and `risk_adapter_v21` should not
 be framed as the final protagonist.
 
-Do not create `risk_adapter_v22` yet. Proceed to paper figure/table planning
-and Results writing using the Stage 4-AC assets.
+Do not create `risk_adapter_v22` yet. Stage 4-AD now freezes the
+figure/table plan for Results writing using the Stage 4-AC assets.
+
+## Stage 4-AD paper figure/table plan
+
+`experiments/protocols/stage4ad_paper_figure_table_plan.md` freezes the main
+paper figure/table plan for the reframed Stage 4 paper.
+
+The plan uses protocol-split success, balanced robustness / protocol regret,
+invalid-only failure groups, and representative trace case studies. It centers
+`risk_adapter_v1` as the balanced learned / risk-conditioned governor,
+presents `windlevel_s085` and `fixed_s080` as protocol specialists, and keeps
+`risk_adapter_v21` as a strong nominal / single-goal variant rather than the
+final method.
+
+The next writing step is Stage 4-AE paper outline / section skeleton. Do not
+create `risk_adapter_v22` yet.
 
 ## Stage 4-AB paper reframing decision
 
@@ -1081,7 +1096,8 @@ The Stage 4-AB table tracks single-goal count, stress count, mean count,
 worst-protocol count, and total regret relative to the protocol oracle. The
 Stage 4-AA3 representative trace review did not justify immediate
 `risk_adapter_v22`; Stage 4-AC2 now records the balanced robustness / protocol
-regret result, and the next step is paper figure/table planning.
+regret result. Stage 4-AD now freezes the figure/table plan, and the next step
+is Stage 4-AE paper outline / section skeleton.
 
 ## Stage 4-X0 final evaluation specification
 

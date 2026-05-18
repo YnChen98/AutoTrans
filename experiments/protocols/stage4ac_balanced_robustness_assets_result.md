@@ -18,6 +18,10 @@ not be the final protagonist.
 Balanced robustness / protocol regret is the correct paper-facing framing for
 the current Stage 4 result.
 
+Stage 4-AD defines the paper figure/table placement that should carry these
+metrics into the main Results and Failure Analysis sections:
+`experiments/protocols/stage4ad_paper_figure_table_plan.md`.
+
 ## Protocol Oracle Definition
 
 - Single-goal mission oracle: `windlevel_s085`, `26/30`.
@@ -75,9 +79,12 @@ Claims to avoid:
 
 Do not create `risk_adapter_v22` yet.
 
-Proceed to paper figure/table planning and Results writing using the Stage 4-AC
-assets. A future `risk_adapter_v22` should be considered only if later work
-requires a clearly mechanism-driven extension.
+Use the Stage 4-AD paper figure/table plan for Results writing with the Stage
+4-AC assets. A future `risk_adapter_v22` should be considered only if later
+work requires a clearly mechanism-driven extension.
+
+Stage 4-AD records that figure/table plan and sets Stage 4-AE as the next
+writing step: paper outline / section skeleton.
 
 ## What Not To Claim
 

@@ -696,8 +696,28 @@ Stage 4-AC balanced robustness assets:
 - `risk_adapter_v1` is the tentative balanced learned / risk-conditioned
   protagonist.
 - Do not create `risk_adapter_v22` yet.
-- Next step: paper figure/table planning and Results writing using the Stage
-  4-AC assets.
+- Stage 4-AD freezes the paper figure/table plan using protocol-split
+  success, balanced robustness / protocol regret, invalid-only failure groups,
+  and representative trace case studies.
+- Next step: Stage 4-AE paper outline / section skeleton.
+
+Stage 4-AD paper figure/table plan:
+
+- The plan document is
+  `experiments/protocols/stage4ad_paper_figure_table_plan.md`.
+- Main paper evidence layers: protocol-split success, balanced robustness /
+  protocol regret, invalid-only failure groups, and representative trace case
+  studies.
+- Main protagonist remains `risk_adapter_v1` as the balanced learned /
+  risk-conditioned execution governor.
+- `windlevel_s085` and `fixed_s080` should be framed as protocol specialists.
+- `risk_adapter_v21` should remain a strong nominal / single-goal variant or
+  ablation, not the final method.
+- Main planned items: protocol-split balanced robustness table, architecture
+  figure, protocol split diagram, Pareto plot, protocol regret bar chart,
+  invalid-only failure group stacked bar, and representative trace case study.
+- Do not create `risk_adapter_v22` yet.
+- Next step: Stage 4-AE paper outline / section skeleton.
 
 Stage 4-AB paper reframing decision:
 
@@ -713,8 +733,9 @@ Stage 4-AB paper reframing decision:
 - `fixed_s080` is the goal-reissue stress specialist at `24/30`.
 - `risk_adapter_v1` has the lowest current dual-protocol regret relative to
   the protocol oracle: `(26 - 25) + (24 - 23) = 2`.
-- Next step: paper figure/table planning and Results writing using Stage 4-AC
-  balanced robustness / protocol regret assets.
+- Stage 4-AD now freezes the paper figure/table plan that follows this
+  balanced-governor framing.
+- Next step: Stage 4-AE paper outline / section skeleton.
 - Do not create `risk_adapter_v22` yet.
 - Only consider `risk_adapter_v22` if later evidence shows a generic
   phase-aware, failure-aware, risk-health-aware, reference /
