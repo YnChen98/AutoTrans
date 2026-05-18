@@ -1079,9 +1079,9 @@ final method.
 
 Stage 4-AE records the paper outline / section skeleton, Stage 4-AF records
 the paper Abstract and Introduction draft, Stage 4-AG records the Method
-section draft, and Stage 4-AH records the Results section draft. The next
-writing step is Stage 4-AI Discussion and Limitations draft or Stage 4-AJ full
-paper assembly. Do not create `risk_adapter_v22` yet.
+section draft, Stage 4-AH records the Results section draft, and Stage 4-AI
+records the Discussion and Limitations draft. The next writing step is Stage
+4-AJ full paper assembly. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AE paper outline section skeleton
 
@@ -1094,9 +1094,10 @@ sections, Results paragraphs aligned to the Stage 4-AD figure plan, Discussion
 and Limitations sections, an Appendix plan, and a claim audit table.
 
 Stage 4-AF records the paper Abstract and Introduction draft, Stage 4-AG
-records the Method section draft, and Stage 4-AH records the Results section
-draft. The next writing step is Stage 4-AI Discussion and Limitations draft or
-Stage 4-AJ full paper assembly. Do not create `risk_adapter_v22` yet.
+records the Method section draft, Stage 4-AH records the Results section
+draft, and Stage 4-AI records the Discussion and Limitations draft. The next
+writing step is Stage 4-AJ full paper assembly. Do not create
+`risk_adapter_v22` yet.
 
 ## Stage 4-AF abstract introduction draft
 
@@ -1108,9 +1109,9 @@ risk-conditioned protagonist, keeps `risk_adapter_v21` as a nominal /
 single-goal variant or ablation, and uses bounded wording around
 balanced/protocol-level robustness under the tested protocols.
 
-Stage 4-AG now records the Method section draft, and Stage 4-AH records the
-Results section draft. The next writing step is Stage 4-AI Discussion and
-Limitations draft or Stage 4-AJ full paper assembly. Do not create
+Stage 4-AG now records the Method section draft, Stage 4-AH records the
+Results section draft, and Stage 4-AI records the Discussion and Limitations
+draft. The next writing step is Stage 4-AJ full paper assembly. Do not create
 `risk_adapter_v22` yet.
 
 ## Stage 4-AG method section draft
@@ -1137,8 +1138,19 @@ risk-conditioned protagonist, presents `windlevel_s085` and `fixed_s080` as
 protocol specialists, and keeps `risk_adapter_v21` as a strong nominal /
 single-goal variant rather than the final method.
 
-The next writing step after AH is Stage 4-AI Discussion and Limitations draft
-or Stage 4-AJ full paper assembly. Do not create `risk_adapter_v22` yet.
+## Stage 4-AI discussion limitations draft
+
+`experiments/protocols/stage4ai_discussion_limitations_draft.md` records the
+current paper Discussion and Limitations draft.
+
+The draft argues for balanced robustness rather than universal learned-method
+dominance, explains why strong simple baselines matter, bounds the
+failure-mode interpretation, and states that `risk_adapter_v22` is not
+justified without a reusable phase-aware, reference-aware, risk-health-aware,
+or failure-aware mechanism.
+
+The next writing step after AI is Stage 4-AJ full paper assembly. Do not
+create `risk_adapter_v22` yet.
 
 ## Stage 4-AB paper reframing decision
 
@@ -1158,8 +1170,8 @@ Stage 4-AA3 representative trace review did not justify immediate
 `risk_adapter_v22`; Stage 4-AC2 now records the balanced robustness / protocol
 regret result. Stage 4-AD now freezes the figure/table plan, Stage 4-AG
 records the Method draft, and Stage 4-AH records the Results section draft.
-The next writing step is Stage 4-AI Discussion and Limitations draft or Stage
-4-AJ full paper assembly.
+Stage 4-AI records the Discussion and Limitations draft. The next writing step
+is Stage 4-AJ full paper assembly.
 
 ## Stage 4-X0 final evaluation specification
 

@@ -20,6 +20,9 @@ not the final method.
 Stage 4-AH now drafts the Results section using the same `risk_adapter_v1`
 centered balanced robustness framing:
 `experiments/protocols/stage4ah_results_section_draft.md`.
+Stage 4-AI expands the Method claim boundaries in the Discussion and
+Limitations draft:
+`experiments/protocols/stage4ai_discussion_limitations_draft.md`.
 
 ## Method Section Draft
 

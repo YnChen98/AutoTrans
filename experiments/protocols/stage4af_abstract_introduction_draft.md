@@ -14,6 +14,9 @@ Abstract / Introduction claims with protocol-split success, balanced
 robustness, protocol regret, invalid-only failure groups, and representative
 trace interpretation:
 `experiments/protocols/stage4ah_results_section_draft.md`.
+Stage 4-AI now records the Discussion and Limitations draft that bounds these
+claims:
+`experiments/protocols/stage4ai_discussion_limitations_draft.md`.
 
 `risk_adapter_v1` remains the current tentative balanced learned /
 risk-conditioned protagonist. `risk_adapter_v21` remains a nominal /

@@ -19,6 +19,9 @@ No learned method uniformly dominates heuristic or fixed baselines. The paper
 should explicitly respect `windlevel_s085` as the single-goal specialist and
 `fixed_s080` as the goal-reissue stress specialist.
 
+Stage 4-AI now provides the current Discussion and Limitations draft:
+`experiments/protocols/stage4ai_discussion_limitations_draft.md`.
+
 ## Results Section Draft
 
 ### 4.1 Protocol-Split Success Rates
