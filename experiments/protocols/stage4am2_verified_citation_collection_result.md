@@ -10,6 +10,9 @@ This document does not finalize the bibliography, does not generate BibTeX,
 and does not insert final citation keys into manuscript prose. It records only
 the metadata provided in the verified citation list. Incomplete metadata is
 marked as `TODO` / needs verification before final bibliography insertion.
+Stage 4-AM3 now drafts section-level citation insertion guidance based on these
+keys:
+`experiments/protocols/stage4am3_citation_insertion_draft.md`.
 
 The current paper framing remains:
 

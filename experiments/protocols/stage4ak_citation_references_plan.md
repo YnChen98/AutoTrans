@@ -11,6 +11,9 @@ insertion workflow:
 Stage 4-AM2 now provides candidate verified citations for the TODO citation
 slots:
 `experiments/protocols/stage4am2_verified_citation_collection_result.md`.
+Stage 4-AM3 now maps the verified and conditional keys into draft manuscript
+sections:
+`experiments/protocols/stage4am3_citation_insertion_draft.md`.
 Stage 4-AL now defines the final figure/table generation plan; final
 citations, figure captions, and paper claims should be checked together:
 `experiments/protocols/stage4al_final_figure_generation_plan.md`.

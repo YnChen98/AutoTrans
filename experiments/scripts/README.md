@@ -1208,6 +1208,23 @@ The next citation step is Stage 4-AM3 BibTeX drafting / citation insertion
 plan, or Stage 4-AO manuscript formatting plan in parallel. Do not create
 `risk_adapter_v22` yet.
 
+## Stage 4-AM3 citation insertion draft
+
+`experiments/protocols/stage4am3_citation_insertion_draft.md` maps Stage
+4-AM2 citation keys into the current full paper assembly draft.
+
+The draft separates ready-to-use keys, conditional keys that require metadata
+verification, and internal-result references such as Table 1 and Figures 1-6.
+It provides citation insertion guidance for the Abstract, Introduction,
+Related Work, Method, Experimental Setup, and Discussion / Limitations
+sections.
+
+This stage does not generate BibTeX and does not insert final citations into
+the manuscript body. Conditional keys should remain marked "use after
+verification" until their AM2 metadata gaps are closed. The next step is Stage
+4-AM4 BibTeX drafting after metadata verification, or Stage 4-AO manuscript
+formatting plan. Do not create `risk_adapter_v22` yet.
+
 ## Stage 4-AL final figure generation plan
 
 `experiments/protocols/stage4al_final_figure_generation_plan.md` records the

@@ -31,6 +31,9 @@ citation placeholders before final manuscript assembly:
 Stage 4-AM2 now records the verified citation collection that should be used
 to resolve citation placeholders before final manuscript formatting:
 `experiments/protocols/stage4am2_verified_citation_collection_result.md`.
+Stage 4-AM3 now drafts citation insertion guidance for the assembled sections;
+final manuscript formatting should resolve TODOs through this AM3 plan:
+`experiments/protocols/stage4am3_citation_insertion_draft.md`.
 Stage 4-AL now plans the final figure/table asset package for this assembled
 draft:
 `experiments/protocols/stage4al_final_figure_generation_plan.md`.
