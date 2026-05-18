@@ -7,6 +7,11 @@ assembled Stage 4 paper draft. It maps the current paper claims to the
 figure/table assets, source generators, formatting expectations, and review
 risks needed before producing final paper-ready figure files.
 
+Stage 4-AL2 now implements the copy/check paper figure package generator:
+`experiments/scripts/create_stage4_paper_figure_package.py`.
+The protocol for that package generator is
+`experiments/protocols/stage4al_paper_figure_package_protocol.md`.
+
 No figures are generated in this task. No figure-generation scripts should be
 run here, and no generated PNG/PDF/SVG/CSV/TXT/MD outputs should be created or
 staged.
@@ -324,7 +329,8 @@ manual figure package pass.
 Recommended next step:
 
 - Stage 4-AL2: paper figure package generation script or manual figure package
-  checklist.
+  checklist. This is now implemented by
+  `experiments/scripts/create_stage4_paper_figure_package.py`.
 
 Alternative parallel step:
 

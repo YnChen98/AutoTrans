@@ -31,6 +31,8 @@ citation placeholders before final manuscript assembly:
 Stage 4-AL now plans the final figure/table asset package for this assembled
 draft:
 `experiments/protocols/stage4al_final_figure_generation_plan.md`.
+Stage 4-AL2 now packages existing paper figure assets for manuscript assembly:
+`experiments/scripts/create_stage4_paper_figure_package.py`.
 
 ## Paper Title
 
