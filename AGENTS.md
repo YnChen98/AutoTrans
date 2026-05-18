@@ -1037,8 +1037,27 @@ Stage 4-AO manuscript formatting plan:
 - It maps source inputs from Stage 4-AF/AJ, Stage 4-AG/AJ, Stage 4-AH/AJ,
   Stage 4-AI/AJ, the Stage 4-AL figure package, and the Stage 4-AM4 draft
   BibTeX package.
+- Stage 4-AP manuscript source scaffold is complete.
 - Continue: do not create `risk_adapter_v22`.
-- Next step after AO: Stage 4-AP manuscript source scaffold or Stage 4-AM5
+- Next step after AP: Stage 4-AQ LaTeX compile/check pass or Stage 4-AM5
+  conditional citation verification.
+
+Stage 4-AP manuscript source scaffold:
+
+- The scaffold lives under `paper/stage4_governor/`.
+- The protocol document is
+  `experiments/protocols/stage4ap_manuscript_scaffold_protocol.md`.
+- It creates an IROS / ICRA-like draft `main.tex`, modular section files,
+  `refs.bib` from ready-to-use Stage 4-AM4 entries, copied paper figure assets,
+  a Table 1 LaTeX file, and supplementary placeholders.
+- It does not run LaTeX compilation, simulation, RViz, `roslaunch`,
+  `catkin_make`, or figure generation scripts.
+- Conditional citation keys remain TODO-only until metadata verification:
+  `Barikbin2019WindPayloadTracking`, `Wabersich2021PredictiveSafetyFilter`,
+  `Jin2025NeuralPredictorPayload`,
+  `Monteleone2023BalanceResilienceBenchmark`, and `Dogga2023AutoARTS`.
+- Continue: do not create `risk_adapter_v22`.
+- Next step after AP: Stage 4-AQ LaTeX compile/check pass or Stage 4-AM5
   conditional citation verification.
 
 Stage 4-AL final figure generation plan:

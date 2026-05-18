@@ -1,0 +1,57 @@
+% TODO: Replace with official target venue template before submission.
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
+
+\IEEEoverridecommandlockouts
+\overrideIEEEmargins
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{array}
+
+\title{\LARGE \bf
+Risk-Conditioned Execution Governance for Balanced Robustness in Windy Suspended-Payload UAV Transport}
+
+\author{TODO: Author names and affiliations}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Suspended-payload UAV transport in strong wind is sensitive to runtime
+execution aggressiveness: even with payload-aware planning, MPC, and low-level
+control, the same planned motion can become too aggressive or overly
+conservative under different wind and mission conditions. We propose a drop-in
+risk-conditioned execution governor that adapts command execution through the
+existing \texttt{speed\_scale} and \texttt{acceleration\_scale} interface,
+leaving the planner/MPC/controller stack unchanged. To avoid a misleading
+single aggregate, we evaluate strong-wind behavior under two protocols: a
+single-goal mission protocol (\texttt{goal\_repeat=1}) and a goal-reissue
+stress protocol (\texttt{goal\_repeat=10}). The results reveal strong protocol
+specialists: \texttt{windlevel\_s085} is best in the single-goal protocol with
+26/30 strict-valid runs, whereas \texttt{fixed\_s080} is best in the stress
+protocol with 24/30 strict-valid runs. Among the evaluated learned /
+risk-conditioned methods, \texttt{risk\_adapter\_v1} is the most balanced,
+achieving the best mean valid count (24.0/30), best worst-protocol count
+(23/30), and lowest total regret (2) relative to the protocol oracles.
+Invalid-only failure groups and representative traces further show that
+aggregate success hides distinct failure modes, motivating failure-aware
+interpretation. These results support balanced robustness analysis under the
+tested protocols while making no statistical significance claim, no formal
+safety guarantee, and no broad real-world deployment claim.
+\end{abstract}
+
+\input{sections/01_intro}
+\input{sections/02_related_work}
+\input{sections/03_method}
+\input{sections/04_experiments}
+\input{sections/05_results}
+\input{sections/06_discussion}
+\input{sections/07_conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

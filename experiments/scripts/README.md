@@ -1247,6 +1247,17 @@ a proposed manuscript layout. The next step is Stage 4-AP manuscript source
 scaffold or Stage 4-AM5 conditional citation verification. Do not create
 `risk_adapter_v22` yet.
 
+## Stage 4-AP manuscript source scaffold
+
+`paper/stage4_governor/` now contains the draft manuscript source scaffold for
+the reframed Stage 4 paper.
+
+`experiments/protocols/stage4ap_manuscript_scaffold_protocol.md` records the
+created files, source inputs, copied figure assets, citation boundaries, and
+claim boundaries. No LaTeX compile was run. The next step is Stage 4-AQ
+LaTeX compile/check pass or Stage 4-AM5 conditional citation verification. Do
+not create `risk_adapter_v22` yet.
+
 ## Stage 4-AL final figure generation plan
 
 `experiments/protocols/stage4al_final_figure_generation_plan.md` records the

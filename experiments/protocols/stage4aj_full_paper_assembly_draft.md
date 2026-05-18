@@ -41,6 +41,9 @@ Stage 4-AL2 now packages existing paper figure assets for manuscript assembly:
 `experiments/scripts/create_stage4_paper_figure_package.py`.
 Stage 4-AO now plans manuscript formatting and the future source scaffold:
 `experiments/protocols/stage4ao_manuscript_formatting_plan.md`.
+Stage 4-AP now turns this assembled draft into the
+`paper/stage4_governor/` manuscript scaffold:
+`experiments/protocols/stage4ap_manuscript_scaffold_protocol.md`.
 Stage 4-AN now specifies the manual schematic details for Figure 1 and Figure
 2:
 `experiments/protocols/stage4an_manual_schematic_spec.md`.

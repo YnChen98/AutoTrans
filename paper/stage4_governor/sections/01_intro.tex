@@ -1,0 +1,77 @@
+\section{Introduction}
+
+Suspended-payload UAV transport enables aerial systems to move objects that
+cannot be rigidly attached to the vehicle, but the suspended load also makes
+the task sensitive to coupled vehicle-load dynamics
+\cite{Sreenath2013DifferentiallyFlatHybrid,Li2023AutoTrans}. Under strong wind,
+small tracking errors, payload swing, and transient speed changes can interact
+with the cable-suspended payload and produce qualitatively different outcomes
+across repeated runs \cite{Son2020ObstacleAvoidanceSuspendedLoad,GuerreroSanchez2017SwingAttenuation}.
+Robust transport in this setting therefore requires not only feasible motion
+generation and tracking, but also careful control of how aggressively the
+planned motion is executed.
+
+Payload-aware planning, MPC, and low-level control provide the core stack for
+generating and tracking feasible trajectories
+\cite{Li2023AutoTrans,Son2020ObstacleAvoidanceSuspendedLoad,UrbinaBrito2021PredictivePayloadTransport,Lee2010GeometricTrackingSE3}.
+However, improving these components alone does not fully address the runtime
+execution-aggressiveness problem. A fixed execution setting can be effective
+for one mission protocol or wind/task phase while becoming too aggressive, too
+conservative, or poorly timed in another. This creates a practical gap between
+trajectory feasibility and balanced protocol-level robustness under repeated
+strong-wind evaluation.
+
+We study execution governance as a drop-in layer on top of an AutoTrans-like
+suspended-payload UAV stack. The governor modifies execution through
+\texttt{speed\_scale} and \texttt{acceleration\_scale}, so it can be attached
+externally without rewriting the planner, payload MPC, or SO3 controller.
+External reference or command modulation has a long control precedent
+\cite{Garone2017ReferenceCommandGovernorsSurvey,Garone2016ExplicitReferenceGovernor,Li2021ActionGovernor},
+but our governor is empirical and is evaluated by repeated-run behavior rather
+than by formal safety certification. In the learned variant, risk-conditioned
+signals are used to choose conservative or less conservative execution scales,
+turning runtime aggressiveness into an interface-level adaptation problem
+rather than a planner/controller redesign.
+
+The evaluation also requires a protocol split. A single-goal mission protocol
+(\texttt{goal\_repeat=1}) tests one commanded mission and is closest to nominal
+single-goal execution. A goal-reissue stress protocol
+(\texttt{goal\_repeat=10}) repeatedly republishes the goal and stresses
+reference-update, post-arrival, and repeated-command behavior. Stress testing
+and benchmark design literature cautions that protocol choice affects what a
+score means \cite{Koren2018AdaptiveStressTesting,Nalic2020StressTestingScenarioBasedADS,Muller2019MeasureTargetConfusion}.
+Because these protocols expose different failure modes and method rankings,
+collapsing them into a mixed-protocol aggregate would obscure the trade-offs
+that matter for evaluated robustness.
+
+Our completed strong-wind evaluation shows that no current learned variant
+dominates both protocols. \texttt{windlevel\_s085} is the single-goal
+specialist, achieving 26/30 strict-valid runs under \texttt{goal\_repeat=1},
+while \texttt{fixed\_s080} is the goal-reissue stress specialist, achieving
+24/30 strict-valid runs under \texttt{goal\_repeat=10}. The learned /
+risk-conditioned governor \texttt{risk\_adapter\_v1} is the most balanced
+current method, with the best mean valid count (24.0/30), best worst-protocol
+valid count (23/30), and lowest total regret (2). By contrast,
+\texttt{risk\_adapter\_v21} remains a strong nominal / single-goal variant, but
+it is weaker under stress and should not be framed as the overall best method.
+
+This paper makes four contributions:
+
+\begin{itemize}
+  \item We introduce a drop-in learned / risk-conditioned execution governor
+  for suspended-payload UAV transport that adapts \texttt{speed\_scale} and
+  \texttt{acceleration\_scale} without replacing the planner, payload MPC, or
+  SO3 controller.
+  \item We define a protocol-split strong-wind evaluation that separates the
+  single-goal mission protocol (\texttt{goal\_repeat=1}) from the goal-reissue
+  stress protocol (\texttt{goal\_repeat=10}), avoiding a mixed-protocol
+  aggregate as the main result.
+  \item We report balanced robustness and protocol regret metrics showing that
+  \texttt{risk\_adapter\_v1} is the most balanced current learned /
+  risk-conditioned method, while \texttt{windlevel\_s085} and
+  \texttt{fixed\_s080} are strong protocol specialists.
+  \item We provide a failure-mode-aware diagnostic workflow based on
+  invalid-only failure groups and representative traces, clarifying why
+  aggregate strict-valid counts alone are insufficient for interpreting
+  robustness.
+\end{itemize}

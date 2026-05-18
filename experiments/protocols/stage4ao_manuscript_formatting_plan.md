@@ -12,6 +12,10 @@ This task does not create LaTeX files, BibTeX files, a `paper/` directory, a
 `manuscript/` directory, or any final figure/table files. It prepares for a
 later Stage 4-AP manuscript source scaffold.
 
+Stage 4-AP now creates the planned manuscript scaffold under
+`paper/stage4_governor/`:
+`experiments/protocols/stage4ap_manuscript_scaffold_protocol.md`.
+
 The current paper framing remains:
 
 - risk-conditioned execution governance,

@@ -1,0 +1,66 @@
+\section{Discussion and Limitations}
+
+\subsection{Why Protocol Split Matters}
+
+The single-goal mission protocol and the goal-reissue stress protocol expose
+different method rankings. \texttt{windlevel\_s085} is strongest in the
+single-goal setting, while \texttt{fixed\_s080} is strongest under goal-reissue
+stress. A mixed aggregate would hide this structure and could make a method
+look broadly robust even if it is actually specialized to one regime.
+
+\subsection{Why Strong Simple Baselines Matter}
+
+The strong heuristic and static baselines are not a weakness of the evaluation.
+They reveal that execution governance is a real operating-point problem:
+simple scales can work well when matched to a protocol, but they also expose
+trade-offs across protocols. Their strength makes the balanced robustness
+claim for \texttt{risk\_adapter\_v1} more meaningful because it is measured
+against strong specialists rather than weak baselines.
+
+\subsection{Balanced Robustness as Deployment-Oriented Criterion}
+
+\texttt{risk\_adapter\_v1} is the current balanced protagonist because it has
+the best mean valid count, best worst-protocol count, and lowest total regret
+under the tested protocols. This does not mean it is statistically best,
+universally best, or guaranteed safe. The claim is narrower: among the
+currently evaluated learned / risk-conditioned governors, it gives the most
+balanced protocol-level behavior.
+
+\subsection{Failure-Mode-Aware Interpretation}
+
+Invalid-only failure groups help interpret where failures concentrate, using
+categories such as \texttt{command\_control\_upstream},
+\texttt{planner\_reference\_upstream}, and \texttt{state\_task\_upstream}.
+These labels are diagnostic rather than exact physical root-cause proof.
+Representative traces support mechanism hypotheses, including early
+pre-arrival vulnerability in Trial 4 stress failures and delayed post-arrival
+divergence in a Trial 6 single-goal bottleneck.
+
+\subsection{Why \texttt{risk\_adapter\_v22} Is Not Introduced Yet}
+
+The representative trace review did not justify a simple threshold patch.
+Trial 4 stress weaknesses include early pre-arrival vulnerability and risk
+availability or timing issues, while Trial 6 shows that lower scale is not
+automatically safer. A future governor should be phase-aware, reference-aware,
+risk-health-aware, or failure-aware only if a reusable mechanism is
+established. Trial-specific patching is outside the current paper claim.
+
+\subsection{Limitations}
+
+The evidence is simulation-only and should not be described as a real-world
+deployment claim. The repeated-run counts are descriptive and do not establish
+statistical significance. The execution governor is empirical and does not
+provide a formal safety guarantee. Failure-group labels are diagnostic and do
+not prove exact physical root cause. The main evaluation focuses on Trials 4,
+5, and 6, and \texttt{risk\_adapter\_v2} lacks a matched stress result for the
+balanced table. The source, training, calibration, and confidence behavior of
+the risk scores also require clearer documentation before a stronger journal
+extension.
+
+\subsection{Future Work}
+
+Future work should investigate trace-driven phase-aware governors, risk
+availability or confidence fallback, broader fixed-scale and wind-level
+frontier sweeps, risk calibration and delayed/shuffled risk ablations,
+speed-only versus acceleration-only scaling, additional wind profiles, payload
+masses, cable lengths, and hardware or HIL validation if available.

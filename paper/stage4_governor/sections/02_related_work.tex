@@ -1,0 +1,78 @@
+\section{Related Work}
+
+\subsection{Suspended-Payload UAV Transport and Control}
+
+Suspended-payload UAV transport has been studied through coupled-load
+trajectory generation, integrated planning and control stacks, online optimal
+trajectory generation, predictive payload control, and geometric quadrotor
+control. Differential-flatness and hybrid-system formulations provide an early
+foundation for cable-suspended load trajectory generation
+\cite{Sreenath2013DifferentiallyFlatHybrid}, while integrated frameworks such
+as AutoTrans combine planning and control for autonomous payload transportation
+\cite{Li2023AutoTrans}. Real-time optimal trajectory generation has also been
+used for obstacle avoidance with suspended loads
+\cite{Son2020ObstacleAvoidanceSuspendedLoad}, and predictive control has been
+applied to aerial payload transport with swing-related constraints
+\cite{UrbinaBrito2021PredictivePayloadTransport}. Low-level quadrotor tracking
+is commonly grounded in geometric SE(3) / SO(3) control
+\cite{Lee2010GeometricTrackingSE3}, and swing attenuation remains an important
+transport-performance concern \cite{GuerreroSanchez2017SwingAttenuation}. In
+contrast to replacing these planner, MPC, or controller components, this paper
+studies a complementary execution-governance layer that modulates runtime
+aggressiveness through \texttt{speed\_scale} and
+\texttt{acceleration\_scale}.
+
+% TODO: Add Barikbin2019WindPayloadTracking after venue/year verification.
+
+\subsection{Runtime Governors and Safety-Filter Boundary}
+
+Runtime governance methods provide a conceptual precedent for modifying
+references or commands around an existing controller. Reference and command
+governors are commonly framed as add-on schemes for constrained or
+pre-stabilized systems \cite{Garone2017ReferenceCommandGovernorsSurvey}, with
+explicit reference governors extending this idea to constrained nonlinear
+systems \cite{Garone2016ExplicitReferenceGovernor}. Robust explicit reference
+governors have also been studied in UAV settings \cite{Nicotra2016UAVRobustERG},
+and action governors provide another supervisory view of modifying nominal
+control signals \cite{Li2021ActionGovernor}. Safety-filter literature gives a
+stronger certified-control boundary for runtime intervention
+\cite{Hsu2024SafetyFilterUnifiedView}. The governor in this paper is empirical:
+it adapts execution scales through the existing command-adaptation interface
+and does not provide formal invariance, stability, or safety guarantees.
+
+% TODO: Add Wabersich2021PredictiveSafetyFilter after DOI / Automatica metadata verification.
+
+\subsection{Learning-Enhanced Aerial Robustness}
+
+Learning has been used to improve aerial robustness through risk-aware control,
+hybrid aerodynamic modeling, data-driven model predictive control, temporal
+learning of dynamics, and disturbance prediction. Risk-aware active learning
+has been explored for quadcopter control
+\cite{Andersson2017RiskAwareActiveLearning}, while hybrid aerodynamic models
+and data-driven MPC show how learned models can complement model-based aerial
+control \cite{Bauersfeld2021NeuroBEM,Torrente2021DataDrivenMPC}.
+Physics-inspired temporal learning has also been integrated with MPC for
+trajectory tracking \cite{Saviolo2022PITCN}, and hybrid model-based /
+data-driven disturbance prediction has been used for precise quadrotor
+tracking \cite{Lee2024HybridDisturbancePrediction}. The present work follows
+this broader learning-enhanced robustness direction but uses learned risk
+information in a lightweight execution-governor layer rather than replacing
+the planner, MPC, or low-level controller.
+
+% TODO: Add Jin2025NeuralPredictorPayload after final metadata verification.
+
+\subsection{Benchmarking, Stress Testing, and Failure Analysis}
+
+Robotics evaluation depends on the choice of measurement target and protocol:
+benchmark scores can become misleading when they are treated as general
+capability rather than context-dependent evidence
+\cite{Muller2019MeasureTargetConfusion}. Stress testing provides a
+complementary way to expose failures that may not appear under nominal
+evaluation \cite{Koren2018AdaptiveStressTesting,Nalic2020StressTestingScenarioBasedADS}.
+Failure taxonomies can organize observed failures and their consequences
+\cite{Cameron2024DomesticRobotFailureOutcomes}. In this paper, protocol-split
+success counts and invalid-only failure groups are used as diagnostic evidence
+under the tested protocols, not as proof of exact physical root cause.
+
+% TODO: Add Monteleone2023BalanceResilienceBenchmark after complete author-list verification.
+% TODO: Add Dogga2023AutoARTS after official USENIX URL verification.

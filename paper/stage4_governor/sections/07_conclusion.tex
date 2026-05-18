@@ -1,0 +1,16 @@
+\section{Conclusion}
+
+This paper studies risk-conditioned execution governance for windy
+suspended-payload UAV transport. The proposed governor leaves the planner,
+payload MPC, and SO3 controller unchanged while adapting execution
+aggressiveness through \texttt{speed\_scale} and
+\texttt{acceleration\_scale}. The protocol-split evaluation shows strong
+specialists: \texttt{windlevel\_s085} leads the single-goal mission protocol
+and \texttt{fixed\_s080} leads the goal-reissue stress protocol. Across the
+two tested protocols, \texttt{risk\_adapter\_v1} provides the best balanced
+learned / risk-conditioned result by mean valid count, worst-protocol count,
+and total regret. Failure-group and representative-trace analyses further show
+why aggregate success alone is insufficient. The current evidence supports a
+bounded balanced-robustness claim under the tested protocols, without claiming
+statistical significance, certified safety, learned uniform domination, or a
+final \texttt{risk\_adapter\_v22} method.
