@@ -28,6 +28,9 @@ TODO citation placeholders with unverified or fabricated references.
 Stage 4-AM now defines the collection workflow that should be used to resolve
 citation placeholders before final manuscript assembly:
 `experiments/protocols/stage4am_citation_collection_plan.md`.
+Stage 4-AL now plans the final figure/table asset package for this assembled
+draft:
+`experiments/protocols/stage4al_final_figure_generation_plan.md`.
 
 ## Paper Title
 

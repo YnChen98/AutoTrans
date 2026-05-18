@@ -5,6 +5,8 @@
 Stage 4-AM defines the citation collection workflow for the assembled Stage 4
 paper draft. It follows the citation slot map in
 `experiments/protocols/stage4ak_citation_references_plan.md`.
+Stage 4-AL now tracks the parallel final figure/table generation plan:
+`experiments/protocols/stage4al_final_figure_generation_plan.md`.
 
 This document does not finalize the bibliography, does not generate BibTeX,
 and does not insert unverified references. It defines what sources must be
@@ -252,6 +254,9 @@ need external citations.
   receives a citation key.
 - Stage 4-AL: final figure generation plan can proceed in parallel after the
   citation slots are stable.
+- Stage 4-AL2: final figure package generation can proceed in parallel with
+  citation collection, but figure captions and claims should be audited against
+  verified citations before final manuscript assembly.
 - Do not insert unverified BibTeX.
 - Do not replace TODO placeholders with guessed references.
 - Do not create `risk_adapter_v22` yet.

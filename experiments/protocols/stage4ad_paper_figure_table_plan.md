@@ -17,6 +17,9 @@ description and caption:
 Stage 4-AH now drafts how the Results section references Table 1 and Figures
 3-6:
 `experiments/protocols/stage4ah_results_section_draft.md`.
+Stage 4-AL now refines this into the final figure/table generation plan before
+paper-ready figure files are produced:
+`experiments/protocols/stage4al_final_figure_generation_plan.md`.
 
 The paper should use four evidence layers:
 

@@ -707,8 +707,9 @@ Stage 4-AC balanced robustness assets:
 - Stage 4-AJ full paper assembly draft is complete.
 - Stage 4-AK citation / references plan is complete.
 - Stage 4-AM citation collection workflow is complete.
-- Next step: Stage 4-AM2 verified citation collection or Stage 4-AL final
-  figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step: Stage 4-AL2 figure package generation or Stage 4-AM2 verified
+  citation collection.
 
 Stage 4-AD paper figure/table plan:
 
@@ -734,8 +735,9 @@ Stage 4-AD paper figure/table plan:
 - Stage 4-AJ full paper assembly draft is complete.
 - Stage 4-AK citation / references plan is complete.
 - Stage 4-AM citation collection workflow is complete.
-- Next step: Stage 4-AM2 verified citation collection or Stage 4-AL final
-  figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step: Stage 4-AL2 figure package generation or Stage 4-AM2 verified
+  citation collection.
 
 Stage 4-AE paper outline / section skeleton:
 
@@ -758,8 +760,9 @@ Stage 4-AE paper outline / section skeleton:
 - Stage 4-AJ full paper assembly draft is complete.
 - Stage 4-AK citation / references plan is complete.
 - Stage 4-AM citation collection workflow is complete.
-- Next step after AM: Stage 4-AM2 verified citation collection or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step after AL: Stage 4-AL2 figure package generation or Stage 4-AM2
+  verified citation collection.
 
 Stage 4-AF paper Abstract and Introduction draft:
 
@@ -783,8 +786,9 @@ Stage 4-AF paper Abstract and Introduction draft:
 - Stage 4-AJ full paper assembly draft is complete.
 - Stage 4-AK citation / references plan is complete.
 - Stage 4-AM citation collection workflow is complete.
-- Next step after AM: Stage 4-AM2 verified citation collection or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step after AL: Stage 4-AL2 figure package generation or Stage 4-AM2
+  verified citation collection.
 
 Stage 4-AG Method section draft:
 
@@ -808,8 +812,9 @@ Stage 4-AG Method section draft:
 - Stage 4-AJ full paper assembly draft is complete.
 - Stage 4-AK citation / references plan is complete.
 - Stage 4-AM citation collection workflow is complete.
-- Next step after AM: Stage 4-AM2 verified citation collection or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step after AL: Stage 4-AL2 figure package generation or Stage 4-AM2
+  verified citation collection.
 
 Stage 4-AH Results section draft:
 
@@ -835,8 +840,9 @@ Stage 4-AH Results section draft:
 - Stage 4-AJ full paper assembly draft is complete.
 - Stage 4-AK citation / references plan is complete.
 - Stage 4-AM citation collection workflow is complete.
-- Next step after AM: Stage 4-AM2 verified citation collection or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step after AL: Stage 4-AL2 figure package generation or Stage 4-AM2
+  verified citation collection.
 
 Stage 4-AI Discussion and Limitations draft:
 
@@ -864,8 +870,9 @@ Stage 4-AI Discussion and Limitations draft:
 - Stage 4-AJ full paper assembly draft is complete.
 - Stage 4-AK citation / references plan is complete.
 - Stage 4-AM citation collection workflow is complete.
-- Next step after AM: Stage 4-AM2 verified citation collection or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step after AL: Stage 4-AL2 figure package generation or Stage 4-AM2
+  verified citation collection.
 
 Stage 4-AJ full paper assembly draft:
 
@@ -886,8 +893,9 @@ Stage 4-AJ full paper assembly draft:
 - Do not create `risk_adapter_v22` yet; review the full-paper draft first.
 - Stage 4-AK citation / references plan is complete.
 - Stage 4-AM citation collection workflow is complete.
-- Next step after AM: Stage 4-AM2 verified citation collection or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step after AL: Stage 4-AL2 figure package generation or Stage 4-AM2
+  verified citation collection.
 
 Stage 4-AK citation / references plan:
 
@@ -910,8 +918,9 @@ Stage 4-AK citation / references plan:
   repeat convention, and generated figure paths.
 - Continue: do not create `risk_adapter_v22` yet.
 - Stage 4-AM citation collection workflow is complete.
-- Next step after AM: Stage 4-AM2 verified citation collection or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step after AL: Stage 4-AL2 figure package generation or Stage 4-AM2
+  verified citation collection.
 
 Stage 4-AM citation collection workflow:
 
@@ -926,8 +935,26 @@ Stage 4-AM citation collection workflow:
 - Do not fabricate citations, paper titles, venues, authors, years, DOIs, URLs,
   or BibTeX entries.
 - Continue: do not create `risk_adapter_v22` yet.
-- Next step after AM: Stage 4-AM2 verified citation collection or Stage 4-AL
-  final figure generation plan.
+- Stage 4-AL final figure generation plan is complete.
+- Next step after AL: Stage 4-AL2 figure package generation or Stage 4-AM2
+  verified citation collection.
+
+Stage 4-AL final figure generation plan:
+
+- The plan document is
+  `experiments/protocols/stage4al_final_figure_generation_plan.md`.
+- It maps the assembled paper's Table 1 and Figures 1-6 to source assets,
+  source generators, supported claims, caveats, paper sections, formatting
+  requirements, and missing-asset risks.
+- No figures are generated by Stage 4-AL, and no figure generation scripts are
+  run in this planning task.
+- `risk_adapter_v1` remains the balanced learned / risk-conditioned
+  protagonist, `windlevel_s085` and `fixed_s080` remain protocol specialists,
+  and `risk_adapter_v21` remains a strong nominal / single-goal variant or
+  ablation.
+- Continue: do not create `risk_adapter_v22` yet.
+- Next step after AL: Stage 4-AL2 figure package generation or Stage 4-AM2
+  verified citation collection.
 
 Stage 4-AB paper reframing decision:
 
@@ -953,8 +980,9 @@ Stage 4-AB paper reframing decision:
 - Stage 4-AJ now records the full paper assembly draft.
 - Stage 4-AK now records the citation / references plan.
 - Stage 4-AM now records the citation collection workflow.
-- Next step: Stage 4-AM2 verified citation collection or Stage 4-AL final
-  figure generation plan.
+- Stage 4-AL now records the final figure generation plan.
+- Next step: Stage 4-AL2 figure package generation or Stage 4-AM2 verified
+  citation collection.
 - Do not create `risk_adapter_v22` yet.
 - Only consider `risk_adapter_v22` if later evidence shows a generic
   phase-aware, failure-aware, risk-health-aware, reference /

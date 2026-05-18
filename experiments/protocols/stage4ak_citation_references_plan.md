@@ -8,6 +8,9 @@ Stage 4 paper draft:
 Stage 4-AM now defines the practical citation collection and bibliography
 insertion workflow:
 `experiments/protocols/stage4am_citation_collection_plan.md`.
+Stage 4-AL now defines the final figure/table generation plan; final
+citations, figure captions, and paper claims should be checked together:
+`experiments/protocols/stage4al_final_figure_generation_plan.md`.
 
 It does not finalize the bibliography, does not provide BibTeX entries, and
 does not replace TODO citation placeholders with unverified references. Its

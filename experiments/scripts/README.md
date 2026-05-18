@@ -1082,9 +1082,10 @@ the paper Abstract and Introduction draft, Stage 4-AG records the Method
 section draft, Stage 4-AH records the Results section draft, Stage 4-AI
 records the Discussion and Limitations draft, Stage 4-AJ records the current
 full paper assembly draft, Stage 4-AK records the citation / references plan,
-and Stage 4-AM records the citation collection workflow. The next writing step
-is Stage 4-AM2 verified citation collection or Stage 4-AL final figure
-generation plan. Do not create `risk_adapter_v22` yet.
+Stage 4-AM records the citation collection workflow, and Stage 4-AL records
+the final figure generation plan. The next writing step is Stage 4-AL2 figure
+package generation or Stage 4-AM2 verified citation collection. Do not create
+`risk_adapter_v22` yet.
 
 ## Stage 4-AE paper outline section skeleton
 
@@ -1100,9 +1101,10 @@ Stage 4-AF records the paper Abstract and Introduction draft, Stage 4-AG
 records the Method section draft, Stage 4-AH records the Results section
 draft, Stage 4-AI records the Discussion and Limitations draft, Stage 4-AJ
 records the full paper assembly draft, Stage 4-AK records the citation /
-references plan, and Stage 4-AM records the citation collection workflow. The
-next writing step is Stage 4-AM2 verified citation collection or Stage 4-AL
-final figure generation plan. Do not create `risk_adapter_v22` yet.
+references plan, Stage 4-AM records the citation collection workflow, and
+Stage 4-AL records the final figure generation plan. The next writing step is
+Stage 4-AL2 figure package generation or Stage 4-AM2 verified citation
+collection. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AF abstract introduction draft
 
@@ -1117,10 +1119,10 @@ balanced/protocol-level robustness under the tested protocols.
 Stage 4-AG now records the Method section draft, Stage 4-AH records the
 Results section draft, and Stage 4-AI records the Discussion and Limitations
 draft. Stage 4-AJ now records the full paper assembly draft, Stage 4-AK
-records the citation / references plan, and Stage 4-AM records the citation
-collection workflow. The next writing step is Stage 4-AM2 verified citation
-collection or Stage 4-AL final figure generation plan. Do not create
-`risk_adapter_v22` yet.
+records the citation / references plan, Stage 4-AM records the citation
+collection workflow, and Stage 4-AL records the final figure generation plan.
+The next writing step is Stage 4-AL2 figure package generation or Stage 4-AM2
+verified citation collection. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AG method section draft
 
@@ -1158,9 +1160,10 @@ justified without a reusable phase-aware, reference-aware, risk-health-aware,
 or failure-aware mechanism.
 
 Stage 4-AJ now records the full paper assembly draft, Stage 4-AK records the
-citation / references plan, and Stage 4-AM records the citation collection
-workflow. The next writing step is Stage 4-AM2 verified citation collection or
-Stage 4-AL final figure generation plan. Do not create `risk_adapter_v22` yet.
+citation / references plan, Stage 4-AM records the citation collection
+workflow, and Stage 4-AL records the final figure generation plan. The next
+writing step is Stage 4-AL2 figure package generation or Stage 4-AM2 verified
+citation collection. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AM citation collection plan
 
@@ -1173,8 +1176,23 @@ locations, citation-risk wording fallbacks, and an internal-vs-external
 evidence boundary. It does not finalize the bibliography and does not insert
 unverified citations.
 
-The next writing step after AM is Stage 4-AM2 verified citation collection or
-Stage 4-AL final figure generation plan. Do not create `risk_adapter_v22` yet.
+Stage 4-AL now records the final figure generation plan. The next writing step
+after AL is Stage 4-AL2 figure package generation or Stage 4-AM2 verified
+citation collection. Do not create `risk_adapter_v22` yet.
+
+## Stage 4-AL final figure generation plan
+
+`experiments/protocols/stage4al_final_figure_generation_plan.md` records the
+final paper figure/table generation plan for the assembled Stage 4 paper.
+
+The plan maps Table 1 and Figures 1-6 to their source assets, source
+generators, paper claims, caveats, formatting requirements, and missing
+asset risks. It does not generate figures, run figure scripts, or create
+paper-ready output files.
+
+The next writing step after AL is Stage 4-AL2 figure package generation or
+Stage 4-AM2 verified citation collection. Do not create `risk_adapter_v22`
+yet.
 
 ## Stage 4-AJ full paper assembly draft
 
@@ -1199,9 +1217,10 @@ technical gaps to explicit TODO citation slots. It does not finalize the
 bibliography, does not generate BibTeX, and should not be used to replace TODO
 placeholders with unverified references.
 
-Stage 4-AM now records the citation collection workflow. The next writing step
-after AM is Stage 4-AM2 verified citation collection or Stage 4-AL final figure
-generation plan. Do not create `risk_adapter_v22` yet.
+Stage 4-AM now records the citation collection workflow, and Stage 4-AL now
+records the final figure generation plan. The next writing step after AL is
+Stage 4-AL2 figure package generation or Stage 4-AM2 verified citation
+collection. Do not create `risk_adapter_v22` yet.
 
 ## Stage 4-AB paper reframing decision
 
@@ -1223,9 +1242,9 @@ regret result. Stage 4-AD now freezes the figure/table plan, Stage 4-AG
 records the Method draft, and Stage 4-AH records the Results section draft.
 Stage 4-AI records the Discussion and Limitations draft, Stage 4-AJ records the
 full paper assembly draft, Stage 4-AK records the citation / references plan,
-and Stage 4-AM records the citation collection workflow. The next writing step
-is Stage 4-AM2 verified citation collection or Stage 4-AL final figure
-generation plan.
+Stage 4-AM records the citation collection workflow, and Stage 4-AL records
+the final figure generation plan. The next writing step is Stage 4-AL2 figure
+package generation or Stage 4-AM2 verified citation collection.
 
 ## Stage 4-X0 final evaluation specification
 
