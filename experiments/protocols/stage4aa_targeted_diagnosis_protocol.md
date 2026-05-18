@@ -19,6 +19,10 @@ traces reveal a generic phase-aware or failure-aware mechanism; otherwise the
 paper should proceed with the Stage 4-AB reframing around `risk_adapter_v1` as
 the balanced learned / risk-conditioned governor.
 
+The Stage 4-AA2 trace protocol is
+`experiments/protocols/stage4aa_representative_trace_protocol.md`. Its plotter
+is `experiments/scripts/plot_stage4_representative_failure_traces.py`.
+
 ## Why These Slices
 
 Trial 4 goal-reissue stress is selected because corrected Stage 4-X1 results
@@ -159,3 +163,4 @@ Do not use Stage 4-AA to claim:
 - `risk_adapter_v21` is globally flawed
 - `risk_adapter_v22` is required before inspecting the targeted outputs
 - a Trial-4-specific patch is a valid next method without a generic mechanism
+- Stage 4-AA2 plots have been reviewed before running the AA2 plotter

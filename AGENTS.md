@@ -634,6 +634,24 @@ Stage 4-AA targeted diagnosis assets:
   behavior, and diagnostic failure groups before any new variant design.
 - Do not create `risk_adapter_v22` before reviewing Stage 4-AA outputs.
 
+Stage 4-AA2 representative trace plots:
+
+- The plotter is
+  `experiments/scripts/plot_stage4_representative_failure_traces.py`.
+- The protocol is
+  `experiments/protocols/stage4aa_representative_trace_protocol.md`.
+- Generated outputs go under
+  `experiments/results/stage4_representative_traces/` and should not be
+  committed.
+- Stage 4-AA2 is the current next diagnostic step before any
+  `risk_adapter_v22` decision.
+- The trace set should inspect Trial 4 goal-reissue stress
+  `risk_adapter_v21` failures, Trial 4 stress comparison against
+  `fixed_s080` / `risk_adapter_v1`, and the Trial 6 single-goal bottleneck.
+- Do not create `risk_adapter_v22` before reviewing AA2 trace outputs.
+- Only create `risk_adapter_v22` if AA2 reveals a generic phase-aware or
+  failure-aware mechanism; do not create a Trial-4-specific patch.
+
 Stage 4-AB paper reframing decision:
 
 - The decision document is
@@ -648,8 +666,8 @@ Stage 4-AB paper reframing decision:
 - `fixed_s080` is the goal-reissue stress specialist at `24/30`.
 - `risk_adapter_v1` has the lowest current dual-protocol regret relative to
   the protocol oracle: `(26 - 25) + (24 - 23) = 2`.
-- Next steps: Stage 4-AA2 representative trace inspection and Stage 4-AC
-  balanced robustness asset generation.
+- Next steps: review Stage 4-AA2 representative trace outputs, then build
+  Stage 4-AC balanced robustness assets.
 - Do not create `risk_adapter_v22` before AA2 and balanced metrics.
 - Only create `risk_adapter_v22` if AA2 shows a generic phase-aware or
   failure-aware mechanism; do not make a Trial-4-specific patch.

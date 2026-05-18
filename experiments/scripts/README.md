@@ -980,6 +980,32 @@ The protocol is
 Stage 4-AA outputs before designing `risk_adapter_v22`; any future method
 should be phase-aware / failure-aware rather than Trial-4-specific.
 
+## Stage 4-AA2 representative trace plots
+
+`experiments/scripts/plot_stage4_representative_failure_traces.py` generates
+offline representative trace plots from existing CSV logs. It supports the
+Stage 4-AB decision gate before any `risk_adapter_v22` design.
+
+The script automatically selects representative runs for Trial 4
+goal-reissue stress `risk_adapter_v21`, Trial 4 stress comparison against
+`fixed_s080` and `risk_adapter_v1`, and the Trial 6 single-goal bottleneck.
+It skips missing CSV columns and records caveats in the generated summary.
+
+Example:
+
+```bash
+cd ~/projects/autotrans_ws/src/AutoTrans
+python3 experiments/scripts/plot_stage4_representative_failure_traces.py \
+  --metrics-dir experiments/figures \
+  --output-dir experiments/results/stage4_representative_traces \
+  --print-summary
+```
+
+Generated outputs under `experiments/results/` are ignored and should not be
+committed. The protocol is
+`experiments/protocols/stage4aa_representative_trace_protocol.md`. Do not
+create `risk_adapter_v22` until these representative trace plots are reviewed.
+
 ## Stage 4-AB paper reframing decision
 
 `experiments/protocols/stage4ab_paper_reframing_decision.md` records the paper

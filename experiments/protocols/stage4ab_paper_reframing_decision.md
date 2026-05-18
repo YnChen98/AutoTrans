@@ -93,7 +93,8 @@ protocol-specialist baselines are strong.
 
 - Stage 4-AA2 representative trace inspection:
   inspect representative Trial 4 stress failures and Trial 6 bottlenecks before
-  any new method design.
+  any new method design. This is the next evidence gate before deciding
+  whether `risk_adapter_v22` is justified.
 - Stage 4-AC balanced robustness asset generator:
   generate paper assets for mean performance, worst-protocol performance, and
   total regret relative to the protocol oracle.
@@ -112,3 +113,8 @@ address a reusable mechanism, not one observed cell in the evaluation table.
 If no generic mechanism appears, proceed with a `risk_adapter_v1`-centered
 paper narrative and use `risk_adapter_v21` as a strong nominal variant /
 ablation rather than as the final method.
+
+Stage 4-AA2 is documented in
+`experiments/protocols/stage4aa_representative_trace_protocol.md`, and its
+plotter is
+`experiments/scripts/plot_stage4_representative_failure_traces.py`.
