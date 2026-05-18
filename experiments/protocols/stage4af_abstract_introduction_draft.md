@@ -9,6 +9,11 @@ It follows the Stage 4-AE paper outline / section skeleton:
 `experiments/protocols/stage4ae_paper_outline_section_skeleton.md`.
 Stage 4-AG now provides the current Method section draft:
 `experiments/protocols/stage4ag_method_section_draft.md`.
+Stage 4-AH now provides the current Results section draft and supports the AF
+Abstract / Introduction claims with protocol-split success, balanced
+robustness, protocol regret, invalid-only failure groups, and representative
+trace interpretation:
+`experiments/protocols/stage4ah_results_section_draft.md`.
 
 `risk_adapter_v1` remains the current tentative balanced learned /
 risk-conditioned protagonist. `risk_adapter_v21` remains a nominal /

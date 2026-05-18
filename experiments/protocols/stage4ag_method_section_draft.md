@@ -17,6 +17,10 @@ completed protocol-split evaluation.
 `risk_adapter_v21` remains a strong nominal / single-goal variant or ablation,
 not the final method.
 
+Stage 4-AH now drafts the Results section using the same `risk_adapter_v1`
+centered balanced robustness framing:
+`experiments/protocols/stage4ah_results_section_draft.md`.
+
 ## Method Section Draft
 
 ### 2.1 System Stack and Problem Setting

@@ -14,6 +14,9 @@ this plan should support those AF claims:
 Stage 4-AG now drafts the Method section; Figure 1 should follow the AG method
 description and caption:
 `experiments/protocols/stage4ag_method_section_draft.md`.
+Stage 4-AH now drafts how the Results section references Table 1 and Figures
+3-6:
+`experiments/protocols/stage4ah_results_section_draft.md`.
 
 The paper should use four evidence layers:
 
@@ -302,5 +305,8 @@ Stage 4-AE is recorded in
 is recorded in
 `experiments/protocols/stage4af_abstract_introduction_draft.md`, and Stage
 4-AG is recorded in
-`experiments/protocols/stage4ag_method_section_draft.md`. The next writing
-step after AG is Stage 4-AH Results section draft.
+`experiments/protocols/stage4ag_method_section_draft.md`. Stage 4-AH is
+recorded in `experiments/protocols/stage4ah_results_section_draft.md` and
+drafts how the Results text should reference the main table and figures. The
+next writing step after AH is Stage 4-AI Discussion and Limitations draft or
+Stage 4-AJ full paper assembly.

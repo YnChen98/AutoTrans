@@ -702,7 +702,9 @@ Stage 4-AC balanced robustness assets:
 - Stage 4-AE paper outline / section skeleton is complete.
 - Stage 4-AF paper Abstract and Introduction draft is complete.
 - Stage 4-AG Method section draft is complete.
-- Next step: Stage 4-AH Results section draft.
+- Stage 4-AH Results section draft is complete.
+- Next step: Stage 4-AI Discussion and Limitations draft or Stage 4-AJ full
+  paper assembly.
 
 Stage 4-AD paper figure/table plan:
 
@@ -723,7 +725,9 @@ Stage 4-AD paper figure/table plan:
 - Stage 4-AE paper outline / section skeleton is complete.
 - Stage 4-AF paper Abstract and Introduction draft is complete.
 - Stage 4-AG Method section draft is complete.
-- Next step: Stage 4-AH Results section draft.
+- Stage 4-AH Results section draft is complete.
+- Next step: Stage 4-AI Discussion and Limitations draft or Stage 4-AJ full
+  paper assembly.
 
 Stage 4-AE paper outline / section skeleton:
 
@@ -741,7 +745,9 @@ Stage 4-AE paper outline / section skeleton:
 - Do not create `risk_adapter_v22` yet.
 - Stage 4-AF paper Abstract and Introduction draft is complete.
 - Stage 4-AG Method section draft is complete.
-- Next step after AG: Stage 4-AH Results section draft.
+- Stage 4-AH Results section draft is complete.
+- Next step after AH: Stage 4-AI Discussion and Limitations draft or Stage
+  4-AJ full paper assembly.
 
 Stage 4-AF paper Abstract and Introduction draft:
 
@@ -760,7 +766,9 @@ Stage 4-AF paper Abstract and Introduction draft:
 - `risk_adapter_v21` remains a nominal / single-goal variant or ablation.
 - Do not create `risk_adapter_v22` yet.
 - Stage 4-AG Method section draft is complete.
-- Next step after AG: Stage 4-AH Results section draft.
+- Stage 4-AH Results section draft is complete.
+- Next step after AH: Stage 4-AI Discussion and Limitations draft or Stage
+  4-AJ full paper assembly.
 
 Stage 4-AG Method section draft:
 
@@ -779,7 +787,32 @@ Stage 4-AG Method section draft:
   safety guarantee, no low-level controller replacement, no learned uniform
   domination, and no statistical significance claim.
 - Do not create `risk_adapter_v22` yet.
-- Next step after AG: Stage 4-AH Results section draft.
+- Stage 4-AH Results section draft is complete.
+- Next step after AH: Stage 4-AI Discussion and Limitations draft or Stage
+  4-AJ full paper assembly.
+
+Stage 4-AH Results section draft:
+
+- The draft document is
+  `experiments/protocols/stage4ah_results_section_draft.md`.
+- It organizes Results by protocol-split success and balanced robustness,
+  not by a single mixed-protocol aggregate.
+- It uses `risk_adapter_v1` as the balanced learned / risk-conditioned
+  protagonist because it has the best mean valid count (`24.0/30`), best
+  worst-protocol valid count (`23/30`), and lowest total regret (`2`).
+- It presents `windlevel_s085` as the single-goal specialist at `26/30` and
+  `fixed_s080` as the goal-reissue stress specialist at `24/30`.
+- It records that `risk_adapter_v21` is dominated by `risk_adapter_v1` in the
+  two-protocol plane because both have `25/30` single-goal strict-valid runs,
+  while `risk_adapter_v1` has `23/30` stress strict-valid runs and
+  `risk_adapter_v21` has `20/30`.
+- It uses invalid-only failure groups and representative traces as diagnostic
+  evidence, not root-cause proof or a replacement for strict-valid counts.
+- Do not claim statistical significance, a safety guarantee, learned-method
+  uniform domination, or a mixed-protocol aggregate result.
+- Do not create `risk_adapter_v22` yet.
+- Next step after AH: Stage 4-AI Discussion and Limitations draft or Stage
+  4-AJ full paper assembly.
 
 Stage 4-AB paper reframing decision:
 
@@ -800,7 +833,9 @@ Stage 4-AB paper reframing decision:
 - Stage 4-AE now formalizes the paper outline and section skeleton.
 - Stage 4-AF now records the paper Abstract and Introduction draft.
 - Stage 4-AG now records the Method section draft.
-- Next step: Stage 4-AH Results section draft.
+- Stage 4-AH now records the Results section draft.
+- Next step: Stage 4-AI Discussion and Limitations draft or Stage 4-AJ full
+  paper assembly.
 - Do not create `risk_adapter_v22` yet.
 - Only consider `risk_adapter_v22` if later evidence shows a generic
   phase-aware, failure-aware, risk-health-aware, reference /
