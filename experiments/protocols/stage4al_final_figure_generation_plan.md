@@ -17,6 +17,9 @@ Figure 2:
 Stage 4-AN2 now provides a deterministic offline matplotlib generator for those
 schematics:
 `experiments/scripts/generate_stage4_manual_schematics.py`.
+Stage 4-AL3 refreshes the paper figure package manifest after AN2 schematic
+generation so Figure 1 and Figure 2 are represented as generated schematic
+assets when their PNG/SVG files are present.
 
 No figures are generated in this task. No figure-generation scripts should be
 run here, and no generated PNG/PDF/SVG/CSV/TXT/MD outputs should be created or
@@ -347,6 +350,10 @@ Recommended next step:
 - Stage 4-AL2: paper figure package generation script or manual figure package
   checklist. This is now implemented by
   `experiments/scripts/create_stage4_paper_figure_package.py`.
+- Stage 4-AL3: refresh the paper figure package after Stage 4-AN2 schematic
+  generation. This updates the package manifest and summary so Figure 1 /
+  Figure 2 generated PNG/SVG files are real package assets when present, with
+  TODO fallback only when missing.
 
 Alternative parallel step:
 

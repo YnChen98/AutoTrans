@@ -258,6 +258,63 @@ def main_asset_specs():
     ]
 
 
+def schematic_asset_specs():
+    return [
+        {
+            "paper_item": "Figure 1 architecture schematic PNG",
+            "target_filename": "main/fig1_architecture.png",
+            "paper_section": "Method",
+            "supported_claim": (
+                "the execution governor is stack-compatible and uses "
+                "speed_scale / acceleration_scale"
+            ),
+            "caveat": (
+                "Explanatory schematic only; not a formal safety filter or "
+                "planner/controller replacement."
+            ),
+        },
+        {
+            "paper_item": "Figure 1 architecture schematic SVG",
+            "target_filename": "main/fig1_architecture.svg",
+            "paper_section": "Method",
+            "supported_claim": (
+                "the execution governor is stack-compatible and uses "
+                "speed_scale / acceleration_scale"
+            ),
+            "caveat": (
+                "Explanatory schematic only; not a formal safety filter or "
+                "planner/controller replacement."
+            ),
+        },
+        {
+            "paper_item": "Figure 2 protocol split schematic PNG",
+            "target_filename": "main/fig2_protocol_split.png",
+            "paper_section": "Experimental Setup",
+            "supported_claim": (
+                "single-goal and goal-reissue stress protocols test different "
+                "system behavior"
+            ),
+            "caveat": (
+                "Explanatory schematic only; not a result plot and no "
+                "mixed-protocol aggregate."
+            ),
+        },
+        {
+            "paper_item": "Figure 2 protocol split schematic SVG",
+            "target_filename": "main/fig2_protocol_split.svg",
+            "paper_section": "Experimental Setup",
+            "supported_claim": (
+                "single-goal and goal-reissue stress protocols test different "
+                "system behavior"
+            ),
+            "caveat": (
+                "Explanatory schematic only; not a result plot and no "
+                "mixed-protocol aggregate."
+            ),
+        },
+    ]
+
+
 def supplementary_specs():
     return [
         {
@@ -408,6 +465,21 @@ def write_todo(spec, output_dir):
     }
 
 
+def check_package_asset(spec, source_root, output_dir):
+    target_rel = Path(spec["target_filename"])
+    target_path = output_dir / target_rel
+    status = "present" if target_path.exists() else "missing_manual_asset"
+    return {
+        "paper_item": spec["paper_item"],
+        "target_filename": str(target_rel),
+        "source_path": relpath(target_path, source_root),
+        "status": status,
+        "paper_section": spec["paper_section"],
+        "supported_claim": spec["supported_claim"],
+        "caveat": spec["caveat"],
+    }
+
+
 def write_manifest_csv(rows, output_dir):
     path = output_dir / "stage4_paper_figure_manifest.csv"
     with path.open("w", newline="", encoding="utf-8") as handle:
@@ -453,28 +525,62 @@ def rows_with_prefix(rows, prefix):
     return [row for row in rows if row["target_filename"].startswith(prefix)]
 
 
+def is_available(row):
+    return row["status"] in ("copied", "present")
+
+
+def schematic_ready(rows, figure_prefix):
+    expected = {
+        "main/%s.png" % figure_prefix,
+        "main/%s.svg" % figure_prefix,
+    }
+    ready = {
+        row["target_filename"]
+        for row in rows
+        if row["target_filename"] in expected and row["status"] == "present"
+    }
+    return ready == expected
+
+
+def active_todo_specs(rows):
+    fig1_ready = schematic_ready(rows, "fig1_architecture")
+    fig2_ready = schematic_ready(rows, "fig2_protocol_split")
+    active = []
+    for spec in todo_specs():
+        target = spec["target_filename"]
+        if target.endswith("fig1_architecture_TODO.md") and fig1_ready:
+            continue
+        if target.endswith("fig2_protocol_split_TODO.md") and fig2_ready:
+            continue
+        active.append(spec)
+    return active
+
+
 def write_summary(rows, output_dir, regenerated):
     path = output_dir / "stage4_paper_figure_package_summary.md"
     main_rows = rows_with_prefix(rows, "main/")
     supplementary_rows = rows_with_prefix(rows, "supplementary/")
     todo_rows = rows_with_prefix(rows, "TODO/")
-    copied_main = [row for row in main_rows if row["status"] == "copied"]
+    available_main = [row for row in main_rows if is_available(row)]
     copied_supp = [row for row in supplementary_rows if row["status"] == "copied"]
     missing_rows = [row for row in rows if row["status"].startswith("missing")]
+    fig1_ready = schematic_ready(rows, "fig1_architecture")
+    fig2_ready = schematic_ready(rows, "fig2_protocol_split")
 
     lines = [
         "# Stage 4 Paper Figure Package Summary",
         "",
         "## Executive Summary",
         "",
-        "Stage 4-AL2 assembled a paper figure package from existing generated Stage 4 assets.",
+        "Stage 4-AL3 refreshed the paper figure package after Stage 4-AN2 schematic generation.",
         "Default behavior is copy/check only; source assets were regenerated only if `--regenerate` was explicitly provided.",
         "This run used `--regenerate=%s`." % ("true" if regenerated else "false"),
+        "Figure 1 / Figure 2 schematics are detected as package-local generated assets when present; this script does not generate them automatically.",
         "",
         "`risk_adapter_v1` remains the balanced learned / risk-conditioned protagonist.",
         "`risk_adapter_v21` remains a strong nominal / single-goal variant or ablation, not the final method.",
         "",
-        "## Main Paper Assets Copied",
+        "## Main Paper Assets",
         "",
         "| paper_item | target_filename | status | source_path |",
         "| --- | --- | --- | --- |",
@@ -492,7 +598,7 @@ def write_summary(rows, output_dir, regenerated):
     lines.extend(
         [
             "",
-            "Copied main assets: `%d/%d`." % (len(copied_main), len(main_rows)),
+            "Available main assets: `%d/%d`." % (len(available_main), len(main_rows)),
             "",
             "## Supplementary Assets Copied",
             "",
@@ -530,6 +636,13 @@ def write_summary(rows, output_dir, regenerated):
     lines.extend(
         [
             "",
+            "Figure 1 generated assets present: `%s`." % ("yes" if fig1_ready else "no"),
+            "Figure 2 generated assets present: `%s`." % ("yes" if fig2_ready else "no"),
+        ]
+    )
+    lines.extend(
+        [
+            "",
             "## Claim Alignment",
             "",
             "| paper_item | supported_claim | caveat |",
@@ -550,8 +663,15 @@ def write_summary(rows, output_dir, regenerated):
             "",
             "## What Still Needs Manual Work",
             "",
-            "- Create the Figure 1 architecture schematic.",
-            "- Create the Figure 2 protocol split schematic.",
+        ]
+    )
+    if todo_rows:
+        for row in todo_rows:
+            lines.append("- Resolve `%s`." % row["target_filename"])
+    else:
+        lines.append("- None for Figure 1 / Figure 2 schematic creation; generated schematic assets are present.")
+    lines.extend(
+        [
             "- Decide the final multi-panel layout and caption for Figure 6.",
             "- Polish final captions against the claim mapping table.",
             "- Resolve citation placeholders through Stage 4-AM2 before final manuscript assembly.",
@@ -591,11 +711,13 @@ def build_package(source_root, output_dir, regenerate):
         (output_dir / dirname).mkdir(parents=True, exist_ok=True)
 
     rows = []
+    for spec in schematic_asset_specs():
+        rows.append(check_package_asset(spec, source_root, output_dir))
     for spec in main_asset_specs():
         rows.append(copy_asset(spec, source_root, output_dir, "missing_required"))
     for spec in supplementary_specs():
         rows.append(copy_asset(spec, source_root, output_dir, "missing_optional"))
-    for spec in todo_specs():
+    for spec in active_todo_specs(rows):
         rows.append(write_todo(spec, output_dir))
 
     csv_path = write_manifest_csv(rows, output_dir)
@@ -607,13 +729,13 @@ def build_package(source_root, output_dir, regenerate):
 def print_summary(rows, output_dir, summary_path):
     main_rows = rows_with_prefix(rows, "main/")
     supplementary_rows = rows_with_prefix(rows, "supplementary/")
-    copied_main = sum(1 for row in main_rows if row["status"] == "copied")
+    available_main = sum(1 for row in main_rows if is_available(row))
     copied_supp = sum(1 for row in supplementary_rows if row["status"] == "copied")
     missing = [row for row in rows if row["status"].startswith("missing")]
     todo = [row for row in rows if row["status"] == "todo_manual"]
     print("Stage 4 paper figure package")
     print("output_dir: %s" % output_dir)
-    print("main copied: %d/%d" % (copied_main, len(main_rows)))
+    print("main available: %d/%d" % (available_main, len(main_rows)))
     print("supplementary copied: %d/%d" % (copied_supp, len(supplementary_rows)))
     print("missing source assets: %d" % len(missing))
     print("manual TODO assets: %d" % len(todo))

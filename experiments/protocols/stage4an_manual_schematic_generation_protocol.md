@@ -139,3 +139,9 @@ After Stage 4-AN2 outputs are generated and reviewed, the next paper-asset step
 is Stage 4-AL3: refresh the paper figure package so Figure 1 and Figure 2 TODOs
 can be replaced or supplemented by the generated schematic files. Stage 4-AM2
 verified citation collection can proceed in parallel.
+
+Stage 4-AL3 consumes these generated schematics by detecting the PNG/SVG files
+in `experiments/results/stage4_paper_figure_package/main/` and adding them to
+the package manifest as real main-paper assets. The AL3 package refresh does
+not call this generator automatically and does not overwrite the generated
+schematic files.

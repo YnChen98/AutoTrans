@@ -986,15 +986,19 @@ Stage 4-AL2 paper figure package generator:
   does not run simulation, and does not create new experimental evidence.
 - It copies available main-paper assets into
   `experiments/results/stage4_paper_figure_package/main/`, copies
-  supplementary summaries when available, writes TODO files for Figure 1 and
-  Figure 2 schematics, and writes manifest CSV/Markdown plus a package
+  supplementary summaries when available, detects generated Figure 1 and
+  Figure 2 schematic assets when present, writes TODO files only when those
+  schematics are missing, and writes manifest CSV/Markdown plus a package
   summary.
 - Generated outputs under
   `experiments/results/stage4_paper_figure_package/` should not be committed.
 - Continue: do not create `risk_adapter_v22` yet.
 - Stage 4-AN manual schematic specification is complete.
-- Next step after AN: Stage 4-AM2 verified citation collection or Stage 4-AN2
-  manual schematic creation.
+- Stage 4-AN2 manual schematic generation is complete.
+- Stage 4-AL3 paper figure package refresh after schematic generation is the
+  current paper-asset stage.
+- Next step after AL3: Stage 4-AM2 verified citation collection or Stage 4-AO
+  manuscript formatting plan.
 
 Stage 4-AN manual schematic specification:
 
@@ -1035,8 +1039,33 @@ Stage 4-AN2 manual schematic generation:
 - Generated PNG/SVG/Markdown outputs under `experiments/results/` should not
   be committed.
 - Continue: do not create `risk_adapter_v22`.
-- Next step after AN2: Stage 4-AL3 refresh paper figure package or Stage
-  4-AM2 verified citation collection.
+- Stage 4-AL3 now consumes these schematic files in the paper figure package
+  manifest when they are present.
+- Next step after AL3: Stage 4-AM2 verified citation collection or Stage 4-AO
+  manuscript formatting plan.
+
+Stage 4-AL3 paper figure package refresh after schematic generation:
+
+- The updated package generator is
+  `experiments/scripts/create_stage4_paper_figure_package.py`.
+- The protocol remains
+  `experiments/protocols/stage4al_paper_figure_package_protocol.md`.
+- It detects existing Stage 4-AN2 schematic files in
+  `experiments/results/stage4_paper_figure_package/main/`:
+  - `fig1_architecture.png`
+  - `fig1_architecture.svg`
+  - `fig2_protocol_split.png`
+  - `fig2_protocol_split.svg`
+- When these files are present, they are included in the package manifest as
+  real main-paper assets with claim/caveat alignment.
+- When they are missing, the generator keeps the Figure 1 / Figure 2 TODO
+  fallback behavior.
+- Default behavior remains copy/check only; it does not call
+  `experiments/scripts/generate_stage4_manual_schematics.py` automatically.
+- Generated outputs under `experiments/results/` should not be committed.
+- Continue: do not create `risk_adapter_v22`.
+- Next step after AL3: Stage 4-AM2 verified citation collection or Stage 4-AO
+  manuscript formatting plan.
 
 Stage 4-AB paper reframing decision:
 
