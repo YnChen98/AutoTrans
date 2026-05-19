@@ -1280,6 +1280,20 @@ the local TeX installation. The manuscript `\documentclass` was not changed;
 the next compile step should add the official target venue class/template or
 run in a matching LaTeX environment. Do not create `risk_adapter_v22` yet.
 
+## Stage 4-AS submission strategy plan
+
+`experiments/protocols/stage4as_submission_strategy_plan.md` records the
+post-research venue strategy. Paper 1 should target RA-L first with
+`risk_adapter_v1` as the protagonist, while `risk_adapter_v21` remains a
+strong nominal / single-goal variant or ablation.
+
+Paper 2 should be a later mechanism-driven extension track, not a lightly
+enlarged version of Paper 1. Possible extension targets include T-RO, IROS
+2027, the next ICRA cycle, TCST, or T-ASE depending on the final mechanism and
+evaluation direction. Do not create `risk_adapter_v22` before Paper 1 RA-L
+submission unless explicitly overridden. The next step is Stage 4-AT RA-L
+format conversion / venue-specific manuscript preparation.
+
 ## Stage 4-AL final figure generation plan
 
 `experiments/protocols/stage4al_final_figure_generation_plan.md` records the

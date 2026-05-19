@@ -16,6 +16,12 @@ Stage 4-AP now creates the planned manuscript scaffold under
 `paper/stage4_governor/`:
 `experiments/protocols/stage4ap_manuscript_scaffold_protocol.md`.
 
+Stage 4-AS now redirects this formatting plan toward RA-L-oriented Paper 1
+conversion. The assembled Stage 4 draft should be treated as the Paper 1 RA-L
+base manuscript; Paper 2 should require a new mechanism-driven governor and a
+substantially expanded evidence package rather than a lightly enlarged version
+of Paper 1.
+
 The current paper framing remains:
 
 - risk-conditioned execution governance,
@@ -30,20 +36,24 @@ not the final method. Do not create `risk_adapter_v22`.
 
 ## Target Venue Format Options
 
-The final venue target is not locked yet. The manuscript scaffold should keep
-the following options open:
+Stage 4-AS locks the immediate Paper 1 target to RA-L. The formatting path
+should therefore prioritize the official RA-L / IEEE template for Paper 1 while
+keeping later extension venues conceptually separate:
 
-- IROS / ICRA conference-style LaTeX.
-- RA-L journal style.
-- A conference-first draft that can later be expanded toward RA-L if the paper
-  needs additional space for method details, failure analysis, or appendices.
+- RA-L journal style for Paper 1.
+- IROS 2027 / ICRA next cycle as later conference-upgrade options after
+  algorithm and evaluation strengthening.
+- T-RO / TCST / T-ASE style extensions only after a mechanism-driven final
+  governor and broader evaluation are developed.
 
 Recommended starting point:
 
-- Use an IROS / ICRA-like conference skeleton for initial drafting.
-- Keep section files modular so the same text can later be adapted to RA-L.
-- Avoid venue-specific formatting decisions that are hard to reverse until the
-  final target is confirmed.
+- Convert the current assembled draft into the official RA-L / IEEE format for
+  Paper 1.
+- Keep section files modular so Paper 2 can later reuse context while adding a
+  new central mechanism and expanded evidence.
+- Avoid downgrading the Paper 1 target or adding `risk_adapter_v22` before the
+  RA-L submission unless explicitly overridden.
 
 ## Proposed Manuscript Directory Layout
 
@@ -229,7 +239,8 @@ Before creating the actual manuscript scaffold:
 - Confirm target manuscript directory, defaulting to
   `paper/stage4_governor/` only if no conflict exists.
 - Confirm no existing `paper/` or `manuscript/` directory will be overwritten.
-- Confirm target style, defaulting to an IROS / ICRA-like draft skeleton.
+- Confirm target style, defaulting to the official RA-L / IEEE template for
+  Paper 1.
 - Confirm generated figures are present in
   `experiments/results/stage4_paper_figure_package/`.
 - Confirm draft BibTeX from Stage 4-AM4 is acceptable as provisional.
@@ -240,7 +251,7 @@ Before creating the actual manuscript scaffold:
 
 Recommended next step:
 
-- Stage 4-AP: create manuscript source scaffold.
+- Stage 4-AT: RA-L format conversion / venue-specific manuscript preparation.
 
 Alternative next step:
 

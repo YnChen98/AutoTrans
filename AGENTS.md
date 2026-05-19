@@ -906,7 +906,11 @@ Stage 4-AJ full paper assembly draft:
 - It keeps claim boundaries explicit: no learned uniform domination, no
   statistical significance claim, no safety guarantee, diagnostic-only
   failure labels, and simulation-only evidence.
-- Do not create `risk_adapter_v22` yet; review the full-paper draft first.
+- Stage 4-AS now treats this AJ draft as the Paper 1 RA-L base draft.
+- Paper 2 must require a new mechanism-driven governor and substantially
+  expanded evidence rather than a lightly enlarged version of AJ.
+- Do not create `risk_adapter_v22` before Paper 1 RA-L submission unless
+  explicitly overridden.
 - Stage 4-AK citation / references plan is complete.
 - Stage 4-AM citation collection workflow is complete.
 - Stage 4-AL final figure generation plan is complete.
@@ -1032,8 +1036,11 @@ Stage 4-AO manuscript formatting plan:
 - It defines how to convert the assembled Stage 4 paper draft into a future
   manuscript source scaffold without creating `paper/`, `manuscript/`, `.tex`,
   or `.bib` files in this stage.
-- Proposed future scaffold defaults to an IROS / ICRA-like draft under
-  `paper/stage4_governor/`, while keeping RA-L extension possible.
+- Stage 4-AS redirects AO toward RA-L-oriented Paper 1 conversion using the
+  official RA-L / IEEE template.
+- The earlier IROS / ICRA-like scaffold under `paper/stage4_governor/` is a
+  source draft; Paper 1 should now be prepared for RA-L first, while IROS 2027
+  / ICRA next cycle / T-RO / TCST / T-ASE remain later extension directions.
 - It maps source inputs from Stage 4-AF/AJ, Stage 4-AG/AJ, Stage 4-AH/AJ,
   Stage 4-AI/AJ, the Stage 4-AL figure package, and the Stage 4-AM4 draft
   BibTeX package.
@@ -1094,6 +1101,37 @@ Stage 4-AQ2 LaTeX compile retry:
 - Next step after AQ2: Stage 4-AR manuscript polish / layout pass after adding
   the official venue class/template, or Stage 4-AM5 conditional citation
   verification.
+
+Stage 4-AS submission strategy plan:
+
+- The plan document is
+  `experiments/protocols/stage4as_submission_strategy_plan.md`.
+- Current submission strategy: Paper 1 targets RA-L first; Paper 2 is a later
+  mechanism-driven extension track.
+- Paper 1 protagonist is locked to `risk_adapter_v1` as the balanced learned /
+  risk-conditioned execution governor.
+- `risk_adapter_v21` remains a strong nominal / single-goal variant or
+  ablation, not the final method.
+- Do not create `risk_adapter_v22` before Paper 1 RA-L submission unless
+  explicitly overridden.
+- Future experiment planning should distinguish Paper 1 evidence polishing
+  from Paper 2 extension work.
+- Paper 1 RA-L must-fix items are official RA-L / IEEE template formatting,
+  citation finalization, Figure 6 layout, risk score source / training
+  documentation, strict-valid metric definition, and final claim audit.
+- Paper 2 must not be a lightly enlarged duplicate of Paper 1; it needs a new
+  mechanism-driven final governor, broader protocol family, calibration /
+  ablation / generalization evidence, and optional HIL or minimal hardware only
+  if it supports the mechanism story.
+- Prefer algorithm, evaluation, and theory-style strengthening over complex
+  real hardware as a Paper 1 requirement.
+- Venue mapping: RA-L is the immediate first target; IROS 2027 / ICRA next
+  cycle are 1-2 month algorithm/evaluation upgrade options; T-RO is a 3-6
+  month major extension target; TCST is a control / supervisory-governor
+  extension target; T-ASE is an automation / reliability reframing target.
+- CoRL, RSS, T-Cyber, T-IV, and Autonomous Robots are not current priorities.
+- Current next step: Stage 4-AT RA-L format conversion / venue-specific
+  manuscript preparation.
 
 Stage 4-AL final figure generation plan:
 

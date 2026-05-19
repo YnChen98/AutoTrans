@@ -3,9 +3,10 @@
 ## Executive Summary
 
 This document is the current full paper assembly draft for the reframed Stage 4
-paper. It is not final manuscript formatting; it is a coherent IROS/ICRA/RA-L
-style system-method draft plan with section text, figure/table placeholders,
-and claim boundaries.
+paper. It is not final manuscript formatting; it is now the Paper 1 RA-L base
+draft with section text, figure/table placeholders, and claim boundaries.
+Paper 2 will require a new mechanism-driven governor and substantially
+expanded evidence; it should not be a lightly enlarged version of this draft.
 
 The current narrative is:
 
@@ -16,10 +17,10 @@ The current narrative is:
 - `risk_adapter_v21` is a strong nominal / single-goal variant or ablation, not
   the final cross-protocol method.
 
-No `risk_adapter_v22` should be created before this full-paper draft is
-reviewed. A future variant should only be attempted if later evidence supports
-a reusable phase-aware, reference-aware, risk-health-aware, or failure-aware
-mechanism.
+No `risk_adapter_v22` should be created before Paper 1 RA-L submission unless
+explicitly overridden. A future Paper 2 variant should only be attempted if
+later evidence supports a reusable phase-aware, reference-aware,
+risk-health-aware, failure-aware, or command / state-health-aware mechanism.
 
 Stage 4-AK now defines citation slots and reference needs for this assembled
 draft:
@@ -41,6 +42,10 @@ Stage 4-AL2 now packages existing paper figure assets for manuscript assembly:
 `experiments/scripts/create_stage4_paper_figure_package.py`.
 Stage 4-AO now plans manuscript formatting and the future source scaffold:
 `experiments/protocols/stage4ao_manuscript_formatting_plan.md`.
+Stage 4-AS now records the submission strategy: Paper 1 targets RA-L first,
+with `risk_adapter_v1` as the protagonist; Paper 2 is a later
+mechanism-driven extension track:
+`experiments/protocols/stage4as_submission_strategy_plan.md`.
 Stage 4-AP now turns this assembled draft into the
 `paper/stage4_governor/` manuscript scaffold:
 `experiments/protocols/stage4ap_manuscript_scaffold_protocol.md`.
@@ -750,8 +755,12 @@ or learned-method uniform domination.
   acceleration-only, delayed-risk, shuffled-risk, and calibration checks.
 - Video or supplementary material is not yet prepared.
 - A final claim audit should be performed before submission.
-- No `risk_adapter_v22` should be introduced unless mechanism-driven evidence
-  is later added.
+- Official RA-L / IEEE template conversion is now the Paper 1 formatting
+  target.
+- Paper 2 needs a new mechanism-driven governor and broader evidence package;
+  do not treat it as a lightly extended Paper 1.
+- No `risk_adapter_v22` should be introduced before Paper 1 RA-L submission
+  unless explicitly overridden.
 
 ## Chinese Summary
 
@@ -768,7 +777,9 @@ complete cross-protocol matrix 中 mean valid count、worst-protocol valid count
 但 goal-reissue stress 下弱于 `risk_adapter_v1`，并且在 two-protocol plane 中被
 `risk_adapter_v1` dominate。把它写成 final winner 会和当前数据冲突。
 
-这种 draft 对 IROS/ICRA/RA-L 更安全：它承认 `windlevel_s085` 和 `fixed_s080`
-这些 strong specialist baseline，避免 mixed-protocol aggregate 和 learned
-uniform domination 叙事，同时把贡献放在 governor interface、protocol-split
-evaluation、balanced robustness 和 failure-aware interpretation 上。
+这种 draft 现在应作为 Paper 1 RA-L base draft：它承认 `windlevel_s085` 和
+`fixed_s080` 这些 strong specialist baseline，避免 mixed-protocol aggregate 和
+learned uniform domination 叙事，同时把贡献放在 governor interface、
+protocol-split evaluation、balanced robustness 和 failure-aware interpretation
+上。Paper 2 不能只是扩写这篇 RA-L paper；它需要新的 mechanism-driven governor
+和更宽的 evidence package。
