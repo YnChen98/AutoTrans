@@ -7,13 +7,18 @@ Stage 4-AU2 audits the final risk model metadata available for the RA-L Paper
 generation was run. The audit is based only on existing generated model JSONs,
 existing scripts, and existing protocol documents.
 
+Stage 4-AU3 records SHA256 checksums and file sizes for these generated local
+artifacts in
+`experiments/protocols/stage4au3_risk_model_artifact_manifest.md`.
+
 All three expected JSON model files are present locally under
 `experiments/models/`, but they are ignored/generated artifacts. Their metadata
 is sufficient to describe the current local model family, dataset row count,
 class counts, feature schema, and exported `LogisticRegression` configuration.
 Calibration transforms, confidence / OOD handling, inference latency, embedded
 export timestamp, and a committed/frozen model artifact remain TODOs before
-final RA-L submission claims.
+final RA-L submission claims. Stage 4-AU3 addresses the artifact checksum
+portion of this gap for the current local files.
 
 No `risk_adapter_v22` is introduced.
 
@@ -258,10 +263,13 @@ Before RA-L submission, still verify or complete:
 - Freeze or archive the exact generated model artifacts used for Paper 1.
 - Freeze or archive the exact generated dataset artifact, or record a checksum
   / manifest version for `experiments/datasets/stage4_risk_dataset.csv`.
+- Stage 4-AU3 now records local SHA256 checksums for the three generated JSONs
+  and the generated dataset CSV; final submission still needs an archive or
+  reproducible regeneration path.
 - Decide whether the ignored local JSONs are the final Paper 1 artifacts or
   whether regenerated equivalents will be used.
-- Record an export timestamp or model-artifact checksum; no embedded timestamp
-  is present in the current JSONs.
+- Record an export timestamp if needed; no embedded timestamp is present in
+  the current JSONs.
 - If the manuscript wants to use probability/calibration language, add a
   calibration method and document it; otherwise keep "warning score" wording.
 - If the manuscript wants confidence / OOD claims, add and document a

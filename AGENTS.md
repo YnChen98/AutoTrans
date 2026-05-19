@@ -1137,10 +1137,10 @@ Stage 4-AS submission strategy plan:
 - Stage 4-AT RA-L conversion / submission readiness audit is complete.
 - Stage 4-AU risk score and strict-valid metric documentation is complete.
 - Stage 4-AU2 risk model metadata audit is complete.
-- Current next recommended order: Stage 4-AV RA-L template acquisition and
-  conversion if AU2 closes enough metadata, or Stage 4-AU3 risk calibration /
-  lead-time plan first if calibration, confidence / OOD, or latency evidence is
-  needed for final claims.
+- Stage 4-AU3 risk model artifact checksum / reproducibility manifest is
+  complete.
+- Current next recommended stage: Stage 4-AV RA-L template acquisition and
+  conversion.
 
 Stage 4-AT RA-L conversion / submission readiness audit:
 
@@ -1174,9 +1174,11 @@ Stage 4-AT RA-L conversion / submission readiness audit:
   documentation item from this audit.
 - Stage 4-AU2 now audits the local generated risk model metadata and feature
   schemas.
+- Stage 4-AU3 now records SHA256 checksums and file sizes for the local
+  generated risk model / dataset artifacts.
 - Next recommended stage: Stage 4-AV RA-L template acquisition and conversion,
-  or Stage 4-AU3 risk calibration / lead-time planning if final risk claims
-  need it.
+  with separate calibration / lead-time planning only if final risk claims need
+  calibration, confidence / OOD, or latency evidence.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
@@ -1196,8 +1198,8 @@ Stage 4-AU risk score and strict-valid metric documentation:
   OOD behavior, and inference latency if claimed.
 - Stage 4-AU2 now audits the local generated risk model metadata.
 - Next recommended stage: Stage 4-AV RA-L template acquisition / conversion,
-  or Stage 4-AU3 risk calibration / lead-time plan if the missing calibration
-  details need to support a manuscript claim.
+  with separate calibration / lead-time planning only if the missing
+  calibration details need to support a manuscript claim.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
@@ -1220,11 +1222,33 @@ Stage 4-AU2 risk model metadata audit:
 - No deployed calibration transform, confidence / OOD rejection, inference
   latency measurement, embedded export timestamp, or artifact checksum was
   found.
+- Stage 4-AU3 now records local artifact checksums; embedded export timestamp
+  remains absent.
 - Use "empirical strict-invalid warning score" wording rather than calibrated
   physical probability wording.
-- Next recommended stage: Stage 4-AV RA-L template acquisition / conversion if
-  AU2 closes enough metadata, or Stage 4-AU3 risk calibration / lead-time plan
-  if calibration, confidence / OOD, or latency claims are needed.
+- Next recommended stage: Stage 4-AV RA-L template acquisition / conversion.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
+  explicitly overridden.
+
+Stage 4-AU3 risk model artifact checksum / reproducibility manifest:
+
+- The manifest document is
+  `experiments/protocols/stage4au3_risk_model_artifact_manifest.md`.
+- Current stage: Stage 4-AU3 risk model artifact checksum / reproducibility
+  manifest for the RA-L Paper 1 track.
+- Paper 1 protagonist remains `risk_adapter_v1`.
+- The manifest records SHA256 checksums and file sizes for:
+  `experiments/models/stage4_risk_logreg_3s.json`,
+  `experiments/models/stage4_risk_logreg_5s.json`,
+  `experiments/models/stage4_risk_logreg_15s.json`, and
+  `experiments/datasets/stage4_risk_dataset.csv`.
+- These files remain ignored/generated and are not committed.
+- The 3s and 5s JSONs remain the main Paper 1 empirical strict-invalid warning
+  score artifacts; the 15s JSON exists as support / monitoring, not the main
+  Paper 1 online protagonist channel.
+- No deployed calibration transform, confidence / OOD rejection, or latency
+  claim is added by AU3.
+- Next recommended stage: Stage 4-AV RA-L template acquisition / conversion.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 

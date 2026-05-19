@@ -8,6 +8,8 @@ experiment, not a new algorithm implementation, and not a template conversion.
 
 Stage 4-AU2 extends this document with a local generated-model metadata audit
 in `experiments/protocols/stage4au2_risk_model_metadata_audit.md`.
+Stage 4-AU3 freezes the local generated artifact identities by SHA256 checksum
+in `experiments/protocols/stage4au3_risk_model_artifact_manifest.md`.
 
 Paper 1 remains centered on `risk_adapter_v1` as the balanced learned /
 risk-conditioned execution governor. This document does not claim formal
@@ -118,6 +120,8 @@ Updated TODO status after Stage 4-AU2:
 - Addressed locally: generated JSON artifacts exist for the 3 s, 5 s, and
   15 s models, but they are ignored/generated and should be archived or
   checksummed before final submission.
+- Addressed locally by Stage 4-AU3: SHA256 checksums and file sizes are now
+  recorded for the three generated JSONs and the generated dataset CSV.
 - Addressed locally: exported JSON metadata records `row_count=90` and class
   counts `0=51`, `1=39`.
 - Addressed locally: exact `feature_names` for the 3 s and 5 s models are
@@ -128,8 +132,9 @@ Updated TODO status after Stage 4-AU2:
 - Still TODO: no confidence / OOD rejection mechanism was found.
 - Still TODO: no inference latency measurement was found beyond the configured
   `5.0 Hz` publish rate.
-- Still TODO: no embedded export timestamp or artifact checksum was found in
-  the JSON metadata.
+- Still TODO: no embedded export timestamp was found in the JSON metadata.
+- Still TODO: final submission must choose whether to archive the generated
+  artifacts or provide a regeneration path that reproduces the AU3 checksums.
 
 ## `risk_adapter_v1` Policy Logic
 

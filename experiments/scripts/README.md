@@ -1306,9 +1306,10 @@ Stage 4-AT does not rewrite `paper/stage4_governor/main.tex`, section files,
 `refs.bib`, figures, or tables. It also does not run LaTeX compilation,
 simulation, RViz, ROS launch files, or figure generation. Stage 4-AU now
 addresses the risk score / strict-valid metric documentation item; the current
-next order is Stage 4-AV RA-L template acquisition and conversion, or Stage
-4-AU3 risk calibration / lead-time planning if final risk claims need it. Do
-not create `risk_adapter_v22` before Paper 1 RA-L submission.
+next order is Stage 4-AV RA-L template acquisition and conversion, with
+separate calibration / lead-time planning only if final risk claims need
+calibration, confidence / OOD, or latency evidence. Do not create
+`risk_adapter_v22` before Paper 1 RA-L submission.
 
 ## Stage 4-AU risk score and strict-valid metric documentation
 
@@ -1340,10 +1341,25 @@ and 15s models. The audited 3s and 5s Paper 1 risk-score artifacts are
 rows, class counts `0=51` and `1=39`, and feature counts 16 and 27. The audit
 also records that no deployed calibration transform, confidence / OOD
 mechanism, inference-latency measurement, embedded export timestamp, or
-artifact checksum was found. The next step is Stage 4-AV RA-L template
-conversion if this metadata is sufficient, or Stage 4-AU3 calibration /
-lead-time planning if probability, confidence, OOD, or latency claims are
-needed.
+artifact checksum was found. Stage 4-AU3 now records local checksums for these
+generated artifacts.
+
+## Stage 4-AU3 risk model artifact manifest
+
+`experiments/protocols/stage4au3_risk_model_artifact_manifest.md` records the
+Paper 1 RA-L reproducibility manifest for generated local risk model and
+dataset artifacts. It records file sizes and SHA256 checksums for
+`experiments/models/stage4_risk_logreg_3s.json`,
+`experiments/models/stage4_risk_logreg_5s.json`,
+`experiments/models/stage4_risk_logreg_15s.json`, and
+`experiments/datasets/stage4_risk_dataset.csv`.
+
+Stage 4-AU3 is documentation-only: it does not train models, modify
+`experiments/models/`, modify `experiments/datasets/`, run ROS, compile
+LaTeX, or create `risk_adapter_v22`. The generated artifacts remain ignored
+and untracked; final RA-L submission should archive them or provide a
+regeneration path. The next recommended stage is Stage 4-AV RA-L template
+acquisition / conversion.
 
 ## Stage 4-AL final figure generation plan
 

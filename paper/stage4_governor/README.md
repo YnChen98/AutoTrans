@@ -20,6 +20,9 @@ governor logic, strict-valid metric, and diagnostic failure-label boundary in
 `experiments/protocols/stage4au_risk_score_metric_documentation.md`.
 Stage 4-AU2 audits the local generated risk model metadata and feature schemas
 in `experiments/protocols/stage4au2_risk_model_metadata_audit.md`.
+Stage 4-AU3 records SHA256 checksums and file sizes for the generated local
+risk model / dataset artifacts in
+`experiments/protocols/stage4au3_risk_model_artifact_manifest.md`.
 
 ## Target Style
 

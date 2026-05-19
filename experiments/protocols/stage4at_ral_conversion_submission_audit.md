@@ -106,10 +106,11 @@ Must-fix items:
   Stage 4-AU now addresses the adapter interface, logged fields, unavailable
   score behavior, governor usage, and metric boundary. Stage 4-AU2 now
   partially addresses model metadata by auditing the local generated JSONs,
-  dataset row count, class counts, and feature schemas. Remaining TODOs are
-  final artifact freezing / checksum, calibration method or no-calibration
-  caveat, confidence / OOD behavior, and inference-latency measurement if
-  claimed.
+  dataset row count, class counts, and feature schemas. Stage 4-AU3 now
+  records checksums and file sizes for the local generated JSON / CSV
+  artifacts. Remaining TODOs are final artifact archiving or reproducible
+  regeneration, calibration method or no-calibration caveat, confidence / OOD
+  behavior, and inference-latency measurement if claimed.
 - Define the strict-valid metric clearly, including `label_strict_invalid`,
   target-error checks, speed/swing/log-health checks, and manual-invalid
   boundaries. Stage 4-AU now documents the Paper 1 strict-valid predicate and
@@ -184,7 +185,7 @@ governor.
 | --- | --- | --- |
 | Simulation-only risk | Paper 1 cannot claim real-world deployment robustness. | Keep claims bounded to tested simulation protocols; frame hardware as future work or optional extension evidence. |
 | Strong heuristic baseline risk | `windlevel_s085` and `fixed_s080` are strong protocol specialists. | Emphasize balanced robustness / protocol regret rather than universal learned-method domination. |
-| Risk score source unclear | Reviewers may question `risk_score_3s` / `risk_score_5s` provenance and online meaning. | Stage 4-AU documents the adapter interface and metric boundary; Stage 4-AU2 audits local generated model metadata and feature schemas. Artifact freezing / checksum, calibration caveat, confidence / OOD behavior, and latency still need completion if claimed. |
+| Risk score source unclear | Reviewers may question `risk_score_3s` / `risk_score_5s` provenance and online meaning. | Stage 4-AU documents the adapter interface and metric boundary; Stage 4-AU2 audits local generated model metadata and feature schemas; Stage 4-AU3 records artifact checksums. Artifact archiving / regeneration, calibration caveat, confidence / OOD behavior, and latency still need completion if claimed. |
 | No statistical significance | Current repeated-run counts are descriptive. | Avoid significance wording; optionally add paired/block analysis if time allows. |
 | No formal safety guarantee | The governor is empirical, not a certified safety filter. | Keep safety-filter wording out; state no formal safety guarantee. |
 | Template/page-limit risk | RA-L conversion may force cuts or supplementary moves. | Audit page budget early and move detailed tables/traces to supplementary material. |
@@ -193,17 +194,16 @@ governor.
 
 ## Recommended Next Stage
 
-Recommended order after Stage 4-AU2:
+Recommended order after Stage 4-AU3:
 
 1. Stage 4-AV: RA-L template acquisition and conversion.
-2. Stage 4-AU3: risk calibration / lead-time plan, if the final RA-L claim
-   needs calibration, confidence, OOD, or latency evidence.
 
 Rationale: Stage 4-AU documents the current risk-score interface and
 strict-valid metric, and Stage 4-AU2 documents the available local generated
-model metadata. RA-L conversion will now expose formatting and page-budget
-issues. If final risk documentation needs calibration, confidence, OOD, or
-latency claims, add Stage 4-AU3 before making those claims.
+model metadata. Stage 4-AU3 now records local artifact checksums. RA-L
+conversion will now expose formatting and page-budget issues. If final risk
+documentation later needs calibration, confidence, OOD, or latency claims, add
+a separate calibration / lead-time plan before making those claims.
 
-Do not create `risk_adapter_v22` in Stage 4-AU2, Stage 4-AU3, or Stage 4-AV
-unless there is an explicit override before Paper 1 RA-L submission.
+Do not create `risk_adapter_v22` in Stage 4-AU3 or Stage 4-AV unless there is
+an explicit override before Paper 1 RA-L submission.
