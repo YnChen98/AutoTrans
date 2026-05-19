@@ -60,11 +60,18 @@ In the current implementation, these scores are exposed as
 \texttt{risk\_score\_3s} and \texttt{risk\_score\_5s}. The adapter subscribes
 to odometry, payload odometry, wind annotation, goal, and trajectory-context
 streams, builds early episode features, and evaluates exported JSON
-\texttt{LogisticRegression} models for the 3 s and 5 s windows. Unavailable
-scores are published as \texttt{-1} and do not trigger risk reductions. The
-final RA-L manuscript must still pin the exact exported model metadata,
-training dataset version, feature schema, and calibration caveat before
-submission.
+\texttt{LogisticRegression} models trained with
+\texttt{label\_strict\_invalid} as the positive class. The audited local JSON
+metadata records a 90-row training dataset with 51 strict-valid and 39
+strict-invalid rows. The 3 s model uses 16 wind, target, and
+\texttt{early\_3s} features, while the 5 s model uses 27 features spanning the
+same base fields plus \texttt{early\_3s} and \texttt{early\_5s} dynamics; the
+full feature schema is kept for supplementary material. Unavailable scores are
+published as \texttt{-1} and do not trigger risk reductions. These values are
+used as empirical strict-invalid warning scores, not as calibrated physical
+probabilities; the current implementation does not include confidence or OOD
+rejection, and inference latency has not been measured separately from the
+configured 5 Hz publish rate.
 
 The governor maps these signals to a pair of scale values. In low-risk
 conditions, it keeps execution less conservative so that the system can

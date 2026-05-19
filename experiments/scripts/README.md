@@ -1307,7 +1307,7 @@ Stage 4-AT does not rewrite `paper/stage4_governor/main.tex`, section files,
 simulation, RViz, ROS launch files, or figure generation. Stage 4-AU now
 addresses the risk score / strict-valid metric documentation item; the current
 next order is Stage 4-AV RA-L template acquisition and conversion, or Stage
-4-AU2 risk calibration / lead-time planning if final risk claims need it. Do
+4-AU3 risk calibration / lead-time planning if final risk claims need it. Do
 not create `risk_adapter_v22` before Paper 1 RA-L submission.
 
 ## Stage 4-AU risk score and strict-valid metric documentation
@@ -1325,6 +1325,25 @@ success and diagnostic `failure_group` / `failure_mode_guess` labels. Remaining
 RA-L risk-score TODOs are final exported model metadata, exact feature schema,
 calibration method or caveat, confidence / OOD behavior, and inference latency
 if those are claimed.
+
+## Stage 4-AU2 risk model metadata audit
+
+`experiments/protocols/stage4au2_risk_model_metadata_audit.md` records the
+Paper 1 RA-L metadata audit for the local generated risk model JSON artifacts.
+It is documentation-only: it does not train models, modify
+`experiments/models/`, modify `experiments/datasets/`, run ROS, compile
+LaTeX, or create `risk_adapter_v22`.
+
+Stage 4-AU2 confirms that the local ignored JSON files exist for the 3s, 5s,
+and 15s models. The audited 3s and 5s Paper 1 risk-score artifacts are
+`LogisticRegression` JSON exports trained on `label_strict_invalid` with 90
+rows, class counts `0=51` and `1=39`, and feature counts 16 and 27. The audit
+also records that no deployed calibration transform, confidence / OOD
+mechanism, inference-latency measurement, embedded export timestamp, or
+artifact checksum was found. The next step is Stage 4-AV RA-L template
+conversion if this metadata is sufficient, or Stage 4-AU3 calibration /
+lead-time planning if probability, confidence, OOD, or latency claims are
+needed.
 
 ## Stage 4-AL final figure generation plan
 

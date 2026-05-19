@@ -10,6 +10,7 @@ Planned items:
 - failure mode tables
 - launch settings
 - Stage 4-AU risk-score interface and strict-valid metric definition
+- Stage 4-AU2 risk model metadata table and full 3s / 5s feature schema
 - `risk_adapter_v1` parameters
 - `risk_adapter_v2` single-goal-only note
 - duplicate CSV audit notes

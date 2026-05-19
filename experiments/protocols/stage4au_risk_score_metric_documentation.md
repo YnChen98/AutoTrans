@@ -6,6 +6,9 @@ Stage 4-AU documents risk score usage and the strict-valid metric for the RA-L
 Paper 1 track. It is a documentation and manuscript-readiness step, not a new
 experiment, not a new algorithm implementation, and not a template conversion.
 
+Stage 4-AU2 extends this document with a local generated-model metadata audit
+in `experiments/protocols/stage4au2_risk_model_metadata_audit.md`.
+
 Paper 1 remains centered on `risk_adapter_v1` as the balanced learned /
 risk-conditioned execution governor. This document does not claim formal
 safety, statistical significance, or real-world deployment robustness. It also
@@ -66,6 +69,12 @@ uses `experiments/scripts/train_stage4_risk_predictor.py` with
 `label_strict_invalid`, `feature-set early`, `--drop-command-scale-features`,
 `--drop-method-features`, and `--export-train-on-all`.
 
+Stage 4-AU2 later inspected the local generated JSON artifacts. The 3 s and
+5 s JSON files exist locally, are ignored by git, and record
+`LogisticRegression` models trained with `label_strict_invalid` on 90 rows
+with class counts `0=51` and `1=39`. Their exact feature counts are 16 for the
+3 s model and 27 for the 5 s model.
+
 The online node subscribes to:
 
 - `/visual_slam/odom`
@@ -104,22 +113,23 @@ Metrics summaries may include:
 - `first_command_risk_score_5s_ge_0p5_time`
 - `first_command_risk_score_5s_ge_0p7_time`
 
-Remaining TODOs before RA-L submission:
+Updated TODO status after Stage 4-AU2:
 
-- TODO: record the exact final risk model source artifact used for Paper 1.
-- TODO: record exact final training dataset version, row count, and class
-  counts from the exported JSON metadata.
-- TODO: record the exact exported `feature_names` schema for the Paper 1 3 s
-  and 5 s models.
-- TODO: define the horizon semantics in manuscript language, including whether
-  the model score is a warning score for strict-invalid risk rather than a
-  calibrated physical probability.
-- TODO: document the calibration method or explicitly state that no deployed
-  calibration transform is used.
-- TODO: document confidence / OOD behavior; no confidence or OOD rejection
-  mechanism was found in the inspected adapter.
-- TODO: measure or bound inference latency if the RA-L paper makes any timing
-  claim beyond the configured `5.0 Hz` publish rate.
+- Addressed locally: generated JSON artifacts exist for the 3 s, 5 s, and
+  15 s models, but they are ignored/generated and should be archived or
+  checksummed before final submission.
+- Addressed locally: exported JSON metadata records `row_count=90` and class
+  counts `0=51`, `1=39`.
+- Addressed locally: exact `feature_names` for the 3 s and 5 s models are
+  recorded in Stage 4-AU2.
+- Addressed for wording: the risk score should be described as an empirical
+  strict-invalid warning score, not a calibrated physical probability.
+- Still TODO: no deployed calibration transform was found.
+- Still TODO: no confidence / OOD rejection mechanism was found.
+- Still TODO: no inference latency measurement was found beyond the configured
+  `5.0 Hz` publish rate.
+- Still TODO: no embedded export timestamp or artifact checksum was found in
+  the JSON metadata.
 
 ## `risk_adapter_v1` Policy Logic
 

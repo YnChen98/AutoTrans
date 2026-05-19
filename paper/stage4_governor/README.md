@@ -18,6 +18,8 @@ template-conversion task.
 Stage 4-AU documents the Paper 1 risk-score interface, `risk_adapter_v1`
 governor logic, strict-valid metric, and diagnostic failure-label boundary in
 `experiments/protocols/stage4au_risk_score_metric_documentation.md`.
+Stage 4-AU2 audits the local generated risk model metadata and feature schemas
+in `experiments/protocols/stage4au2_risk_model_metadata_audit.md`.
 
 ## Target Style
 
@@ -70,6 +72,8 @@ Verify before final bibliography insertion:
 - Failure groups are diagnostic only.
 - Risk scores are not claimed to be calibrated unless final deployed model
   calibration is documented.
+- Current risk scores should be described as empirical strict-invalid warning
+  scores, not calibrated physical probabilities.
 - No `risk_adapter_v22`.
 
 ## Local Draft Structure

@@ -1136,9 +1136,11 @@ Stage 4-AS submission strategy plan:
 - CoRL, RSS, T-Cyber, T-IV, and Autonomous Robots are not current priorities.
 - Stage 4-AT RA-L conversion / submission readiness audit is complete.
 - Stage 4-AU risk score and strict-valid metric documentation is complete.
+- Stage 4-AU2 risk model metadata audit is complete.
 - Current next recommended order: Stage 4-AV RA-L template acquisition and
-  conversion, or Stage 4-AU2 risk calibration / lead-time plan first if final
-  risk documentation needs calibration, confidence / OOD, or latency evidence.
+  conversion if AU2 closes enough metadata, or Stage 4-AU3 risk calibration /
+  lead-time plan first if calibration, confidence / OOD, or latency evidence is
+  needed for final claims.
 
 Stage 4-AT RA-L conversion / submission readiness audit:
 
@@ -1170,8 +1172,10 @@ Stage 4-AT RA-L conversion / submission readiness audit:
   minimal hardware evidence.
 - Stage 4-AU now addresses the risk score and strict-valid metric
   documentation item from this audit.
+- Stage 4-AU2 now audits the local generated risk model metadata and feature
+  schemas.
 - Next recommended stage: Stage 4-AV RA-L template acquisition and conversion,
-  or Stage 4-AU2 risk calibration / lead-time planning if final risk claims
+  or Stage 4-AU3 risk calibration / lead-time planning if final risk claims
   need it.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
@@ -1190,9 +1194,37 @@ Stage 4-AU risk score and strict-valid metric documentation:
 - Remaining TODOs before final risk-score claims are exact final exported model
   metadata, exact feature schema, calibration method or caveat, confidence /
   OOD behavior, and inference latency if claimed.
+- Stage 4-AU2 now audits the local generated risk model metadata.
 - Next recommended stage: Stage 4-AV RA-L template acquisition / conversion,
-  or Stage 4-AU2 risk calibration / lead-time plan if the missing calibration
+  or Stage 4-AU3 risk calibration / lead-time plan if the missing calibration
   details need to support a manuscript claim.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
+  explicitly overridden.
+
+Stage 4-AU2 risk model metadata audit:
+
+- The audit document is
+  `experiments/protocols/stage4au2_risk_model_metadata_audit.md`.
+- Current stage: Stage 4-AU2 risk model metadata audit for the RA-L Paper 1
+  track.
+- Paper 1 protagonist remains `risk_adapter_v1`.
+- The local generated JSONs exist under `experiments/models/` for 3s, 5s, and
+  15s, but they are ignored/generated and should be frozen, archived, or
+  checksummed before final submission.
+- The audited JSON metadata records `LogisticRegression`, `label_strict_invalid`,
+  `feature_set=early`, `drop_command_scale_features=true`,
+  `drop_method_features=true`, 90 training rows, and class counts `0=51`,
+  `1=39`.
+- The 3s model has 16 features and the 5s model has 27 features; full feature
+  schema belongs in supplementary material.
+- No deployed calibration transform, confidence / OOD rejection, inference
+  latency measurement, embedded export timestamp, or artifact checksum was
+  found.
+- Use "empirical strict-invalid warning score" wording rather than calibrated
+  physical probability wording.
+- Next recommended stage: Stage 4-AV RA-L template acquisition / conversion if
+  AU2 closes enough metadata, or Stage 4-AU3 risk calibration / lead-time plan
+  if calibration, confidence / OOD, or latency claims are needed.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
