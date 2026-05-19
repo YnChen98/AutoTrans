@@ -1304,10 +1304,27 @@ needs, and separates Paper 1 must-fix items from optional should-fix evidence.
 
 Stage 4-AT does not rewrite `paper/stage4_governor/main.tex`, section files,
 `refs.bib`, figures, or tables. It also does not run LaTeX compilation,
-simulation, RViz, ROS launch files, or figure generation. The recommended next
-order is Stage 4-AU risk score / strict-valid metric documentation, then Stage
-4-AV RA-L template acquisition and conversion unless the official template is
-already ready. Do not create `risk_adapter_v22` before Paper 1 RA-L submission.
+simulation, RViz, ROS launch files, or figure generation. Stage 4-AU now
+addresses the risk score / strict-valid metric documentation item; the current
+next order is Stage 4-AV RA-L template acquisition and conversion, or Stage
+4-AU2 risk calibration / lead-time planning if final risk claims need it. Do
+not create `risk_adapter_v22` before Paper 1 RA-L submission.
+
+## Stage 4-AU risk score and strict-valid metric documentation
+
+`experiments/protocols/stage4au_risk_score_metric_documentation.md` records the
+Paper 1 RA-L documentation pass for `risk_score_3s`, `risk_score_5s`,
+`risk_adapter_v1`, and the strict-valid metric. It is documentation-only: it
+does not run experiments, regenerate figures, compile LaTeX, or create
+`risk_adapter_v22`.
+
+Stage 4-AU documents the adapter topics and logged fields, unavailable risk
+score handling, `risk_adapter_v1` thresholds and scale logic, the exact
+paper-facing strict-valid predicate, and the boundary between strict-valid
+success and diagnostic `failure_group` / `failure_mode_guess` labels. Remaining
+RA-L risk-score TODOs are final exported model metadata, exact feature schema,
+calibration method or caveat, confidence / OOD behavior, and inference latency
+if those are claimed.
 
 ## Stage 4-AL final figure generation plan
 

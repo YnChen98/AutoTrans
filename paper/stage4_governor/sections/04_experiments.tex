@@ -12,10 +12,19 @@ strong-wind failures and method differences.
 \subsection{Strict-Valid Metric}
 
 The paper-facing metric is strict-valid count over repeated runs. A strict
-valid run must satisfy the Stage 4 validity checks used throughout the
-protocol-split evaluation. We report strict-valid counts rather than only raw
-suggested validity because warning-style diagnostics and invalid-only failure
-groups are needed to interpret failure modes.
+valid run must first satisfy the raw analyzer field
+\texttt{valid\_run\_suggested=true}. It must also have no NaN state, finite
+maximum swing below 60 deg, finite maximum UAV and payload speeds below
+4 m/s, and final UAV XY error at most 0.5 m. These stricter checks are the
+paper-facing success definition for the protocol-split tables.
+
+We report strict-valid counts rather than only raw suggested validity because
+warning-style diagnostics and invalid-only failure groups are needed to
+interpret failure modes. Fields such as \texttt{failure\_mode\_guess},
+\texttt{failure\_group}, command saturation, swing warnings, and
+reference/position jump warnings are diagnostic labels; they do not replace
+the strict-valid predicate and are not treated as exact physical root-cause
+proof.
 
 \subsection{Protocol Definitions}
 

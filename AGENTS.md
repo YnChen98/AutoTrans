@@ -1135,9 +1135,10 @@ Stage 4-AS submission strategy plan:
   extension target; T-ASE is an automation / reliability reframing target.
 - CoRL, RSS, T-Cyber, T-IV, and Autonomous Robots are not current priorities.
 - Stage 4-AT RA-L conversion / submission readiness audit is complete.
-- Current next recommended order: Stage 4-AU risk score and strict-valid metric
-  documentation, then Stage 4-AV RA-L template acquisition and conversion
-  unless the official template is already ready.
+- Stage 4-AU risk score and strict-valid metric documentation is complete.
+- Current next recommended order: Stage 4-AV RA-L template acquisition and
+  conversion, or Stage 4-AU2 risk calibration / lead-time plan first if final
+  risk documentation needs calibration, confidence / OOD, or latency evidence.
 
 Stage 4-AT RA-L conversion / submission readiness audit:
 
@@ -1167,8 +1168,31 @@ Stage 4-AT RA-L conversion / submission readiness audit:
 - Paper 2 must remain a separate mechanism-driven extension with broader
   protocol family, generalization, calibration, ablation, and optional HIL or
   minimal hardware evidence.
-- Next recommended stage: Stage 4-AU risk score and strict-valid metric
-  documentation, then Stage 4-AV RA-L template acquisition and conversion.
+- Stage 4-AU now addresses the risk score and strict-valid metric
+  documentation item from this audit.
+- Next recommended stage: Stage 4-AV RA-L template acquisition and conversion,
+  or Stage 4-AU2 risk calibration / lead-time planning if final risk claims
+  need it.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
+  explicitly overridden.
+
+Stage 4-AU risk score and strict-valid metric documentation:
+
+- The documentation document is
+  `experiments/protocols/stage4au_risk_score_metric_documentation.md`.
+- Current stage: Stage 4-AU risk score and strict-valid metric documentation
+  for the RA-L Paper 1 track.
+- Paper 1 protagonist remains `risk_adapter_v1`.
+- Stage 4-AU documents the `risk_score_3s` / `risk_score_5s` adapter
+  interface, logged fields, unavailable score behavior, `risk_adapter_v1`
+  threshold / scale logic, paper-facing strict-valid predicate, and diagnostic
+  `failure_group` / `failure_mode_guess` boundary.
+- Remaining TODOs before final risk-score claims are exact final exported model
+  metadata, exact feature schema, calibration method or caveat, confidence /
+  OOD behavior, and inference latency if claimed.
+- Next recommended stage: Stage 4-AV RA-L template acquisition / conversion,
+  or Stage 4-AU2 risk calibration / lead-time plan if the missing calibration
+  details need to support a manuscript claim.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 

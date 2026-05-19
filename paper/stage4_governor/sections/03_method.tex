@@ -56,6 +56,16 @@ short-horizon risk captures imminent instability or tracking stress, while the
 long-horizon risk captures a broader upcoming window where conservative
 execution may be useful.
 
+In the current implementation, these scores are exposed as
+\texttt{risk\_score\_3s} and \texttt{risk\_score\_5s}. The adapter subscribes
+to odometry, payload odometry, wind annotation, goal, and trajectory-context
+streams, builds early episode features, and evaluates exported JSON
+\texttt{LogisticRegression} models for the 3 s and 5 s windows. Unavailable
+scores are published as \texttt{-1} and do not trigger risk reductions. The
+final RA-L manuscript must still pin the exact exported model metadata,
+training dataset version, feature schema, and calibration caveat before
+submission.
+
 The governor maps these signals to a pair of scale values. In low-risk
 conditions, it keeps execution less conservative so that the system can
 continue progressing toward the goal. When risk increases, it reduces the speed

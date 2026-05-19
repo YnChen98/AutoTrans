@@ -143,6 +143,12 @@ recommended next order: Stage 4-AU risk score / strict-valid metric
 documentation, then Stage 4-AV RA-L template acquisition and conversion unless
 the template is already ready.
 
+Stage 4-AU now closes the Paper 1 RA-L must-fix documentation item for the
+risk-score interface, `risk_adapter_v1` governor logic, strict-valid metric,
+and diagnostic failure-label boundary. Remaining risk-score TODOs are final
+exported model metadata, exact feature schema, calibration caveat or method,
+confidence / OOD behavior, and inference latency if those are claimed.
+
 No `risk_adapter_v22` should be created before Paper 1 RA-L submission unless
 explicitly overridden.
 

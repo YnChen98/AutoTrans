@@ -9,7 +9,7 @@ Planned items:
 - all representative trace plots
 - failure mode tables
 - launch settings
-- strict-valid definition
+- Stage 4-AU risk-score interface and strict-valid metric definition
 - `risk_adapter_v1` parameters
 - `risk_adapter_v2` single-goal-only note
 - duplicate CSV audit notes

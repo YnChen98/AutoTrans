@@ -15,6 +15,10 @@ the protagonist. Stage 4-AT tracks RA-L conversion and submission readiness in
 directory remains pre-RA-L-conversion until Stage 4-AV or a later explicit
 template-conversion task.
 
+Stage 4-AU documents the Paper 1 risk-score interface, `risk_adapter_v1`
+governor logic, strict-valid metric, and diagnostic failure-label boundary in
+`experiments/protocols/stage4au_risk_score_metric_documentation.md`.
+
 ## Target Style
 
 - Current drafting style: IROS / ICRA-like conference skeleton.
@@ -64,6 +68,8 @@ Verify before final bibliography insertion:
 - No safety guarantee.
 - No broad real-world deployment claim.
 - Failure groups are diagnostic only.
+- Risk scores are not claimed to be calibrated unless final deployed model
+  calibration is documented.
 - No `risk_adapter_v22`.
 
 ## Local Draft Structure
