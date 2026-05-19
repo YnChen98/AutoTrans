@@ -67,10 +67,12 @@ and that the current scaffold compiled successfully in the user's manual check.
 No scientific manuscript content, result tables, figures, references, claims,
 or algorithms were changed.
 
-## Remaining Follow-Up
+## Follow-Up Status
 
-- Stage 4-AR: manuscript polish / layout pass, including layout warnings,
-  figure sizing, Table 1 width, citation resolution, and final caption polish.
+- Stage 4-AR now performs the follow-on manuscript polish / layout pass after
+  AQ3. It recompiles the scaffold, records an 8-page successful PDF build, and
+  applies presentation-only fixes to Figure 6 and the resolved Table 1 layout
+  TODO.
 - Stage 4-AV: RA-L conversion continuation if the paper proceeds from the
   current `ieeeconf` scaffold toward a RA-L-specific template workflow.
 - Continue to keep generated LaTeX outputs out of git.

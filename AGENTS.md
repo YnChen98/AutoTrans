@@ -1127,6 +1127,30 @@ Stage 4-AQ3 official template compile success:
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
+Stage 4-AR manuscript polish / layout pass:
+
+- The result document is
+  `experiments/protocols/stage4ar_manuscript_polish_layout_result.md`.
+- Current stage: Stage 4-AR manuscript polish / layout pass.
+- Stage 4-AR cleaned prior LaTeX generated outputs, ran
+  `latexmk -pdf -interaction=nonstopmode -file-line-error main.tex` from
+  `paper/stage4_governor/`, and recorded `latexmk_exit=0`.
+- The final generated `main.pdf` was 8 pages and approximately 2.3 MB during
+  the compile check.
+- Final log status: no LaTeX errors, undefined citations, undefined
+  references, overfull hboxes, missing figures, bibliography warnings, or
+  float warnings.
+- Residual underfull boxes remain non-blocking layout reminders for later
+  venue-specific polish.
+- Source-only fixes: Figure 6 is now a 3+2 two-row `figure*` layout for
+  readability, and the resolved Table 1 layout TODO was removed.
+- Generated PDF, auxiliary, and log files are not tracked.
+- Next recommended stage: Stage 4-AT2 RA-L submission checklist, or Stage
+  4-AM5 conditional citation verification depending on final
+  submission-readiness priorities.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
+  explicitly overridden.
+
 Stage 4-AS submission strategy plan:
 
 - The plan document is
