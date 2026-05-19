@@ -907,6 +907,8 @@ Stage 4-AJ full paper assembly draft:
   statistical significance claim, no safety guarantee, diagnostic-only
   failure labels, and simulation-only evidence.
 - Stage 4-AS now treats this AJ draft as the Paper 1 RA-L base draft.
+- Stage 4-AT defines RA-L conversion and submission readiness gaps for this
+  Paper 1 base draft.
 - Paper 2 must require a new mechanism-driven governor and substantially
   expanded evidence rather than a lightly enlarged version of AJ.
 - Do not create `risk_adapter_v22` before Paper 1 RA-L submission unless
@@ -1038,6 +1040,8 @@ Stage 4-AO manuscript formatting plan:
   or `.bib` files in this stage.
 - Stage 4-AS redirects AO toward RA-L-oriented Paper 1 conversion using the
   official RA-L / IEEE template.
+- Stage 4-AT is the RA-L conversion / submission readiness audit that consumes
+  AO as its upstream formatting plan.
 - The earlier IROS / ICRA-like scaffold under `paper/stage4_governor/` is a
   source draft; Paper 1 should now be prepared for RA-L first, while IROS 2027
   / ICRA next cycle / T-RO / TCST / T-ASE remain later extension directions.
@@ -1130,8 +1134,43 @@ Stage 4-AS submission strategy plan:
   month major extension target; TCST is a control / supervisory-governor
   extension target; T-ASE is an automation / reliability reframing target.
 - CoRL, RSS, T-Cyber, T-IV, and Autonomous Robots are not current priorities.
-- Current next step: Stage 4-AT RA-L format conversion / venue-specific
-  manuscript preparation.
+- Stage 4-AT RA-L conversion / submission readiness audit is complete.
+- Current next recommended order: Stage 4-AU risk score and strict-valid metric
+  documentation, then Stage 4-AV RA-L template acquisition and conversion
+  unless the official template is already ready.
+
+Stage 4-AT RA-L conversion / submission readiness audit:
+
+- The audit document is
+  `experiments/protocols/stage4at_ral_conversion_submission_audit.md`.
+- Current stage: Stage 4-AT RA-L conversion / submission audit for Paper 1.
+- Paper 1 target remains RA-L, with `risk_adapter_v1` as protagonist.
+- The current `paper/stage4_governor/` scaffold is IROS / ICRA-like and not
+  yet RA-L-template-specific.
+- Stage 4-AT does not rewrite the manuscript template and does not modify
+  `paper/stage4_governor/main.tex`, `paper/stage4_governor/sections/**`,
+  `paper/stage4_governor/refs.bib`, `paper/stage4_governor/figures/**`, or
+  `paper/stage4_governor/tables/**`.
+- Paper 1 must-fix items include official RA-L / IEEE template compile,
+  citation and BibTeX cleanup, conditional citation metadata verification,
+  `risk_score_3s` / `risk_score_5s` source and training documentation,
+  strict-valid metric definition, Figure 6 layout polish, final captions,
+  final claim audit, supplementary plan, and author / affiliation placeholders.
+- Paper 1 should-fix items, if time allows, include paired/block statistical
+  analysis, fixed-scale frontier sweep, speed-only / acceleration-only /
+  combined channel ablation, no-risk / delayed-risk / shuffled-risk ablations,
+  efficiency metrics, and a `goal_repeat` curve for `1/3/5/10`.
+- Risk register: simulation-only evidence, strong heuristic baselines,
+  unclear risk score source, no statistical significance, no formal safety
+  guarantee, template/page-limit risk, related-work citation risk, and
+  Paper 1 / Paper 2 overlap risk.
+- Paper 2 must remain a separate mechanism-driven extension with broader
+  protocol family, generalization, calibration, ablation, and optional HIL or
+  minimal hardware evidence.
+- Next recommended stage: Stage 4-AU risk score and strict-valid metric
+  documentation, then Stage 4-AV RA-L template acquisition and conversion.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
+  explicitly overridden.
 
 Stage 4-AL final figure generation plan:
 

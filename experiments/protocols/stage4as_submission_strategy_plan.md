@@ -133,8 +133,15 @@ Required Paper 2 novelty:
 
 ## Current Next Step
 
-Stage 4-AT should be RA-L format conversion / venue-specific manuscript
-preparation.
+Stage 4-AT now audits RA-L conversion and submission readiness:
+`experiments/protocols/stage4at_ral_conversion_submission_audit.md`.
+
+Stage 4-AT does not perform template conversion. It records the current
+`paper/stage4_governor/` scaffold inventory, RA-L conversion needs, Paper 1
+must-fix / should-fix items, Paper 2 overlap boundary, risk register, and the
+recommended next order: Stage 4-AU risk score / strict-valid metric
+documentation, then Stage 4-AV RA-L template acquisition and conversion unless
+the template is already ready.
 
 No `risk_adapter_v22` should be created before Paper 1 RA-L submission unless
 explicitly overridden.

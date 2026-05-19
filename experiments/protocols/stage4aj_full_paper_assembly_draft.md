@@ -46,6 +46,9 @@ Stage 4-AS now records the submission strategy: Paper 1 targets RA-L first,
 with `risk_adapter_v1` as the protagonist; Paper 2 is a later
 mechanism-driven extension track:
 `experiments/protocols/stage4as_submission_strategy_plan.md`.
+Stage 4-AT now defines the RA-L conversion and submission readiness gaps for
+this Paper 1 base draft:
+`experiments/protocols/stage4at_ral_conversion_submission_audit.md`.
 Stage 4-AP now turns this assembled draft into the
 `paper/stage4_governor/` manuscript scaffold:
 `experiments/protocols/stage4ap_manuscript_scaffold_protocol.md`.
@@ -757,6 +760,8 @@ or learned-method uniform domination.
 - A final claim audit should be performed before submission.
 - Official RA-L / IEEE template conversion is now the Paper 1 formatting
   target.
+- Stage 4-AT defines the conversion/readiness gaps before rewriting the
+  template.
 - Paper 2 needs a new mechanism-driven governor and broader evidence package;
   do not treat it as a lightly extended Paper 1.
 - No `risk_adapter_v22` should be introduced before Paper 1 RA-L submission

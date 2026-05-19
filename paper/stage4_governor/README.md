@@ -9,13 +9,20 @@ LaTeX draft skeleton while keeping RA-L extension possible.
 This scaffold is a draft source package, not a submission-ready manuscript. No
 LaTeX compilation has been run.
 
+Stage 4-AS now sets Paper 1's first target to RA-L, with `risk_adapter_v1` as
+the protagonist. Stage 4-AT tracks RA-L conversion and submission readiness in
+`experiments/protocols/stage4at_ral_conversion_submission_audit.md`. This
+directory remains pre-RA-L-conversion until Stage 4-AV or a later explicit
+template-conversion task.
+
 ## Target Style
 
-- Default drafting style: IROS / ICRA-like conference skeleton.
-- Future extension: RA-L style remains possible after the target venue is
-  locked.
+- Current drafting style: IROS / ICRA-like conference skeleton.
+- Paper 1 target: RA-L.
 - TODO before submission: replace the draft `ieeeconf` setup with the official
-  target venue template.
+  RA-L / IEEE template.
+- Do not rewrite the manuscript template in Stage 4-AT; that stage is an
+  audit / readiness plan only.
 
 ## Figure And Table Sources
 

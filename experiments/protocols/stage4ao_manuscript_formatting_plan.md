@@ -22,6 +22,11 @@ base manuscript; Paper 2 should require a new mechanism-driven governor and a
 substantially expanded evidence package rather than a lightly enlarged version
 of Paper 1.
 
+Stage 4-AT now audits the RA-L conversion and submission readiness gaps:
+`experiments/protocols/stage4at_ral_conversion_submission_audit.md`. AO should
+be treated as the upstream formatting plan that feeds AT's RA-L-oriented audit;
+AT does not rewrite the manuscript template.
+
 The current paper framing remains:
 
 - risk-conditioned execution governance,
@@ -251,11 +256,11 @@ Before creating the actual manuscript scaffold:
 
 Recommended next step:
 
-- Stage 4-AT: RA-L format conversion / venue-specific manuscript preparation.
+- Stage 4-AU: risk score and strict-valid metric documentation.
 
 Alternative next step:
 
-- Stage 4-AM5: verify remaining conditional citations before creating or
-  finalizing `refs.bib`.
+- Stage 4-AV: RA-L template acquisition and conversion, if the official
+  template is already ready.
 
 Do not recommend new simulation, new experimental runs, or `risk_adapter_v22`.

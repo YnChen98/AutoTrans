@@ -1294,6 +1294,21 @@ evaluation direction. Do not create `risk_adapter_v22` before Paper 1 RA-L
 submission unless explicitly overridden. The next step is Stage 4-AT RA-L
 format conversion / venue-specific manuscript preparation.
 
+## Stage 4-AT RA-L conversion submission audit
+
+`experiments/protocols/stage4at_ral_conversion_submission_audit.md` records the
+RA-L conversion and submission readiness audit for Paper 1. It inventories the
+current `paper/stage4_governor/` scaffold, confirms that the scaffold is still
+IROS / ICRA-like rather than RA-L-template-specific, lists RA-L conversion
+needs, and separates Paper 1 must-fix items from optional should-fix evidence.
+
+Stage 4-AT does not rewrite `paper/stage4_governor/main.tex`, section files,
+`refs.bib`, figures, or tables. It also does not run LaTeX compilation,
+simulation, RViz, ROS launch files, or figure generation. The recommended next
+order is Stage 4-AU risk score / strict-valid metric documentation, then Stage
+4-AV RA-L template acquisition and conversion unless the official template is
+already ready. Do not create `risk_adapter_v22` before Paper 1 RA-L submission.
+
 ## Stage 4-AL final figure generation plan
 
 `experiments/protocols/stage4al_final_figure_generation_plan.md` records the
