@@ -1106,6 +1106,27 @@ Stage 4-AQ2 LaTeX compile retry:
   the official venue class/template, or Stage 4-AM5 conditional citation
   verification.
 
+Stage 4-AQ3 official template compile success:
+
+- The result document is
+  `experiments/protocols/stage4aq3_official_template_compile_result.md`.
+- Current stage: Stage 4-AQ3 official template compile success.
+- `paper/stage4_governor/ieeeconf.cls` is now present and tracked as the
+  required class file for the current manuscript scaffold.
+- The user manually ran
+  `latexmk -pdf -interaction=nonstopmode -file-line-error main.tex` from
+  `paper/stage4_governor/`.
+- Recorded result: `latexmk_exit=0`; `main.pdf` was generated successfully at
+  approximately 2.3 MB, and `main.log` existed during the compile check.
+- Generated PDF, auxiliary, and log files were cleaned before commit and should
+  not be tracked.
+- No scientific manuscript content, figures, tables, references, simulation,
+  RViz, `roslaunch`, `catkin_make`, or figure generation changed in AQ3.
+- Next step after AQ3: Stage 4-AR manuscript polish / layout pass or Stage
+  4-AV RA-L conversion continuation.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
+  explicitly overridden.
+
 Stage 4-AS submission strategy plan:
 
 - The plan document is

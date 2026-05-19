@@ -17,6 +17,13 @@ No scientific claims were changed. No manuscript source fixes were made because
 the compile failure is a missing class-file dependency rather than a manuscript
 syntax error.
 
+Stage 4-AQ3 subsequently resolved this blocking dependency by adding
+`paper/stage4_governor/ieeeconf.cls` as a tracked template class file. The
+user's manual compile command
+`latexmk -pdf -interaction=nonstopmode -file-line-error main.tex` then
+completed with `latexmk_exit=0` and generated `main.pdf`. Generated PDF,
+auxiliary, and log files were cleaned before commit and are not tracked.
+
 ## Tools Found / Missing
 
 Tool checks:
@@ -119,8 +126,8 @@ to change `\documentclass` when the failure is missing `ieeeconf.cls`.
 
 Recommended next step:
 
-- Stage 4-AR: manuscript polish / layout pass after adding the official venue
-  class/template or compiling in a matching LaTeX environment.
+- Stage 4-AR: manuscript polish / layout pass after the successful Stage 4-AQ3
+  compile with `paper/stage4_governor/ieeeconf.cls`.
 
 Alternative next step:
 

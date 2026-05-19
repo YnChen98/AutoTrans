@@ -1280,6 +1280,28 @@ the local TeX installation. The manuscript `\documentclass` was not changed;
 the next compile step should add the official target venue class/template or
 run in a matching LaTeX environment. Do not create `risk_adapter_v22` yet.
 
+## Stage 4-AQ3 official template compile success
+
+`experiments/protocols/stage4aq3_official_template_compile_result.md` records
+the successful manual compile/check pass after adding
+`paper/stage4_governor/ieeeconf.cls` as a tracked template class dependency.
+
+The user ran:
+
+```bash
+cd paper/stage4_governor
+latexmk -pdf -interaction=nonstopmode -file-line-error main.tex
+```
+
+The recorded result is `latexmk_exit=0`; `main.pdf` was generated successfully
+during the manual check at approximately 2.3 MB, and `main.log` existed during
+the check. Generated PDF, auxiliary, and log files were cleaned before commit
+and are not tracked. No manuscript source content, figures, tables, references,
+simulation, RViz, `roslaunch`, `catkin_make`, or figure generation changed.
+Next step: Stage 4-AR manuscript polish / layout pass or Stage 4-AV RA-L
+conversion continuation. Do not create `risk_adapter_v22` before Paper 1 RA-L
+submission.
+
 ## Stage 4-AS submission strategy plan
 
 `experiments/protocols/stage4as_submission_strategy_plan.md` records the
