@@ -6,6 +6,12 @@ Stage 4-AY ran the final compile check for the RA-L Paper 1 scaffold under
 `paper/stage4_governor_ral/` and records the submission package readiness
 checklist.
 
+Stage 4-AZ later records the human visual inspection of the compiled PDF. That
+manual review found presentation blockers after compile success, including raw
+underscore-style method tokens, Figure 1 / Figure 2 schematic quality,
+Figure 3 compactness, and Figure 6 overcrowding. These are presentation issues,
+not scientific-result blockers.
+
 The final compile succeeded with `latexmk_exit=0`. The generated `main.pdf`
 was 8 pages and approximately 2.3 MB during the check. The final `main.log`
 had no LaTeX errors, undefined citations, undefined references, overfull
@@ -105,7 +111,9 @@ Remaining before actual submission:
 
 - Confirm author metadata and institutional affiliations.
 - Confirm final venue template / upload rules.
-- Inspect `/tmp/stage4_governor_ral_final_check.pdf` visually.
+- Inspect `/tmp/stage4_governor_ral_final_check.pdf` visually. Stage 4-AZ
+  records the first human visual inspection findings and identifies follow-up
+  presentation-polish stages.
 - Decide what supplementary artifacts are acceptable to upload.
 - Submit through the RA-L / IEEE system.
 

@@ -73,6 +73,10 @@ file.
 - Stage 4-AY ran the final compile / submission checklist. The scaffold
   compiled to an 8-page PDF during the check, and a temporary inspection copy
   was written to `/tmp/stage4_governor_ral_final_check.pdf`.
+- Stage 4-AZ recorded human visual inspection findings after the clean compile.
+  Compile success does not yet mean visual-submission readiness: raw method
+  tokens, Figure 1 / Figure 2 schematic quality, Figure 3 compactness, and
+  Figure 6 overcrowding remain presentation blockers.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -113,5 +117,12 @@ file.
 - Use Stage 4-AX as the current final claim-audit baseline.
 - Use Stage 4-AY as the current final compile / submission package checklist
   baseline.
-- Perform final human visual PDF inspection and submission package assembly.
+- Use Stage 4-AZ as the current human visual inspection baseline.
+- Next presentation-polish sequence:
+  - Stage 4-BA display-name cleanup;
+  - Stage 4-BB schematic placeholder / redraw preparation;
+  - Stage 4-BC Figure 3 compact polish;
+  - Stage 4-BD Figure 6 simplified replot planning.
+- Perform final submission package assembly only after the AZ blockers are
+  resolved or explicitly accepted.
 - Keep generated PDF / aux / log files out of git.

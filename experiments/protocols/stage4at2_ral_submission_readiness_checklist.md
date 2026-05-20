@@ -47,6 +47,11 @@ that the RA-L scaffold compiles to an 8-page PDF after AX, records a temporary
 inspection copy under `/tmp/stage4_governor_ral_final_check.pdf`, and tracks
 the remaining human-only submission tasks.
 
+Stage 4-AZ records human visual inspection findings after the clean AY compile.
+It confirms that compile success does not yet mean visual-submission readiness:
+raw underscore-style method names, Figure 1 / Figure 2 schematic quality,
+Figure 3 compactness, and Figure 6 overcrowding remain presentation blockers.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -68,7 +73,8 @@ the remaining human-only submission tasks.
 ## Remaining Must-Fix Before Submission
 
 - Confirm the final RA-L / IEEE template requirement and page budget.
-- Perform visual PDF inspection.
+- Perform visual PDF inspection: first pass recorded by Stage 4-AZ, with
+  presentation blockers still open.
 - Fill final author names and affiliations.
 - Perform final title check.
 - Complete final citation style polish if venue-specific formatting requires
@@ -79,7 +85,8 @@ the remaining human-only submission tasks.
 - Final figure / caption polish for Table 1 and Figures 1-6: addressed by
   Stage 4-AW.
 - Check final Figure 6 visual readability in the compiled PDF during final
-  visual inspection.
+  visual inspection: Stage 4-AZ found Figure 6 overcrowded and recommended a
+  simplified paper-facing replot plan.
 - Final claim audit: addressed by Stage 4-AX:
   - no statistical significance claim;
   - no formal safety guarantee;
@@ -96,6 +103,11 @@ the remaining human-only submission tasks.
   in git.
 - Final compile / submission package check: addressed by Stage 4-AY.
 - Confirm generated experiment outputs are not accidentally committed.
+- Resolve Stage 4-AZ presentation blockers before final submission:
+  - manuscript-visible display-name cleanup;
+  - Figure 1 / Figure 2 placeholder swap and redraw plan;
+  - Figure 3 compactness polish;
+  - Figure 6 simplified paper-facing replot plan.
 
 ## Remaining Should-Fix If Time Allows
 
@@ -173,17 +185,18 @@ Recommended submission-readiness path:
 4. Stage 4-AW final figure / caption polish.
 5. Stage 4-AX final claim audit.
 6. Stage 4-AY final compile / submission package check.
-7. Stage 4-AZ human visual PDF inspection and final submission package
-   assembly.
+7. Stage 4-AZ human visual PDF inspection finding record.
+8. Stage 4-BA through Stage 4-BD presentation-polish follow-ups.
 
 Suggested order:
 
 ```text
-AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ
+AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ -> BA -> BB -> BC -> BD
 ```
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
-After Stage 4-AY, continue with Stage 4-AZ human visual PDF inspection and
-final submission package assembly, or an optional Stage 4-AM5 follow-up if
-citation metadata changes.
+After Stage 4-AZ, continue with Stage 4-BA display-name cleanup, Stage 4-BB
+schematic placeholder / redraw preparation, Stage 4-BC Figure 3 compact polish,
+and Stage 4-BD Figure 6 simplified replot planning before final submission
+package assembly.

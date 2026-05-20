@@ -1404,6 +1404,30 @@ Stage 4-AY final compile / submission package check:
   submission package assembly.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-AZ human visual inspection finding record:
+
+- The result document is
+  `experiments/protocols/stage4az_human_visual_submission_package_result.md`.
+- Current stage: Stage 4-AZ human visual inspection finding record.
+- Stage 4-AZ records manual PDF inspection findings after the Stage 4-AY clean
+  compile.
+- Compile success does not yet mean visual-submission readiness.
+- Presentation blockers found:
+  - raw underscore-style method names such as `risk_adapter_v21`,
+    `fixed_s080`, and `windlevel_s085` remain visible;
+  - Figure 1 / Figure 2 need placeholder handling and external redraw;
+  - Figure 3 needs compactness polish;
+  - Figure 6 is overcrowded and needs a simplified paper-facing replot plan,
+    with possible full trace detail moved to supplementary material.
+- Recommended next stages:
+  - Stage 4-BA display-name cleanup;
+  - Stage 4-BB schematic placeholder / redraw prep;
+  - Stage 4-BC Figure 3 compact polish;
+  - Stage 4-BD Figure 6 simplified replot.
+- Stage 4-AZ is documentation-only: no LaTeX compile, figure regeneration,
+  simulation, ROS action, training, or new experiment output.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

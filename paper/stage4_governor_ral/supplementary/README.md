@@ -29,6 +29,12 @@ video / trace packages in the RA-L submission package. Generated experiment
 outputs should not be copied into this scaffold or committed unless they are
 intentionally packaged as submission-facing supplementary material.
 
+Stage 4-AZ human visual inspection found that Figure 6 is too crowded for its
+current main-paper role. A later Figure 6 simplification may keep only key
+signals in the main paper and shift full trace detail to supplementary material.
+If this split is used, supplementary trace content should remain clearly tied
+to the diagnostic-only claim boundary.
+
 Claim boundaries remain the same as the main paper: no statistical
 significance claim, no safety guarantee, no learned uniform domination, no
 mixed-protocol aggregate as the main result, diagnostic-only failure groups,

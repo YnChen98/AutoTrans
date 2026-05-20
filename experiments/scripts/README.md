@@ -1492,6 +1492,22 @@ excluded from git. Next recommended work is Stage 4-AZ human visual PDF
 inspection and final submission package assembly. Do not create
 `risk_adapter_v22` before Paper 1 RA-L submission.
 
+## Stage 4-AZ human visual inspection finding record
+
+`experiments/protocols/stage4az_human_visual_submission_package_result.md`
+records the manual PDF inspection findings after the Stage 4-AY clean compile.
+
+Stage 4-AZ is documentation-only. It does not compile LaTeX, regenerate
+figures, run simulation, run ROS, run training, or create new experiment
+outputs. The human review finds presentation blockers: raw underscore-style
+method names remain visible, Figure 1 / Figure 2 need placeholder handling and
+external redraw, Figure 3 needs compactness polish, and Figure 6 needs a
+simplified paper-facing replot plan with possible supplementary trace detail.
+Next recommended stages are Stage 4-BA display-name cleanup, Stage 4-BB
+schematic placeholder / redraw prep, Stage 4-BC Figure 3 compact polish, and
+Stage 4-BD Figure 6 simplified replot. Do not create `risk_adapter_v22` before
+Paper 1 RA-L submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the
