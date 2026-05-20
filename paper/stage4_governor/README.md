@@ -6,8 +6,9 @@ This directory is the Stage 4-AP manuscript source scaffold for the reframed
 Stage 4 paper. It converts the assembled Stage 4 draft into an IROS / ICRA-like
 LaTeX draft skeleton while keeping RA-L extension possible.
 
-This scaffold is a draft source package, not a submission-ready manuscript. No
-LaTeX compilation has been run.
+This scaffold is a draft source package, not a submission-ready manuscript.
+Stage 4-AR recorded a clean compile / layout pass under the current tracked
+template, but final RA-L submission checks remain.
 
 Stage 4-AS now sets Paper 1's first target to RA-L, with `risk_adapter_v1` as
 the protagonist. Stage 4-AT tracks RA-L conversion and submission readiness in
@@ -23,6 +24,8 @@ in `experiments/protocols/stage4au2_risk_model_metadata_audit.md`.
 Stage 4-AU3 records SHA256 checksums and file sizes for the generated local
 risk model / dataset artifacts in
 `experiments/protocols/stage4au3_risk_model_artifact_manifest.md`.
+Stage 4-AT2 tracks the remaining RA-L submission-readiness checklist in
+`experiments/protocols/stage4at2_ral_submission_readiness_checklist.md`.
 
 ## Target Style
 

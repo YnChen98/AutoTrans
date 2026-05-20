@@ -2,6 +2,11 @@
 
 Add supplementary material here after the main manuscript scaffold stabilizes.
 
+Stage 4-AT2 records that supplementary decisions remain before RA-L
+submission, including whether to include risk model JSON artifact details,
+dataset checksum manifests, full run tables, and optional trace / video
+packages.
+
 Planned items:
 
 - full run tables

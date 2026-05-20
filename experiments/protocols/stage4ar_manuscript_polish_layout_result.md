@@ -13,6 +13,9 @@ experiment outputs were changed. No simulation, RViz, `roslaunch`,
 `catkin_make`, training scripts, or figure generation scripts were run.
 `risk_adapter_v22` was not created.
 
+Stage 4-AT2 follows this clean compile / layout pass and tracks the remaining
+RA-L submission-readiness tasks before Paper 1 submission.
+
 ## Commands Run
 
 Clean previous LaTeX generated outputs:
@@ -99,11 +102,13 @@ are qualitative mechanism evidence, not proof of general causality.
 - Review residual underfull boxes during the final venue-specific layout pass,
   especially long `\texttt{...}` method names in the two-column format.
 - Perform final visual PDF inspection before submission.
-- Continue RA-L-specific template / page-budget work in Stage 4-AV or a
-  follow-on Stage 4-AT2 checklist.
+- Continue RA-L-specific template / page-budget work using the Stage 4-AT2
+  checklist and later final submission edits.
 - Continue conditional citation verification if any unverified citations are
   considered later; do not add conditional citations as active BibTeX entries
   without metadata verification.
+- Use Stage 4-AT2 as the checklist for remaining RA-L submission-readiness
+  tasks after this clean compile.
 
 ## Generated Files
 

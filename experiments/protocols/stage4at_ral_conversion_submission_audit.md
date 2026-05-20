@@ -19,6 +19,9 @@ method.
 Paper 2 remains separate. It should be a later mechanism-driven extension
 track rather than a lightly enlarged duplicate of Paper 1.
 
+Stage 4-AT2 now creates the RA-L submission readiness checklist after the
+clean Stage 4-AR manuscript compile / layout pass.
+
 ## Current Scaffold Inventory
 
 Current scaffold root:
@@ -194,7 +197,7 @@ governor.
 
 ## Recommended Next Stage
 
-Recommended order after Stage 4-AU3:
+Original recommended order after Stage 4-AU3:
 
 1. Stage 4-AV: RA-L template acquisition and conversion.
 
@@ -207,3 +210,9 @@ a separate calibration / lead-time plan before making those claims.
 
 Do not create `risk_adapter_v22` in Stage 4-AU3 or Stage 4-AV unless there is
 an explicit override before Paper 1 RA-L submission.
+
+After the clean Stage 4-AR compile, Stage 4-AT2 records the remaining
+submission-readiness tasks before final RA-L submission. The current
+submission-readiness order is Stage 4-AM5 conditional citation verification,
+Stage 4-AW final figure / caption polish, Stage 4-AX final claim audit, then
+final compile.

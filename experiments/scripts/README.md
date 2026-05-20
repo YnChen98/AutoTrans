@@ -1350,11 +1350,33 @@ needs, and separates Paper 1 must-fix items from optional should-fix evidence.
 Stage 4-AT does not rewrite `paper/stage4_governor/main.tex`, section files,
 `refs.bib`, figures, or tables. It also does not run LaTeX compilation,
 simulation, RViz, ROS launch files, or figure generation. Stage 4-AU now
-addresses the risk score / strict-valid metric documentation item; the current
-next order is Stage 4-AV RA-L template acquisition and conversion, with
-separate calibration / lead-time planning only if final risk claims need
-calibration, confidence / OOD, or latency evidence. Do not create
-`risk_adapter_v22` before Paper 1 RA-L submission.
+addresses the risk score / strict-valid metric documentation item, and Stage
+4-AT2 now records the post-AR RA-L submission readiness checklist. The current
+submission-readiness order is Stage 4-AM5 conditional citation verification,
+Stage 4-AW final figure / caption polish, Stage 4-AX final claim audit, then
+final compile. Do not create `risk_adapter_v22` before Paper 1 RA-L
+submission.
+
+## Stage 4-AT2 RA-L submission readiness checklist
+
+`experiments/protocols/stage4at2_ral_submission_readiness_checklist.md`
+records the RA-L submission readiness checklist after the clean Stage 4-AR
+manuscript compile / layout pass.
+
+Stage 4-AT2 confirms that the manuscript scaffold, official class file, clean
+compile, main figures/tables, Table 1, Figures 1-6, drafted citations,
+risk-score / metric documentation, artifact checksums, and RA-L-first paper
+strategy are ready at scaffold level. It also tracks remaining must-fix items:
+final RA-L / IEEE template and page-budget confirmation, visual PDF inspection,
+author / affiliation completion, final title and citation checks, conditional
+citation decisions, Figure 6 readability, caption polish, final claim audit,
+supplementary package decisions, generated-PDF submission packaging, and final
+compile after all edits.
+
+The recommended next order is Stage 4-AM5 conditional citation verification and
+BibTeX cleanup, Stage 4-AW final figure / caption polish, Stage 4-AX final
+claim audit, then final compile. Do not create `risk_adapter_v22` before Paper
+1 RA-L submission.
 
 ## Stage 4-AU risk score and strict-valid metric documentation
 

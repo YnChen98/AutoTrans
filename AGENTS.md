@@ -1184,8 +1184,11 @@ Stage 4-AS submission strategy plan:
 - Stage 4-AU2 risk model metadata audit is complete.
 - Stage 4-AU3 risk model artifact checksum / reproducibility manifest is
   complete.
-- Current next recommended stage: Stage 4-AV RA-L template acquisition and
-  conversion.
+- Stage 4-AT2 RA-L submission readiness checklist is complete.
+- Current next recommended stages: Stage 4-AM5 conditional citation
+  verification, Stage 4-AW final figure / caption polish, and Stage 4-AX final
+  claim audit.
+- Suggested order: Stage 4-AM5 -> Stage 4-AW -> Stage 4-AX -> final compile.
 
 Stage 4-AT RA-L conversion / submission readiness audit:
 
@@ -1221,11 +1224,40 @@ Stage 4-AT RA-L conversion / submission readiness audit:
   schemas.
 - Stage 4-AU3 now records SHA256 checksums and file sizes for the local
   generated risk model / dataset artifacts.
-- Next recommended stage: Stage 4-AV RA-L template acquisition and conversion,
-  with separate calibration / lead-time planning only if final risk claims need
-  calibration, confidence / OOD, or latency evidence.
+- Stage 4-AT2 now records the RA-L submission readiness checklist after the
+  clean Stage 4-AR compile.
+- Current next recommended stages: Stage 4-AM5 conditional citation
+  verification, Stage 4-AW final figure / caption polish, and Stage 4-AX final
+  claim audit.
+- Suggested order: Stage 4-AM5 -> Stage 4-AW -> Stage 4-AX -> final compile.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
+
+Stage 4-AT2 RA-L submission readiness checklist:
+
+- The checklist document is
+  `experiments/protocols/stage4at2_ral_submission_readiness_checklist.md`.
+- Current stage: Stage 4-AT2 RA-L submission readiness checklist after the
+  clean Stage 4-AR manuscript compile / layout pass.
+- Stage 4-AT2 records that the manuscript currently compiles to 8 pages under
+  the current tracked template, but this is not final submission yet.
+- Current ready items include the manuscript scaffold, official class file,
+  clean compile, main figures / tables, Table 1 / Figures 1-6 at scaffold
+  level, drafted citations, risk score / metric documentation, artifact
+  checksums, and RA-L-first paper strategy.
+- Remaining must-fix items include final RA-L / IEEE template and page-budget
+  confirmation, visual PDF inspection, author / affiliation completion, final
+  title check, final citation verification and BibTeX cleanup, conditional
+  citation decisions, final Figure 6 readability check, final caption polish,
+  final claim audit, supplementary package decisions, generated-PDF submission
+  packaging, and final compile after all edits.
+- Should-fix items, if time allows, include paired / blocked analysis,
+  fixed-scale frontier summary, channel ablation, risk calibration /
+  lead-time planning, efficiency metrics, and a `goal_repeat` curve.
+- Next recommended stages: Stage 4-AM5 conditional citation verification,
+  Stage 4-AW final figure / caption polish, and Stage 4-AX final claim audit.
+- Suggested order: Stage 4-AM5 -> Stage 4-AW -> Stage 4-AX -> final compile.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
 Stage 4-AU risk score and strict-valid metric documentation:
 
@@ -1242,9 +1274,11 @@ Stage 4-AU risk score and strict-valid metric documentation:
   metadata, exact feature schema, calibration method or caveat, confidence /
   OOD behavior, and inference latency if claimed.
 - Stage 4-AU2 now audits the local generated risk model metadata.
-- Next recommended stage: Stage 4-AV RA-L template acquisition / conversion,
-  with separate calibration / lead-time planning only if the missing
-  calibration details need to support a manuscript claim.
+- Earlier recommended stage: Stage 4-AV RA-L template acquisition /
+  conversion, with separate calibration / lead-time planning only if the
+  missing calibration details need to support a manuscript claim. After Stage
+  4-AT2, current submission-readiness order is Stage 4-AM5 -> Stage 4-AW ->
+  Stage 4-AX -> final compile.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
@@ -1271,7 +1305,9 @@ Stage 4-AU2 risk model metadata audit:
   remains absent.
 - Use "empirical strict-invalid warning score" wording rather than calibrated
   physical probability wording.
-- Next recommended stage: Stage 4-AV RA-L template acquisition / conversion.
+- Earlier recommended stage: Stage 4-AV RA-L template acquisition /
+  conversion. After Stage 4-AT2, current submission-readiness order is Stage
+  4-AM5 -> Stage 4-AW -> Stage 4-AX -> final compile.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
@@ -1293,7 +1329,9 @@ Stage 4-AU3 risk model artifact checksum / reproducibility manifest:
   Paper 1 online protagonist channel.
 - No deployed calibration transform, confidence / OOD rejection, or latency
   claim is added by AU3.
-- Next recommended stage: Stage 4-AV RA-L template acquisition / conversion.
+- Earlier recommended stage: Stage 4-AV RA-L template acquisition /
+  conversion. After Stage 4-AT2, current submission-readiness order is Stage
+  4-AM5 -> Stage 4-AW -> Stage 4-AX -> final compile.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
