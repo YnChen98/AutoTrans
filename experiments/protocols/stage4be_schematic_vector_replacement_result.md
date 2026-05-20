@@ -139,6 +139,15 @@ cleaner paper-facing rendering. BF also recompiled the scaffold successfully to
 hboxes, missing figures, bibliography warnings, or float warnings in the final
 log.
 
+## Stage 4-BG Follow-Up
+
+Stage 4-BG further redrew the Figure 1 / Figure 2 TikZ schematics for a cleaner
+paper-facing presentation. Figure 1 now uses a more disciplined aligned
+flowchart with the unchanged inner stack on the top row and feedback /
+diagnostic paths separated below. Figure 2 now uses a less crowded two-panel
+timeline with fewer labels and clearer protocol definitions. The old generated
+Figure 1 / Figure 2 PNG/SVG assets remain inactive.
+
 ## Scope
 
 - No simulation was run.

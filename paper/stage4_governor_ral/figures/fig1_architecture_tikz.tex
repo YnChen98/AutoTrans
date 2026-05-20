@@ -2,28 +2,28 @@
   font=\sffamily\scriptsize,
   >=Latex,
   block/.style={
-    draw=black!72,
+    draw=black!76,
     fill=black!3,
     rounded corners=1pt,
-    minimum width=1.55cm,
-    minimum height=0.62cm,
+    minimum width=1.58cm,
+    minimum height=0.64cm,
     align=center,
-    inner sep=2.4pt
+    inner sep=2.2pt
   },
   wideblock/.style={
     block,
-    minimum width=1.95cm
+    minimum width=1.98cm
   },
-  flow/.style={-Latex, line width=0.58pt, draw=black!82},
-  adapt/.style={-Latex, line width=0.62pt, draw=black!78, dashed},
-  sense/.style={-Latex, line width=0.54pt, draw=black!66, densely dotted},
-  group/.style={draw=black!48, rounded corners=2pt, dashed, inner sep=4.8pt}
+  flow/.style={-Latex, line width=0.58pt, draw=black!84},
+  adapt/.style={-Latex, line width=0.60pt, draw=black!78, dashed},
+  feedback/.style={-Latex, line width=0.52pt, draw=black!64, densely dotted},
+  group/.style={draw=black!48, rounded corners=2pt, dashed, inner sep=5.0pt}
 ]
 
-\node[block] (planner) at (0.00,1.35) {Planner /\\reference\\generator};
-\node[block] (mpc) at (2.05,1.35) {Payload\\MPC};
-\node[block] (so3) at (3.95,1.35) {SO(3)\\controller};
-\node[wideblock] (plant) at (6.10,1.35) {UAV +\\suspended\\payload};
+\node[block] (planner) at (0.00,1.30) {Planner /\\reference\\generator};
+\node[block] (mpc) at (1.95,1.30) {Payload\\MPC};
+\node[block] (so3) at (3.75,1.30) {SO(3)\\controller};
+\node[wideblock] (plant) at (5.85,1.30) {UAV +\\suspended\\payload};
 
 \node[
   group,
@@ -31,27 +31,29 @@
   label={[font=\sffamily\tiny, yshift=1pt]above:unchanged inner stack}
 ] (stack) {};
 
-\node[wideblock] (risk) at (0.85,-0.58) {Risk input /\\warning scores};
-\node[wideblock, minimum width=2.10cm] (governor) at (3.25,-0.58)
+\node[wideblock] (risk) at (0.00,-0.72) {Risk input /\\warning scores};
+\node[wideblock, minimum width=2.08cm] (governor) at (2.30,-0.72)
   {Risk-conditioned\\execution governor\\{\tiny empirical governor}};
-\node[wideblock, minimum width=2.05cm] (interface) at (5.70,-0.58)
+\node[wideblock, minimum width=2.05cm] (interface) at (4.70,-0.72)
   {Command-adaptation\\interface\\{\tiny speed scale}\\{\tiny acceleration scale}};
-\node[wideblock, minimum width=1.78cm] (logs) at (6.10,-1.78)
+\node[wideblock, minimum width=1.78cm] (logs) at (5.85,-1.72)
   {Diagnostics /\\logs};
+
+\coordinate (commandtap) at (2.92,0.74);
+\coordinate (plantdown) at (5.85,0.30);
+\coordinate (feedbackbottom) at (0.00,-1.72);
 
 \draw[flow] (planner) -- (mpc);
 \draw[flow] (mpc) -- (so3);
 \draw[flow] (so3) -- (plant);
 
-\draw[sense] (plant.south) -- ++(0,-0.38) -| (logs.north);
-\draw[sense] (plant.south west) .. controls (4.70,0.38) and (2.25,0.12) ..
-  (risk.north east);
 \draw[flow] (risk) -- (governor);
 \draw[flow] (governor) -- (interface);
-\draw[adapt] (interface.north) .. controls (5.65,0.14) and (5.00,0.60) ..
-  ($(so3.south)!0.58!(plant.south)$);
-\node[font=\sffamily\tiny, align=center, fill=white, inner sep=1.2pt]
-  at (5.18,0.25) {execution\\command path};
-\draw[sense] (logs.west) -| (risk.south);
+\draw[adapt] (interface.north) |- (commandtap);
+\node[font=\sffamily\tiny, align=center, fill=white, inner sep=1.0pt]
+  at (4.70,0.22) {execution\\command path};
+
+\draw[feedback] (plant.south) -- (plantdown) -- (logs.north);
+\draw[feedback] (logs.west) -- (feedbackbottom) -- (risk.south);
 
 \end{tikzpicture}

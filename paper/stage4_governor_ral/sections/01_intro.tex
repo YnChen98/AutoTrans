@@ -24,7 +24,7 @@ strong-wind evaluation.
 We study execution governance as a drop-in layer on top of an AutoTrans-like
 suspended-payload UAV stack. The governor modifies execution through
 speed scale and acceleration scale, so it can be attached
-externally without rewriting the planner, payload MPC, or SO3 controller.
+externally without rewriting the planner, payload MPC, or SO(3) controller.
 External reference or command modulation has a long control precedent
 \cite{Garone2017ReferenceCommandGovernorsSurvey,Garone2016ExplicitReferenceGovernor,Li2021ActionGovernor},
 but our governor is empirical and is evaluated by repeated-run behavior rather
@@ -34,9 +34,9 @@ turning runtime aggressiveness into an interface-level adaptation problem
 rather than a planner/controller redesign.
 
 The evaluation also requires a protocol split. A single-goal mission protocol
-(Goal Repeat = 1) tests one commanded mission and is closest to nominal
+(goal repeat = 1) tests one commanded mission and is closest to nominal
 single-goal execution. A goal-reissue stress protocol
-(Goal Repeat = 10) repeatedly republishes the goal and stresses
+(goal repeat = 10) repeatedly republishes the goal and stresses
 reference-update, post-arrival, and repeated-command behavior. Stress testing
 and benchmark design literature cautions that protocol choice affects what a
 score means \cite{Koren2018AdaptiveStressTesting,Nalic2020StressTestingScenarioBasedADS,Muller2019MeasureTargetConfusion}.
@@ -46,9 +46,9 @@ that matter for evaluated robustness.
 
 Our completed strong-wind evaluation shows that no current learned variant is
 strongest in both protocols. Wind-Level 0.85 is the single-goal
-specialist, achieving 26/30 strict-valid runs under Goal Repeat = 1,
+specialist, achieving 26/30 strict-valid runs under goal repeat = 1,
 while Fixed Scale 0.80 is the goal-reissue stress specialist, achieving
-24/30 strict-valid runs under Goal Repeat = 10. The learned /
+24/30 strict-valid runs under goal repeat = 10. The learned /
 risk-conditioned governor Risk Adapter v1 is the most balanced current method,
 with the highest mean valid count (24.0/30), highest worst-protocol valid count
 (23/30), and lowest total regret (2). By contrast, Risk Adapter v2.1 remains a
@@ -62,10 +62,10 @@ This paper makes four contributions:
   \item We introduce a drop-in learned / risk-conditioned execution governor
   for suspended-payload UAV transport that adapts speed scale and
   acceleration scale without replacing the planner, payload MPC, or
-  SO3 controller.
+  SO(3) controller.
   \item We define a protocol-split strong-wind evaluation that separates the
-  single-goal mission protocol (Goal Repeat = 1) from the goal-reissue
-  stress protocol (Goal Repeat = 10), avoiding a mixed-protocol
+  single-goal mission protocol (goal repeat = 1) from the goal-reissue
+  stress protocol (goal repeat = 10), avoiding a mixed-protocol
   aggregate as the main result.
   \item We report balanced robustness and protocol regret metrics showing that
   Risk Adapter v1 is the most balanced current learned / risk-conditioned

@@ -64,6 +64,12 @@ main-paper position signal. Full target-error, reference-error, risk-score, and
 other trace details should remain supplementary / archived trace material if
 used.
 
+Stage 4-BG further polishes the main-paper presentation assets. Figure 4 and
+Figure 5 now use paper-facing labels in the active main-paper PNG/SVG assets,
+and Figure 6 keeps only the simplified main-paper signals with one global
+legend. Full trace details and richer diagnostic tables should remain
+supplementary / archived materials if the final submission package uses them.
+
 Claim boundaries remain the same as the main paper: no statistical
 significance claim, no safety guarantee, no learned uniform domination, no
 mixed-protocol aggregate as the main result, diagnostic-only failure groups,

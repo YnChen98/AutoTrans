@@ -99,6 +99,12 @@ file.
   TikZ spacing was polished, and Figure 6 was regenerated without unavailable
   position-error placeholder text. The scaffold compiled to 7 pages during the
   BF check.
+- Stage 4-BG performed a further paper-facing presentation cleanup: remaining
+  active manuscript code-token rendering was removed, Figure 1 / Figure 2 TikZ
+  schematics were redrawn with cleaner spacing, Figure 4 / Figure 5 were
+  regenerated with paper-facing display names and SVG outputs, and Figure 6 was
+  layout-polished with one global legend and subcaptions below the columns. The
+  scaffold compiled to 7 pages during the BG check.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -149,8 +155,9 @@ file.
 - Use Stage 4-BE as the current Figure 1 / Figure 2 vector schematic
   replacement baseline.
 - Use Stage 4-BF as the current presentation blocker fix baseline.
+- Use Stage 4-BG as the current paper-facing presentation polish baseline.
 - Next presentation-polish sequence:
-  - Stage 4-BG final visual PDF re-inspection;
+  - Stage 4-BH final visual PDF reinspection after BG;
   - optional external artist polish if desired.
 - Perform final submission package assembly only after the AZ blockers are
   resolved or explicitly accepted.

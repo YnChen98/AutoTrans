@@ -10,10 +10,10 @@ difficulty of the same nominal trajectory. Under strong wind, a command that
 is feasible in one run can become too aggressive or poorly timed in another.
 
 The underlying system follows an AutoTrans-like stack composed of a
-payload-aware planner, a payload MPC, and an SO3 controller
+payload-aware planner, a payload MPC, and an SO(3) controller
 \cite{Li2023AutoTrans,UrbinaBrito2021PredictivePayloadTransport,Lee2010GeometricTrackingSE3}.
 The planner generates nominal motion references, the payload MPC tracks these
-references while accounting for the load, and the SO3 controller provides the
+references while accounting for the load, and the SO(3) controller provides the
 low-level vehicle control interface. In this paper, these core stack
 components are kept unchanged.
 
@@ -28,7 +28,7 @@ and make the executed motion more conservative.
 
 This interface is intentionally stack-compatible. The planner continues to
 produce the nominal reference, the payload MPC continues to solve the tracking
-problem, and the SO3 controller remains the low-level controller. The governor
+problem, and the SO(3) controller remains the low-level controller. The governor
 only changes the execution scale exposed through the command-adaptation
 interface. This design connects to command and reference governance concepts
 \cite{Garone2017ReferenceCommandGovernorsSurvey,Garone2016ExplicitReferenceGovernor,Li2021ActionGovernor},
@@ -39,7 +39,7 @@ certified reference governor.
   \centering
   \resizebox{\linewidth}{!}{\input{figures/fig1_architecture_tikz}}
   \caption{Stack-compatible risk-conditioned execution governance. The
-  planner, payload MPC, and SO3 controller remain unchanged, while an external
+  planner, payload MPC, and SO(3) controller remain unchanged, while an external
   governor adapts execution aggressiveness through speed scale and
   acceleration scale. The governor is empirical and is not a
   certified safety filter.}
@@ -59,18 +59,18 @@ execution may be useful.
 In the current implementation, these scores are exposed as
 3 s and 5 s risk scores. The adapter subscribes
 to odometry, payload odometry, wind annotation, goal, and trajectory-context
-streams, builds early episode features, and evaluates exported JSON
-\texttt{LogisticRegression} models trained with
+streams, builds early episode features, and evaluates exported
+JSON-serialized logistic regression models trained with
 the strict-invalid label as the positive class. The audited local JSON
 metadata records a 90-row training dataset with 51 strict-valid and 39
 strict-invalid rows. The 3 s model uses 16 wind, target, and
 3 s early-window features, while the 5 s model uses 27 features spanning the
 same base fields plus 3 s and 5 s early-window dynamics; the
 full feature schema is kept for supplementary material. Unavailable scores are
-published as \texttt{-1} and do not trigger risk reductions. These values are
-used as empirical strict-invalid warning scores, not as calibrated physical
-probabilities; the current implementation does not include confidence or OOD
-rejection, and inference latency has not been measured separately from the
+published as a sentinel value of -1 and do not trigger risk reductions. These
+values are used as empirical strict-invalid warning scores, not as calibrated
+physical probabilities; the current implementation does not include confidence
+or OOD rejection, and inference latency has not been measured separately from the
 configured 5 Hz publish rate.
 
 The governor maps these signals to a pair of scale values. In low-risk
@@ -146,5 +146,5 @@ it does not imply formal safety, stability, or optimality guarantees.
 
 The execution governor is an empirical runtime adaptation layer. It is not a
 formal safety filter, does not provide a safety guarantee, and does not replace
-the planner, payload MPC, or SO3 controller. Its claim is limited to improving
+the planner, payload MPC, or SO(3) controller. Its claim is limited to improving
 balanced protocol-level behavior under the tested strong-wind evaluation.

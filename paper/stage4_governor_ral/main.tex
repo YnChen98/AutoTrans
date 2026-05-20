@@ -15,24 +15,6 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc}
 
-% Display paper-facing interface names even in legacy scaffold prose that still
-% uses implementation tokens.
-\makeatletter
-\let\StageOriginalTexttt\texttt
-\renewcommand{\texttt}[1]{%
-  \def\StageTextttArg{#1}%
-  \def\StageSpeedToken{speed\_scale}%
-  \def\StageAccelerationToken{acceleration\_scale}%
-  \ifx\StageTextttArg\StageSpeedToken
-    speed scale%
-  \else\ifx\StageTextttArg\StageAccelerationToken
-    acceleration scale%
-  \else
-    \StageOriginalTexttt{#1}%
-  \fi\fi
-}
-\makeatother
-
 \title{\LARGE \bf
 Risk-Conditioned Execution Governance for Balanced Robustness in Windy Suspended-Payload UAV Transport}
 
@@ -51,8 +33,8 @@ risk-conditioned execution governor that adapts command execution through the
 existing speed scale and acceleration scale interface,
 leaving the planner/MPC/controller stack unchanged. To avoid a misleading
 single aggregate, we evaluate strong-wind behavior under two protocols: a
-single-goal mission protocol (Goal Repeat = 1) and a goal-reissue
-stress protocol (Goal Repeat = 10). The results reveal strong protocol
+single-goal mission protocol (goal repeat = 1) and a goal-reissue
+stress protocol (goal repeat = 10). The results reveal strong protocol
 specialists: Wind-Level 0.85 has the highest observed single-goal count with
 26/30 strict-valid runs, whereas Fixed Scale 0.80 has the highest observed
 stress count with 24/30 strict-valid runs. Among the evaluated learned /

@@ -1587,7 +1587,7 @@ or simulation, and does not write `experiments/results/`. It writes:
 - `paper/stage4_governor_ral/figures/fig6_trace_summary.svg`
 
 Stage 4-BD replaces the active five-panel Figure 6 block with a 4-column
-summary that keeps only speed, swing, position-error, and command-scale
+summary that keeps only speed, swing, UAV XY displacement, and command-scale
 signals for readability. It uses display names and no visible raw underscore
 method labels. Next recommended work is Stage 4-BE external Figure 1 / Figure
 2 schematic replacement or final visual PDF inspection after BD. Do not create
@@ -1629,6 +1629,38 @@ python3 experiments/scripts/generate_stage4_paper_ready_trace_summary.py
 Stage 4-BF recompiled the RA-L scaffold successfully to 7 pages. Next
 recommended work is Stage 4-BG final visual PDF re-inspection. Do not create
 `risk_adapter_v22` before Paper 1 RA-L submission.
+
+## Stage 4-BG paper-facing presentation polish cleanup
+
+Stage 4-BG performs the paper-facing presentation polish cleanup after BF / BE.
+The result is recorded in
+`experiments/protocols/stage4bg_presentation_polish_cleanup_result.md`.
+
+The pass updates active manuscript wording, redraws Figure 1 / Figure 2 TikZ
+schematics, regenerates Figure 4 / Figure 5 with paper-facing display names,
+and polishes the Figure 6 trace-summary layout.
+
+Examples:
+
+```bash
+python3 -m py_compile experiments/scripts/generate_stage4_paper_ready_trace_summary.py experiments/scripts/generate_stage4_paper_ready_protocol_regret.py experiments/scripts/generate_stage4_paper_ready_failure_groups.py
+python3 experiments/scripts/generate_stage4_paper_ready_protocol_regret.py
+python3 experiments/scripts/generate_stage4_paper_ready_failure_groups.py
+python3 experiments/scripts/generate_stage4_paper_ready_trace_summary.py
+```
+
+The generated main-paper assets are:
+
+- `paper/stage4_governor_ral/figures/fig4_protocol_regret.png`
+- `paper/stage4_governor_ral/figures/fig4_protocol_regret.svg`
+- `paper/stage4_governor_ral/figures/fig5_invalid_failure_groups.png`
+- `paper/stage4_governor_ral/figures/fig5_invalid_failure_groups.svg`
+- `paper/stage4_governor_ral/figures/fig6_trace_summary.png`
+- `paper/stage4_governor_ral/figures/fig6_trace_summary.svg`
+
+Stage 4-BG recompiled the RA-L scaffold successfully to 7 pages. Next
+recommended work is Stage 4-BH final visual PDF reinspection after BG. Do not
+create `risk_adapter_v22` before Paper 1 RA-L submission.
 
 ## Stage 4-AU risk score and strict-valid metric documentation
 

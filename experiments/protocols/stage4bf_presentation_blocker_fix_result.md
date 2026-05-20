@@ -135,12 +135,24 @@ used for visual sanity checks under `/tmp`; those files were not committed.
 
 ## Remaining Non-Blocking Reminders
 
-- Stage 4-BG should perform final human visual PDF re-inspection.
+- Stage 4-BG should perform paper-facing presentation polish cleanup and
+  schedule final human visual PDF re-inspection afterward.
 - Author names and affiliations remain placeholders.
 - Final RA-L official requirements and page-budget confirmation remain
   human/submission tasks.
 - Optional external artist polish for Figure 1 / Figure 2 remains possible if
   the team wants a more bespoke schematic style.
+
+## Stage 4-BG Follow-Up
+
+Stage 4-BG completed the next presentation-polish pass after BF. It removed the
+remaining active manuscript code-token rendering workaround, further redrew
+Figure 1 / Figure 2 TikZ schematics, regenerated Figure 4 and Figure 5 with
+paper-facing labels and SVG outputs, and polished Figure 6 with one closer
+global legend and subcaptions below the panel columns. The BG compile check
+succeeded to 7 pages with no LaTeX errors, undefined citations / references,
+overfull hboxes, missing figures, bibliography warnings, or float warnings in
+the final log. Final visual reinspection is now Stage 4-BH.
 
 ## Scope
 

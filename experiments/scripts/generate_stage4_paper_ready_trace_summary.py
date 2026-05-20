@@ -424,16 +424,10 @@ def configure_matplotlib() -> None:
 
 def draw_summary(cases: list[TraceCase], output_dir: Path) -> tuple[Path, Path]:
     configure_matplotlib()
-    fig, axes = plt.subplots(4, 4, figsize=(7.25, 4.95), sharex="col")
+    fig, axes = plt.subplots(4, 4, figsize=(7.25, 4.42), sharex="col")
     row_labels = ("Speed (m/s)", "Swing (deg)", "UAV XY disp. (m)", "Scale")
 
     for column_index, case in enumerate(cases):
-        axes[0, column_index].set_title(
-            f"{case.spec.panel} {case.spec.protocol_label}\n"
-            f"{case.spec.display_name} {case.spec.outcome_label}",
-            fontsize=6.6,
-            pad=4.0,
-        )
         plot_speed(axes[0, column_index], case)
         plot_swing(axes[1, column_index], case)
         plot_xy_travel(axes[2, column_index], case)
@@ -445,6 +439,28 @@ def draw_summary(cases: list[TraceCase], output_dir: Path) -> tuple[Path, Path]:
             else:
                 axes[row_index, column_index].tick_params(labelleft=False)
         axes[3, column_index].set_xlabel("time (s)")
+
+    fig.subplots_adjust(
+        left=0.075,
+        right=0.995,
+        bottom=0.205,
+        top=0.855,
+        hspace=0.15,
+        wspace=0.08,
+    )
+    for column_index, case in enumerate(cases):
+        bbox = axes[3, column_index].get_position()
+        fig.text(
+            (bbox.x0 + bbox.x1) / 2.0,
+            0.072,
+            (
+                f"{case.spec.panel} {case.spec.protocol_label}\n"
+                f"{case.spec.display_name} {case.spec.outcome_label}"
+            ),
+            ha="center",
+            va="bottom",
+            fontsize=6.2,
+        )
 
     legend_handles = [
         Line2D([0], [0], color="#2b5c8a", linewidth=1.0, label="UAV speed"),
@@ -475,7 +491,7 @@ def draw_summary(cases: list[TraceCase], output_dir: Path) -> tuple[Path, Path]:
             label="failure / NaN",
         ),
     ]
-    legend_ax = fig.add_axes([0.095, 0.905, 0.86, 0.055])
+    legend_ax = fig.add_axes([0.095, 0.865, 0.86, 0.050])
     legend_ax.axis("off")
     legend_ax.legend(
         handles=legend_handles,
@@ -486,7 +502,6 @@ def draw_summary(cases: list[TraceCase], output_dir: Path) -> tuple[Path, Path]:
         handlelength=1.8,
         handletextpad=0.4,
     )
-    fig.subplots_adjust(left=0.075, right=0.995, bottom=0.085, top=0.785, hspace=0.16, wspace=0.08)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     png_path = output_dir / "fig6_trace_summary.png"

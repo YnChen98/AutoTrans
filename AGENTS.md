@@ -1571,6 +1571,30 @@ Stage 4-BF presentation blocker fix pass:
 - Next recommended stage: Stage 4-BG final visual PDF re-inspection.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BG paper-facing presentation polish cleanup:
+
+- The result document is
+  `experiments/protocols/stage4bg_presentation_polish_cleanup_result.md`.
+- Current stage: Stage 4-BG paper-facing presentation polish cleanup.
+- Stage 4-BG cleans the remaining paper-facing presentation issues after
+  Stage 4-BF / BE:
+  - removes the remaining active manuscript code-token rendering workaround;
+  - redraws Figure 1 and Figure 2 TikZ schematics with cleaner aligned layouts;
+  - regenerates Figure 4 and Figure 5 with paper-facing display names and SVG
+    outputs;
+  - polishes Figure 6 with one global legend, reduced top whitespace, and
+    subcaptions below the panel columns.
+- Added / updated paper-facing figure generators:
+  - `experiments/scripts/generate_stage4_paper_ready_protocol_regret.py`;
+  - `experiments/scripts/generate_stage4_paper_ready_failure_groups.py`;
+  - `experiments/scripts/generate_stage4_paper_ready_trace_summary.py`.
+- Stage 4-BG compile check succeeded with `latexmk_exit=0`; the scaffold
+  compiled to 7 pages with no LaTeX errors, undefined citations / references,
+  overfull hboxes, missing figures, bibliography warnings, or float warnings in
+  the final log. Residual Underfull hbox messages are non-blocking.
+- Next recommended stage: Stage 4-BH final visual reinspection after BG.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

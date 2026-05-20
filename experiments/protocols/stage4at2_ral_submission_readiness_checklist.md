@@ -79,7 +79,14 @@ Stage 4-BF fixes the remaining presentation blockers after BE: active
 paper-facing text now renders display names for the remaining interface /
 protocol tokens, Figure 1 / Figure 2 TikZ spacing was polished, and Figure 6
 was regenerated without the `position error not logged` placeholder. Final
-human visual re-inspection remains required as Stage 4-BG.
+human visual re-inspection remains required after the presentation-fix passes.
+
+Stage 4-BG performs a further paper-facing presentation polish cleanup after
+BF / BE. It removes the remaining active manuscript code-token rendering
+workaround, redraws Figure 1 / Figure 2 TikZ layouts, regenerates Figure 4 and
+Figure 5 with paper-facing display names and SVG outputs, and polishes Figure 6
+with one global legend and subcaptions below the columns. Final human visual
+reinspection remains required as Stage 4-BH.
 
 ## Current Ready Items
 
@@ -138,11 +145,14 @@ human visual re-inspection remains required as Stage 4-BG.
 - Resolve Stage 4-AZ presentation blockers before final submission:
   - manuscript-visible display-name cleanup: addressed by Stage 4-BA;
   - Figure 1 / Figure 2 placeholder swap and redraw plan: addressed by Stage
-    4-BE with active TikZ vector schematics;
+    4-BE with active TikZ vector schematics and further polished by Stage
+    4-BG;
   - Figure 3 compactness polish: addressed by Stage 4-BC;
-  - Figure 6 simplified paper-facing replot: addressed by Stage 4-BD;
-  - remaining BE presentation blockers: addressed by Stage 4-BF, with final
-    Stage 4-BG human visual re-inspection still pending.
+  - Figure 4 / Figure 5 display-name cleanup: addressed by Stage 4-BG;
+  - Figure 6 simplified paper-facing replot: addressed by Stage 4-BD and
+    layout-polished by Stage 4-BG;
+  - remaining BE presentation blockers: addressed by Stage 4-BF and Stage
+    4-BG, with final Stage 4-BH human visual reinspection still pending.
 
 ## Remaining Should-Fix If Time Allows
 
@@ -224,12 +234,13 @@ Recommended submission-readiness path:
 8. Stage 4-BA through Stage 4-BD presentation-polish follow-ups.
 9. Stage 4-BE Figure 1 / Figure 2 vector schematic replacement.
 10. Stage 4-BF presentation blocker fix pass.
-11. Stage 4-BG final visual PDF re-inspection.
+11. Stage 4-BG paper-facing presentation polish cleanup.
+12. Stage 4-BH final visual PDF reinspection.
 
 Suggested order:
 
 ```text
-AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ -> BA -> BB -> BC -> BD -> BE -> BF -> BG
+AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ -> BA -> BB -> BC -> BD -> BE -> BF -> BG -> BH
 ```
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
@@ -239,5 +250,6 @@ schematic placeholder / redraw preparation, Stage 4-BC Figure 3 compact polish,
 and Stage 4-BD Figure 6 simplified replot before final submission package
 assembly. After BD, continue with Stage 4-BE external Figure 1 / Figure 2
 schematic replacement. After BE, continue with Stage 4-BF final visual PDF
-presentation blocker fix pass. After BF, continue with Stage 4-BG final visual
-PDF re-inspection.
+presentation blocker fix pass. After BF, continue with Stage 4-BG
+paper-facing presentation polish cleanup. After BG, continue with Stage 4-BH
+final visual PDF reinspection.
