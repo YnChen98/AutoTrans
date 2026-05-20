@@ -1366,6 +1366,25 @@ Stage 4-AW final figure / caption polish:
   compile / submission package checks.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-AX final claim audit:
+
+- The result document is
+  `experiments/protocols/stage4ax_final_claim_audit_result.md`.
+- Current stage: Stage 4-AX final claim audit.
+- Stage 4-AX audits active manuscript text under
+  `paper/stage4_governor_ral/` for overclaiming-risk wording.
+- It tightens broad `best`, proof, causality, deployment, and future-variant
+  language while preserving the core Paper 1 claim:
+  `risk_adapter_v1` remains the balanced learned / risk-conditioned
+  protagonist by mean valid count, worst-protocol count, and total regret under
+  the tested protocol split.
+- Active manuscript text no longer mentions `risk_adapter_v22`.
+- Numerical results, method rankings, citation keys, Table 1 data, figures,
+  algorithms, and experiment outputs are unchanged.
+- Next recommended stage: final compile / submission package checks, or
+  optional Stage 4-AM5 follow-up if citation metadata changes.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

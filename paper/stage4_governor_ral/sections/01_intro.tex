@@ -44,16 +44,17 @@ Because these protocols expose different failure modes and method rankings,
 collapsing them into a mixed-protocol aggregate would obscure the trade-offs
 that matter for evaluated robustness.
 
-Our completed strong-wind evaluation shows that no current learned variant
-dominates both protocols. \texttt{windlevel\_s085} is the single-goal
+Our completed strong-wind evaluation shows that no current learned variant is
+strongest in both protocols. \texttt{windlevel\_s085} is the single-goal
 specialist, achieving 26/30 strict-valid runs under \texttt{goal\_repeat=1},
 while \texttt{fixed\_s080} is the goal-reissue stress specialist, achieving
 24/30 strict-valid runs under \texttt{goal\_repeat=10}. The learned /
 risk-conditioned governor \texttt{risk\_adapter\_v1} is the most balanced
-current method, with the best mean valid count (24.0/30), best worst-protocol
-valid count (23/30), and lowest total regret (2). By contrast,
+current method, with the highest mean valid count (24.0/30), highest
+worst-protocol valid count (23/30), and lowest total regret (2). By contrast,
 \texttt{risk\_adapter\_v21} remains a strong nominal / single-goal variant, but
-it is weaker under stress and should not be framed as the overall best method.
+it is weaker under stress and should not be framed as the final balanced
+method.
 
 This paper makes four contributions:
 

@@ -5,7 +5,7 @@
 The single-goal mission protocol and the goal-reissue stress protocol expose
 different method rankings. \texttt{windlevel\_s085} is strongest in the
 single-goal setting, while \texttt{fixed\_s080} is strongest under goal-reissue
-stress. A mixed aggregate would hide this structure and could make a method
+stress. A single combined aggregate would hide this structure and could make a method
 look broadly robust even if it is actually specialized to one regime.
 
 \subsection{Why Strong Simple Baselines Matter}
@@ -17,12 +17,12 @@ trade-offs across protocols. Their strength makes the balanced robustness
 claim for \texttt{risk\_adapter\_v1} more meaningful because it is measured
 against strong specialists rather than weak baselines.
 
-\subsection{Balanced Robustness as Deployment-Oriented Criterion}
+\subsection{Balanced Robustness as a Protocol-Level Criterion}
 
 \texttt{risk\_adapter\_v1} is the current balanced protagonist because it has
-the best mean valid count, best worst-protocol count, and lowest total regret
-under the tested protocols. This does not mean it is statistically best,
-universally best, or guaranteed safe. The claim is narrower: among the
+the highest mean valid count, highest worst-protocol count, and lowest total
+regret under the tested protocols. This does not mean it is statistically
+superior, universal, or guaranteed safe. The claim is narrower: among the
 currently evaluated learned / risk-conditioned governors, it gives the most
 balanced protocol-level behavior.
 
@@ -31,12 +31,12 @@ balanced protocol-level behavior.
 Invalid-only failure groups help interpret where failures concentrate, using
 categories such as \texttt{command\_control\_upstream},
 \texttt{planner\_reference\_upstream}, and \texttt{state\_task\_upstream}.
-These labels are diagnostic rather than exact physical root-cause proof.
+These labels are diagnostic rather than definitive root-cause attribution.
 Representative traces support mechanism hypotheses, including early
 pre-arrival vulnerability in Trial 4 stress failures and delayed post-arrival
 divergence in a Trial 6 single-goal bottleneck.
 
-\subsection{Why \texttt{risk\_adapter\_v22} Is Not Introduced Yet}
+\subsection{Why a New Variant Is Not Introduced Yet}
 
 The representative trace review did not justify a simple threshold patch.
 Trial 4 stress weaknesses include early pre-arrival vulnerability and risk
@@ -47,15 +47,15 @@ established. Trial-specific patching is outside the current paper claim.
 
 \subsection{Limitations}
 
-The evidence is simulation-only and should not be described as a real-world
-deployment claim. The repeated-run counts are descriptive and do not establish
-statistical significance. The execution governor is empirical and does not
-provide a formal safety guarantee. Failure-group labels are diagnostic and do
-not prove exact physical root cause. The main evaluation focuses on Trials 4,
-5, and 6, and \texttt{risk\_adapter\_v2} lacks a matched stress result for the
-balanced table. The source, training, calibration, and confidence behavior of
-the risk scores also require clearer documentation before a stronger journal
-extension.
+The evidence is simulation-only and should not be described as hardware or
+field robustness evidence. The repeated-run counts are descriptive and do not
+establish statistical significance. The execution governor is empirical and
+does not provide a formal safety guarantee. Failure-group labels are diagnostic
+and do not establish definitive physical causality. The main evaluation focuses
+on Trials 4, 5, and 6, and \texttt{risk\_adapter\_v2} lacks a matched stress
+result for the balanced table. The source, training, calibration, and
+confidence behavior of the risk scores also require clearer documentation
+before a stronger journal extension.
 
 \subsection{Future Work}
 

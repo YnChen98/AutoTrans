@@ -15,6 +15,10 @@ No simulation, RViz, `roslaunch`, `catkin_make`, training scripts, figure
 generation scripts, or new experimental runs were performed. `risk_adapter_v22`
 was not created.
 
+Stage 4-AX later audited the manuscript claim boundaries after this caption
+polish pass. AX preserved the Figure/Table caption intent while tightening
+overclaiming-risk wording in the active manuscript.
+
 ## Files Inspected
 
 - `paper/stage4_governor_ral/sections/03_method.tex`
@@ -112,7 +116,7 @@ a template-level reminder, not a compile failure.
 - Perform final visual PDF inspection, with specific attention to Figure 6
   readability after the caption / panel-label polish.
 - Confirm final RA-L / IEEE page-budget and template requirements.
-- Run Stage 4-AX final claim audit.
+- Stage 4-AX final claim audit is complete.
 - Run one final compile after all submission edits.
 
 ## Generated Outputs Excluded From Commit

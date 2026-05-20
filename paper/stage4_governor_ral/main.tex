@@ -33,17 +33,18 @@ leaving the planner/MPC/controller stack unchanged. To avoid a misleading
 single aggregate, we evaluate strong-wind behavior under two protocols: a
 single-goal mission protocol (\texttt{goal\_repeat=1}) and a goal-reissue
 stress protocol (\texttt{goal\_repeat=10}). The results reveal strong protocol
-specialists: \texttt{windlevel\_s085} is best in the single-goal protocol with
-26/30 strict-valid runs, whereas \texttt{fixed\_s080} is best in the stress
-protocol with 24/30 strict-valid runs. Among the evaluated learned /
-risk-conditioned methods, \texttt{risk\_adapter\_v1} is the most balanced,
-achieving the best mean valid count (24.0/30), best worst-protocol count
-(23/30), and lowest total regret (2) relative to the protocol oracles.
+specialists: \texttt{windlevel\_s085} has the highest observed single-goal
+count with 26/30 strict-valid runs, whereas \texttt{fixed\_s080} has the
+highest observed stress count with 24/30 strict-valid runs. Among the
+evaluated learned / risk-conditioned methods, \texttt{risk\_adapter\_v1} is the
+most balanced, achieving the highest mean valid count (24.0/30), highest
+worst-protocol count (23/30), and lowest total regret (2) relative to the
+protocol oracles.
 Invalid-only failure groups and representative traces further show that
 aggregate success hides distinct failure modes, motivating failure-aware
 interpretation. These results support balanced robustness analysis under the
 tested protocols while making no statistical significance claim, no formal
-safety guarantee, and no broad real-world deployment claim.
+safety guarantee, and no broad hardware-transfer claim.
 \end{abstract}
 
 \input{sections/01_intro}

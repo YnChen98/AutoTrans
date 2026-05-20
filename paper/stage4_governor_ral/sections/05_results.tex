@@ -9,7 +9,7 @@ repeated post-arrival or reference-update stimuli. We therefore report
 strict-valid counts separately for the single-goal mission protocol
 (\texttt{goal\_repeat=1}) and the goal-reissue stress protocol
 (\texttt{goal\_repeat=10}), rather than collapsing the two settings into a
-mixed aggregate.
+single combined aggregate.
 
 In the single-goal mission protocol, the strongest method in the evaluated set
 is the heuristic \texttt{windlevel\_s085}, which achieves 26/30 strict-valid
@@ -25,13 +25,13 @@ runs, \texttt{risk\_adapter\_v1} follows with 23/30, and
 \subsection{Balanced Robustness and Protocol Regret}
 
 Balanced robustness is evaluated using the complete cross-protocol matrix. The
-protocol oracles are the best observed method in each protocol:
+protocol oracles are the highest observed method in each protocol:
 \texttt{windlevel\_s085} with 26/30 in the single-goal mission protocol and
 \texttt{fixed\_s080} with 24/30 in the goal-reissue stress protocol. Protocol
 regret measures how far each method falls below these observed oracles.
 
 Under this view, \texttt{risk\_adapter\_v1} has the strongest balanced
-performance. It achieves a mean valid count of 24.0/30, the best
+performance. It achieves a mean valid count of 24.0/30, the highest
 worst-protocol count of 23/30, and the lowest total regret of 2. This is the
 main reason for centering \texttt{risk\_adapter\_v1} as the paper's balanced
 learned / risk-conditioned execution governor.
@@ -53,7 +53,7 @@ learned / risk-conditioned execution governor.
   \includegraphics[width=\linewidth]{figures/fig4_protocol_regret.png}
   \caption{Protocol regret relative to the observed protocol oracles.
   \texttt{risk\_adapter\_v1} has the lowest total regret under the tested
-  protocols. The oracle in each protocol is the observed best method, not a
+  protocols. The oracle in each protocol is the observed protocol leader, not a
   theoretical optimum.}
   \label{fig:regret}
 \end{figure}
@@ -71,7 +71,7 @@ because it has the same single-goal count as \texttt{risk\_adapter\_v1}
 Protocol-split success counts explain which methods are stronger, but they do
 not explain how invalid runs occur. We therefore use invalid-only failure
 groups as a diagnostic view. These labels should be read as failure-analysis
-categories, not exact physical root-cause proof; the paper-facing success
+categories, not definitive root-cause attribution; the paper-facing success
 metric remains strict-valid count.
 
 \begin{figure}[t]
@@ -79,7 +79,7 @@ metric remains strict-valid count.
   \includegraphics[width=\linewidth]{figures/fig5_invalid_failure_groups.png}
   \caption{Invalid-only failure groups. The categories expose heterogeneous
   failure patterns across protocols and methods, but they are diagnostic labels
-  rather than exact physical root-cause proof.}
+  rather than definitive root-cause attribution.}
   \label{fig:failure_groups}
 \end{figure}
 
@@ -140,7 +140,8 @@ safer, and delayed post-arrival divergence can still occur under
   goal-reissue stress behavior for \texttt{risk\_adapter\_v21},
   \texttt{fixed\_s080}, and \texttt{risk\_adapter\_v1}. Panels (d)--(e) show
   the Trial 6 single-goal bottleneck comparison. These representative traces
-  are qualitative mechanism evidence only, not proof of general causality.}
+  are qualitative mechanism evidence only, not population-level causal
+  evidence.}
   \label{fig:representative_traces}
 \end{figure*}
 
@@ -154,9 +155,9 @@ safer, and delayed post-arrival divergence can still occur under
   risk-conditioned method by mean valid count, worst-protocol valid count, and
   total regret.
   \item \texttt{risk\_adapter\_v21} improves nominal / single-goal behavior but
-  is weaker under goal-reissue stress and is dominated by
-  \texttt{risk\_adapter\_v1} in the two-protocol plane.
+  is weaker under goal-reissue stress; \texttt{risk\_adapter\_v1} matches its
+  single-goal count and improves its stress count in the two-protocol plane.
   \item Protocol split and invalid-only failure groups are necessary to
-  interpret robustness; a single mixed aggregate would hide specialist
+  interpret robustness; a single combined aggregate would hide specialist
   trade-offs.
 \end{itemize}

@@ -67,6 +67,9 @@ file.
 - Stage 4-AW polished figure / table captions for the active RA-L scaffold,
   preserved claim boundaries, and recompiled successfully to an 8-page PDF
   during the check.
+- Stage 4-AX performed the final claim audit for the active manuscript,
+  tightened overclaiming-risk wording, and removed active manuscript
+  `risk_adapter_v22` wording.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -104,5 +107,6 @@ file.
   caption / panel-label polish.
 - Verify conditional citations before adding any missing metadata or active
   BibTeX entries.
-- Run final claim audit before submission.
+- Use Stage 4-AX as the current final claim-audit baseline.
+- Run final compile / submission package checks before submission.
 - Keep generated PDF / aux / log files out of git.

@@ -37,6 +37,11 @@ RA-L scaffold. It updates Table 1 and Figures 2-4 / 6 caption text, preserves
 claim boundaries, and recompiles the scaffold to 8 pages. Final visual PDF
 inspection remains a submission TODO.
 
+Stage 4-AX addresses the final claim audit item for the active RA-L scaffold.
+It checks manuscript text for overclaiming risk, removes active
+`risk_adapter_v22` wording from the manuscript, and preserves the bounded
+balanced-protagonist claim for `risk_adapter_v1`.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -70,7 +75,7 @@ inspection remains a submission TODO.
   Stage 4-AW.
 - Check final Figure 6 visual readability in the compiled PDF during final
   visual inspection.
-- Run a final claim audit:
+- Final claim audit: addressed by Stage 4-AX:
   - no statistical significance claim;
   - no formal safety guarantee;
   - no broad real-world deployment claim;
@@ -78,7 +83,8 @@ inspection remains a submission TODO.
   - no `risk_adapter_v21` overall-best claim;
   - no mixed-protocol aggregate as the main result;
   - no calibrated-probability claim for risk scores unless calibration is
-    documented.
+    documented;
+  - no active manuscript `risk_adapter_v22` wording.
 - Decide the supplementary package boundary for the risk model JSON artifacts
   and dataset checksum manifest.
 - Decide whether the generated PDF belongs in the submission package only, not
@@ -171,5 +177,5 @@ AV -> AV2 -> AM5 -> AW -> AX -> final compile
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
-After Stage 4-AW, continue with Stage 4-AX final claim audit, then final
-compile / submission package checks.
+After Stage 4-AX, continue with final compile / submission package checks, or
+an optional Stage 4-AM5 follow-up if citation metadata changes.

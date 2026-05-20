@@ -1456,6 +1456,22 @@ RViz, `roslaunch`, `catkin_make`, training scripts, or figure generation
 scripts were run. Do not create `risk_adapter_v22` before Paper 1 RA-L
 submission.
 
+## Stage 4-AX final claim audit
+
+`experiments/protocols/stage4ax_final_claim_audit_result.md` records the final
+claim audit for the RA-L Paper 1 scaffold under
+`paper/stage4_governor_ral/`.
+
+Stage 4-AX inspects active manuscript text for overclaiming-risk wording,
+tightens broad `best`, proof, causality, deployment, and future-variant
+language, and preserves the bounded core claim that `risk_adapter_v1` is the
+balanced learned / risk-conditioned protagonist under the tested protocol
+split. AX does not change numerical results, rankings, citation keys, Table 1
+data, figures, algorithms, or experiment outputs. Next recommended work is
+final compile / submission package checks, or an optional Stage 4-AM5 follow-up
+if citation metadata changes. Do not create `risk_adapter_v22` before Paper 1
+RA-L submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the
