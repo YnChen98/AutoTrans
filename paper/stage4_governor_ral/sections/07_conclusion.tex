@@ -5,9 +5,9 @@ suspended-payload UAV transport. The proposed governor leaves the planner,
 payload MPC, and SO3 controller unchanged while adapting execution
 aggressiveness through \texttt{speed\_scale} and
 \texttt{acceleration\_scale}. The protocol-split evaluation shows strong
-specialists: \texttt{windlevel\_s085} leads the single-goal mission protocol
-and \texttt{fixed\_s080} leads the goal-reissue stress protocol. Across the
-two tested protocols, \texttt{risk\_adapter\_v1} provides the strongest
+specialists: Wind-Level 0.85 leads the single-goal mission protocol
+and Fixed Scale 0.80 leads the goal-reissue stress protocol. Across the
+two tested protocols, Risk Adapter v1 provides the strongest
 balanced learned / risk-conditioned result in the evaluated set by mean valid
 count, worst-protocol count, and total regret. Failure-group and
 representative-trace analyses further show

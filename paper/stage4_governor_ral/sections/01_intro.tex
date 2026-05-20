@@ -45,14 +45,14 @@ collapsing them into a mixed-protocol aggregate would obscure the trade-offs
 that matter for evaluated robustness.
 
 Our completed strong-wind evaluation shows that no current learned variant is
-strongest in both protocols. \texttt{windlevel\_s085} is the single-goal
+strongest in both protocols. Wind-Level 0.85 is the single-goal
 specialist, achieving 26/30 strict-valid runs under \texttt{goal\_repeat=1},
-while \texttt{fixed\_s080} is the goal-reissue stress specialist, achieving
+while Fixed Scale 0.80 is the goal-reissue stress specialist, achieving
 24/30 strict-valid runs under \texttt{goal\_repeat=10}. The learned /
-risk-conditioned governor \texttt{risk\_adapter\_v1} is the most balanced
-current method, with the highest mean valid count (24.0/30), highest
-worst-protocol valid count (23/30), and lowest total regret (2). By contrast,
-\texttt{risk\_adapter\_v21} remains a strong nominal / single-goal variant, but
+risk-conditioned governor Risk Adapter v1 is the most balanced current method,
+with the highest mean valid count (24.0/30), highest worst-protocol valid count
+(23/30), and lowest total regret (2). By contrast, Risk Adapter v2.1 remains a
+strong nominal / single-goal variant, but
 it is weaker under stress and should not be framed as the final balanced
 method.
 
@@ -68,9 +68,9 @@ This paper makes four contributions:
   stress protocol (\texttt{goal\_repeat=10}), avoiding a mixed-protocol
   aggregate as the main result.
   \item We report balanced robustness and protocol regret metrics showing that
-  \texttt{risk\_adapter\_v1} is the most balanced current learned /
-  risk-conditioned method, while \texttt{windlevel\_s085} and
-  \texttt{fixed\_s080} are strong protocol specialists.
+  Risk Adapter v1 is the most balanced current learned / risk-conditioned
+  method, while Wind-Level 0.85 and Fixed Scale 0.80 are strong protocol
+  specialists.
   \item We provide a failure-mode-aware diagnostic workflow based on
   invalid-only failure groups and representative traces, clarifying why
   aggregate strict-valid counts alone are insufficient for interpreting

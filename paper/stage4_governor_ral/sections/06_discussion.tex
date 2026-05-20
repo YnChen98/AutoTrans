@@ -3,8 +3,8 @@
 \subsection{Why Protocol Split Matters}
 
 The single-goal mission protocol and the goal-reissue stress protocol expose
-different method rankings. \texttt{windlevel\_s085} is strongest in the
-single-goal setting, while \texttt{fixed\_s080} is strongest under goal-reissue
+different method rankings. Wind-Level 0.85 is strongest in the
+single-goal setting, while Fixed Scale 0.80 is strongest under goal-reissue
 stress. A single combined aggregate would hide this structure and could make a method
 look broadly robust even if it is actually specialized to one regime.
 
@@ -14,12 +14,12 @@ The strong heuristic and static baselines are not a weakness of the evaluation.
 They reveal that execution governance is a real operating-point problem:
 simple scales can work well when matched to a protocol, but they also expose
 trade-offs across protocols. Their strength makes the balanced robustness
-claim for \texttt{risk\_adapter\_v1} more meaningful because it is measured
+claim for Risk Adapter v1 more meaningful because it is measured
 against strong specialists rather than weak baselines.
 
 \subsection{Balanced Robustness as a Protocol-Level Criterion}
 
-\texttt{risk\_adapter\_v1} is the current balanced protagonist because it has
+Risk Adapter v1 is the current balanced protagonist because it has
 the highest mean valid count, highest worst-protocol count, and lowest total
 regret under the tested protocols. This does not mean it is statistically
 superior, universal, or guaranteed safe. The claim is narrower: among the
@@ -52,7 +52,7 @@ field robustness evidence. The repeated-run counts are descriptive and do not
 establish statistical significance. The execution governor is empirical and
 does not provide a formal safety guarantee. Failure-group labels are diagnostic
 and do not establish definitive physical causality. The main evaluation focuses
-on Trials 4, 5, and 6, and \texttt{risk\_adapter\_v2} lacks a matched stress
+on Trials 4, 5, and 6, and Risk Adapter v2 lacks a matched stress
 result for the balanced table. The source, training, calibration, and
 confidence behavior of the risk scores also require clearer documentation
 before a stronger journal extension.

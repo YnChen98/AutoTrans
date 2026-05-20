@@ -35,6 +35,11 @@ signals in the main paper and shift full trace detail to supplementary material.
 If this split is used, supplementary trace content should remain clearly tied
 to the diagnostic-only claim boundary.
 
+Stage 4-BA cleans paper-facing method names in the active manuscript and
+Table 1. Internal tokens may still appear in supplementary implementation
+references, artifact filenames, manifests, parameter documentation, and trace
+packages where exact reproducibility requires the raw identifiers.
+
 Claim boundaries remain the same as the main paper: no statistical
 significance claim, no safety guarantee, no learned uniform domination, no
 mixed-protocol aggregate as the main result, diagnostic-only failure groups,

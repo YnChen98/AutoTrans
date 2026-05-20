@@ -77,6 +77,9 @@ file.
   Compile success does not yet mean visual-submission readiness: raw method
   tokens, Figure 1 / Figure 2 schematic quality, Figure 3 compactness, and
   Figure 6 overcrowding remain presentation blockers.
+- Stage 4-BA cleaned manuscript-visible method names in active prose,
+  captions, panel labels, and Table 1. Figure-internal labels embedded in
+  existing image files remain for the figure-specific polish stages.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -118,8 +121,9 @@ file.
 - Use Stage 4-AY as the current final compile / submission package checklist
   baseline.
 - Use Stage 4-AZ as the current human visual inspection baseline.
+- Use Stage 4-BA as the current manuscript-visible display-name cleanup
+  baseline.
 - Next presentation-polish sequence:
-  - Stage 4-BA display-name cleanup;
   - Stage 4-BB schematic placeholder / redraw preparation;
   - Stage 4-BC Figure 3 compact polish;
   - Stage 4-BD Figure 6 simplified replot planning.

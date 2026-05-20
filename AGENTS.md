@@ -1428,6 +1428,32 @@ Stage 4-AZ human visual inspection finding record:
   simulation, ROS action, training, or new experiment output.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BA manuscript-visible display-name cleanup:
+
+- The result document is
+  `experiments/protocols/stage4ba_display_name_cleanup_result.md`.
+- Current stage: Stage 4-BA manuscript-visible display-name cleanup.
+- Stage 4-BA replaces reader-visible raw method tokens in the active RA-L
+  manuscript with paper-facing display names:
+  - `original` -> Original;
+  - `fixed_s085` -> Fixed Scale 0.85;
+  - `fixed_s080` -> Fixed Scale 0.80;
+  - `windlevel_s085` -> Wind-Level 0.85;
+  - `risk_adapter_v1` -> Risk Adapter v1;
+  - `risk_adapter_v2` -> Risk Adapter v2;
+  - `risk_adapter_v21` -> Risk Adapter v2.1.
+- BA preserves file paths, code-facing parameter names, artifact identifiers,
+  diagnostic field names, numerical results, rankings, citations, algorithms,
+  and claim boundaries.
+- BA does not regenerate figures, so figure-internal raw labels remain for
+  Stage 4-BC and Stage 4-BD.
+- The RA-L scaffold compiles successfully after the cleanup.
+- Next recommended stages:
+  - Stage 4-BB Figure 1 / Figure 2 placeholder or redraw workflow;
+  - Stage 4-BC Figure 3 compact polish;
+  - Stage 4-BD Figure 6 simplified replot.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

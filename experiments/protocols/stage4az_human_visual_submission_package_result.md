@@ -59,6 +59,14 @@ Recommended next action:
 - The cleanup should not change numerical results, rankings, claim boundaries,
   or citation keys.
 
+Stage 4-BA follow-up:
+
+- Stage 4-BA addressed manuscript-visible display names in active prose,
+  captions, panel labels, and Table 1.
+- BA did not edit figure-internal bitmap labels or legends; Figure 3 and
+  Figure 6 internal labels remain figure-specific TODOs for Stage 4-BC and
+  Stage 4-BD.
+
 ## Issue 2: Figure 1 / Figure 2 Not Ready
 
 Figure 1 and Figure 2 are not acceptable as final paper schematics in their

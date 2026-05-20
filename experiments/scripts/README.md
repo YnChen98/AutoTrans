@@ -1508,6 +1508,21 @@ schematic placeholder / redraw prep, Stage 4-BC Figure 3 compact polish, and
 Stage 4-BD Figure 6 simplified replot. Do not create `risk_adapter_v22` before
 Paper 1 RA-L submission.
 
+## Stage 4-BA manuscript-visible display-name cleanup
+
+`experiments/protocols/stage4ba_display_name_cleanup_result.md` records the
+display-name cleanup pass for the RA-L Paper 1 scaffold under
+`paper/stage4_governor_ral/`.
+
+Stage 4-BA replaces manuscript-visible raw method tokens in active prose,
+captions, panel labels, and Table 1 with paper-facing display names such as
+Risk Adapter v1, Risk Adapter v2.1, Wind-Level 0.85, and Fixed Scale 0.80. It
+preserves code-facing parameter names, file paths, artifact identifiers, and
+diagnostic field names. The RA-L scaffold compiles successfully to 8 pages
+after the cleanup. Figure-internal labels embedded inside existing images are
+not regenerated in BA and remain for Stage 4-BC / Stage 4-BD. Do not create
+`risk_adapter_v22` before Paper 1 RA-L submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the

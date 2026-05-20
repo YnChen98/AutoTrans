@@ -2,22 +2,21 @@
 \centering
 \caption{Protocol-split strict-valid counts and balanced robustness metrics.
 Counts are strict-valid runs over 30 repeats per protocol. Total regret is
-relative to the observed protocol oracles: \texttt{windlevel\_s085} for the
-single-goal mission protocol and \texttt{fixed\_s080} for the goal-reissue
-stress protocol. Counts are descriptive and are not a statistical-significance
-claim.}
+relative to the observed protocol oracles: Wind-Level 0.85 for the single-goal
+mission protocol and Fixed Scale 0.80 for the goal-reissue stress protocol.
+Counts are descriptive and are not a statistical-significance claim.}
 \label{tab:protocol_balanced_robustness}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lcccccl}
 \toprule
 Method & Single-goal & Stress & Mean & Worst & Total regret & Role \\
 \midrule
-\texttt{original} & 21/30 & 18/30 & 19.5/30 & 18/30 & 11 & unadapted baseline \\
-\texttt{fixed\_s085} & 22/30 & 18/30 & 20.0/30 & 18/30 & 10 & fixed static baseline \\
-\texttt{windlevel\_s085} & 26/30 & 16/30 & 21.0/30 & 16/30 & 8 & single-goal specialist heuristic \\
-\texttt{fixed\_s080} & 21/30 & 24/30 & 22.5/30 & 21/30 & 5 & goal-reissue stress specialist \\
-\texttt{risk\_adapter\_v1} & 25/30 & 23/30 & 24.0/30 & 23/30 & 2 & balanced learned governor \\
-\texttt{risk\_adapter\_v21} & 25/30 & 20/30 & 22.5/30 & 20/30 & 5 & strong nominal variant \\
+Original & 21/30 & 18/30 & 19.5/30 & 18/30 & 11 & unadapted baseline \\
+Fixed Scale 0.85 & 22/30 & 18/30 & 20.0/30 & 18/30 & 10 & fixed static baseline \\
+Wind-Level 0.85 & 26/30 & 16/30 & 21.0/30 & 16/30 & 8 & single-goal specialist heuristic \\
+Fixed Scale 0.80 & 21/30 & 24/30 & 22.5/30 & 21/30 & 5 & goal-reissue stress specialist \\
+Risk Adapter v1 & 25/30 & 23/30 & 24.0/30 & 23/30 & 2 & balanced learned governor \\
+Risk Adapter v2.1 & 25/30 & 20/30 & 22.5/30 & 20/30 & 5 & strong nominal variant \\
 \bottomrule
 \end{tabular}%
 }

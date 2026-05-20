@@ -81,10 +81,10 @@ long-horizon risk is high enough, the governor may apply a stronger reduction.
 The scale output is rate-limited so that the command does not switch abruptly
 between aggressive and conservative modes.
 
-\subsection{Current Protagonist: \texttt{risk\_adapter\_v1}}
+\subsection{Current Protagonist: Risk Adapter v1}
 
-The current paper protagonist is \texttt{risk\_adapter\_v1}, the balanced
-learned / risk-conditioned execution governor. Its policy settings are:
+The current paper protagonist is Risk Adapter v1, the balanced learned /
+risk-conditioned execution governor. Its policy settings are:
 
 \begin{itemize}
   \item \texttt{risk\_threshold\_3s=0.5}
@@ -96,31 +96,29 @@ learned / risk-conditioned execution governor. Its policy settings are:
   \item \texttt{scale\_rate\_limit\_per\_sec=0.5}
 \end{itemize}
 
-\texttt{risk\_adapter\_v1} is selected as the tentative balanced protagonist
-because it gives the strongest observed cross-protocol balance in the current
-evaluation. It achieves 25/30 strict-valid runs in the single-goal mission
-protocol and 23/30 in the goal-reissue stress protocol, yielding the highest
-mean valid count (24.0/30), highest worst-protocol valid count (23/30), and
-lowest total regret (2) relative to the observed protocol oracles.
+Risk Adapter v1 is selected as the tentative balanced protagonist because it
+gives the strongest observed cross-protocol balance in the current evaluation.
+It achieves 25/30 strict-valid runs in the single-goal mission protocol and
+23/30 in the goal-reissue stress protocol, yielding the highest mean valid
+count (24.0/30), highest worst-protocol valid count (23/30), and lowest total
+regret (2) relative to the observed protocol oracles.
 
-The later \texttt{risk\_adapter\_v21} variant remains important, but it should
-not be presented as the final method. It ties \texttt{risk\_adapter\_v1} in the
+The later Risk Adapter v2.1 variant remains important, but it should not be
+presented as the final method. It ties Risk Adapter v1 in the
 single-goal mission protocol at 25/30, but it drops to 20/30 under goal-reissue
 stress. It is therefore a strong nominal / single-goal variant or ablation,
-while \texttt{risk\_adapter\_v1} is the current balanced learned /
-risk-conditioned protagonist.
+while Risk Adapter v1 is the current balanced learned / risk-conditioned
+protagonist.
 
 \subsection{Baselines and Method Variants}
 
 The evaluation compares the governor against no-op, fixed, heuristic, and
-learned / risk-conditioned variants: \texttt{original}, \texttt{fixed\_s085},
-\texttt{windlevel\_s085}, \texttt{fixed\_s080},
-\texttt{risk\_adapter\_v1}, \texttt{risk\_adapter\_v2}, and
-\texttt{risk\_adapter\_v21}. \texttt{windlevel\_s085} is the single-goal
-specialist heuristic. \texttt{fixed\_s080} is the goal-reissue stress
-specialist static frontier. \texttt{risk\_adapter\_v1} is the balanced learned
-/ risk-conditioned protagonist, while \texttt{risk\_adapter\_v21} is a strong
-nominal variant that is weaker under stress.
+learned / risk-conditioned variants: Original, Fixed Scale 0.85, Wind-Level
+0.85, Fixed Scale 0.80, Risk Adapter v1, Risk Adapter v2, and Risk Adapter
+v2.1. Wind-Level 0.85 is the single-goal specialist heuristic. Fixed Scale 0.80
+is the goal-reissue stress specialist static frontier. Risk Adapter v1 is the
+balanced learned / risk-conditioned protagonist, while Risk Adapter v2.1 is a
+strong nominal variant that is weaker under stress.
 
 \subsection{Notation Block}
 

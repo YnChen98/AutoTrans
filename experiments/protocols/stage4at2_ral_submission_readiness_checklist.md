@@ -52,6 +52,11 @@ It confirms that compile success does not yet mean visual-submission readiness:
 raw underscore-style method names, Figure 1 / Figure 2 schematic quality,
 Figure 3 compactness, and Figure 6 overcrowding remain presentation blockers.
 
+Stage 4-BA addresses the manuscript-visible raw-token naming blocker by
+replacing active prose, captions, panel labels, and Table 1 method labels with
+paper-facing display names. Figure-internal raw labels remain for the
+figure-specific Stage 4-BC / Stage 4-BD polish steps.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -104,7 +109,7 @@ Figure 3 compactness, and Figure 6 overcrowding remain presentation blockers.
 - Final compile / submission package check: addressed by Stage 4-AY.
 - Confirm generated experiment outputs are not accidentally committed.
 - Resolve Stage 4-AZ presentation blockers before final submission:
-  - manuscript-visible display-name cleanup;
+  - manuscript-visible display-name cleanup: addressed by Stage 4-BA;
   - Figure 1 / Figure 2 placeholder swap and redraw plan;
   - Figure 3 compactness polish;
   - Figure 6 simplified paper-facing replot plan.

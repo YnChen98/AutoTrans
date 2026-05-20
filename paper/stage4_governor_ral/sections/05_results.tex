@@ -12,13 +12,12 @@ strict-valid counts separately for the single-goal mission protocol
 single combined aggregate.
 
 In the single-goal mission protocol, the strongest method in the evaluated set
-is the heuristic \texttt{windlevel\_s085}, which achieves 26/30 strict-valid
-runs. The learned / risk-conditioned methods \texttt{risk\_adapter\_v1} and
-\texttt{risk\_adapter\_v21} are both competitive in this setting, each
-achieving 25/30 strict-valid runs. In the goal-reissue stress protocol, the
-ranking changes: \texttt{fixed\_s080} is strongest with 24/30 strict-valid
-runs, \texttt{risk\_adapter\_v1} follows with 23/30, and
-\texttt{risk\_adapter\_v21} drops to 20/30.
+is the heuristic Wind-Level 0.85, which achieves 26/30 strict-valid runs. The
+learned / risk-conditioned methods Risk Adapter v1 and Risk Adapter v2.1 are
+both competitive in this setting, each achieving 25/30 strict-valid runs. In
+the goal-reissue stress protocol, the ranking changes: Fixed Scale 0.80 is
+strongest with 24/30 strict-valid runs, Risk Adapter v1 follows with 23/30, and
+Risk Adapter v2.1 drops to 20/30.
 
 \input{tables/table1_protocol_balanced_robustness}
 
@@ -26,15 +25,15 @@ runs, \texttt{risk\_adapter\_v1} follows with 23/30, and
 
 Balanced robustness is evaluated using the complete cross-protocol matrix. The
 protocol oracles are the highest observed method in each protocol:
-\texttt{windlevel\_s085} with 26/30 in the single-goal mission protocol and
-\texttt{fixed\_s080} with 24/30 in the goal-reissue stress protocol. Protocol
+Wind-Level 0.85 with 26/30 in the single-goal mission protocol and Fixed Scale
+0.80 with 24/30 in the goal-reissue stress protocol. Protocol
 regret measures how far each method falls below these observed oracles.
 
-Under this view, \texttt{risk\_adapter\_v1} has the strongest balanced
-performance. It achieves a mean valid count of 24.0/30, the highest
-worst-protocol count of 23/30, and the lowest total regret of 2. This is the
-main reason for centering \texttt{risk\_adapter\_v1} as the paper's balanced
-learned / risk-conditioned execution governor.
+Under this view, Risk Adapter v1 has the strongest balanced performance. It
+achieves a mean valid count of 24.0/30, the highest worst-protocol count of
+23/30, and the lowest total regret of 2. This is the main reason for centering
+Risk Adapter v1 as the paper's balanced learned / risk-conditioned execution
+governor.
 
 \begin{figure}[t]
   \centering
@@ -42,9 +41,8 @@ learned / risk-conditioned execution governor.
   \caption{Balanced robustness / Pareto frontier across the two tested
   protocols. The x-axis is single-goal valid count and the y-axis is
   goal-reissue stress valid count. The observed frontier contains
-  \texttt{windlevel\_s085}, \texttt{fixed\_s080}, and
-  \texttt{risk\_adapter\_v1}; this frontier is limited to the evaluated
-  methods and protocols.}
+  Wind-Level 0.85, Fixed Scale 0.80, and Risk Adapter v1; this frontier is
+  limited to the evaluated methods and protocols.}
   \label{fig:pareto}
 \end{figure}
 
@@ -52,19 +50,18 @@ learned / risk-conditioned execution governor.
   \centering
   \includegraphics[width=\linewidth]{figures/fig4_protocol_regret.png}
   \caption{Protocol regret relative to the observed protocol oracles.
-  \texttt{risk\_adapter\_v1} has the lowest total regret under the tested
-  protocols. The oracle in each protocol is the observed protocol leader, not a
-  theoretical optimum.}
+  Risk Adapter v1 has the lowest total regret under the tested protocols. The
+  oracle in each protocol is the observed protocol leader, not a theoretical
+  optimum.}
   \label{fig:regret}
 \end{figure}
 
 The specialist baselines expose the trade-off that a single protocol would
-hide. \texttt{windlevel\_s085} reaches the single-goal oracle with 26/30 but
-falls to 16/30 under stress. Conversely, \texttt{fixed\_s080} reaches the
-stress oracle with 24/30 but achieves only 21/30 in the single-goal mission
-protocol. \texttt{risk\_adapter\_v21} is not on the observed Pareto frontier
-because it has the same single-goal count as \texttt{risk\_adapter\_v1}
-(25/30) but a lower stress count (20/30 versus 23/30).
+hide. Wind-Level 0.85 reaches the single-goal oracle with 26/30 but falls to
+16/30 under stress. Conversely, Fixed Scale 0.80 reaches the stress oracle with
+24/30 but achieves only 21/30 in the single-goal mission protocol. Risk Adapter
+v2.1 is not on the observed Pareto frontier because it has the same single-goal
+count as Risk Adapter v1 (25/30) but a lower stress count (20/30 versus 23/30).
 
 \subsection{Failure-Mode-Aware Diagnosis}
 
@@ -83,8 +80,8 @@ metric remains strict-valid count.
   \label{fig:failure_groups}
 \end{figure}
 
-In the goal-reissue stress protocol, \texttt{risk\_adapter\_v21} shows larger
-planner-reference and command/control components than \texttt{risk\_adapter\_v1},
+In the goal-reissue stress protocol, Risk Adapter v2.1 shows larger
+planner-reference and command/control components than Risk Adapter v1,
 consistent with its weaker stress-protocol result. This diagnostic view
 supports the reframed paper claim: aggregate strict-valid counts alone are
 insufficient for interpreting robustness.
@@ -92,7 +89,7 @@ insufficient for interpreting robustness.
 \subsection{Representative Trace Analysis}
 
 Representative traces add a case-study view of the same trade-offs. In Trial 4
-under goal-reissue stress, several \texttt{risk\_adapter\_v21} failures occur
+under goal-reissue stress, several Risk Adapter v2.1 failures occur
 before arrival rather than only after post-arrival goal republishes. These
 traces point to early pre-arrival vulnerability and risk availability or timing
 issues, not merely a goal-reissue artifact. Trial 6 under the single-goal
@@ -106,42 +103,41 @@ safer, and delayed post-arrival divergence can still occur under
     \centering
     \includegraphics[width=\linewidth]{figures/fig6a_trial4_stress_v21_failure.png}\\
     \scriptsize
-    (a) T4 goal-reissue, \texttt{risk\_adapter\_v21}
+    (a) T4 goal-reissue, Risk Adapter v2.1
   \end{minipage}
   \hfill
   \begin{minipage}{0.32\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/fig6b_trial4_stress_comparison_fixed_s080.png}\\
     \scriptsize
-    (b) T4 goal-reissue, \texttt{fixed\_s080}
+    (b) T4 goal-reissue, Fixed Scale 0.80
   \end{minipage}
   \hfill
   \begin{minipage}{0.32\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/fig6c_trial4_stress_comparison_risk_adapter_v1.png}\\
     \scriptsize
-    (c) T4 goal-reissue, \texttt{risk\_adapter\_v1}
+    (c) T4 goal-reissue, Risk Adapter v1
   \end{minipage}
   \par\medskip
   \begin{minipage}{0.32\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/fig6d_trial6_single_goal_windlevel_s085.png}\\
     \scriptsize
-    (d) T6 single-goal, \texttt{windlevel\_s085}
+    (d) T6 single-goal, Wind-Level 0.85
   \end{minipage}
   \hspace{0.06\textwidth}
   \begin{minipage}{0.32\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/fig6e_trial6_single_goal_risk_adapter_v21_failure.png}\\
     \scriptsize
-    (e) T6 single-goal, \texttt{risk\_adapter\_v21}
+    (e) T6 single-goal, Risk Adapter v2.1
   \end{minipage}
   \caption{Representative trace case studies. Panels (a)--(c) compare Trial 4
-  goal-reissue stress behavior for \texttt{risk\_adapter\_v21},
-  \texttt{fixed\_s080}, and \texttt{risk\_adapter\_v1}. Panels (d)--(e) show
-  the Trial 6 single-goal bottleneck comparison. These representative traces
-  are qualitative mechanism evidence only, not population-level causal
-  evidence.}
+  goal-reissue stress behavior for Risk Adapter v2.1, Fixed Scale 0.80, and
+  Risk Adapter v1. Panels (d)--(e) show the Trial 6 single-goal bottleneck
+  comparison. These representative traces are qualitative mechanism evidence
+  only, not population-level causal evidence.}
   \label{fig:representative_traces}
 \end{figure*}
 
@@ -149,14 +145,14 @@ safer, and delayed post-arrival divergence can still occur under
 
 \begin{itemize}
   \item Simple baselines are strong protocol specialists:
-  \texttt{windlevel\_s085} leads the single-goal protocol and
-  \texttt{fixed\_s080} leads the goal-reissue stress protocol.
-  \item \texttt{risk\_adapter\_v1} is the most balanced current learned /
+  Wind-Level 0.85 leads the single-goal protocol and Fixed Scale 0.80 leads the
+  goal-reissue stress protocol.
+  \item Risk Adapter v1 is the most balanced current learned /
   risk-conditioned method by mean valid count, worst-protocol valid count, and
   total regret.
-  \item \texttt{risk\_adapter\_v21} improves nominal / single-goal behavior but
-  is weaker under goal-reissue stress; \texttt{risk\_adapter\_v1} matches its
-  single-goal count and improves its stress count in the two-protocol plane.
+  \item Risk Adapter v2.1 improves nominal / single-goal behavior but is weaker
+  under goal-reissue stress; Risk Adapter v1 matches its single-goal count and
+  improves its stress count in the two-protocol plane.
   \item Protocol split and invalid-only failure groups are necessary to
   interpret robustness; a single combined aggregate would hide specialist
   trade-offs.
