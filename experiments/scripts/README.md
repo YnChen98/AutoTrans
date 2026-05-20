@@ -1523,6 +1523,22 @@ after the cleanup. Figure-internal labels embedded inside existing images are
 not regenerated in BA and remain for Stage 4-BC / Stage 4-BD. Do not create
 `risk_adapter_v22` before Paper 1 RA-L submission.
 
+## Stage 4-BB Figure 1 / Figure 2 placeholders and redraw workflow
+
+`experiments/protocols/stage4bb_schematic_placeholder_redraw_plan.md` records
+the placeholder swap and external redraw workflow for Figure 1 and Figure 2 in
+the RA-L Paper 1 scaffold.
+
+Stage 4-BB stops using the current generated Figure 1 / Figure 2 schematic
+images in the active manuscript and replaces them with compact LaTeX
+placeholder boxes. The existing image files remain in
+`paper/stage4_governor_ral/figures/`, but they are not treated as final
+submission visuals. The redraw plan allows PowerPoint, draw.io, Figma,
+Illustrator, TikZ, or a manually curated vector graphic. Next recommended work
+is Stage 4-BC Figure 3 compact polish, Stage 4-BD Figure 6 simplified replot,
+and later Stage 4-BE external schematic replacement. Do not create
+`risk_adapter_v22` before Paper 1 RA-L submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the

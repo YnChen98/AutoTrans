@@ -1454,6 +1454,28 @@ Stage 4-BA manuscript-visible display-name cleanup:
   - Stage 4-BD Figure 6 simplified replot.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BB Figure 1/2 placeholders and redraw workflow:
+
+- The result document is
+  `experiments/protocols/stage4bb_schematic_placeholder_redraw_plan.md`.
+- Current stage: Stage 4-BB Figure 1/2 placeholders and redraw workflow.
+- Stage 4-BB replaces the active Figure 1 and Figure 2 generated schematic
+  images in `paper/stage4_governor_ral/sections/03_method.tex` and
+  `paper/stage4_governor_ral/sections/04_experiments.tex` with compact LaTeX
+  placeholder boxes.
+- Existing `fig1_architecture.*` and `fig2_protocol_split.*` assets remain in
+  `paper/stage4_governor_ral/figures/`, but they are not used as active final
+  paper visuals after BB.
+- The redraw workflow should use PowerPoint, draw.io, Figma, Illustrator,
+  TikZ, or a manually curated vector graphic and should avoid raw underscore
+  method tokens, clutter, certified-safety implications, and result-ranking
+  implications.
+- Next recommended stages:
+  - Stage 4-BC Figure 3 compact polish;
+  - Stage 4-BD Figure 6 simplified replot;
+  - later Stage 4-BE external schematic replacement.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

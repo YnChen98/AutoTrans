@@ -40,6 +40,12 @@ Table 1. Internal tokens may still appear in supplementary implementation
 references, artifact filenames, manifests, parameter documentation, and trace
 packages where exact reproducibility requires the raw identifiers.
 
+Stage 4-BB stops using the old generated Figure 1 / Figure 2 schematic images
+as active main-paper visuals. Those generated schematics may remain as
+historical/generated assets, but they should not be used as final RA-L
+submission visuals after the placeholder workflow unless they are externally
+redrawn or manually curated to final paper quality.
+
 Claim boundaries remain the same as the main paper: no statistical
 significance claim, no safety guarantee, no learned uniform domination, no
 mixed-protocol aggregate as the main result, diagnostic-only failure groups,

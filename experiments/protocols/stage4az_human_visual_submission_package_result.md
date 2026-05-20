@@ -85,6 +85,13 @@ Recommended next action:
 - The placeholder swap should make the submission-readiness status clear
   without changing scientific content.
 
+Stage 4-BB follow-up:
+
+- Stage 4-BB replaced the active Figure 1 / Figure 2 manuscript visuals with
+  clean LaTeX placeholder boxes pending external redraw.
+- The old generated schematic image files remain in the scaffold but are no
+  longer used by the active Figure 1 / Figure 2 environments.
+
 ## Issue 3: Figure 3 Too Spacious
 
 Figure 3 content is acceptable, but the current plot is visually sparse.

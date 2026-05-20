@@ -57,6 +57,11 @@ replacing active prose, captions, panel labels, and Table 1 method labels with
 paper-facing display names. Figure-internal raw labels remain for the
 figure-specific Stage 4-BC / Stage 4-BD polish steps.
 
+Stage 4-BB replaces the active Figure 1 / Figure 2 generated schematic images
+with clean LaTeX placeholders and records the external redraw workflow. The
+redraw remains an active submission blocker until final paper-quality
+schematics replace the placeholders.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -110,7 +115,8 @@ figure-specific Stage 4-BC / Stage 4-BD polish steps.
 - Confirm generated experiment outputs are not accidentally committed.
 - Resolve Stage 4-AZ presentation blockers before final submission:
   - manuscript-visible display-name cleanup: addressed by Stage 4-BA;
-  - Figure 1 / Figure 2 placeholder swap and redraw plan;
+  - Figure 1 / Figure 2 placeholder swap and redraw plan: placeholders are now
+    active after Stage 4-BB, but final external redraw remains required;
   - Figure 3 compactness polish;
   - Figure 6 simplified paper-facing replot plan.
 
