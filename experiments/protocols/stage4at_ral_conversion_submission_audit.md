@@ -22,6 +22,10 @@ track rather than a lightly enlarged duplicate of Paper 1.
 Stage 4-AT2 now creates the RA-L submission readiness checklist after the
 clean Stage 4-AR manuscript compile / layout pass.
 
+Stage 4-AV now creates a separate RA-L-oriented scaffold under
+`paper/stage4_governor_ral/` using the user-provided files in
+`paper/templates/ral/`.
+
 ## Current Scaffold Inventory
 
 Current scaffold root:
@@ -213,6 +217,6 @@ an explicit override before Paper 1 RA-L submission.
 
 After the clean Stage 4-AR compile, Stage 4-AT2 records the remaining
 submission-readiness tasks before final RA-L submission. The current
-submission-readiness order is Stage 4-AM5 conditional citation verification,
-Stage 4-AW final figure / caption polish, Stage 4-AX final claim audit, then
-final compile.
+template-conversion step is Stage 4-AV, which creates the separate
+`paper/stage4_governor_ral/` scaffold. The next recommended stage after AV is
+Stage 4-AV2 RA-L scaffold compile/check pass.

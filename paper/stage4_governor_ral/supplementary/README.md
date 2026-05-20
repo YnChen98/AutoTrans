@@ -1,0 +1,28 @@
+# RA-L Supplementary Material Placeholder
+
+This directory is the supplementary-material placeholder for the Stage 4-AV
+RA-L-oriented scaffold.
+
+Supplementary candidates:
+
+- full run tables
+- full protocol-split summaries
+- invalid-only failure tables
+- representative trace packages
+- launch / protocol settings
+- strict-valid metric details
+- `risk_adapter_v1` parameter table
+- risk model feature-schema summary
+- risk model artifact checksum manifest from
+  `experiments/protocols/stage4au3_risk_model_artifact_manifest.md`
+- duplicate CSV audit notes if needed
+- optional video / trace package if the submission uses one
+
+Generated experiment outputs are not copied automatically into this scaffold.
+Only intentionally packaged, submission-facing supplementary files should be
+added later.
+
+Claim boundaries remain the same as the main paper: no statistical
+significance claim, no safety guarantee, no learned uniform domination, no
+mixed-protocol aggregate as the main result, diagnostic-only failure groups,
+and no `risk_adapter_v22`.

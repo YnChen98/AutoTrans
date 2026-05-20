@@ -27,6 +27,10 @@ Stage 4-AT now audits the RA-L conversion and submission readiness gaps:
 be treated as the upstream formatting plan that feeds AT's RA-L-oriented audit;
 AT does not rewrite the manuscript template.
 
+Stage 4-AV now creates a separate RA-L-oriented scaffold from the general
+`paper/stage4_governor/` scaffold:
+`paper/stage4_governor_ral/`. The original general scaffold remains unchanged.
+
 The current paper framing remains:
 
 - risk-conditioned execution governance,
@@ -262,5 +266,8 @@ Alternative next step:
 
 - Stage 4-AV: RA-L template acquisition and conversion, if the official
   template is already ready.
+
+Stage 4-AV now implements the separate RA-L scaffold creation. The next
+recommended stage after AV is Stage 4-AV2 RA-L scaffold compile/check pass.
 
 Do not recommend new simulation, new experimental runs, or `risk_adapter_v22`.

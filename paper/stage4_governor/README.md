@@ -26,6 +26,8 @@ risk model / dataset artifacts in
 `experiments/protocols/stage4au3_risk_model_artifact_manifest.md`.
 Stage 4-AT2 tracks the remaining RA-L submission-readiness checklist in
 `experiments/protocols/stage4at2_ral_submission_readiness_checklist.md`.
+Stage 4-AV creates the separate RA-L-oriented version, if present, under
+`paper/stage4_governor_ral/`. This original scaffold remains unchanged.
 
 ## Target Style
 

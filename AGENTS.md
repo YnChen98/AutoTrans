@@ -1185,10 +1185,9 @@ Stage 4-AS submission strategy plan:
 - Stage 4-AU3 risk model artifact checksum / reproducibility manifest is
   complete.
 - Stage 4-AT2 RA-L submission readiness checklist is complete.
-- Current next recommended stages: Stage 4-AM5 conditional citation
-  verification, Stage 4-AW final figure / caption polish, and Stage 4-AX final
-  claim audit.
-- Suggested order: Stage 4-AM5 -> Stage 4-AW -> Stage 4-AX -> final compile.
+- Stage 4-AV RA-L template conversion scaffold is complete.
+- Current next recommended stage: Stage 4-AV2 RA-L scaffold compile/check
+  pass.
 
 Stage 4-AT RA-L conversion / submission readiness audit:
 
@@ -1226,10 +1225,10 @@ Stage 4-AT RA-L conversion / submission readiness audit:
   generated risk model / dataset artifacts.
 - Stage 4-AT2 now records the RA-L submission readiness checklist after the
   clean Stage 4-AR compile.
-- Current next recommended stages: Stage 4-AM5 conditional citation
-  verification, Stage 4-AW final figure / caption polish, and Stage 4-AX final
-  claim audit.
-- Suggested order: Stage 4-AM5 -> Stage 4-AW -> Stage 4-AX -> final compile.
+- Stage 4-AV now creates the separate RA-L-oriented scaffold under
+  `paper/stage4_governor_ral/`.
+- Current next recommended stage: Stage 4-AV2 RA-L scaffold compile/check
+  pass.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
@@ -1254,9 +1253,33 @@ Stage 4-AT2 RA-L submission readiness checklist:
 - Should-fix items, if time allows, include paired / blocked analysis,
   fixed-scale frontier summary, channel ablation, risk calibration /
   lead-time planning, efficiency metrics, and a `goal_repeat` curve.
-- Next recommended stages: Stage 4-AM5 conditional citation verification,
-  Stage 4-AW final figure / caption polish, and Stage 4-AX final claim audit.
-- Suggested order: Stage 4-AM5 -> Stage 4-AW -> Stage 4-AX -> final compile.
+- Stage 4-AV now creates the separate RA-L-oriented scaffold under
+  `paper/stage4_governor_ral/`.
+- Next recommended stage: Stage 4-AV2 RA-L scaffold compile/check pass.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
+Stage 4-AV RA-L template conversion scaffold:
+
+- The protocol document is
+  `experiments/protocols/stage4av_ral_template_conversion_protocol.md`.
+- Current stage: Stage 4-AV RA-L template conversion.
+- Stage 4-AV creates the separate RA-L-oriented scaffold under
+  `paper/stage4_governor_ral/` from the existing
+  `paper/stage4_governor/` scaffold and the user-provided template files under
+  `paper/templates/ral/`.
+- Template files found under `paper/templates/ral/` are `ieeeconf.cls`,
+  `root.tex`, and `root.pdf`.
+- The likely main template file is `paper/templates/ral/root.tex`, and it uses
+  `\documentclass[letterpaper, 10 pt, conference]{ieeeconf}`.
+- The template appears to be `ieeeconf`-based rather than `IEEEtran`-based;
+  no `IEEEtran.cls`, `.sty`, or `.bst` files were found in
+  `paper/templates/ral/`.
+- The source scaffold `paper/stage4_governor/` remains unchanged.
+- Stage 4-AV does not run LaTeX compile, simulation, RViz, `roslaunch`,
+  `catkin_make`, training scripts, or figure generation scripts.
+- Stage 4-AV does not change scientific claims, numerical results, method
+  rankings, citations, figures, or tables.
+- Next recommended stage: Stage 4-AV2 RA-L scaffold compile/check pass.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
 Stage 4-AU risk score and strict-valid metric documentation:

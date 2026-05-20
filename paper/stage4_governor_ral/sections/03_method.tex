@@ -1,0 +1,152 @@
+\section{Method}
+
+\subsection{System Stack and Problem Setting}
+
+We consider suspended-payload UAV transport under wind, where the vehicle must
+move a cable-suspended load to a target while limiting tracking degradation,
+payload swing, and arrival failures. The suspended payload couples the UAV
+motion to load dynamics, so execution aggressiveness can change the effective
+difficulty of the same nominal trajectory. Under strong wind, a command that
+is feasible in one run can become too aggressive or poorly timed in another.
+
+The underlying system follows an AutoTrans-like stack composed of a
+payload-aware planner, a payload MPC, and an SO3 controller
+\cite{Li2023AutoTrans,UrbinaBrito2021PredictivePayloadTransport,Lee2010GeometricTrackingSE3}.
+The planner generates nominal motion references, the payload MPC tracks these
+references while accounting for the load, and the SO3 controller provides the
+low-level vehicle control interface. In this paper, these core stack
+components are kept unchanged.
+
+\subsection{Execution-Governor Interface}
+
+The execution governor publishes two scalar adaptation signals:
+\texttt{speed\_scale} and \texttt{acceleration\_scale}. These signals are
+consumed by the command-adaptation interface and modify the aggressiveness of
+the executed motion command. A scale near 1.0 preserves the nominal command
+more closely, whereas smaller scales reduce the commanded speed or acceleration
+and make the executed motion more conservative.
+
+This interface is intentionally stack-compatible. The planner continues to
+produce the nominal reference, the payload MPC continues to solve the tracking
+problem, and the SO3 controller remains the low-level controller. The governor
+only changes the execution scale exposed through the command-adaptation
+interface. This design connects to command and reference governance concepts
+\cite{Garone2017ReferenceCommandGovernorsSurvey,Garone2016ExplicitReferenceGovernor,Li2021ActionGovernor},
+but the implementation here is an empirical execution policy rather than a
+certified reference governor.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig1_architecture.png}
+  \caption{Stack-compatible risk-conditioned execution governance. The
+  planner, payload MPC, and SO3 controller remain unchanged, while an external
+  governor adapts execution aggressiveness through \texttt{speed\_scale} and
+  \texttt{acceleration\_scale}. The governor is empirical and is not a
+  certified safety filter.}
+  \label{fig:architecture}
+\end{figure}
+
+\subsection{Risk-Conditioned Governor}
+
+The learned governor uses risk-conditioned decision logic to choose execution
+scales. At a high level, the governor receives short-horizon and long-horizon
+risk estimates, denoted here as $r_3$ and $r_5$, together with execution
+context such as the active method mode and command-adaptation state. The
+short-horizon risk captures imminent instability or tracking stress, while the
+long-horizon risk captures a broader upcoming window where conservative
+execution may be useful.
+
+In the current implementation, these scores are exposed as
+\texttt{risk\_score\_3s} and \texttt{risk\_score\_5s}. The adapter subscribes
+to odometry, payload odometry, wind annotation, goal, and trajectory-context
+streams, builds early episode features, and evaluates exported JSON
+\texttt{LogisticRegression} models trained with
+\texttt{label\_strict\_invalid} as the positive class. The audited local JSON
+metadata records a 90-row training dataset with 51 strict-valid and 39
+strict-invalid rows. The 3 s model uses 16 wind, target, and
+\texttt{early\_3s} features, while the 5 s model uses 27 features spanning the
+same base fields plus \texttt{early\_3s} and \texttt{early\_5s} dynamics; the
+full feature schema is kept for supplementary material. Unavailable scores are
+published as \texttt{-1} and do not trigger risk reductions. These values are
+used as empirical strict-invalid warning scores, not as calibrated physical
+probabilities; the current implementation does not include confidence or OOD
+rejection, and inference latency has not been measured separately from the
+configured 5 Hz publish rate.
+
+The governor maps these signals to a pair of scale values. In low-risk
+conditions, it keeps execution less conservative so that the system can
+continue progressing toward the goal. When risk increases, it reduces the speed
+and acceleration scales to avoid overly aggressive execution. When the
+long-horizon risk is high enough, the governor may apply a stronger reduction.
+The scale output is rate-limited so that the command does not switch abruptly
+between aggressive and conservative modes.
+
+\subsection{Current Protagonist: \texttt{risk\_adapter\_v1}}
+
+The current paper protagonist is \texttt{risk\_adapter\_v1}, the balanced
+learned / risk-conditioned execution governor. Its policy settings are:
+
+\begin{itemize}
+  \item \texttt{risk\_threshold\_3s=0.5}
+  \item \texttt{risk\_threshold\_5s=0.5}
+  \item \texttt{hard\_threshold\_5s=0.7}
+  \item \texttt{soft\_scale\_3s=0.75}
+  \item \texttt{soft\_scale\_5s=0.65}
+  \item \texttt{hard\_scale\_5s=0.60}
+  \item \texttt{scale\_rate\_limit\_per\_sec=0.5}
+\end{itemize}
+
+\texttt{risk\_adapter\_v1} is selected as the tentative balanced protagonist
+because it gives the best cross-protocol balance in the current evaluation. It
+achieves 25/30 strict-valid runs in the single-goal mission protocol and 23/30
+in the goal-reissue stress protocol, yielding the best mean valid count
+(24.0/30), best worst-protocol valid count (23/30), and lowest total regret
+(2) relative to the observed protocol oracles.
+
+The later \texttt{risk\_adapter\_v21} variant remains important, but it should
+not be presented as the final method. It ties \texttt{risk\_adapter\_v1} in the
+single-goal mission protocol at 25/30, but it drops to 20/30 under goal-reissue
+stress. It is therefore a strong nominal / single-goal variant or ablation,
+while \texttt{risk\_adapter\_v1} is the current balanced learned /
+risk-conditioned protagonist.
+
+\subsection{Baselines and Method Variants}
+
+The evaluation compares the governor against no-op, fixed, heuristic, and
+learned / risk-conditioned variants: \texttt{original}, \texttt{fixed\_s085},
+\texttt{windlevel\_s085}, \texttt{fixed\_s080},
+\texttt{risk\_adapter\_v1}, \texttt{risk\_adapter\_v2}, and
+\texttt{risk\_adapter\_v21}. \texttt{windlevel\_s085} is the single-goal
+specialist heuristic. \texttt{fixed\_s080} is the goal-reissue stress
+specialist static frontier. \texttt{risk\_adapter\_v1} is the balanced learned
+/ risk-conditioned protagonist, while \texttt{risk\_adapter\_v21} is a strong
+nominal variant that is weaker under stress.
+
+\subsection{Notation Block}
+
+Let $u_{\mathrm{ref}}(t)$ denote the nominal reference or command produced by
+the planner/MPC stack. The execution governor outputs a speed scale $s_v$ and
+an acceleration scale $s_a$, with $s_v \in (0,1]$ and $s_a \in (0,1]$. The
+executed command is modulated by these scale factors through the
+command-adaptation interface:
+
+\begin{equation}
+u_{\mathrm{exec}}(t) = A(u_{\mathrm{ref}}(t), s_v(t), s_a(t)),
+\end{equation}
+
+where $A$ denotes the existing command-adaptation operation. The
+risk-conditioned governor is written abstractly as:
+
+\begin{equation}
+g(r_3(t), r_5(t), c(t)) \rightarrow (s_v(t), s_a(t)),
+\end{equation}
+
+where $c(t)$ is execution context. This notation describes the interface only;
+it does not imply formal safety, stability, or optimality guarantees.
+
+\subsection{Claim Boundary}
+
+The execution governor is an empirical runtime adaptation layer. It is not a
+formal safety filter, does not provide a safety guarantee, and does not replace
+the planner, payload MPC, or SO3 controller. Its claim is limited to improving
+balanced protocol-level behavior under the tested strong-wind evaluation.

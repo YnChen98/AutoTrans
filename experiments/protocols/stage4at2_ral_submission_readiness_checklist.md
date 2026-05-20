@@ -18,6 +18,11 @@ stay outside Paper 1.
 No `risk_adapter_v22` is allowed before Paper 1 RA-L submission unless the
 submission strategy is explicitly changed.
 
+Stage 4-AV is the first template-conversion scaffold step after this
+submission checklist. It creates a separate RA-L-oriented scaffold under
+`paper/stage4_governor_ral/` while preserving the existing
+`paper/stage4_governor/` scaffold unchanged.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -132,15 +137,17 @@ submitted or published.
 
 Recommended next stages:
 
-1. Stage 4-AM5 conditional citation verification and BibTeX cleanup.
-2. Stage 4-AW final figure / caption polish.
-3. Stage 4-AX final claim audit.
-4. Final compile after all edits.
+1. Stage 4-AV RA-L template conversion scaffold.
+2. Stage 4-AV2 RA-L scaffold compile/check pass.
+3. Stage 4-AM5 conditional citation verification and BibTeX cleanup.
+4. Stage 4-AW final figure / caption polish.
+5. Stage 4-AX final claim audit.
+6. Final compile after all edits.
 
 Suggested order:
 
 ```text
-AM5 -> AW -> AX -> final compile
+AV -> AV2 -> AM5 -> AW -> AX -> final compile
 ```
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.

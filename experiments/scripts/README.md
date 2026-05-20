@@ -1378,6 +1378,26 @@ BibTeX cleanup, Stage 4-AW final figure / caption polish, Stage 4-AX final
 claim audit, then final compile. Do not create `risk_adapter_v22` before Paper
 1 RA-L submission.
 
+## Stage 4-AV RA-L template conversion scaffold
+
+`experiments/protocols/stage4av_ral_template_conversion_protocol.md` records
+the RA-L-oriented template conversion scaffold for Paper 1.
+
+Stage 4-AV uses the existing source scaffold under `paper/stage4_governor/`
+and the user-provided template files under `paper/templates/ral/` to create a
+separate scaffold under `paper/stage4_governor_ral/`. The detected template
+uses:
+
+```tex
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
+```
+
+The source scaffold remains unchanged. No LaTeX compile, simulation, RViz,
+`roslaunch`, `catkin_make`, training script, or figure generation script is
+run in Stage 4-AV. The next recommended stage is Stage 4-AV2 RA-L scaffold
+compile/check pass. Do not create `risk_adapter_v22` before Paper 1 RA-L
+submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the
