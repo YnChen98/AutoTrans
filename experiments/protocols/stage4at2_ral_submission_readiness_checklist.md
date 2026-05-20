@@ -42,6 +42,11 @@ It checks manuscript text for overclaiming risk, removes active
 `risk_adapter_v22` wording from the manuscript, and preserves the bounded
 balanced-protagonist claim for `risk_adapter_v1`.
 
+Stage 4-AY performs the final compile / submission package check. It confirms
+that the RA-L scaffold compiles to an 8-page PDF after AX, records a temporary
+inspection copy under `/tmp/stage4_governor_ral_final_check.pdf`, and tracks
+the remaining human-only submission tasks.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -89,7 +94,7 @@ balanced-protagonist claim for `risk_adapter_v1`.
   and dataset checksum manifest.
 - Decide whether the generated PDF belongs in the submission package only, not
   in git.
-- Run the final compile after all submission edits.
+- Final compile / submission package check: addressed by Stage 4-AY.
 - Confirm generated experiment outputs are not accidentally committed.
 
 ## Remaining Should-Fix If Time Allows
@@ -167,15 +172,18 @@ Recommended submission-readiness path:
 3. Stage 4-AM5 conditional citation verification and BibTeX cleanup.
 4. Stage 4-AW final figure / caption polish.
 5. Stage 4-AX final claim audit.
-6. Final compile after all edits.
+6. Stage 4-AY final compile / submission package check.
+7. Stage 4-AZ human visual PDF inspection and final submission package
+   assembly.
 
 Suggested order:
 
 ```text
-AV -> AV2 -> AM5 -> AW -> AX -> final compile
+AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ
 ```
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
-After Stage 4-AX, continue with final compile / submission package checks, or
-an optional Stage 4-AM5 follow-up if citation metadata changes.
+After Stage 4-AY, continue with Stage 4-AZ human visual PDF inspection and
+final submission package assembly, or an optional Stage 4-AM5 follow-up if
+citation metadata changes.

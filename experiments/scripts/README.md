@@ -1472,6 +1472,26 @@ final compile / submission package checks, or an optional Stage 4-AM5 follow-up
 if citation metadata changes. Do not create `risk_adapter_v22` before Paper 1
 RA-L submission.
 
+## Stage 4-AY final compile / submission package check
+
+`experiments/protocols/stage4ay_final_compile_submission_check.md` records the
+final compile check and submission package readiness checklist for the RA-L
+Paper 1 scaffold under `paper/stage4_governor_ral/`.
+
+Stage 4-AY cleans LaTeX generated outputs, runs:
+
+```bash
+cd paper/stage4_governor_ral
+latexmk -pdf -interaction=nonstopmode -file-line-error main.tex
+```
+
+The final compile succeeds with `latexmk_exit=0` and produces an 8-page PDF
+during the check. A temporary human-inspection copy is written to
+`/tmp/stage4_governor_ral_final_check.pdf`. Generated PDF / aux / log files are
+excluded from git. Next recommended work is Stage 4-AZ human visual PDF
+inspection and final submission package assembly. Do not create
+`risk_adapter_v22` before Paper 1 RA-L submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the

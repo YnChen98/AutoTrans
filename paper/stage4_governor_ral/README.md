@@ -70,6 +70,9 @@ file.
 - Stage 4-AX performed the final claim audit for the active manuscript,
   tightened overclaiming-risk wording, and removed active manuscript
   `risk_adapter_v22` wording.
+- Stage 4-AY ran the final compile / submission checklist. The scaffold
+  compiled to an 8-page PDF during the check, and a temporary inspection copy
+  was written to `/tmp/stage4_governor_ral_final_check.pdf`.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -108,5 +111,7 @@ file.
 - Verify conditional citations before adding any missing metadata or active
   BibTeX entries.
 - Use Stage 4-AX as the current final claim-audit baseline.
-- Run final compile / submission package checks before submission.
+- Use Stage 4-AY as the current final compile / submission package checklist
+  baseline.
+- Perform final human visual PDF inspection and submission package assembly.
 - Keep generated PDF / aux / log files out of git.

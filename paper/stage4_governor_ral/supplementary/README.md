@@ -22,6 +22,13 @@ Generated experiment outputs are not copied automatically into this scaffold.
 Only intentionally packaged, submission-facing supplementary files should be
 added later.
 
+Stage 4-AY confirms that final supplementary package decisions remain before
+actual submission. In particular, decide whether to include risk model JSON
+artifacts, checksum manifests, full CSV summaries, representative traces, or
+video / trace packages in the RA-L submission package. Generated experiment
+outputs should not be copied into this scaffold or committed unless they are
+intentionally packaged as submission-facing supplementary material.
+
 Claim boundaries remain the same as the main paper: no statistical
 significance claim, no safety guarantee, no learned uniform domination, no
 mixed-protocol aggregate as the main result, diagnostic-only failure groups,

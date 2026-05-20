@@ -15,6 +15,10 @@ algorithms, and experiment outputs were not changed.
 The RA-L scaffold recompiled successfully after the claim audit with
 `latexmk_exit=0`. The generated `main.pdf` was 8 pages during the check.
 
+Stage 4-AY follows this claim audit with the final compile / submission package
+check. AY confirms the scaffold still compiles to an 8-page PDF and records the
+remaining human-only submission tasks.
+
 No simulation, RViz, `roslaunch`, `catkin_make`, training scripts, figure
 generation scripts, or new experimental runs were performed. `risk_adapter_v22`
 was not created.

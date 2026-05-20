@@ -1385,6 +1385,25 @@ Stage 4-AX final claim audit:
   optional Stage 4-AM5 follow-up if citation metadata changes.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-AY final compile / submission package check:
+
+- The result document is
+  `experiments/protocols/stage4ay_final_compile_submission_check.md`.
+- Current stage: Stage 4-AY final compile / submission package check.
+- Stage 4-AY cleans stale LaTeX generated outputs under
+  `paper/stage4_governor_ral/`, runs the final `latexmk` compile, records the
+  PDF page count / size, and writes a submission package readiness checklist.
+- The final compile succeeds with `latexmk_exit=0` and generates an 8-page
+  `main.pdf` during the check.
+- A temporary PDF inspection copy is written to
+  `/tmp/stage4_governor_ral_final_check.pdf`; generated PDF / aux / log files
+  remain excluded from git.
+- No manuscript claims, citations, figures, tables, results, algorithms, or
+  experiment outputs are changed.
+- Next recommended stage: Stage 4-AZ human visual PDF inspection and final
+  submission package assembly.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is
