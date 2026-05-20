@@ -23,6 +23,10 @@ submission checklist. It creates a separate RA-L-oriented scaffold under
 `paper/stage4_governor_ral/` while preserving the existing
 `paper/stage4_governor/` scaffold unchanged.
 
+Stage 4-AV2 is the RA-L scaffold compile check for
+`paper/stage4_governor_ral/`. It records whether the new scaffold compiles,
+the generated PDF page count, and remaining warnings / submission TODOs.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -151,3 +155,6 @@ AV -> AV2 -> AM5 -> AW -> AX -> final compile
 ```
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
+After Stage 4-AV2, choose among Stage 4-AM5, Stage 4-AW, and Stage 4-AX based
+on citation, figure/caption, and claim-audit priorities.

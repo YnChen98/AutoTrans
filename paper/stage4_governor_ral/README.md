@@ -15,7 +15,9 @@ The official user-provided template source directory is:
 paper/templates/ral/
 ```
 
-No LaTeX compile was run in Stage 4-AV.
+No LaTeX compile was run in Stage 4-AV. Stage 4-AV2 later records the first
+RA-L scaffold compile/check pass in
+`experiments/protocols/stage4av2_ral_scaffold_compile_check_result.md`.
 
 ## Template Inspection
 
@@ -56,6 +58,9 @@ file.
   confirmation before submission.
 - Scientific claims, numerical results, method rankings, citations, figures,
   and tables were not changed by Stage 4-AV.
+- Stage 4-AV2 compile/check succeeded with `latexmk_exit=0`; the generated
+  `main.pdf` was 8 pages during the check. Generated PDF / aux / log files
+  should remain out of git.
 - No `risk_adapter_v22` was created.
 
 ## Claim Boundaries
@@ -86,7 +91,7 @@ file.
 - Fill final author names and affiliations.
 - Confirm official RA-L / IEEE template requirements if the final submission
   target differs from the provided `ieeeconf` template.
-- Run Stage 4-AV2 RA-L scaffold compile/check pass.
+- Use Stage 4-AV2 as the current compile/check baseline.
 - Check final page limit.
 - Visually inspect Figure 6 layout in the compiled PDF.
 - Verify conditional citations before adding any missing metadata.

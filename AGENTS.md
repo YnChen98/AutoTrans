@@ -1186,8 +1186,10 @@ Stage 4-AS submission strategy plan:
   complete.
 - Stage 4-AT2 RA-L submission readiness checklist is complete.
 - Stage 4-AV RA-L template conversion scaffold is complete.
-- Current next recommended stage: Stage 4-AV2 RA-L scaffold compile/check
-  pass.
+- Stage 4-AV2 RA-L scaffold compile/check pass is complete.
+- Current next recommended stage: Stage 4-AM5 conditional citation
+  verification, Stage 4-AW final figure / caption polish, or Stage 4-AX final
+  claim audit depending on AV2 result and submission-readiness priority.
 
 Stage 4-AT RA-L conversion / submission readiness audit:
 
@@ -1227,8 +1229,10 @@ Stage 4-AT RA-L conversion / submission readiness audit:
   clean Stage 4-AR compile.
 - Stage 4-AV now creates the separate RA-L-oriented scaffold under
   `paper/stage4_governor_ral/`.
-- Current next recommended stage: Stage 4-AV2 RA-L scaffold compile/check
-  pass.
+- Stage 4-AV2 now records the RA-L scaffold compile/check pass.
+- Current next recommended stage: Stage 4-AM5 conditional citation
+  verification, Stage 4-AW final figure / caption polish, or Stage 4-AX final
+  claim audit depending on AV2 result and submission-readiness priority.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
@@ -1255,7 +1259,10 @@ Stage 4-AT2 RA-L submission readiness checklist:
   lead-time planning, efficiency metrics, and a `goal_repeat` curve.
 - Stage 4-AV now creates the separate RA-L-oriented scaffold under
   `paper/stage4_governor_ral/`.
-- Next recommended stage: Stage 4-AV2 RA-L scaffold compile/check pass.
+- Stage 4-AV2 now records the RA-L scaffold compile/check pass.
+- Next recommended stage: Stage 4-AM5 conditional citation verification,
+  Stage 4-AW final figure / caption polish, or Stage 4-AX final claim audit
+  depending on AV2 result and submission-readiness priority.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
 Stage 4-AV RA-L template conversion scaffold:
@@ -1279,7 +1286,34 @@ Stage 4-AV RA-L template conversion scaffold:
   `catkin_make`, training scripts, or figure generation scripts.
 - Stage 4-AV does not change scientific claims, numerical results, method
   rankings, citations, figures, or tables.
-- Next recommended stage: Stage 4-AV2 RA-L scaffold compile/check pass.
+- Stage 4-AV2 now records the RA-L scaffold compile/check pass.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
+Stage 4-AV2 RA-L scaffold compile/check pass:
+
+- The result document is
+  `experiments/protocols/stage4av2_ral_scaffold_compile_check_result.md`.
+- Current stage: Stage 4-AV2 RA-L scaffold compile/check pass.
+- Stage 4-AV2 cleans stale generated LaTeX outputs under
+  `paper/stage4_governor_ral/` and runs
+  `latexmk -pdf -interaction=nonstopmode -file-line-error main.tex` from that
+  directory.
+- The compile succeeds with `latexmk_exit=0`.
+- The generated `paper/stage4_governor_ral/main.pdf` is 8 pages and
+  approximately 2.3 MB during the check.
+- Final log status: no LaTeX errors, undefined citations, undefined
+  references, overfull hboxes, missing figures, bibliography warnings, or
+  float warnings.
+- Residual underfull boxes remain non-blocking layout reminders: 40
+  `Underfull \hbox` messages and 2 `Underfull \vbox` messages.
+- Generated PDF, auxiliary, and log files are not tracked.
+- Stage 4-AV2 does not run simulation, RViz, `roslaunch`, `catkin_make`,
+  training scripts, or figure generation scripts.
+- Stage 4-AV2 does not change scientific claims, numerical results, method
+  rankings, citations, figures, or tables.
+- Next recommended stage: Stage 4-AM5 conditional citation verification,
+  Stage 4-AW final figure / caption polish, or Stage 4-AX final claim audit
+  depending on submission-readiness priority.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
 Stage 4-AU risk score and strict-valid metric documentation:

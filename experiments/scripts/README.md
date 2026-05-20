@@ -1373,10 +1373,11 @@ citation decisions, Figure 6 readability, caption polish, final claim audit,
 supplementary package decisions, generated-PDF submission packaging, and final
 compile after all edits.
 
-The recommended next order is Stage 4-AM5 conditional citation verification and
-BibTeX cleanup, Stage 4-AW final figure / caption polish, Stage 4-AX final
-claim audit, then final compile. Do not create `risk_adapter_v22` before Paper
-1 RA-L submission.
+The recommended next order after AT2 was Stage 4-AV template conversion,
+Stage 4-AV2 compile/check, then Stage 4-AM5 conditional citation verification
+and BibTeX cleanup, Stage 4-AW final figure / caption polish, Stage 4-AX final
+claim audit, and final compile. Do not create `risk_adapter_v22` before Paper 1
+RA-L submission.
 
 ## Stage 4-AV RA-L template conversion scaffold
 
@@ -1397,6 +1398,29 @@ The source scaffold remains unchanged. No LaTeX compile, simulation, RViz,
 run in Stage 4-AV. The next recommended stage is Stage 4-AV2 RA-L scaffold
 compile/check pass. Do not create `risk_adapter_v22` before Paper 1 RA-L
 submission.
+
+## Stage 4-AV2 RA-L scaffold compile/check pass
+
+`experiments/protocols/stage4av2_ral_scaffold_compile_check_result.md`
+records the first compile/check pass for `paper/stage4_governor_ral/`.
+
+Stage 4-AV2 cleans stale LaTeX generated outputs under
+`paper/stage4_governor_ral/`, runs:
+
+```bash
+cd paper/stage4_governor_ral
+latexmk -pdf -interaction=nonstopmode -file-line-error main.tex
+```
+
+The recorded compile succeeds with `latexmk_exit=0`; `main.pdf` is generated
+as an 8-page PDF of approximately 2.3 MB during the check. The final log has
+no LaTeX errors, undefined citations, undefined references, overfull hboxes,
+missing figures, bibliography warnings, or float warnings. Residual underfull
+boxes are recorded as non-blocking layout reminders. Generated PDF, auxiliary,
+and log files are not committed. Next recommended work is Stage 4-AM5
+conditional citation verification, Stage 4-AW final figure / caption polish,
+or Stage 4-AX final claim audit depending on submission-readiness priority. Do
+not create `risk_adapter_v22` before Paper 1 RA-L submission.
 
 ## Stage 4-AU risk score and strict-valid metric documentation
 

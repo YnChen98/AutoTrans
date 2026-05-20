@@ -11,6 +11,9 @@ This stage does not run LaTeX compile, simulation, RViz, `roslaunch`,
 change scientific claims, numerical results, method rankings, citation
 choices, figures, or tables. It does not create `risk_adapter_v22`.
 
+Stage 4-AV2 now compiles/checks the RA-L-oriented scaffold created here:
+`experiments/protocols/stage4av2_ral_scaffold_compile_check_result.md`.
+
 ## Input Scaffold
 
 Source scaffold:
@@ -163,7 +166,8 @@ Stage 4-AV preserves the Paper 1 claim boundaries:
 
 - Confirm final RA-L / IEEE template requirements and page budget.
 - Fill author names and affiliations.
-- Run Stage 4-AV2 RA-L scaffold compile/check pass.
+- Use the Stage 4-AV2 compile/check result as the current RA-L scaffold
+  compile baseline.
 - Inspect the compiled PDF visually.
 - Check Figure 6 readability under the RA-L-oriented scaffold.
 - Verify conditional citation metadata and clean up BibTeX.
@@ -173,8 +177,12 @@ Stage 4-AV preserves the Paper 1 claim boundaries:
 
 ## Next Stage Recommendation
 
-Next recommended stage:
+Original next recommended stage:
 
 - Stage 4-AV2 RA-L scaffold compile/check pass.
+
+After Stage 4-AV2, next recommended work is Stage 4-AM5 conditional citation
+verification, Stage 4-AW final figure / caption polish, or Stage 4-AX final
+claim audit depending on submission-readiness priority.
 
 Do not create `risk_adapter_v22` before Paper 1 RA-L submission.
