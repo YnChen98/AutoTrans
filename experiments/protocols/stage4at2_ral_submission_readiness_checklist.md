@@ -32,6 +32,11 @@ for the active RA-L scaffold by confirming that active citations and active
 `refs.bib` entries match and that unresolved conditional citation keys remain
 excluded from active Paper 1 citations / BibTeX entries.
 
+Stage 4-AW addresses the final figure / caption polish item for the active
+RA-L scaffold. It updates Table 1 and Figures 2-4 / 6 caption text, preserves
+claim boundaries, and recompiles the scaffold to 8 pages. Final visual PDF
+inspection remains a submission TODO.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -61,8 +66,10 @@ excluded from active Paper 1 citations / BibTeX entries.
 - Conditional citation decision / BibTeX cleanup: addressed by Stage 4-AM5 for
   the active RA-L scaffold; unresolved conditional keys remain excluded unless
   later verified.
-- Check final Figure 6 visual readability in the compiled PDF.
-- Polish final captions for Table 1 and Figures 1-6.
+- Final figure / caption polish for Table 1 and Figures 1-6: addressed by
+  Stage 4-AW.
+- Check final Figure 6 visual readability in the compiled PDF during final
+  visual inspection.
 - Run a final claim audit:
   - no statistical significance claim;
   - no formal safety guarantee;
@@ -164,6 +171,5 @@ AV -> AV2 -> AM5 -> AW -> AX -> final compile
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
-After Stage 4-AM5, choose among Stage 4-AW final figure / caption polish,
-Stage 4-AX final claim audit, and final compile based on submission-readiness
-priorities.
+After Stage 4-AW, continue with Stage 4-AX final claim audit, then final
+compile / submission package checks.

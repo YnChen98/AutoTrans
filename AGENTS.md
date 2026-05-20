@@ -1344,6 +1344,28 @@ Stage 4-AM5 conditional citation cleanup:
   4-AX final claim audit, and final compile.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-AW final figure / caption polish:
+
+- The result document is
+  `experiments/protocols/stage4aw_final_figure_caption_polish_result.md`.
+- Current stage: Stage 4-AW final figure / caption polish.
+- Stage 4-AW polishes Table 1 and Figures 2-4 / 6 captions in the RA-L
+  scaffold under `paper/stage4_governor_ral/`.
+- Figure 1 and Figure 5 were inspected and already carried the required claim
+  caveats, so their captions were left unchanged.
+- Caption polish preserved numerical results, method rankings, citation keys,
+  and claim boundaries.
+- `risk_adapter_v1` remains the balanced learned / risk-conditioned Paper 1
+  protagonist.
+- `windlevel_s085` remains the single-goal specialist, `fixed_s080` remains
+  the goal-reissue stress specialist, and `risk_adapter_v21` remains a strong
+  nominal variant / ablation.
+- The RA-L scaffold recompiled successfully after AW with `latexmk_exit=0` and
+  an 8-page `main.pdf`; generated PDF / aux / log files are not committed.
+- Next recommended stage: Stage 4-AX final claim audit, then final
+  compile / submission package checks.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

@@ -40,8 +40,11 @@ learned / risk-conditioned execution governor.
   \centering
   \includegraphics[width=\linewidth]{figures/fig3_pareto.png}
   \caption{Balanced robustness / Pareto frontier across the two tested
-  protocols. The observed frontier contains \texttt{windlevel\_s085},
-  \texttt{fixed\_s080}, and \texttt{risk\_adapter\_v1}.}
+  protocols. The x-axis is single-goal valid count and the y-axis is
+  goal-reissue stress valid count. The observed frontier contains
+  \texttt{windlevel\_s085}, \texttt{fixed\_s080}, and
+  \texttt{risk\_adapter\_v1}; this frontier is limited to the evaluated
+  methods and protocols.}
   \label{fig:pareto}
 \end{figure}
 
@@ -50,7 +53,8 @@ learned / risk-conditioned execution governor.
   \includegraphics[width=\linewidth]{figures/fig4_protocol_regret.png}
   \caption{Protocol regret relative to the observed protocol oracles.
   \texttt{risk\_adapter\_v1} has the lowest total regret under the tested
-  protocols.}
+  protocols. The oracle in each protocol is the observed best method, not a
+  theoretical optimum.}
   \label{fig:regret}
 \end{figure}
 
@@ -102,42 +106,41 @@ safer, and delayed post-arrival divergence can still occur under
     \centering
     \includegraphics[width=\linewidth]{figures/fig6a_trial4_stress_v21_failure.png}\\
     \scriptsize
-    (a) Trial 4 stress, \texttt{risk\_adapter\_v21}
+    (a) T4 goal-reissue, \texttt{risk\_adapter\_v21}
   \end{minipage}
   \hfill
   \begin{minipage}{0.32\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/fig6b_trial4_stress_comparison_fixed_s080.png}\\
     \scriptsize
-    (b) Trial 4 stress, \texttt{fixed\_s080}
+    (b) T4 goal-reissue, \texttt{fixed\_s080}
   \end{minipage}
   \hfill
   \begin{minipage}{0.32\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/fig6c_trial4_stress_comparison_risk_adapter_v1.png}\\
     \scriptsize
-    (c) Trial 4 stress, \texttt{risk\_adapter\_v1}
+    (c) T4 goal-reissue, \texttt{risk\_adapter\_v1}
   \end{minipage}
   \par\medskip
   \begin{minipage}{0.32\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/fig6d_trial6_single_goal_windlevel_s085.png}\\
     \scriptsize
-    (d) Trial 6 single-goal, \texttt{windlevel\_s085}
+    (d) T6 single-goal, \texttt{windlevel\_s085}
   \end{minipage}
   \hspace{0.06\textwidth}
   \begin{minipage}{0.32\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/fig6e_trial6_single_goal_risk_adapter_v21_failure.png}\\
     \scriptsize
-    (e) Trial 6 single-goal, \texttt{risk\_adapter\_v21}
+    (e) T6 single-goal, \texttt{risk\_adapter\_v21}
   \end{minipage}
-  \caption{Representative trace case studies. Panels compare a Trial 4
-  goal-reissue stress weakness for \texttt{risk\_adapter\_v21} with successful
-  stress traces for \texttt{fixed\_s080} and \texttt{risk\_adapter\_v1}, and a
-  Trial 6 single-goal specialist trace with a \texttt{risk\_adapter\_v21}
-  bottleneck trace. The traces are qualitative mechanism evidence, not proof
-  of general causality.}
+  \caption{Representative trace case studies. Panels (a)--(c) compare Trial 4
+  goal-reissue stress behavior for \texttt{risk\_adapter\_v21},
+  \texttt{fixed\_s080}, and \texttt{risk\_adapter\_v1}. Panels (d)--(e) show
+  the Trial 6 single-goal bottleneck comparison. These representative traces
+  are qualitative mechanism evidence only, not proof of general causality.}
   \label{fig:representative_traces}
 \end{figure*}
 

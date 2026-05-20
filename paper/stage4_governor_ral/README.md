@@ -64,6 +64,9 @@ file.
 - Stage 4-AM5 checked active RA-L scaffold citation usage. Active citations
   and active `refs.bib` entries match, and conditional citation keys are
   excluded from the active Paper 1 bibliography unless later verified.
+- Stage 4-AW polished figure / table captions for the active RA-L scaffold,
+  preserved claim boundaries, and recompiled successfully to an 8-page PDF
+  during the check.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -97,9 +100,9 @@ file.
   target differs from the provided `ieeeconf` template.
 - Use Stage 4-AV2 as the current compile/check baseline.
 - Check final page limit.
-- Visually inspect Figure 6 layout in the compiled PDF.
+- Visually inspect Figure 6 layout in the compiled PDF after Stage 4-AW
+  caption / panel-label polish.
 - Verify conditional citations before adding any missing metadata or active
   BibTeX entries.
-- Polish final captions.
 - Run final claim audit before submission.
 - Keep generated PDF / aux / log files out of git.

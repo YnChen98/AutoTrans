@@ -10,6 +10,12 @@ The scaffold compiled successfully with `latexmk_exit=0`. The generated
 `main.log` had no LaTeX errors, undefined citations, undefined references,
 overfull hboxes, missing figures, bibliography warnings, or float warnings.
 
+Stage 4-AW later recompiled the RA-L scaffold after final figure / table
+caption polish. That compile also succeeded with `latexmk_exit=0` and produced
+an 8-page `main.pdf`; the final log again had no LaTeX errors, undefined
+citations, undefined references, overfull hboxes, missing figures,
+bibliography warnings, or float warnings.
+
 No scientific claims, numerical results, method rankings, citation choices,
 figures, tables, experiment outputs, planner/controller/simulator files, or
 template source files were changed. No simulation, RViz, `roslaunch`,
@@ -98,7 +104,8 @@ task did not change manuscript source content under
 - Fill final author names and affiliations.
 - Complete Stage 4-AM5 conditional citation verification and BibTeX cleanup if
   any conditional citations are considered.
-- Continue Stage 4-AW final figure / caption polish.
+- Stage 4-AW final figure / caption polish is complete; perform final visual
+  PDF inspection before submission.
 - Continue Stage 4-AX final claim audit.
 - Keep generated PDF / aux / log files out of git.
 

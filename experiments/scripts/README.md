@@ -1439,6 +1439,23 @@ Stage 4-AW final figure / caption polish, Stage 4-AX final claim audit, and
 final compile. Do not create `risk_adapter_v22` before Paper 1 RA-L
 submission.
 
+## Stage 4-AW final figure / caption polish
+
+`experiments/protocols/stage4aw_final_figure_caption_polish_result.md`
+records the final figure / table caption polish pass for the RA-L Paper 1
+scaffold under `paper/stage4_governor_ral/`.
+
+Stage 4-AW updates caption text for the protocol schematic, balanced
+robustness table, Pareto plot, protocol-regret plot, and representative trace
+figure, while preserving numerical results, rankings, citation keys, and claim
+boundaries. The pass keeps `risk_adapter_v1` as the balanced protagonist,
+keeps `windlevel_s085` and `fixed_s080` as protocol specialists, and keeps
+`risk_adapter_v21` as a strong nominal variant / ablation. The RA-L scaffold
+recompiled successfully to 8 pages after the caption polish. No simulation,
+RViz, `roslaunch`, `catkin_make`, training scripts, or figure generation
+scripts were run. Do not create `risk_adapter_v22` before Paper 1 RA-L
+submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the
