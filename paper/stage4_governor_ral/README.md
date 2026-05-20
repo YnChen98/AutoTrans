@@ -87,6 +87,10 @@ file.
 - Stage 4-BC regenerated Figure 3 as a compact paper-facing Pareto frontier
   plot with display names, reduced whitespace, no raw underscore labels, and no
   redundant in-plot title. Figure 3 now has both PNG and SVG assets.
+- Stage 4-BD regenerated Figure 6 as one simplified paper-facing trace summary
+  with display names, fewer key signals, larger labels, and no visible raw
+  underscore method labels. The scaffold compiled to 7 pages during the BD
+  check.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -120,8 +124,8 @@ file.
   target differs from the provided `ieeeconf` template.
 - Use Stage 4-AV2 as the current compile/check baseline.
 - Check final page limit.
-- Visually inspect Figure 6 layout in the compiled PDF after Stage 4-AW
-  caption / panel-label polish.
+- Visually inspect the simplified Figure 6 layout in the compiled PDF after
+  Stage 4-BD.
 - Verify conditional citations before adding any missing metadata or active
   BibTeX entries.
 - Use Stage 4-AX as the current final claim-audit baseline.
@@ -133,9 +137,10 @@ file.
 - Use Stage 4-BB as the current Figure 1 / Figure 2 placeholder and redraw
   workflow baseline.
 - Use Stage 4-BC as the current Figure 3 compact polish baseline.
+- Use Stage 4-BD as the current Figure 6 simplified replot baseline.
 - Next presentation-polish sequence:
-  - Stage 4-BD Figure 6 simplified replot planning;
-  - later Stage 4-BE external schematic replacement.
+  - Stage 4-BE external Figure 1 / Figure 2 schematic replacement;
+  - final visual PDF inspection after BD / BE.
 - Perform final submission package assembly only after the AZ blockers are
   resolved or explicitly accepted.
 - Keep generated PDF / aux / log files out of git.

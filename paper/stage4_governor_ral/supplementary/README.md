@@ -46,6 +46,13 @@ historical/generated assets, but they should not be used as final RA-L
 submission visuals after the placeholder workflow unless they are externally
 redrawn or manually curated to final paper quality.
 
+Stage 4-BD replaces the active five-panel Figure 6 trace block with a
+simplified main-paper trace summary. Full trace detail, including the omitted
+Fixed Scale 0.80 representative trace and risk-score traces, should remain in
+supplementary material or archived trace assets if the final submission package
+uses them. Keep these materials tied to the qualitative / diagnostic claim
+boundary.
+
 Claim boundaries remain the same as the main paper: no statistical
 significance claim, no safety guarantee, no learned uniform domination, no
 mixed-protocol aggregate as the main result, diagnostic-only failure groups,

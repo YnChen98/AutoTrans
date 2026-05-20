@@ -1494,6 +1494,34 @@ Stage 4-BC Figure 3 compact polish:
 - Next recommended stage: Stage 4-BD Figure 6 simplified paper-facing replot.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BD Figure 6 simplified paper-facing replot:
+
+- The result document is
+  `experiments/protocols/stage4bd_figure6_simplified_replot_result.md`.
+- The generator is
+  `experiments/scripts/generate_stage4_paper_ready_trace_summary.py`.
+- Current stage: Stage 4-BD Figure 6 simplified paper-facing replot.
+- Stage 4-BD regenerates
+  `paper/stage4_governor_ral/figures/fig6_trace_summary.png` and adds
+  `paper/stage4_governor_ral/figures/fig6_trace_summary.svg`.
+- The active Figure 6 now uses one simplified composite trace figure instead
+  of the previous five-panel layout.
+- The selected cases are Trial 4 goal-reissue Risk Adapter v2.1 failure, Trial
+  4 goal-reissue Risk Adapter v1 success, Trial 6 single-goal Wind-Level 0.85
+  success, and Trial 6 single-goal Risk Adapter v2.1 failure.
+- The figure keeps key speed, swing, position-error, and command-scale signals
+  for readability, uses display names, and avoids visible raw underscore method
+  labels.
+- The traces remain qualitative mechanism evidence only, not population-level
+  causal proof.
+- Stage 4-BD compile check succeeded with `latexmk_exit=0`; the simplified
+  layout compiled to 7 pages with no LaTeX errors, undefined citations /
+  references, overfull hboxes, missing figures, bibliography warnings, or float
+  warnings in the final log.
+- Next recommended stage: Stage 4-BE external Figure 1 / Figure 2 schematic
+  replacement or final visual PDF inspection after BD.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

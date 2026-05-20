@@ -66,6 +66,11 @@ Stage 4-BC addresses the Figure 3 compactness and internal-label presentation
 blocker by regenerating the Pareto frontier plot with display names, reduced
 whitespace, no raw underscore labels, and no redundant in-plot title.
 
+Stage 4-BD addresses the Figure 6 overcrowding and internal-label presentation
+blocker by replacing the active five-panel trace block with one simplified
+paper-facing composite trace figure. Final visual PDF inspection remains
+required, especially because the simplified layout now compiles to 7 pages.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -99,8 +104,9 @@ whitespace, no raw underscore labels, and no redundant in-plot title.
 - Final figure / caption polish for Table 1 and Figures 1-6: addressed by
   Stage 4-AW.
 - Check final Figure 6 visual readability in the compiled PDF during final
-  visual inspection: Stage 4-AZ found Figure 6 overcrowded and recommended a
-  simplified paper-facing replot plan.
+  visual inspection: Stage 4-BD simplified the main-paper trace figure, removed
+  visible raw method labels from the SVG, and retained full trace details as a
+  supplementary / archived trace-asset candidate.
 - Final claim audit: addressed by Stage 4-AX:
   - no statistical significance claim;
   - no formal safety guarantee;
@@ -122,7 +128,8 @@ whitespace, no raw underscore labels, and no redundant in-plot title.
   - Figure 1 / Figure 2 placeholder swap and redraw plan: placeholders are now
     active after Stage 4-BB, but final external redraw remains required;
   - Figure 3 compactness polish: addressed by Stage 4-BC;
-  - Figure 6 simplified paper-facing replot plan.
+  - Figure 6 simplified paper-facing replot: addressed by Stage 4-BD, with
+    final visual PDF inspection still pending.
 
 ## Remaining Should-Fix If Time Allows
 
@@ -202,16 +209,19 @@ Recommended submission-readiness path:
 6. Stage 4-AY final compile / submission package check.
 7. Stage 4-AZ human visual PDF inspection finding record.
 8. Stage 4-BA through Stage 4-BD presentation-polish follow-ups.
+9. Stage 4-BE external Figure 1 / Figure 2 schematic replacement or final
+   visual PDF inspection after BD.
 
 Suggested order:
 
 ```text
-AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ -> BA -> BB -> BC -> BD
+AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ -> BA -> BB -> BC -> BD -> BE / final visual check
 ```
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
 After Stage 4-AZ, continue with Stage 4-BA display-name cleanup, Stage 4-BB
 schematic placeholder / redraw preparation, Stage 4-BC Figure 3 compact polish,
-and Stage 4-BD Figure 6 simplified replot planning before final submission
-package assembly.
+and Stage 4-BD Figure 6 simplified replot before final submission package
+assembly. After BD, continue with Stage 4-BE external Figure 1 / Figure 2
+schematic replacement or final visual PDF inspection.

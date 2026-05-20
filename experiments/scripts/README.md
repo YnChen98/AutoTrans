@@ -1565,6 +1565,34 @@ frontier membership. Next recommended work is Stage 4-BD Figure 6 simplified
 paper-facing replot. Do not create `risk_adapter_v22` before Paper 1 RA-L
 submission.
 
+## Stage 4-BD Figure 6 simplified paper-facing replot
+
+`experiments/scripts/generate_stage4_paper_ready_trace_summary.py` regenerates
+the paper-facing Figure 6 representative trace summary for the RA-L Paper 1
+scaffold. The result is recorded in
+`experiments/protocols/stage4bd_figure6_simplified_replot_result.md`.
+
+Example:
+
+```bash
+python3 -m py_compile experiments/scripts/generate_stage4_paper_ready_trace_summary.py
+python3 experiments/scripts/generate_stage4_paper_ready_trace_summary.py
+```
+
+The script uses matplotlib only, reads the Stage 4-AA2 representative trace
+index, reads existing CSV logs through the `csv_path` field, does not run ROS
+or simulation, and does not write `experiments/results/`. It writes:
+
+- `paper/stage4_governor_ral/figures/fig6_trace_summary.png`
+- `paper/stage4_governor_ral/figures/fig6_trace_summary.svg`
+
+Stage 4-BD replaces the active five-panel Figure 6 block with a 4-column
+summary that keeps only speed, swing, position-error, and command-scale
+signals for readability. It uses display names and no visible raw underscore
+method labels. Next recommended work is Stage 4-BE external Figure 1 / Figure
+2 schematic replacement or final visual PDF inspection after BD. Do not create
+`risk_adapter_v22` before Paper 1 RA-L submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the

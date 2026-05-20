@@ -140,6 +140,15 @@ Recommended next action:
   representative traces are qualitative mechanism evidence only, not
   population-level causal evidence.
 
+Stage 4-BD follow-up:
+
+- Stage 4-BD replaces the active five-panel Figure 6 block with one simplified
+  paper-facing composite trace figure.
+- The regenerated figure uses display names, key speed / swing / position-error
+  / governor-scale signals, and no raw underscore method labels in visible SVG
+  text.
+- Full trace detail remains a supplementary / archived trace-asset candidate.
+
 ## Why These Are Presentation Blockers
 
 These findings are presentation blockers rather than scientific-result
@@ -164,6 +173,8 @@ Recommended order:
 2. Stage 4-BB: Figure 1 / Figure 2 placeholder swap and redraw plan.
 3. Stage 4-BC: Figure 3 compactness polish.
 4. Stage 4-BD: Figure 6 paper-facing replot plan.
+5. Stage 4-BE: external Figure 1 / Figure 2 schematic replacement or final
+   visual PDF inspection after BD.
 
 These stages should remain presentation-focused. They should not introduce new
 experiments, new methods, new claims, new citations, or `risk_adapter_v22`.
