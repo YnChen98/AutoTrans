@@ -129,6 +129,16 @@ resolved them by the final pass.
 - Optional manual external artist polish if the team wants a more bespoke
   schematic style before submission.
 
+## Stage 4-BF Follow-Up
+
+Stage 4-BF polished the Figure 1 / Figure 2 TikZ layouts after manual PDF
+inspection found remaining overlap / spacing issues. The active schematics
+remain TikZ vector figures, but arrows and event labels were repositioned for
+cleaner paper-facing rendering. BF also recompiled the scaffold successfully to
+7 pages with no LaTeX errors, undefined citations / references, overfull
+hboxes, missing figures, bibliography warnings, or float warnings in the final
+log.
+
 ## Scope
 
 - No simulation was run.

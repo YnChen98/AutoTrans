@@ -1549,6 +1549,28 @@ Stage 4-BE Figure 1 / Figure 2 vector schematic replacement:
   fixes.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BF presentation blocker fix pass:
+
+- The result document is
+  `experiments/protocols/stage4bf_presentation_blocker_fix_result.md`.
+- Current stage: Stage 4-BF presentation blocker fix pass.
+- Stage 4-BF fixes the remaining paper-facing presentation blockers found
+  after Stage 4-BE:
+  - manuscript-visible interface / protocol tokens render as paper-facing
+    names in the active PDF;
+  - Figure 1 and Figure 2 TikZ schematics are respaced to reduce overlap /
+    collision issues;
+  - Figure 6 is regenerated without unavailable-signal placeholder text.
+- `experiments/scripts/generate_stage4_paper_ready_trace_summary.py` now uses
+  UAV XY displacement as the common main-paper position signal for Figure 6 and
+  fails clearly if required UAV XY columns are missing.
+- Stage 4-BF compile check succeeded with `latexmk_exit=0`; the scaffold
+  compiled to 7 pages with no LaTeX errors, undefined citations / references,
+  overfull hboxes, missing figures, bibliography warnings, or float warnings in
+  the final log. Residual Underfull hbox messages are non-blocking.
+- Next recommended stage: Stage 4-BG final visual PDF re-inspection.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

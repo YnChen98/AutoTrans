@@ -94,6 +94,11 @@ file.
 - Stage 4-BE replaced the active Figure 1 / Figure 2 placeholder boxes with
   TikZ vector schematics. The old generated schematic PNG/SVG assets remain
   unchanged and inactive.
+- Stage 4-BF fixed remaining presentation blockers after BE: manuscript-visible
+  interface / protocol tokens render as paper-facing names, Figure 1 / Figure 2
+  TikZ spacing was polished, and Figure 6 was regenerated without unavailable
+  position-error placeholder text. The scaffold compiled to 7 pages during the
+  BF check.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -143,8 +148,9 @@ file.
 - Use Stage 4-BD as the current Figure 6 simplified replot baseline.
 - Use Stage 4-BE as the current Figure 1 / Figure 2 vector schematic
   replacement baseline.
+- Use Stage 4-BF as the current presentation blocker fix baseline.
 - Next presentation-polish sequence:
-  - Stage 4-BF final visual PDF inspection after figure fixes;
+  - Stage 4-BG final visual PDF re-inspection;
   - optional external artist polish if desired.
 - Perform final submission package assembly only after the AZ blockers are
   resolved or explicitly accepted.

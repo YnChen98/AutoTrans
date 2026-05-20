@@ -1609,6 +1609,27 @@ script. They do not regenerate the old Figure 1 / Figure 2 PNG/SVG assets.
 Next recommended work is Stage 4-BF final visual PDF inspection after figure
 fixes. Do not create `risk_adapter_v22` before Paper 1 RA-L submission.
 
+## Stage 4-BF presentation blocker fix pass
+
+Stage 4-BF fixes the remaining paper-facing presentation blockers found after
+Stage 4-BE. The result is recorded in
+`experiments/protocols/stage4bf_presentation_blocker_fix_result.md`.
+
+The pass updates manuscript-visible interface / protocol wording, polishes the
+Figure 1 / Figure 2 TikZ schematic spacing, and regenerates Figure 6 so the
+main-paper trace summary no longer contains unavailable-signal placeholder
+text.
+
+Figure 6 can be regenerated with:
+
+```bash
+python3 experiments/scripts/generate_stage4_paper_ready_trace_summary.py
+```
+
+Stage 4-BF recompiled the RA-L scaffold successfully to 7 pages. Next
+recommended work is Stage 4-BG final visual PDF re-inspection. Do not create
+`risk_adapter_v22` before Paper 1 RA-L submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the

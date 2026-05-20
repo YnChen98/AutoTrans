@@ -20,7 +20,7 @@ components are kept unchanged.
 \subsection{Execution-Governor Interface}
 
 The execution governor publishes two scalar adaptation signals:
-\texttt{speed\_scale} and \texttt{acceleration\_scale}. These signals are
+speed scale and acceleration scale. These signals are
 consumed by the command-adaptation interface and modify the aggressiveness of
 the executed motion command. A scale near 1.0 preserves the nominal command
 more closely, whereas smaller scales reduce the commanded speed or acceleration
@@ -40,8 +40,8 @@ certified reference governor.
   \resizebox{\linewidth}{!}{\input{figures/fig1_architecture_tikz}}
   \caption{Stack-compatible risk-conditioned execution governance. The
   planner, payload MPC, and SO3 controller remain unchanged, while an external
-  governor adapts execution aggressiveness through \texttt{speed\_scale} and
-  \texttt{acceleration\_scale}. The governor is empirical and is not a
+  governor adapts execution aggressiveness through speed scale and
+  acceleration scale. The governor is empirical and is not a
   certified safety filter.}
   \label{fig:architecture}
 \end{figure}
@@ -57,15 +57,15 @@ long-horizon risk captures a broader upcoming window where conservative
 execution may be useful.
 
 In the current implementation, these scores are exposed as
-\texttt{risk\_score\_3s} and \texttt{risk\_score\_5s}. The adapter subscribes
+3 s and 5 s risk scores. The adapter subscribes
 to odometry, payload odometry, wind annotation, goal, and trajectory-context
 streams, builds early episode features, and evaluates exported JSON
 \texttt{LogisticRegression} models trained with
-\texttt{label\_strict\_invalid} as the positive class. The audited local JSON
+the strict-invalid label as the positive class. The audited local JSON
 metadata records a 90-row training dataset with 51 strict-valid and 39
 strict-invalid rows. The 3 s model uses 16 wind, target, and
-\texttt{early\_3s} features, while the 5 s model uses 27 features spanning the
-same base fields plus \texttt{early\_3s} and \texttt{early\_5s} dynamics; the
+3 s early-window features, while the 5 s model uses 27 features spanning the
+same base fields plus 3 s and 5 s early-window dynamics; the
 full feature schema is kept for supplementary material. Unavailable scores are
 published as \texttt{-1} and do not trigger risk reductions. These values are
 used as empirical strict-invalid warning scores, not as calibrated physical
@@ -87,13 +87,13 @@ The current paper protagonist is Risk Adapter v1, the balanced learned /
 risk-conditioned execution governor. Its policy settings are:
 
 \begin{itemize}
-  \item \texttt{risk\_threshold\_3s=0.5}
-  \item \texttt{risk\_threshold\_5s=0.5}
-  \item \texttt{hard\_threshold\_5s=0.7}
-  \item \texttt{soft\_scale\_3s=0.75}
-  \item \texttt{soft\_scale\_5s=0.65}
-  \item \texttt{hard\_scale\_5s=0.60}
-  \item \texttt{scale\_rate\_limit\_per\_sec=0.5}
+  \item 3 s risk threshold: 0.5
+  \item 5 s risk threshold: 0.5
+  \item 5 s hard threshold: 0.7
+  \item 3 s soft scale: 0.75
+  \item 5 s soft scale: 0.65
+  \item 5 s hard scale: 0.60
+  \item scale rate limit: 0.5 per second
 \end{itemize}
 
 Risk Adapter v1 is selected as the tentative balanced protagonist because it

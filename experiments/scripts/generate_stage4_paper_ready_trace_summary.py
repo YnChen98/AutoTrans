@@ -263,6 +263,28 @@ def xy_error_series(
     return values if any_finite else None
 
 
+def xy_displacement_series(
+    rows: list[dict[str, str]], point_columns: tuple[str, str]
+) -> list[float] | None:
+    if not rows or not all(column in rows[0] for column in point_columns):
+        return None
+
+    origin: tuple[float, float] | None = None
+    values: list[float] = []
+    any_finite = False
+    for row in rows:
+        px = parse_float(row.get(point_columns[0]))
+        py = parse_float(row.get(point_columns[1]))
+        if not all(math.isfinite(value) for value in (px, py)):
+            values.append(math.nan)
+            continue
+        if origin is None:
+            origin = (px, py)
+        values.append(math.hypot(px - origin[0], py - origin[1]))
+        any_finite = True
+    return values if any_finite else None
+
+
 def finite_pairs(time_s: list[float], values: list[float], x_end_s: float) -> tuple[list[float], list[float]]:
     x_values: list[float] = []
     y_values: list[float] = []
@@ -346,29 +368,15 @@ def plot_swing(ax: plt.Axes, case: TraceCase) -> list[float]:
     return y_values
 
 
-def plot_error(ax: plt.Axes, case: TraceCase) -> list[float]:
-    target_error = xy_error_series(
-        case.rows, ("uav_pos_x", "uav_pos_y"), ("goal_pos_x", "goal_pos_y")
-    )
-    reference_error = xy_error_series(
-        case.rows, ("uav_pos_x", "uav_pos_y"), ("ref_pos_x", "ref_pos_y")
-    )
-    error = target_error if target_error is not None else reference_error
-    if error is None:
-        ax.text(
-            0.5,
-            0.5,
-            "position error\nnot logged",
-            ha="center",
-            va="center",
-            fontsize=5.8,
-            color="#555b61",
-            transform=ax.transAxes,
+def plot_xy_travel(ax: plt.Axes, case: TraceCase) -> list[float]:
+    travel = xy_displacement_series(case.rows, ("uav_pos_x", "uav_pos_y"))
+    if travel is None:
+        raise RuntimeError(
+            "selected trace lacks finite UAV XY position columns needed for "
+            f"{case.spec.protocol}/{case.spec.method}/{case.spec.trial}/"
+            f"repeat{case.spec.repeat}"
         )
-        ax.set_ylim(0.0, 1.0)
-        ax.set_yticks([])
-        return []
-    x_values, y_values = finite_pairs(case.time_s, error, signal_x_end(case))
+    x_values, y_values = finite_pairs(case.time_s, travel, signal_x_end(case))
     ax.plot(x_values, y_values, color="#b36b2c", linewidth=0.95)
     set_panel_limits(ax, y_values)
     return y_values
@@ -417,7 +425,7 @@ def configure_matplotlib() -> None:
 def draw_summary(cases: list[TraceCase], output_dir: Path) -> tuple[Path, Path]:
     configure_matplotlib()
     fig, axes = plt.subplots(4, 4, figsize=(7.25, 4.95), sharex="col")
-    row_labels = ("Speed (m/s)", "Swing (deg)", "Position error (m)", "Scale")
+    row_labels = ("Speed (m/s)", "Swing (deg)", "UAV XY disp. (m)", "Scale")
 
     for column_index, case in enumerate(cases):
         axes[0, column_index].set_title(
@@ -428,7 +436,7 @@ def draw_summary(cases: list[TraceCase], output_dir: Path) -> tuple[Path, Path]:
         )
         plot_speed(axes[0, column_index], case)
         plot_swing(axes[1, column_index], case)
-        plot_error(axes[2, column_index], case)
+        plot_xy_travel(axes[2, column_index], case)
         plot_scale(axes[3, column_index], case)
         for row_index in range(4):
             style_axis(axes[row_index, column_index], case, row_index)

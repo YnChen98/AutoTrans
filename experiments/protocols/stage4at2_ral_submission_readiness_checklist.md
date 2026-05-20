@@ -75,6 +75,12 @@ Stage 4-BE addresses the Figure 1 / Figure 2 placeholder blocker by replacing
 the active placeholder boxes with TikZ vector schematics. Final visual PDF
 inspection remains required after the figure fixes.
 
+Stage 4-BF fixes the remaining presentation blockers after BE: active
+paper-facing text now renders display names for the remaining interface /
+protocol tokens, Figure 1 / Figure 2 TikZ spacing was polished, and Figure 6
+was regenerated without the `position error not logged` placeholder. Final
+human visual re-inspection remains required as Stage 4-BG.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -134,8 +140,9 @@ inspection remains required after the figure fixes.
   - Figure 1 / Figure 2 placeholder swap and redraw plan: addressed by Stage
     4-BE with active TikZ vector schematics;
   - Figure 3 compactness polish: addressed by Stage 4-BC;
-  - Figure 6 simplified paper-facing replot: addressed by Stage 4-BD, with
-    final visual PDF inspection still pending.
+  - Figure 6 simplified paper-facing replot: addressed by Stage 4-BD;
+  - remaining BE presentation blockers: addressed by Stage 4-BF, with final
+    Stage 4-BG human visual re-inspection still pending.
 
 ## Remaining Should-Fix If Time Allows
 
@@ -216,12 +223,13 @@ Recommended submission-readiness path:
 7. Stage 4-AZ human visual PDF inspection finding record.
 8. Stage 4-BA through Stage 4-BD presentation-polish follow-ups.
 9. Stage 4-BE Figure 1 / Figure 2 vector schematic replacement.
-10. Stage 4-BF final visual PDF inspection after figure fixes.
+10. Stage 4-BF presentation blocker fix pass.
+11. Stage 4-BG final visual PDF re-inspection.
 
 Suggested order:
 
 ```text
-AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ -> BA -> BB -> BC -> BD -> BE -> BF
+AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ -> BA -> BB -> BC -> BD -> BE -> BF -> BG
 ```
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
@@ -231,4 +239,5 @@ schematic placeholder / redraw preparation, Stage 4-BC Figure 3 compact polish,
 and Stage 4-BD Figure 6 simplified replot before final submission package
 assembly. After BD, continue with Stage 4-BE external Figure 1 / Figure 2
 schematic replacement. After BE, continue with Stage 4-BF final visual PDF
-inspection.
+presentation blocker fix pass. After BF, continue with Stage 4-BG final visual
+PDF re-inspection.

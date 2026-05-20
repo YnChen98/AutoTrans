@@ -58,6 +58,12 @@ supplementary material or archived trace assets if the final submission package
 uses them. Keep these materials tied to the qualitative / diagnostic claim
 boundary.
 
+Stage 4-BF regenerates the active Figure 6 summary without unavailable
+position-error placeholder text by using UAV XY displacement as the common
+main-paper position signal. Full target-error, reference-error, risk-score, and
+other trace details should remain supplementary / archived trace material if
+used.
+
 Claim boundaries remain the same as the main paper: no statistical
 significance claim, no safety guarantee, no learned uniform domination, no
 mixed-protocol aggregate as the main result, diagnostic-only failure groups,

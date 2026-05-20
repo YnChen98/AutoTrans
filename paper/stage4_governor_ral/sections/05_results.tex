@@ -7,8 +7,8 @@ goal-reissue stress. This protocol split is important because the same method
 can behave differently when the system receives one goal command versus
 repeated post-arrival or reference-update stimuli. We therefore report
 strict-valid counts separately for the single-goal mission protocol
-(\texttt{goal\_repeat=1}) and the goal-reissue stress protocol
-(\texttt{goal\_repeat=10}), rather than collapsing the two settings into a
+(Goal Repeat = 1) and the goal-reissue stress protocol
+(Goal Repeat = 10), rather than collapsing the two settings into a
 single combined aggregate.
 
 In the single-goal mission protocol, the strongest method in the evaluated set
@@ -95,14 +95,14 @@ traces point to early pre-arrival vulnerability and risk availability or timing
 issues, not merely a goal-reissue artifact. Trial 6 under the single-goal
 protocol shows a different pattern: lower command scale is not automatically
 safer, and delayed post-arrival divergence can still occur under
-\texttt{goal\_repeat=1}.
+Goal Repeat = 1.
 
 \begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{figures/fig6_trace_summary.png}
   \caption{Representative trace summary for selected failure and success
   cases. Columns compare Trial 4 goal-reissue stress and Trial 6 single-goal
-  bottleneck behavior. The figure keeps only key speed, swing, error, and
+  bottleneck behavior. The figure keeps only key speed, swing, UAV XY displacement, and
   governor-scale signals for readability. Full trace details are available in
   supplementary / archived trace assets. The traces are qualitative mechanism
   evidence, not proof of general causality.}

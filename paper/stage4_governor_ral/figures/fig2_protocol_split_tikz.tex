@@ -5,8 +5,8 @@
     draw=black!62,
     fill=black!2,
     rounded corners=2pt,
-    minimum width=3.75cm,
-    minimum height=2.05cm,
+    minimum width=3.55cm,
+    minimum height=2.65cm,
     inner sep=4pt
   },
   axis/.style={-Latex, line width=0.55pt, draw=black!82},
@@ -18,33 +18,34 @@
 ]
 
 \node[panel] (singlepanel) at (0,0) {};
-\node[panel] (stresspanel) at (4.38,0) {};
+\node[panel] (stresspanel) at (4.05,0) {};
 
-\node[font=\sffamily\scriptsize\bfseries] at (0,0.78) {Single-goal mission};
-\node[txt] at (0,0.51) {goal repeat = 1};
-\draw[axis] (-1.50,-0.43) -- (1.55,-0.43) node[right, font=\sffamily\tiny] {time};
-\draw[publish] (-1.12,0.17) -- (-1.12,-0.34);
-\node[txt] at (-1.12,0.34) {one goal\\publish};
-\draw[span] (-0.95,-0.18) -- (0.78,-0.18);
-\node[txt] at (-0.08,0.04) {transport\\interval};
-\draw[event] (0.94,0.13) -- (0.94,-0.43);
-\node[txt] at (1.02,0.34) {arrival /\\hold};
-\node[txt] at (0,-0.81) {tests nominal single-goal execution};
+\node[font=\sffamily\scriptsize\bfseries] at (0,1.03) {Single-goal mission};
+\node[txt] at (0,0.70) {Goal Repeat = 1};
+\draw[axis] (-1.38,-0.22) -- (1.42,-0.22) node[right, font=\sffamily\tiny] {time};
+\draw[publish] (-0.92,0.19) -- (-0.92,-0.14);
+\node[txt] at (-0.92,0.45) {goal\\publish};
+\draw[span] (-0.70,-0.02) -- (0.70,-0.02);
+\node[txt] at (0.00,0.20) {transport interval};
+\draw[event] (0.92,0.19) -- (0.92,-0.22);
+\node[txt] at (0.94,0.45) {arrival / hold};
+\node[txt] at (0,-0.98) {nominal single-goal execution};
 
-\node[font=\sffamily\scriptsize\bfseries] at (4.38,0.78) {Goal-reissue stress};
-\node[txt] at (4.38,0.51) {goal repeat = 10};
-\draw[axis] (2.88,-0.43) -- (5.93,-0.43) node[right, font=\sffamily\tiny] {time};
-\foreach \x in {3.22,3.55,3.88,4.21,4.54} {
-  \draw[publish] (\x,0.17) -- (\x,-0.34);
+\node[font=\sffamily\scriptsize\bfseries] at (4.05,1.03) {Goal-reissue stress};
+\node[txt] at (4.05,0.70) {Goal Repeat = 10};
+\draw[axis] (2.67,-0.22) -- (5.47,-0.22) node[right, font=\sffamily\tiny] {time};
+\foreach \x in {2.98,3.24,3.50,3.76,4.02} {
+  \draw[publish] (\x,0.17) -- (\x,-0.14);
 }
-\node[txt] at (3.86,0.27) {repeated same-goal\\publishes};
-\draw[span] (3.11,-0.18) -- (4.78,-0.18);
-\node[txt] at (3.92,0.04) {transport\\interval};
-\draw[event] (4.90,0.13) -- (4.90,-0.43);
-\draw[update] (5.18,0.14) -- (4.94,-0.19);
-\draw[update] (5.45,0.14) -- (4.97,-0.22);
-\node[txt] at (5.33,0.34) {arrival / reissue\\interaction};
-\node[txt] at (4.38,-0.81) {tests repeated-goal / reference-update stress};
+\node[txt] at (3.50,0.45) {goal republishes};
+\draw[span] (2.90,-0.02) -- (4.30,-0.02);
+\node[txt] at (3.62,0.20) {transport interval};
+\draw[event] (4.50,0.19) -- (4.50,-0.22);
+\node[txt] at (4.57,0.46) {arrival /\\reissue};
+\draw[update] (4.92,0.19) -- (4.55,-0.06);
+\draw[update] (5.18,0.19) -- (4.57,-0.09);
+\node[txt] at (5.12,0.45) {updates};
+\node[txt] at (4.05,-0.98) {repeated-goal / reference-update stress};
 
 \node[
   draw=black!55,
@@ -53,6 +54,6 @@
   align=center,
   font=\sffamily\tiny,
   inner sep=2pt
-] at (2.19,-1.31) {report protocols separately};
+] at (2.02,-1.58) {report protocols separately};
 
 \end{tikzpicture}

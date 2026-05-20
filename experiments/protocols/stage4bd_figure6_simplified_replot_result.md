@@ -162,6 +162,15 @@ resolved them by the final pass.
 - Final visual PDF inspection remains required after BD because the PDF page
   count changed from 8 pages to 7 pages under the simplified Figure 6 layout.
 
+## Stage 4-BF Follow-Up
+
+Stage 4-BF fixed the remaining Figure 6 presentation blocker by replacing the
+unavailable position-error row with UAV XY displacement from the trace start.
+The regenerated PNG/SVG no longer contains any visible `position error not
+logged` placeholder text, and the SVG raw-token check reported no matches for
+the internal method / protocol tokens. The caption now describes the retained
+signals as speed, swing, UAV XY displacement, and governor-scale signals.
+
 ## Scope
 
 - No simulation was run.
