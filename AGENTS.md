@@ -1476,6 +1476,24 @@ Stage 4-BB Figure 1/2 placeholders and redraw workflow:
   - later Stage 4-BE external schematic replacement.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BC Figure 3 compact polish:
+
+- The result document is
+  `experiments/protocols/stage4bc_figure3_compact_polish_result.md`.
+- The generator is
+  `experiments/scripts/generate_stage4_paper_ready_pareto.py`.
+- Current stage: Stage 4-BC Figure 3 compact polish.
+- Stage 4-BC regenerates `paper/stage4_governor_ral/figures/fig3_pareto.png`
+  and adds `paper/stage4_governor_ral/figures/fig3_pareto.svg`.
+- The regenerated Figure 3 uses display names, compact axis limits, direct
+  labels, no raw underscore method tokens, no redundant in-plot title, and
+  marker-style distinctions for frontier versus non-frontier methods.
+- The data values and frontier membership remain unchanged:
+  Wind-Level 0.85, Fixed Scale 0.80, and Risk Adapter v1 form the observed
+  frontier in the evaluated two-protocol plane.
+- Next recommended stage: Stage 4-BD Figure 6 simplified paper-facing replot.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

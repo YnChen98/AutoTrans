@@ -62,6 +62,10 @@ with clean LaTeX placeholders and records the external redraw workflow. The
 redraw remains an active submission blocker until final paper-quality
 schematics replace the placeholders.
 
+Stage 4-BC addresses the Figure 3 compactness and internal-label presentation
+blocker by regenerating the Pareto frontier plot with display names, reduced
+whitespace, no raw underscore labels, and no redundant in-plot title.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -117,7 +121,7 @@ schematics replace the placeholders.
   - manuscript-visible display-name cleanup: addressed by Stage 4-BA;
   - Figure 1 / Figure 2 placeholder swap and redraw plan: placeholders are now
     active after Stage 4-BB, but final external redraw remains required;
-  - Figure 3 compactness polish;
+  - Figure 3 compactness polish: addressed by Stage 4-BC;
   - Figure 6 simplified paper-facing replot plan.
 
 ## Remaining Should-Fix If Time Allows

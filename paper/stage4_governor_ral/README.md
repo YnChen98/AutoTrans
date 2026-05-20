@@ -84,6 +84,9 @@ file.
   images with LaTeX placeholder boxes and documented the external redraw
   workflow. Final paper-quality schematics are still required before
   submission.
+- Stage 4-BC regenerated Figure 3 as a compact paper-facing Pareto frontier
+  plot with display names, reduced whitespace, no raw underscore labels, and no
+  redundant in-plot title. Figure 3 now has both PNG and SVG assets.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -129,8 +132,8 @@ file.
   baseline.
 - Use Stage 4-BB as the current Figure 1 / Figure 2 placeholder and redraw
   workflow baseline.
+- Use Stage 4-BC as the current Figure 3 compact polish baseline.
 - Next presentation-polish sequence:
-  - Stage 4-BC Figure 3 compact polish;
   - Stage 4-BD Figure 6 simplified replot planning;
   - later Stage 4-BE external schematic replacement.
 - Perform final submission package assembly only after the AZ blockers are

@@ -111,6 +111,13 @@ Recommended next action:
   them.
 - Keep the same data points, protocol axes, and Pareto / frontier meaning.
 
+Stage 4-BC follow-up:
+
+- Stage 4-BC regenerated Figure 3 as a compact paper-facing Pareto plot with
+  display names, reduced whitespace, no raw underscore labels, and no in-plot
+  title.
+- The plotted counts and frontier membership are unchanged.
+
 ## Issue 4: Figure 6 Overcrowded
 
 Figure 6 is too visually crowded for the main paper in its current style.

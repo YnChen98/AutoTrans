@@ -1539,6 +1539,32 @@ is Stage 4-BC Figure 3 compact polish, Stage 4-BD Figure 6 simplified replot,
 and later Stage 4-BE external schematic replacement. Do not create
 `risk_adapter_v22` before Paper 1 RA-L submission.
 
+## Stage 4-BC Figure 3 compact polish
+
+`experiments/scripts/generate_stage4_paper_ready_pareto.py` regenerates the
+paper-facing Figure 3 Pareto frontier assets for the RA-L Paper 1 scaffold.
+The result is recorded in
+`experiments/protocols/stage4bc_figure3_compact_polish_result.md`.
+
+Example:
+
+```bash
+python3 -m py_compile experiments/scripts/generate_stage4_paper_ready_pareto.py
+python3 experiments/scripts/generate_stage4_paper_ready_pareto.py
+```
+
+The script uses matplotlib only, hard-codes the final Table 1 counts, does not
+read or write `experiments/results/`, and writes:
+
+- `paper/stage4_governor_ral/figures/fig3_pareto.png`
+- `paper/stage4_governor_ral/figures/fig3_pareto.svg`
+
+Stage 4-BC removes the old Figure 3 in-plot title, replaces raw method labels
+with display names, reduces whitespace, and keeps the same data values and
+frontier membership. Next recommended work is Stage 4-BD Figure 6 simplified
+paper-facing replot. Do not create `risk_adapter_v22` before Paper 1 RA-L
+submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the
