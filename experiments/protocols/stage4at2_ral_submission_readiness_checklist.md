@@ -27,6 +27,11 @@ Stage 4-AV2 is the RA-L scaffold compile check for
 `paper/stage4_governor_ral/`. It records whether the new scaffold compiles,
 the generated PDF page count, and remaining warnings / submission TODOs.
 
+Stage 4-AM5 addresses the conditional citation decision / BibTeX cleanup item
+for the active RA-L scaffold by confirming that active citations and active
+`refs.bib` entries match and that unresolved conditional citation keys remain
+excluded from active Paper 1 citations / BibTeX entries.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -51,8 +56,11 @@ the generated PDF page count, and remaining warnings / submission TODOs.
 - Perform visual PDF inspection.
 - Fill final author names and affiliations.
 - Perform final title check.
-- Complete final citation verification and BibTeX cleanup.
-- Decide each conditional citation: verify and include it, or remove it.
+- Complete final citation style polish if venue-specific formatting requires
+  it.
+- Conditional citation decision / BibTeX cleanup: addressed by Stage 4-AM5 for
+  the active RA-L scaffold; unresolved conditional keys remain excluded unless
+  later verified.
 - Check final Figure 6 visual readability in the compiled PDF.
 - Polish final captions for Table 1 and Figures 1-6.
 - Run a final claim audit:
@@ -139,7 +147,7 @@ submitted or published.
 
 ## Recommended Next Stage
 
-Recommended next stages:
+Recommended submission-readiness path:
 
 1. Stage 4-AV RA-L template conversion scaffold.
 2. Stage 4-AV2 RA-L scaffold compile/check pass.
@@ -156,5 +164,6 @@ AV -> AV2 -> AM5 -> AW -> AX -> final compile
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
-After Stage 4-AV2, choose among Stage 4-AM5, Stage 4-AW, and Stage 4-AX based
-on citation, figure/caption, and claim-audit priorities.
+After Stage 4-AM5, choose among Stage 4-AW final figure / caption polish,
+Stage 4-AX final claim audit, and final compile based on submission-readiness
+priorities.

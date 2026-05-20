@@ -19,6 +19,11 @@ Only entries that Stage 4-AM3 marked ready-to-use are converted into draft
 BibTeX blocks. Conditional entries remain TODO items and require metadata
 verification before final BibTeX is written.
 
+Stage 4-AM5 now checks active RA-L scaffold citation usage against
+`paper/stage4_governor_ral/refs.bib`. AM5 confirms that the active Paper 1
+scaffold uses only these ready-to-use keys and leaves unresolved conditional
+entries out of the active bibliography.
+
 The paper framing remains risk-conditioned execution governance for
 suspended-payload UAV transport under strong wind, protocol-split robustness
 evaluation, balanced robustness / protocol regret analysis, and

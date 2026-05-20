@@ -1187,9 +1187,9 @@ Stage 4-AS submission strategy plan:
 - Stage 4-AT2 RA-L submission readiness checklist is complete.
 - Stage 4-AV RA-L template conversion scaffold is complete.
 - Stage 4-AV2 RA-L scaffold compile/check pass is complete.
-- Current next recommended stage: Stage 4-AM5 conditional citation
-  verification, Stage 4-AW final figure / caption polish, or Stage 4-AX final
-  claim audit depending on AV2 result and submission-readiness priority.
+- Stage 4-AM5 conditional citation cleanup is complete.
+- Current next recommended stages: Stage 4-AW final figure / caption polish,
+  Stage 4-AX final claim audit, and final compile.
 
 Stage 4-AT RA-L conversion / submission readiness audit:
 
@@ -1230,9 +1230,10 @@ Stage 4-AT RA-L conversion / submission readiness audit:
 - Stage 4-AV now creates the separate RA-L-oriented scaffold under
   `paper/stage4_governor_ral/`.
 - Stage 4-AV2 now records the RA-L scaffold compile/check pass.
-- Current next recommended stage: Stage 4-AM5 conditional citation
-  verification, Stage 4-AW final figure / caption polish, or Stage 4-AX final
-  claim audit depending on AV2 result and submission-readiness priority.
+- Stage 4-AM5 now records the conditional citation cleanup for the active
+  RA-L scaffold.
+- Current next recommended stages: Stage 4-AW final figure / caption polish,
+  Stage 4-AX final claim audit, and final compile.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission unless
   explicitly overridden.
 
@@ -1260,9 +1261,10 @@ Stage 4-AT2 RA-L submission readiness checklist:
 - Stage 4-AV now creates the separate RA-L-oriented scaffold under
   `paper/stage4_governor_ral/`.
 - Stage 4-AV2 now records the RA-L scaffold compile/check pass.
-- Next recommended stage: Stage 4-AM5 conditional citation verification,
-  Stage 4-AW final figure / caption polish, or Stage 4-AX final claim audit
-  depending on AV2 result and submission-readiness priority.
+- Stage 4-AM5 now records the conditional citation cleanup for the active
+  RA-L scaffold.
+- Next recommended stages: Stage 4-AW final figure / caption polish, Stage
+  4-AX final claim audit, and final compile.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
 Stage 4-AV RA-L template conversion scaffold:
@@ -1311,9 +1313,35 @@ Stage 4-AV2 RA-L scaffold compile/check pass:
   training scripts, or figure generation scripts.
 - Stage 4-AV2 does not change scientific claims, numerical results, method
   rankings, citations, figures, or tables.
-- Next recommended stage: Stage 4-AM5 conditional citation verification,
-  Stage 4-AW final figure / caption polish, or Stage 4-AX final claim audit
-  depending on submission-readiness priority.
+- Stage 4-AM5 now records the conditional citation cleanup for the active
+  RA-L scaffold.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
+Stage 4-AM5 conditional citation cleanup:
+
+- The result document is
+  `experiments/protocols/stage4am5_conditional_citation_cleanup_result.md`.
+- Current stage: Stage 4-AM5 conditional citation cleanup.
+- Stage 4-AM5 checks active RA-L scaffold citation usage under
+  `paper/stage4_governor_ral/` against
+  `paper/stage4_governor_ral/refs.bib`.
+- Active cited keys: 20.
+- Active BibTeX entries: 20.
+- Missing active BibTeX keys: none.
+- Unused active BibTeX keys: none.
+- Conditional citation keys remain excluded from active Paper 1 citations and
+  active BibTeX entries unless later verified:
+  `Barikbin2019WindPayloadTracking`,
+  `Wabersich2021PredictiveSafetyFilter`,
+  `Jin2025NeuralPredictorPayload`,
+  `Monteleone2023BalanceResilienceBenchmark`, and `Dogga2023AutoARTS`.
+- The conditional keys appear only as comments / TODOs in the RA-L scaffold.
+- No fabricated citations were added, and no web metadata was used.
+- No LaTeX compile, simulation, RViz, `roslaunch`, `catkin_make`, training
+  scripts, figure generation scripts, or new experimental runs were performed
+  in AM5.
+- Next recommended stages: Stage 4-AW final figure / caption polish, Stage
+  4-AX final claim audit, and final compile.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
 Stage 4-AU risk score and strict-valid metric documentation:

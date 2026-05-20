@@ -16,6 +16,9 @@ Stage 4-AM4 now creates draft BibTeX blocks for ready-to-use AM2 / AM3
 entries while leaving conditional entries as TODOs:
 `experiments/protocols/stage4am4_bibtex_draft.md`.
 
+Stage 4-AM5 now checks the active RA-L scaffold and excludes unresolved
+conditional citations from active Paper 1 citations and active BibTeX entries.
+
 This stage does not generate BibTeX entries, does not fabricate references,
 and does not insert final citations into the manuscript body. It is a section-
 level guide for later citation insertion and claim audit.

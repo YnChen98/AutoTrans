@@ -61,6 +61,10 @@ file.
 - Stage 4-AV2 compile/check succeeded with `latexmk_exit=0`; the generated
   `main.pdf` was 8 pages during the check. Generated PDF / aux / log files
   should remain out of git.
+- Stage 4-AM5 checked active RA-L scaffold citation usage. Active citations
+  and active `refs.bib` entries match, and conditional citation keys are
+  excluded from the active Paper 1 bibliography unless later verified.
+- No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
 ## Claim Boundaries
@@ -94,7 +98,8 @@ file.
 - Use Stage 4-AV2 as the current compile/check baseline.
 - Check final page limit.
 - Visually inspect Figure 6 layout in the compiled PDF.
-- Verify conditional citations before adding any missing metadata.
+- Verify conditional citations before adding any missing metadata or active
+  BibTeX entries.
 - Polish final captions.
 - Run final claim audit before submission.
 - Keep generated PDF / aux / log files out of git.

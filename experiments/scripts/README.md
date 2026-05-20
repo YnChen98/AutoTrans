@@ -1422,6 +1422,23 @@ conditional citation verification, Stage 4-AW final figure / caption polish,
 or Stage 4-AX final claim audit depending on submission-readiness priority. Do
 not create `risk_adapter_v22` before Paper 1 RA-L submission.
 
+## Stage 4-AM5 conditional citation cleanup
+
+`experiments/protocols/stage4am5_conditional_citation_cleanup_result.md`
+records the active citation / BibTeX cleanup audit for the RA-L Paper 1
+scaffold under `paper/stage4_governor_ral/`.
+
+Stage 4-AM5 checks active `\cite{...}` usage against
+`paper/stage4_governor_ral/refs.bib`, confirms 20 active cited keys and 20
+matching active BibTeX entries, and finds no missing or unused active keys.
+The unresolved conditional keys from Stage 4-AM3 / AM4 remain only as comments
+/ TODOs and are excluded from active Paper 1 citations and active BibTeX
+entries unless later verified. No fabricated citations are added, no web
+metadata is used, and no LaTeX compile is run in AM5. Next recommended work is
+Stage 4-AW final figure / caption polish, Stage 4-AX final claim audit, and
+final compile. Do not create `risk_adapter_v22` before Paper 1 RA-L
+submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the
