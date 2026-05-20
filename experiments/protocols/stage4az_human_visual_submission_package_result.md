@@ -92,6 +92,15 @@ Stage 4-BB follow-up:
 - The old generated schematic image files remain in the scaffold but are no
   longer used by the active Figure 1 / Figure 2 environments.
 
+Stage 4-BE follow-up:
+
+- Stage 4-BE replaces the active Figure 1 / Figure 2 placeholder boxes with
+  TikZ vector schematics.
+- The new schematics are editable source figures, avoid raw underscore method
+  tokens, and preserve the caption boundaries: Figure 1 is an empirical
+  stack-compatible governor schematic, and Figure 2 defines protocols rather
+  than results.
+
 ## Issue 3: Figure 3 Too Spacious
 
 Figure 3 content is acceptable, but the current plot is visually sparse.
@@ -173,8 +182,8 @@ Recommended order:
 2. Stage 4-BB: Figure 1 / Figure 2 placeholder swap and redraw plan.
 3. Stage 4-BC: Figure 3 compactness polish.
 4. Stage 4-BD: Figure 6 paper-facing replot plan.
-5. Stage 4-BE: external Figure 1 / Figure 2 schematic replacement or final
-   visual PDF inspection after BD.
+5. Stage 4-BE: Figure 1 / Figure 2 vector schematic replacement.
+6. Stage 4-BF: final visual PDF inspection after figure fixes.
 
 These stages should remain presentation-focused. They should not introduce new
 experiments, new methods, new claims, new citations, or `risk_adapter_v22`.

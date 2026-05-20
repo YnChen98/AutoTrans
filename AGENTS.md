@@ -1522,6 +1522,33 @@ Stage 4-BD Figure 6 simplified paper-facing replot:
   replacement or final visual PDF inspection after BD.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BE Figure 1 / Figure 2 vector schematic replacement:
+
+- The result document is
+  `experiments/protocols/stage4be_schematic_vector_replacement_result.md`.
+- Current stage: Stage 4-BE Figure 1 / Figure 2 vector schematic replacement.
+- Stage 4-BE replaces the active Figure 1 / Figure 2 placeholder boxes with
+  TikZ vector schematics:
+  - `paper/stage4_governor_ral/figures/fig1_architecture_tikz.tex`;
+  - `paper/stage4_governor_ral/figures/fig2_protocol_split_tikz.tex`.
+- `paper/stage4_governor_ral/main.tex` now loads TikZ with
+  `arrows.meta`, `positioning`, `fit`, and `calc`.
+- Figure 1 shows the unchanged planner / payload MPC / SO(3) controller stack,
+  the risk-conditioned empirical governor, warning-score input, command
+  adaptation interface, speed / acceleration scale labels, and diagnostics /
+  logs.
+- Figure 2 shows the single-goal mission and goal-reissue stress timelines,
+  using paper-facing `goal repeat = 1` and `goal repeat = 10` labels.
+- The old generated Figure 1 / Figure 2 PNG/SVG assets remain unchanged and
+  inactive in the active manuscript.
+- Stage 4-BE compile check succeeded with `latexmk_exit=0`; the scaffold
+  compiled to 7 pages with no LaTeX errors, undefined citations / references,
+  overfull hboxes, missing figures, bibliography warnings, or float warnings in
+  the final log.
+- Next recommended stage: Stage 4-BF final visual PDF inspection after figure
+  fixes.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

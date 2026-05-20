@@ -117,6 +117,15 @@ The active manuscript now uses placeholder boxes with these messages:
 The old generated schematic files remain available as historical/generated
 assets, but they should not be treated as final submission visuals.
 
+Stage 4-BE follow-up:
+
+- Stage 4-BE replaced the Figure 1 / Figure 2 placeholder boxes with active
+  TikZ vector schematics.
+- The replacement files are
+  `paper/stage4_governor_ral/figures/fig1_architecture_tikz.tex` and
+  `paper/stage4_governor_ral/figures/fig2_protocol_split_tikz.tex`.
+- The old generated schematic PNG/SVG assets remain unchanged and inactive.
+
 ## Compile Check
 
 Command run from `paper/stage4_governor_ral/`:
@@ -143,10 +152,8 @@ Generated PDF / aux / log files were excluded from git.
 
 ## Remaining TODO
 
-- Create final `fig1_architecture.(pdf/svg/png)`.
-- Create final `fig2_protocol_split.(pdf/svg/png)`.
-- Replace the Figure 1 / Figure 2 placeholders after the external redraw is
-  complete.
-- Recompile and visually inspect the PDF after replacement.
+- Final visual PDF inspection after the Stage 4-BE TikZ replacement.
+- Optional manual external artist polish if the team wants a more bespoke
+  schematic style before submission.
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.

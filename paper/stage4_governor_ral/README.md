@@ -91,6 +91,9 @@ file.
   with display names, fewer key signals, larger labels, and no visible raw
   underscore method labels. The scaffold compiled to 7 pages during the BD
   check.
+- Stage 4-BE replaced the active Figure 1 / Figure 2 placeholder boxes with
+  TikZ vector schematics. The old generated schematic PNG/SVG assets remain
+  unchanged and inactive.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -138,9 +141,11 @@ file.
   workflow baseline.
 - Use Stage 4-BC as the current Figure 3 compact polish baseline.
 - Use Stage 4-BD as the current Figure 6 simplified replot baseline.
+- Use Stage 4-BE as the current Figure 1 / Figure 2 vector schematic
+  replacement baseline.
 - Next presentation-polish sequence:
-  - Stage 4-BE external Figure 1 / Figure 2 schematic replacement;
-  - final visual PDF inspection after BD / BE.
+  - Stage 4-BF final visual PDF inspection after figure fixes;
+  - optional external artist polish if desired.
 - Perform final submission package assembly only after the AZ blockers are
   resolved or explicitly accepted.
 - Keep generated PDF / aux / log files out of git.

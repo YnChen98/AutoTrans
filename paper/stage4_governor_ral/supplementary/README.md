@@ -46,6 +46,11 @@ historical/generated assets, but they should not be used as final RA-L
 submission visuals after the placeholder workflow unless they are externally
 redrawn or manually curated to final paper quality.
 
+Stage 4-BE replaces the Figure 1 / Figure 2 placeholder boxes with TikZ vector
+schematics. The old generated schematic PNG/SVG files are no longer active main
+visuals; keep them only as historical/generated assets unless the team
+intentionally packages them for provenance or comparison.
+
 Stage 4-BD replaces the active five-panel Figure 6 trace block with a
 simplified main-paper trace summary. Full trace detail, including the omitted
 Fixed Scale 0.80 representative trace and risk-score traces, should remain in

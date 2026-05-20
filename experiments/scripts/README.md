@@ -1593,6 +1593,22 @@ method labels. Next recommended work is Stage 4-BE external Figure 1 / Figure
 2 schematic replacement or final visual PDF inspection after BD. Do not create
 `risk_adapter_v22` before Paper 1 RA-L submission.
 
+## Stage 4-BE Figure 1 / Figure 2 vector schematic replacement
+
+Stage 4-BE replaces the active Figure 1 / Figure 2 placeholder boxes with
+TikZ vector schematics in the RA-L Paper 1 scaffold. The result is recorded in
+`experiments/protocols/stage4be_schematic_vector_replacement_result.md`.
+
+The active schematic sources are:
+
+- `paper/stage4_governor_ral/figures/fig1_architecture_tikz.tex`
+- `paper/stage4_governor_ral/figures/fig2_protocol_split_tikz.tex`
+
+These schematics are compiled through LaTeX, not through a figure generation
+script. They do not regenerate the old Figure 1 / Figure 2 PNG/SVG assets.
+Next recommended work is Stage 4-BF final visual PDF inspection after figure
+fixes. Do not create `risk_adapter_v22` before Paper 1 RA-L submission.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the

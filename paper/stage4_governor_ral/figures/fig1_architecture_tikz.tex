@@ -1,0 +1,54 @@
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  >=Latex,
+  block/.style={
+    draw=black!72,
+    fill=black!3,
+    rounded corners=1pt,
+    minimum width=1.62cm,
+    minimum height=0.62cm,
+    align=center,
+    inner sep=2.3pt
+  },
+  wideblock/.style={
+    block,
+    minimum width=2.04cm
+  },
+  note/.style={
+    draw=black!55,
+    fill=black!1,
+    rounded corners=1pt,
+    align=center,
+    inner sep=2.0pt
+  },
+  flow/.style={-Latex, line width=0.58pt, draw=black!82},
+  adapt/.style={-Latex, line width=0.62pt, draw=black!78, dashed},
+  sense/.style={-Latex, line width=0.54pt, draw=black!66, densely dotted},
+  group/.style={draw=black!48, rounded corners=2pt, dashed, inner sep=4.5pt}
+]
+
+\node[block] (planner) {Planner /\\reference\\generator};
+\node[block, right=0.50cm of planner] (mpc) {Payload\\MPC};
+\node[block, right=0.50cm of mpc] (so3) {SO(3)\\controller};
+\node[wideblock, right=0.50cm of so3] (plant) {UAV +\\suspended\\payload};
+
+\node[group, fit=(planner)(mpc)(so3), label={[font=\sffamily\tiny]above:unchanged inner stack}] (stack) {};
+
+\node[wideblock, below=0.78cm of mpc] (interface) {Command-adaptation\\interface\\{\tiny speed scale}\\{\tiny acceleration scale}};
+\node[wideblock, below=0.78cm of interface] (governor) {Risk-conditioned\\execution governor\\{\tiny empirical governor}};
+\node[wideblock, left=0.68cm of governor] (risk) {Risk input /\\warning scores};
+\node[wideblock, right=0.68cm of governor] (logs) {Diagnostics /\\logs};
+
+\draw[flow] (planner) -- (mpc);
+\draw[flow] (mpc) -- (so3);
+\draw[flow] (so3) -- (plant);
+
+\draw[sense] (plant.south) |- (risk.east);
+\draw[flow] (risk) -- (governor);
+\draw[flow] (governor) -- (interface);
+\draw[adapt] (interface.north) -- ($(mpc.south)!0.48!(so3.south)$)
+  node[midway, right, font=\sffamily\tiny, align=left] {execution\\command path};
+\draw[sense] (plant.south) |- (logs.east);
+\draw[sense] (logs.west) -- (risk.east);
+
+\end{tikzpicture}

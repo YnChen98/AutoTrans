@@ -1,0 +1,58 @@
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  >=Latex,
+  panel/.style={
+    draw=black!62,
+    fill=black!2,
+    rounded corners=2pt,
+    minimum width=3.75cm,
+    minimum height=2.05cm,
+    inner sep=4pt
+  },
+  axis/.style={-Latex, line width=0.55pt, draw=black!82},
+  event/.style={line width=0.58pt, draw=black!80},
+  publish/.style={-Latex, line width=0.60pt, draw=black!75},
+  update/.style={-Latex, line width=0.52pt, draw=black!60, dashed},
+  span/.style={line width=0.62pt, draw=black!70},
+  txt/.style={align=center, font=\sffamily\tiny}
+]
+
+\node[panel] (singlepanel) at (0,0) {};
+\node[panel] (stresspanel) at (4.38,0) {};
+
+\node[font=\sffamily\scriptsize\bfseries] at (0,0.78) {Single-goal mission};
+\node[txt] at (0,0.51) {goal repeat = 1};
+\draw[axis] (-1.50,-0.43) -- (1.55,-0.43) node[right, font=\sffamily\tiny] {time};
+\draw[publish] (-1.12,0.17) -- (-1.12,-0.34);
+\node[txt] at (-1.12,0.34) {one goal\\publish};
+\draw[span] (-0.95,-0.18) -- (0.78,-0.18);
+\node[txt] at (-0.08,0.04) {transport\\interval};
+\draw[event] (0.94,0.13) -- (0.94,-0.43);
+\node[txt] at (1.02,0.34) {arrival /\\hold};
+\node[txt] at (0,-0.81) {tests nominal single-goal execution};
+
+\node[font=\sffamily\scriptsize\bfseries] at (4.38,0.78) {Goal-reissue stress};
+\node[txt] at (4.38,0.51) {goal repeat = 10};
+\draw[axis] (2.88,-0.43) -- (5.93,-0.43) node[right, font=\sffamily\tiny] {time};
+\foreach \x in {3.22,3.55,3.88,4.21,4.54} {
+  \draw[publish] (\x,0.17) -- (\x,-0.34);
+}
+\node[txt] at (3.86,0.27) {repeated same-goal\\publishes};
+\draw[span] (3.11,-0.18) -- (4.78,-0.18);
+\node[txt] at (3.92,0.04) {transport\\interval};
+\draw[event] (4.90,0.13) -- (4.90,-0.43);
+\draw[update] (5.18,0.14) -- (4.94,-0.19);
+\draw[update] (5.45,0.14) -- (4.97,-0.22);
+\node[txt] at (5.33,0.34) {arrival / reissue\\interaction};
+\node[txt] at (4.38,-0.81) {tests repeated-goal / reference-update stress};
+
+\node[
+  draw=black!55,
+  fill=white,
+  rounded corners=1pt,
+  align=center,
+  font=\sffamily\tiny,
+  inner sep=2pt
+] at (2.19,-1.31) {report protocols separately};
+
+\end{tikzpicture}
