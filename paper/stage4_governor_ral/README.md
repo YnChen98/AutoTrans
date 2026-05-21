@@ -105,6 +105,10 @@ file.
   regenerated with paper-facing display names and SVG outputs, and Figure 6 was
   layout-polished with one global legend and subcaptions below the columns. The
   scaffold compiled to 7 pages during the BG check.
+- Stage 4-BI records a documentation-only plan for a deeper
+  nature-skills-assisted presentation / prose polish pass after manual
+  inspection found that Figure 1 / Figure 2 and some code-like / AI-like prose
+  remain active blockers before final submission readiness.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -156,9 +160,14 @@ file.
   replacement baseline.
 - Use Stage 4-BF as the current presentation blocker fix baseline.
 - Use Stage 4-BG as the current paper-facing presentation polish baseline.
+- Use Stage 4-BI as the current nature-skills-assisted Figure 1 / Figure 2 and
+  prose polish planning baseline.
 - Next presentation-polish sequence:
-  - Stage 4-BH final visual PDF reinspection after BG;
-  - optional external artist polish if desired.
+  - Stage 4-BJ Figure 1 / Figure 2 redesign using a `nature-figure`-inspired
+    editable schematic style;
+  - Stage 4-BK RA-L prose polishing / de-AI pass using a
+    `nature-polishing`-inspired workflow;
+  - Stage 4-BL compile and visual inspection after BJ / BK.
 - Perform final submission package assembly only after the AZ blockers are
   resolved or explicitly accepted.
 - Keep generated PDF / aux / log files out of git.

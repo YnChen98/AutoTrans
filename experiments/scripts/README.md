@@ -1659,8 +1659,30 @@ The generated main-paper assets are:
 - `paper/stage4_governor_ral/figures/fig6_trace_summary.svg`
 
 Stage 4-BG recompiled the RA-L scaffold successfully to 7 pages. Next
-recommended work is Stage 4-BH final visual PDF reinspection after BG. Do not
-create `risk_adapter_v22` before Paper 1 RA-L submission.
+recommended work is Stage 4-BI nature-skills-assisted presentation / prose
+polish planning because manual inspection after BG still found Figure 1 /
+Figure 2 and prose blockers. Do not create `risk_adapter_v22` before Paper 1
+RA-L submission.
+
+## Stage 4-BI nature-skills-assisted presentation / prose polish plan
+
+`experiments/protocols/stage4bi_nature_skills_presentation_polish_plan.md`
+records the documentation-only plan for using `nature-figure` as design
+guidance for Figure 1 / Figure 2 and `nature-polishing` as a bounded RA-L prose
+polish workflow.
+
+Stage 4-BI does not run scripts, compile LaTeX, regenerate figures, run
+simulation, run ROS, run training, create new experiment outputs, or modify the
+active manuscript / figure sources. It records the current blockers and
+proposes the next stages:
+
+- Stage 4-BJ Figure 1 / Figure 2 redesign using a `nature-figure`-inspired
+  editable schematic style.
+- Stage 4-BK RA-L prose polishing / de-AI pass using a
+  `nature-polishing`-inspired workflow.
+- Stage 4-BL compile and visual inspection after BJ / BK.
+
+Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
 ## Stage 4-AU risk score and strict-valid metric documentation
 

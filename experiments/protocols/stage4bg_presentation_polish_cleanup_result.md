@@ -12,6 +12,13 @@ layout.
 No scientific claims, numerical results, rankings, citations, algorithms, or
 experiment outputs were changed.
 
+Stage 4-BI follow-up note: manual inspection after BG still found that Figure 1
+and Figure 2 are not final and that some manuscript prose still reads as
+code-like or AI-like. Stage 4-BI therefore plans a deeper
+nature-skills-assisted presentation / prose polish pass using `nature-figure`
+for Figure 1 / Figure 2 redesign guidance and `nature-polishing` for a bounded
+RA-L prose polish workflow.
+
 ## Issues Addressed
 
 - Remaining paper-facing raw-token / monospace / source-code-like wording in
@@ -154,8 +161,12 @@ those files were not committed.
 
 ## Residual Non-Blocking Reminders
 
-- Stage 4-BH should perform final human visual PDF reinspection after the BG
-  presentation cleanup.
+- Stage 4-BI should plan the deeper nature-skills-assisted Figure 1 / Figure 2
+  and prose polish pass because BG did not fully resolve those issues.
+- Stage 4-BJ should redesign Figure 1 / Figure 2 after BI.
+- Stage 4-BK should perform the bounded RA-L prose polishing / de-AI pass after
+  BI.
+- Stage 4-BL should compile and visually inspect the paper after BJ / BK.
 - Author names and affiliations remain placeholders.
 - Final RA-L official requirements and page-budget confirmation remain
   human/submission tasks.

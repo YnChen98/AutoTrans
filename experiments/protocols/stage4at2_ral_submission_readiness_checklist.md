@@ -88,6 +88,11 @@ Figure 5 with paper-facing display names and SVG outputs, and polishes Figure 6
 with one global legend and subcaptions below the columns. Final human visual
 reinspection remains required as Stage 4-BH.
 
+Stage 4-BI records that manual inspection after BG still found Figure 1 /
+Figure 2 layout issues and remaining code-like / AI-like prose. BI therefore
+plans a deeper nature-skills-assisted presentation and prose polish workflow
+before final submission readiness.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -146,13 +151,18 @@ reinspection remains required as Stage 4-BH.
   - manuscript-visible display-name cleanup: addressed by Stage 4-BA;
   - Figure 1 / Figure 2 placeholder swap and redraw plan: addressed by Stage
     4-BE with active TikZ vector schematics and further polished by Stage
-    4-BG;
+    4-BG, but manual inspection after BG still found Figure 1 / Figure 2
+    layout blockers that Stage 4-BI plans to address through Stage 4-BJ;
   - Figure 3 compactness polish: addressed by Stage 4-BC;
   - Figure 4 / Figure 5 display-name cleanup: addressed by Stage 4-BG;
   - Figure 6 simplified paper-facing replot: addressed by Stage 4-BD and
     layout-polished by Stage 4-BG;
   - remaining BE presentation blockers: addressed by Stage 4-BF and Stage
-    4-BG, with final Stage 4-BH human visual reinspection still pending.
+    4-BG;
+  - remaining code-like / AI-like prose remains an active presentation blocker
+    that Stage 4-BI plans to address through Stage 4-BK;
+  - final Stage 4-BL compile and visual inspection should follow the Stage
+    4-BJ / Stage 4-BK passes.
 
 ## Remaining Should-Fix If Time Allows
 
@@ -235,12 +245,15 @@ Recommended submission-readiness path:
 9. Stage 4-BE Figure 1 / Figure 2 vector schematic replacement.
 10. Stage 4-BF presentation blocker fix pass.
 11. Stage 4-BG paper-facing presentation polish cleanup.
-12. Stage 4-BH final visual PDF reinspection.
+12. Stage 4-BI nature-skills-assisted presentation / prose polish plan.
+13. Stage 4-BJ Figure 1 / Figure 2 redesign.
+14. Stage 4-BK RA-L prose polishing / de-AI pass.
+15. Stage 4-BL compile and visual inspection.
 
 Suggested order:
 
 ```text
-AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ -> BA -> BB -> BC -> BD -> BE -> BF -> BG -> BH
+AV -> AV2 -> AM5 -> AW -> AX -> AY -> AZ -> BA -> BB -> BC -> BD -> BE -> BF -> BG -> BI -> BJ -> BK -> BL
 ```
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
@@ -251,5 +264,7 @@ and Stage 4-BD Figure 6 simplified replot before final submission package
 assembly. After BD, continue with Stage 4-BE external Figure 1 / Figure 2
 schematic replacement. After BE, continue with Stage 4-BF final visual PDF
 presentation blocker fix pass. After BF, continue with Stage 4-BG
-paper-facing presentation polish cleanup. After BG, continue with Stage 4-BH
-final visual PDF reinspection.
+paper-facing presentation polish cleanup. After BG, continue with Stage 4-BI
+nature-skills-assisted presentation / prose polish planning, then Stage 4-BJ
+Figure 1 / Figure 2 redesign, Stage 4-BK RA-L prose polishing, and Stage 4-BL
+compile / visual inspection.

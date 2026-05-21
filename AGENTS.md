@@ -1592,7 +1592,42 @@ Stage 4-BG paper-facing presentation polish cleanup:
   compiled to 7 pages with no LaTeX errors, undefined citations / references,
   overfull hboxes, missing figures, bibliography warnings, or float warnings in
   the final log. Residual Underfull hbox messages are non-blocking.
-- Next recommended stage: Stage 4-BH final visual reinspection after BG.
+- Manual inspection after BG still found Figure 1 / Figure 2 layout blockers
+  and code-like / AI-like prose.
+- Next recommended stage: Stage 4-BI nature-skills-assisted presentation /
+  prose polish plan.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
+Stage 4-BI nature-skills-assisted presentation/prose polish plan:
+
+- The plan document is
+  `experiments/protocols/stage4bi_nature_skills_presentation_polish_plan.md`.
+- Current stage: Stage 4-BI nature-skills-assisted presentation/prose polish
+  plan.
+- Stage 4-BI is documentation-only and plans how to use `nature-figure` and
+  `nature-polishing` as guidance for the RA-L Paper 1 presentation pass.
+- Manual inspection after Stage 4-BG found:
+  - Figure 1 is not final because arrow / line / box layout issues remain;
+  - Figure 2 is not final because timeline labels / arrows still risk overlap
+    and visual clutter;
+  - manuscript prose still has code-like / AI-like style in places.
+- `nature-figure` should guide high-impact, editable, non-redundant Figure 1 /
+  Figure 2 redesign, with SVG / PDF / PPT-editable target formats and no raw
+  AI-generated raster images as final paper assets.
+- Figure 1 redesign target: pipeline-like architecture figure, aligned
+  rectangular blocks, orthogonal arrows, no line crossing through text boxes,
+  clear main path and feedback path, no result ranking, and no safety guarantee
+  implication.
+- Figure 2 redesign target: two-panel protocol schematic, minimal text, no
+  overlapping labels, explicit `goal repeat = 1` and `goal repeat = 10`,
+  protocols reported separately, and not a result plot.
+- `nature-polishing` should guide a bounded RA-L prose polish / de-AI pass,
+  reducing code-like wording and AI-template phrasing while preserving RA-L /
+  IEEE robotics style, citations, values, claims, and caveats.
+- Next recommended stages:
+  - Stage 4-BJ Figure 1 / Figure 2 redesign;
+  - Stage 4-BK RA-L prose polishing;
+  - Stage 4-BL compile and visual inspection after BJ / BK.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
 Stage 4-AU risk score and strict-valid metric documentation:
