@@ -97,6 +97,11 @@ Stage 4-BJ addresses the Figure 1 / Figure 2 nature-style redesign item by
 replacing the active TikZ schematic inputs with deterministic matplotlib
 SVG / PDF / PNG assets. Final human visual inspection remains pending.
 
+Stage 4-BK addresses the RA-L prose-polishing / de-AI item by reducing
+code-like wording, formulaic phrasing, and repeated caveat language in the
+active manuscript while preserving claim boundaries, citations, and numerical
+results. Final visual / claim inspection remains pending.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -166,8 +171,8 @@ SVG / PDF / PNG assets. Final human visual inspection remains pending.
     layout-polished by Stage 4-BG;
   - remaining BE presentation blockers: addressed by Stage 4-BF and Stage
     4-BG;
-  - remaining code-like / AI-like prose remains an active presentation blocker
-    that Stage 4-BI plans to address through Stage 4-BK;
+  - remaining code-like / AI-like prose: addressed by Stage 4-BK through a
+    controlled RA-L prose-polishing pass, pending final visual / claim check;
   - final Stage 4-BL compile and visual inspection should follow the Stage
     4-BJ / Stage 4-BK passes.
 

@@ -1708,6 +1708,18 @@ PDF assets while keeping the TikZ files as historical scaffold assets. No
 scientific claims, numerical results, method rankings, algorithms, ROS runs,
 training scripts, or `risk_adapter_v22` are introduced.
 
+## Stage 4-BK RA-L prose polishing / de-AI pass
+
+Stage 4-BK is a prose-only manuscript polish pass recorded in
+`experiments/protocols/stage4bk_prose_polishing_result.md`. It uses
+`nature-polishing`-inspired guidance for clarity, concision, and
+reader-facing terminology while preserving RA-L / IEEE robotics style.
+
+There is no Stage 4-BK experiment or figure-generation script to run. The
+stage edits only the active RA-L manuscript prose and status documents; it does
+not run ROS, simulation, training, figure-generation scripts, or create
+`risk_adapter_v22`.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the

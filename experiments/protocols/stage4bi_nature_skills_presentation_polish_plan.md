@@ -27,6 +27,11 @@ it replaces the active TikZ schematics with deterministic, paper-facing
 matplotlib SVG / PDF / PNG assets while preserving the scientific claims,
 protocol definitions, and method rankings.
 
+Stage 4-BK now executes the prose-polishing branch defined here: it applies a
+bounded `nature-polishing`-inspired RA-L / IEEE prose pass to the active
+manuscript while preserving citations, quantitative values, method rankings,
+claim boundaries, and the no-`risk_adapter_v22` Paper 1 constraint.
+
 ## Why Stage 4-BI Is Needed
 
 Stage 4-BG improved the active paper-facing presentation by redrawing Figure 1

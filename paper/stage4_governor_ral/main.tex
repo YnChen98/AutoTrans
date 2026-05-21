@@ -25,27 +25,26 @@ Risk-Conditioned Execution Governance for Balanced Robustness in Windy Suspended
 \maketitle
 
 \begin{abstract}
-Suspended-payload UAV transport in strong wind is sensitive to runtime
-execution aggressiveness: even with payload-aware planning, MPC, and low-level
-control, the same planned motion can become too aggressive or overly
-conservative under different wind and mission conditions. We propose a drop-in
-risk-conditioned execution governor that adapts command execution through the
-existing speed scale and acceleration scale interface,
-leaving the planner/MPC/controller stack unchanged. To avoid a misleading
-single aggregate, we evaluate strong-wind behavior under two protocols: a
-single-goal mission protocol (goal repeat = 1) and a goal-reissue
-stress protocol (goal repeat = 10). The results reveal strong protocol
-specialists: Wind-Level 0.85 has the highest observed single-goal count with
-26/30 strict-valid runs, whereas Fixed Scale 0.80 has the highest observed
-stress count with 24/30 strict-valid runs. Among the evaluated learned /
+Suspended-payload UAV transport in strong wind is sensitive to how aggressively
+motion commands are executed. Even with payload-aware planning, MPC, and
+low-level control, the same planned motion can be too aggressive or too
+conservative under different wind and mission conditions. We propose a
+stack-compatible risk-conditioned execution governor that adjusts command
+execution through the existing speed scale and acceleration scale interface,
+while leaving the planner/MPC/controller stack unchanged. To avoid a
+misleading single aggregate, we evaluate strong-wind behavior under a
+single-goal mission protocol (goal repeat = 1) and a goal-reissue stress
+protocol (goal repeat = 10). The results reveal strong protocol specialists:
+Wind-Level 0.85 has the highest observed single-goal count with 26/30
+strict-valid runs, whereas Fixed Scale 0.80 has the highest observed stress
+count with 24/30 strict-valid runs. Among the evaluated learned /
 risk-conditioned methods, Risk Adapter v1 is the most balanced, achieving the
-highest mean valid count (24.0/30), highest worst-protocol count (23/30), and
-lowest total regret (2) relative to the protocol oracles.
-Invalid-only failure groups and representative traces further show that
-aggregate success hides distinct failure modes, motivating failure-aware
-interpretation. These results support balanced robustness analysis under the
-tested protocols while making no statistical significance claim, no formal
-safety guarantee, and no broad hardware-transfer claim.
+highest mean valid count (24.0/30), the highest worst-protocol count (23/30),
+and the lowest total regret (2) relative to the protocol oracles. Invalid-only
+failure groups and representative traces show that aggregate success can hide
+distinct failure modes. These results support balanced robustness analysis
+under the tested protocols, without claiming statistical significance, formal
+safety, or broad hardware transfer.
 \end{abstract}
 
 \input{sections/01_intro}

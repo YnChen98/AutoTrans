@@ -1653,6 +1653,24 @@ Stage 4-BJ nature-style Figure 1 / Figure 2 redesign:
   inspection after BJ / BK.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BK RA-L prose polishing / de-AI pass:
+
+- The result document is
+  `experiments/protocols/stage4bk_prose_polishing_result.md`.
+- Current stage: Stage 4-BK RA-L prose polishing / de-AI pass.
+- Stage 4-BK uses cloned `nature-polishing` guidance from
+  `/tmp/nature-skills` plus the local `nature-polishing` skill to apply a
+  bounded RA-L / IEEE prose polish.
+- The polish reduces code-like wording, formulaic AI-like phrasing, and
+  repeated caveat language in the active manuscript while preserving scientific
+  claims, numerical values, citations, method rankings, limitations, and claim
+  boundaries.
+- Stage 4-BK does not change figures, tables, `refs.bib`, algorithms,
+  planner/controller/simulator code, ROS runs, training scripts, experiments,
+  or `risk_adapter_v22`.
+- Next recommended stage: Stage 4-BL compile + visual inspection after BJ/BK.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is

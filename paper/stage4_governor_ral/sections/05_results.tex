@@ -3,35 +3,34 @@
 \subsection{Protocol-Split Success Rates}
 
 The strong-wind evaluation separates single-goal mission execution from
-goal-reissue stress. This protocol split is important because the same method
-can behave differently when the system receives one goal command versus
-repeated post-arrival or reference-update stimuli. We therefore report
-strict-valid counts separately for the single-goal mission protocol
-(goal repeat = 1) and the goal-reissue stress protocol
-(goal repeat = 10), rather than collapsing the two settings into a
-single combined aggregate.
+goal-reissue stress. This split is important because the same method can behave
+differently when the system receives one goal command versus repeated
+post-arrival or reference-update stimuli. We therefore report strict-valid
+counts separately for the single-goal mission protocol (goal repeat = 1) and
+the goal-reissue stress protocol (goal repeat = 10), rather than collapsing the
+two settings into a single combined aggregate.
 
-In the single-goal mission protocol, the strongest method in the evaluated set
-is the heuristic Wind-Level 0.85, which achieves 26/30 strict-valid runs. The
-learned / risk-conditioned methods Risk Adapter v1 and Risk Adapter v2.1 are
-both competitive in this setting, each achieving 25/30 strict-valid runs. In
-the goal-reissue stress protocol, the ranking changes: Fixed Scale 0.80 is
-strongest with 24/30 strict-valid runs, Risk Adapter v1 follows with 23/30, and
-Risk Adapter v2.1 drops to 20/30.
+In the single-goal mission protocol, the heuristic Wind-Level 0.85 is strongest
+in the evaluated set, achieving 26/30 strict-valid runs. The learned /
+risk-conditioned methods Risk Adapter v1 and Risk Adapter v2.1 are also
+competitive, each achieving 25/30 strict-valid runs. In the goal-reissue stress
+protocol, the ranking changes: Fixed Scale 0.80 is strongest with 24/30
+strict-valid runs, Risk Adapter v1 follows with 23/30, and Risk Adapter v2.1
+drops to 20/30.
 
 \input{tables/table1_protocol_balanced_robustness}
 
 \subsection{Balanced Robustness and Protocol Regret}
 
-Balanced robustness is evaluated using the complete cross-protocol matrix. The
-protocol oracles are the highest observed method in each protocol:
-Wind-Level 0.85 with 26/30 in the single-goal mission protocol and Fixed Scale
-0.80 with 24/30 in the goal-reissue stress protocol. Protocol
-regret measures how far each method falls below these observed oracles.
+Balanced robustness is evaluated from the complete cross-protocol matrix. The
+protocol oracles are the highest observed method in each protocol: Wind-Level
+0.85 with 26/30 in the single-goal mission protocol and Fixed Scale 0.80 with
+24/30 in the goal-reissue stress protocol. Protocol regret measures how far
+each method falls below these observed oracles.
 
 Under this view, Risk Adapter v1 has the strongest balanced performance. It
 achieves a mean valid count of 24.0/30, the highest worst-protocol count of
-23/30, and the lowest total regret of 2. This is the main reason for centering
+23/30, and the lowest total regret of 2. These criteria motivate centering
 Risk Adapter v1 as the paper's balanced learned / risk-conditioned execution
 governor.
 
@@ -56,8 +55,8 @@ governor.
   \label{fig:regret}
 \end{figure}
 
-The specialist baselines expose the trade-off that a single protocol would
-hide. Wind-Level 0.85 reaches the single-goal oracle with 26/30 but falls to
+The specialist baselines expose the trade-off hidden by a single protocol.
+Wind-Level 0.85 reaches the single-goal oracle with 26/30 but falls to
 16/30 under stress. Conversely, Fixed Scale 0.80 reaches the stress oracle with
 24/30 but achieves only 21/30 in the single-goal mission protocol. Risk Adapter
 v2.1 is not on the observed Pareto frontier because it has the same single-goal
@@ -65,11 +64,11 @@ count as Risk Adapter v1 (25/30) but a lower stress count (20/30 versus 23/30).
 
 \subsection{Failure-Mode-Aware Diagnosis}
 
-Protocol-split success counts explain which methods are stronger, but they do
-not explain how invalid runs occur. We therefore use invalid-only failure
-groups as a diagnostic view. These labels should be read as failure-analysis
-categories, not definitive root-cause attribution; the paper-facing success
-metric remains strict-valid count.
+Protocol-split success counts show which methods are stronger, but not how
+invalid runs occur. We therefore use invalid-only failure groups as a
+diagnostic view. These labels are failure-analysis categories rather than
+definitive root-cause attribution; the paper-facing success metric remains
+strict-valid count.
 
 \begin{figure}[t]
   \centering
@@ -83,29 +82,29 @@ metric remains strict-valid count.
 In the goal-reissue stress protocol, Risk Adapter v2.1 shows larger
 planner-reference and command/control components than Risk Adapter v1,
 consistent with its weaker stress-protocol result. This diagnostic view
-supports the reframed paper claim: aggregate strict-valid counts alone are
+supports the reframed paper claim that aggregate strict-valid counts alone are
 insufficient for interpreting robustness.
 
 \subsection{Representative Trace Analysis}
 
-Representative traces add a case-study view of the same trade-offs. In Trial 4
-under goal-reissue stress, several Risk Adapter v2.1 failures occur
+Representative traces provide a case-study view of the same trade-offs. In
+Trial 4 under goal-reissue stress, several Risk Adapter v2.1 failures occur
 before arrival rather than only after post-arrival goal republishes. These
 traces point to early pre-arrival vulnerability and risk availability or timing
 issues, not merely a goal-reissue artifact. Trial 6 under the single-goal
 protocol shows a different pattern: lower command scale is not automatically
-safer, and delayed post-arrival divergence can still occur under
-goal repeat = 1.
+safer, and delayed post-arrival divergence can still occur under goal repeat =
+1.
 
 \begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{figures/fig6_trace_summary.png}
   \caption{Representative trace summary for selected failure and success
   cases. Columns compare Trial 4 goal-reissue stress and Trial 6 single-goal
-  bottleneck behavior. The figure keeps only key speed, swing, UAV XY displacement, and
-  governor-scale signals for readability. Full trace details are available in
-  supplementary / archived trace assets. The traces are qualitative mechanism
-  evidence, not proof of general causality.}
+  bottleneck behavior. The figure keeps only key speed, swing, UAV XY
+  displacement, and governor-scale signals for readability. Full trace details
+  are available in supplementary / archived trace assets. The traces are
+  qualitative mechanism evidence, not proof of general causality.}
   \label{fig:representative_traces}
 \end{figure*}
 
@@ -121,7 +120,7 @@ goal repeat = 1.
   \item Risk Adapter v2.1 improves nominal / single-goal behavior but is weaker
   under goal-reissue stress; Risk Adapter v1 matches its single-goal count and
   improves its stress count in the two-protocol plane.
-  \item Protocol split and invalid-only failure groups are necessary to
-  interpret robustness; a single combined aggregate would hide specialist
+  \item Protocol split and invalid-only failure groups are needed to interpret
+  robustness; a single combined aggregate would hide specialist
   trade-offs.
 \end{itemize}

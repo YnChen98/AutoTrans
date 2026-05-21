@@ -113,6 +113,10 @@ file.
   with deterministic nature-style matplotlib SVG / PDF / PNG assets. The old
   TikZ files remain as historical scaffold assets, and final human visual
   inspection remains pending.
+- Stage 4-BK applies a controlled RA-L prose-polishing / de-AI pass to the
+  active manuscript. The pass reduces code-like wording and formulaic phrasing
+  while preserving citations, numerical results, method rankings, limitations,
+  and claim boundaries.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -168,9 +172,9 @@ file.
   prose polish planning baseline.
 - Use Stage 4-BJ as the current active Figure 1 / Figure 2 nature-style
   schematic baseline, pending final visual inspection.
+- Use Stage 4-BK as the current prose-polished manuscript baseline, pending
+  final visual / claim inspection.
 - Next presentation-polish sequence:
-  - Stage 4-BK RA-L prose polishing / de-AI pass using a
-    `nature-polishing`-inspired workflow;
   - Stage 4-BL compile and visual inspection after BJ / BK.
 - Perform final submission package assembly only after the AZ blockers are
   resolved or explicitly accepted.
