@@ -93,6 +93,10 @@ Figure 2 layout issues and remaining code-like / AI-like prose. BI therefore
 plans a deeper nature-skills-assisted presentation and prose polish workflow
 before final submission readiness.
 
+Stage 4-BJ addresses the Figure 1 / Figure 2 nature-style redesign item by
+replacing the active TikZ schematic inputs with deterministic matplotlib
+SVG / PDF / PNG assets. Final human visual inspection remains pending.
+
 ## Current Ready Items
 
 - Manuscript scaffold created under `paper/stage4_governor/`.
@@ -126,7 +130,9 @@ before final submission readiness.
 - Final figure / caption polish for Table 1 and Figures 1-6: addressed by
   Stage 4-AW.
 - Figure 1 / Figure 2 placeholder issue: addressed by Stage 4-BE with active
-  TikZ vector schematics; final visual inspection remains pending.
+  TikZ vector schematics, then addressed again by Stage 4-BJ with active
+  nature-style matplotlib vector schematics; final visual inspection remains
+  pending.
 - Check final Figure 6 visual readability in the compiled PDF during final
   visual inspection: Stage 4-BD simplified the main-paper trace figure, removed
   visible raw method labels from the SVG, and retained full trace details as a
@@ -151,8 +157,9 @@ before final submission readiness.
   - manuscript-visible display-name cleanup: addressed by Stage 4-BA;
   - Figure 1 / Figure 2 placeholder swap and redraw plan: addressed by Stage
     4-BE with active TikZ vector schematics and further polished by Stage
-    4-BG, but manual inspection after BG still found Figure 1 / Figure 2
-    layout blockers that Stage 4-BI plans to address through Stage 4-BJ;
+    4-BG; manual inspection after BG still found Figure 1 / Figure 2 layout
+    blockers, and Stage 4-BJ addresses them with active nature-style
+    matplotlib vector schematics pending final visual inspection;
   - Figure 3 compactness polish: addressed by Stage 4-BC;
   - Figure 4 / Figure 5 display-name cleanup: addressed by Stage 4-BG;
   - Figure 6 simplified paper-facing replot: addressed by Stage 4-BD and

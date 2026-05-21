@@ -22,6 +22,11 @@ The next execution stages should be:
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BJ now executes the Figure 1 / Figure 2 redesign branch defined here:
+it replaces the active TikZ schematics with deterministic, paper-facing
+matplotlib SVG / PDF / PNG assets while preserving the scientific claims,
+protocol definitions, and method rankings.
+
 ## Why Stage 4-BI Is Needed
 
 Stage 4-BG improved the active paper-facing presentation by redrawing Figure 1

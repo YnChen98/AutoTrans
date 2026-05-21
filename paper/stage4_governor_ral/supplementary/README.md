@@ -51,6 +51,12 @@ schematics. The old generated schematic PNG/SVG files are no longer active main
 visuals; keep them only as historical/generated assets unless the team
 intentionally packages them for provenance or comparison.
 
+Stage 4-BJ replaces the active Figure 1 / Figure 2 TikZ schematic inputs with
+deterministic nature-style matplotlib SVG / PDF / PNG assets. The old TikZ
+files and old generated schematic assets are not active final visuals; keep
+them only as historical scaffold / provenance material unless explicitly
+packaged outside the main-paper visual set.
+
 Stage 4-BD replaces the active five-panel Figure 6 trace block with a
 simplified main-paper trace summary. Full trace detail, including the omitted
 Fixed Scale 0.80 representative trace and risk-score traces, should remain in

@@ -1684,6 +1684,30 @@ proposes the next stages:
 
 Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+## Stage 4-BJ nature-style Figure 1 / Figure 2 redesign
+
+`experiments/scripts/generate_stage4_nature_style_schematics.py` generates the
+active Figure 1 and Figure 2 nature-style schematic assets for the RA-L
+manuscript.
+
+The script is deterministic and offline. It uses `matplotlib` only, does not
+use seaborn, does not require ROS, does not run simulation, does not train
+models, and does not write under `experiments/results/`. It writes editable
+SVG / PDF files and PNG previews directly to
+`paper/stage4_governor_ral/figures/`.
+
+Example command:
+
+```bash
+python3 experiments/scripts/generate_stage4_nature_style_schematics.py \
+  --print-summary
+```
+
+Stage 4-BJ replaces the active Figure 1 / Figure 2 TikZ inputs with the new
+PDF assets while keeping the TikZ files as historical scaffold assets. No
+scientific claims, numerical results, method rankings, algorithms, ROS runs,
+training scripts, or `risk_adapter_v22` are introduced.
+
 ## Stage 4-AU risk score and strict-valid metric documentation
 
 `experiments/protocols/stage4au_risk_score_metric_documentation.md` records the

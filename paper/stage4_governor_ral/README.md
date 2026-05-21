@@ -109,6 +109,10 @@ file.
   nature-skills-assisted presentation / prose polish pass after manual
   inspection found that Figure 1 / Figure 2 and some code-like / AI-like prose
   remain active blockers before final submission readiness.
+- Stage 4-BJ replaces the active Figure 1 / Figure 2 TikZ schematic inputs
+  with deterministic nature-style matplotlib SVG / PDF / PNG assets. The old
+  TikZ files remain as historical scaffold assets, and final human visual
+  inspection remains pending.
 - No fabricated citations were added.
 - No `risk_adapter_v22` was created.
 
@@ -162,9 +166,9 @@ file.
 - Use Stage 4-BG as the current paper-facing presentation polish baseline.
 - Use Stage 4-BI as the current nature-skills-assisted Figure 1 / Figure 2 and
   prose polish planning baseline.
+- Use Stage 4-BJ as the current active Figure 1 / Figure 2 nature-style
+  schematic baseline, pending final visual inspection.
 - Next presentation-polish sequence:
-  - Stage 4-BJ Figure 1 / Figure 2 redesign using a `nature-figure`-inspired
-    editable schematic style;
   - Stage 4-BK RA-L prose polishing / de-AI pass using a
     `nature-polishing`-inspired workflow;
   - Stage 4-BL compile and visual inspection after BJ / BK.

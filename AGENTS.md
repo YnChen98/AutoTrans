@@ -1630,6 +1630,29 @@ Stage 4-BI nature-skills-assisted presentation/prose polish plan:
   - Stage 4-BL compile and visual inspection after BJ / BK.
 - Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
 
+Stage 4-BJ nature-style Figure 1 / Figure 2 redesign:
+
+- The result document is
+  `experiments/protocols/stage4bj_nature_style_schematic_redesign_result.md`.
+- Current stage: Stage 4-BJ nature-style Figure 1 / Figure 2 redesign.
+- Stage 4-BJ uses cloned `nature-figure` guidance from `/tmp/nature-skills`
+  plus the local `nature-figure` skill to redesign Figure 1 and Figure 2 as
+  deterministic matplotlib SVG / PDF / PNG schematics.
+- The generator is
+  `experiments/scripts/generate_stage4_nature_style_schematics.py`.
+- Active RA-L manuscript figures now use:
+  - `paper/stage4_governor_ral/figures/fig1_architecture_nature.pdf`;
+  - `paper/stage4_governor_ral/figures/fig2_protocol_split_nature.pdf`.
+- The old TikZ files remain as historical scaffold assets and are not the
+  active final visuals after BJ.
+- Stage 4-BJ does not change scientific claims, numerical results, citations,
+  Table 1, algorithms, planner/controller/simulator code, ROS runs, training
+  scripts, or experiments.
+- Next recommended stage: Stage 4-BK RA-L prose polishing / de-AI pass using a
+  `nature-polishing`-inspired workflow, then Stage 4-BL compile and visual
+  inspection after BJ / BK.
+- Continue: no `risk_adapter_v22` before Paper 1 RA-L submission.
+
 Stage 4-AU risk score and strict-valid metric documentation:
 
 - The documentation document is
